@@ -1,6 +1,8 @@
-# DeepSeek V4 Flash reference
+# DeepSeek V4 Flash preview reference
 
 Self-contained reference for the [V4 versus V4.1 measurement plan](../../target.md). No access to the previous repository is required.
+
+**Identity correction (2026-09-27):** the saved ID `deepseek-ai/DeepSeek-V4-Flash` identifies the preview repository, not `deepseek-ai/DeepSeek-V4-Flash-0731`. The manifest does not pin an immutable revision. Preserve the original JSONs and label this bundle **preview, exact revision unverified**. The new primary comparison uses 0731 versus V4.1 with DSpark; see the sourced [checkpoint and speculation audit](../../docs/speculative-decoding.md). These off-only preview results establish neither 0731 performance nor DSpark gains.
 
 ## Included evidence
 

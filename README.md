@@ -1,6 +1,8 @@
 # DeepSeek serving measurements
 
-The active study compares **DeepSeek V4 Flash and V4.1 Flash**, from serving throughput/latency down to prefill, decode, and individual component costs. See [target.md](target.md) for the measurement matrix and ordered GPU-session checklist.
+The active study compares **DeepSeek V4 Flash 0731 (official release) and V4.1 Flash**, from serving throughput/latency down to prefill, decode, and individual component costs. See [target.md](target.md) for the measurement matrix and ordered GPU-session checklist.
+
+The old V4 measurements used the **preview** model ID, with exact revision unverified. They are historical context, not 0731 results. The [speculative-decoding plan](docs/speculative-decoding.md) separates classic preview MTP from native DSpark and compares speculation off, fixed DSpark, and adaptive DSpark for the two primary checkpoints.
 
 This repository contains a curated, portable subset of the earlier `LLMs_frontier_serving` study. Historical GLM and Qwen evidence is retained for a future comparison **only when requested**. It does not expand the active DeepSeek scope.
 
@@ -8,8 +10,9 @@ This repository contains a curated, portable subset of the earlier `LLMs_frontie
 | --- | --- |
 | Next agent's scope | [AGENTS.md](AGENTS.md) |
 | DeepSeek measurement and GPU handoff plan | [target.md](target.md) |
+| Checkpoint identity and MTP/DSpark experiments | [docs/speculative-decoding.md](docs/speculative-decoding.md) |
 | Historical evidence, selection, and shared caveats | [references/README.md](references/README.md) |
-| DeepSeek V4 baseline | [DeepSeek reference](references/deepseek-v4-flash/README.md) |
+| Historical DeepSeek V4 preview | [DeepSeek reference](references/deepseek-v4-flash/README.md) |
 | Dormant GLM evidence | [GLM reference](references/glm-5.3-flash/README.md) |
 | Dormant Qwen evidence | [Qwen reference](references/qwen3.8-flash-next-fp8/README.md) |
 | Verify the curated bundle locally | [tools/audit_references.py](tools/audit_references.py) |

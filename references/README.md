@@ -1,6 +1,6 @@
 # Curated historical evidence
 
-**Active scope: DeepSeek V4 Flash versus V4.1 Flash.** GLM and Qwen remain dormant until explicitly requested. These references preserve evidence for later use; they are not a queue of experiments to run.
+**Active scope: DeepSeek V4 Flash 0731 versus V4.1 Flash.** The historical V4 bundle is from the preview model ID, with exact revision unverified; it is not a 0731 baseline. See the [checkpoint/speculation audit](../docs/speculative-decoding.md). GLM and Qwen remain dormant until explicitly requested. These references preserve evidence for later use; they are not a queue of experiments to run.
 
 ## Included study arms
 
