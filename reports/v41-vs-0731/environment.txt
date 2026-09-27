@@ -1,0 +1,49 @@
+date: 2026-09-27T17:45:18+00:00
+index, name, memory.total [MiB], driver_version, clocks.max.sm [MHz], power.limit [W], persistence_mode
+0, NVIDIA H100 80GB HBM3, 81559 MiB, 580.105.08, 1980 MHz, 700.00 W, Disabled
+1, NVIDIA H100 80GB HBM3, 81559 MiB, 580.105.08, 1980 MHz, 700.00 W, Disabled
+2, NVIDIA H100 80GB HBM3, 81559 MiB, 580.105.08, 1980 MHz, 700.00 W, Disabled
+3, NVIDIA H100 80GB HBM3, 81559 MiB, 580.105.08, 1980 MHz, 700.00 W, Disabled
+4, NVIDIA H100 80GB HBM3, 81559 MiB, 580.105.08, 1980 MHz, 700.00 W, Disabled
+5, NVIDIA H100 80GB HBM3, 81559 MiB, 580.105.08, 1980 MHz, 700.00 W, Disabled
+6, NVIDIA H100 80GB HBM3, 81559 MiB, 580.105.08, 1980 MHz, 700.00 W, Disabled
+7, NVIDIA H100 80GB HBM3, 81559 MiB, 580.105.08, 1980 MHz, 700.00 W, Disabled
+	GPU0	GPU1	GPU2	GPU3	GPU4	GPU5	GPU6	GPU7	NIC0	CPU Affinity	NUMA Affinity	GPU NUMA ID
+GPU0	 X 	NV18	NV18	NV18	NV18	NV18	NV18	NV18	SYS	0-103	0		N/A
+GPU1	NV18	 X 	NV18	NV18	NV18	NV18	NV18	NV18	SYS	0-103	0		N/A
+GPU2	NV18	NV18	 X 	NV18	NV18	NV18	NV18	NV18	SYS	0-103	0		N/A
+GPU3	NV18	NV18	NV18	 X 	NV18	NV18	NV18	NV18	SYS	0-103	0		N/A
+GPU4	NV18	NV18	NV18	NV18	 X 	NV18	NV18	NV18	SYS	104-207	1		N/A
+GPU5	NV18	NV18	NV18	NV18	NV18	 X 	NV18	NV18	SYS	104-207	1		N/A
+GPU6	NV18	NV18	NV18	NV18	NV18	NV18	 X 	NV18	SYS	104-207	1		N/A
+GPU7	NV18	NV18	NV18	NV18	NV18	NV18	NV18	 X 	SYS	104-207	1		N/A
+NIC0	SYS	SYS	SYS	SYS	SYS	SYS	SYS	SYS	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+
+
+CPU(s):                               208
+Model name:                           Intel(R) Xeon(R) Platinum 8480+
+Socket(s):                            2
+NUMA node(s):                         2
+               total        used        free      shared  buff/cache   available
+Mem:            1771         321         834         264         889        1449
+torch 2.13.0+cu132 cuda 13.2
+vllm 0.30.1rc1.dev223+g44af287eb
+triton 3.7.1
+transformers 5.17.0
+Build cuda_13.0.r13.0/compiler.36424714_0
+v41 snapshot: dba1be0a40aa45a94ad051997016db3960a90277
+8be45ce0476004a3f529fd896115a4a2e800a129ad2d3ec05b16050f52e21879  $HF_HOME/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277/config.json

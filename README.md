@@ -9,6 +9,9 @@ This repository contains a curated, portable subset of the earlier `LLMs_frontie
 | Need | File |
 | --- | --- |
 | Next agent's scope | [AGENTS.md](AGENTS.md) |
+| **V4.1 Flash measured results (speculation off)** | [report.md](report.md) |
+| Benchmark/profiling harness | [bench/](bench/) |
+| Curated V4.1 run evidence | [reports/v41-vs-0731/](reports/v41-vs-0731/) |
 | DeepSeek measurement and GPU handoff plan | [target.md](target.md) |
 | Checkpoint identity and MTP/DSpark experiments | [docs/speculative-decoding.md](docs/speculative-decoding.md) |
 | Historical evidence, selection, and shared caveats | [references/README.md](references/README.md) |
@@ -17,7 +20,7 @@ This repository contains a curated, portable subset of the earlier `LLMs_frontie
 | Dormant Qwen evidence | [Qwen reference](references/qwen3.8-flash-next-fp8/README.md) |
 | Verify the curated bundle locally | [tools/audit_references.py](tools/audit_references.py) |
 
-`install.sh`, `run.sh`, and `request.sh` are the existing Linux installation, V4.1 launch, and smoke-request scaffolds. They are not an automated benchmark harness. Installation currently selects a moving nightly, and the launch defaults are 32K context and eight server sequences; follow `target.md` before a GPU comparison. No new GPU execution, V4.1 result, or component profile is included yet.
+`install.sh`, `run.sh`, and `request.sh` are the Linux installation, V4.1 launch, and smoke-request scaffolds. The matched benchmark harness is in `bench/` (`serve.sh`, `run_matrix.py`, `profile_trace.py`, `trace_breakdown.py`, `summarize.py`, `compare.py`, `curate.py`). **V4.1 Flash speculation-off results** (concurrency, context, prefix cache states, isolated prefill/decode, and prefill kernel breakdown, including the finding that this vLLM build does not use V4.1's CED prefill path) are in [report.md](report.md). The matched 0731 baseline, DSpark arms, and remaining profiling are pending.
 
 The GitHub bundle includes small result JSONs, benchmark logs, selected startup logs, manifests, corrected summaries, and source/export SHA-256 provenance. Numeric result JSONs are preserved byte-for-byte. Exported manifests/logs may have private host/path information and terminal formatting removed; [provenance.json](references/provenance.json) records each transformation. Caches, weights, presentations, old executable launch wrappers, quarantined runs, and superseded narratives are excluded with reasons in the reference index. Original files remain in the source repository.
 

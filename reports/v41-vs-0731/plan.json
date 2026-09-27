@@ -1,0 +1,22 @@
+{
+  "study": "v41-vs-0731",
+  "declared": "2026-09-27T17:47",
+  "phase": "V4.1 speculation-off baseline first; 0731 matched rerun next with identical harness/settings",
+  "server_common": {"tp": 8, "ep": true, "gpu_memory_utilization": 0.90, "max_model_len": 262144,
+    "max_num_seqs": 64, "max_num_batched_tokens": "8192 (vLLM default, resolved)", "kv_cache_dtype": "auto -> fp8_ds_mla (resolved)",
+    "speculative_config": null, "language_model_only": true, "graph_mode": "vLLM default"},
+  "server_launches_v41": [
+    {"config": "off", "prefix_caching": false, "workloads": ["concurrency", "context", "prefix cache-off"]},
+    {"config": "off-prefix", "prefix_caching": true, "workloads": ["prefix cold (reset_prefix_cache before run)", "prefix prewarmed (reset, then 1 disjoint-suffix request per prefix)"]}
+  ],
+  "request": {"backend": "openai-chat", "thinking": false, "temperature": 0.0, "ignore_eos": true, "output_len": 256, "request_rate": "inf"},
+  "concurrency": {"isl": 16384, "conc": [1,2,4,8,16,32,48,64], "num_prompts": "max(16, 4*c)", "dataset": "random, range_ratio 0"},
+  "context": {"isl": [16384,65536,131072,260000], "conc": 8, "num_prompts": 16},
+  "prefix": {"prefix_len": 65536, "suffix_len": 2048, "distinct_prefixes": [1,4,16], "num_prompts": 64, "conc": 8,
+    "prompts": "harness-generated jsonl, identical measured file/order across cache-off/cold/prewarmed; new files per repeat"},
+  "repeats": 3, "order": "ascending on odd repeats, descending on even repeats",
+  "seed": "(isl % 100000) + c*7919 + 256*31 + repeat*104729; warmup seeds +50,000,000 (disjoint)",
+  "warmup": "concurrency: c=1,16,64 with n=c on disjoint seeds; context: 1 request per isl on disjoint seed",
+  "validity": "all requests completed, failed=0, output tokens == n*256, server prompt tokens >= 98% of expected; invalid points kept and listed",
+  "timeout_rule": "no client timeout beyond vllm defaults; failures retained"
+}
