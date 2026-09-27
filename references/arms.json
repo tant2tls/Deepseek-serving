@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "active_models": [
+    "DeepSeek-V4-Flash",
+    "DeepSeek-V4.1-Flash"
+  ],
+  "activation_rule": "GLM and Qwen require an explicit future user request. Completing DeepSeek does not activate them.",
+  "arms": [
+    {
+      "source": "GLM-5.3-Flash/results/_discarded-warmup-contaminated",
+      "role": "quarantined",
+      "note": "Retained measurement artifacts; exclude from headline comparisons.",
+      "included": false,
+      "exclusion": "Quarantined; source preserved"
+    },
+    {
+      "source": "GLM-5.3-Flash/results/_mtpctx_queued_firstrun",
+      "role": "quarantined",
+      "note": "Retained measurement artifacts; exclude from headline comparisons.",
+      "included": false,
+      "exclusion": "Quarantined; source preserved"
+    },
+    {
+      "source": "GLM-5.3-Flash/results/_util085_queued_firstrun",
+      "role": "quarantined",
+      "note": "Retained measurement artifacts; exclude from headline comparisons.",
+      "included": false,
+      "exclusion": "Quarantined; source preserved"
+    },
+    {
+      "source": "GLM-5.3-Flash/results/bf16kv",
+      "role": "primary",
+      "note": "GLM batch/context/prefix base; BF16 KV, utilization 0.82; points span sessions.",
+      "included": true,
+      "path": "references/glm-5.3-flash/results/bf16kv",
+      "points": 15,
+      "scope": "dormant"
+    },
+    {
+      "source": "GLM-5.3-Flash/results/bf16kv-fi618",
+      "role": "experimental",
+      "note": "Alternate BF16 stack; experimental version-check bypass.",
+      "included": true,
+      "path": "references/glm-5.3-flash/results/bf16kv-fi618",
+      "points": 4,
+      "scope": "dormant"
+    },
+    {
+      "source": "GLM-5.3-Flash/results/bf16kv-mtp-n1",
+      "role": "control",
+      "note": "GLM MTP n1 batch; compare bf16kv.",
+      "included": true,
+      "path": "references/glm-5.3-flash/results/bf16kv-mtp-n1",
+      "points": 4,
+      "scope": "dormant"
+    },
+    {
+      "source": "GLM-5.3-Flash/results/bf16kv-mtp-n1-context",
+      "role": "control",
+      "note": "GLM MTP n1 context; compare bf16kv context.",
+      "included": true,
+      "path": "references/glm-5.3-flash/results/bf16kv-mtp-n1-context",
+      "points": 4,
+      "scope": "dormant"
+    },
+    {
+      "source": "GLM-5.3-Flash/results/bf16kv-mtp-n5",
+      "role": "control",
+      "note": "GLM MTP n5 batch; compare bf16kv.",
+      "included": true,
+      "path": "references/glm-5.3-flash/results/bf16kv-mtp-n5",
+      "points": 4,
+      "scope": "dormant"
+    },
+    {
+      "source": "GLM-5.3-Flash/results/fp8kv",
+      "role": "failed-route",
+      "note": "Original incompatible fp8_ds_mla route; does not rule out alternate FP8 path.",
+      "included": false,
+      "exclusion": "Supplemental or failed route; caveat retained in guide"
+    },
+    {
+      "source": "GLM-5.3-Flash/results/fp8kv-fi618",
+      "role": "experimental",
+      "note": "Alternate FP8; paired dtype control is bf16kv-fi618; numerical parity unverified.",
+      "included": true,
+      "path": "references/glm-5.3-flash/results/fp8kv-fi618",
+      "points": 11,
+      "scope": "dormant"
+    },
+    {
+      "source": "GLM-5.3-Flash/results/util085",
+      "role": "supplemental",
+      "note": "Additional or historical arm; not included in the selected 95-file audit. Consult raw data and current caveats.",
+      "included": false,
+      "exclusion": "Supplemental or failed route; caveat retained in guide"
+    },
+    {
+      "source": "Qwen3.8-Flash-Next-FP8/results/_base_c1_jitcold",
+      "role": "quarantined",
+      "note": "Retained measurement artifacts; exclude from headline comparisons.",
+      "included": false,
+      "exclusion": "Quarantined; source preserved"
+    },
+    {
+      "source": "Qwen3.8-Flash-Next-FP8/results/_mtp_c1_jitcold",
+      "role": "quarantined",
+      "note": "Retained measurement artifacts; exclude from headline comparisons.",
+      "included": false,
+      "exclusion": "Quarantined; source preserved"
+    },
+    {
+      "source": "Qwen3.8-Flash-Next-FP8/results/base",
+      "role": "qualified",
+      "note": "Context/prefix usable with smaller-pool caveat; batch superseded by base-util082.",
+      "included": true,
+      "path": "references/qwen3.8-flash-next-fp8/results/base",
+      "points": 11,
+      "scope": "dormant"
+    },
+    {
+      "source": "Qwen3.8-Flash-Next-FP8/results/base-util082",
+      "role": "primary",
+      "note": "Corrected main batch only; warm compile cache, utilization 0.82.",
+      "included": true,
+      "path": "references/qwen3.8-flash-next-fp8/results/base-util082",
+      "points": 4,
+      "scope": "dormant"
+    },
+    {
+      "source": "Qwen3.8-Flash-Next-FP8/results/mtp-n1",
+      "role": "qualified",
+      "note": "Compare original base only with startup/pool caveats; not corrected base-util082.",
+      "included": true,
+      "path": "references/qwen3.8-flash-next-fp8/results/mtp-n1",
+      "points": 4,
+      "scope": "dormant"
+    },
+    {
+      "source": "deepseek_v4_flash/results/_v4image_firstrun_queued",
+      "role": "quarantined",
+      "note": "Retained measurement artifacts; exclude from headline comparisons.",
+      "included": false,
+      "exclusion": "Outside curated DeepSeek baseline selection"
+    },
+    {
+      "source": "deepseek_v4_flash/results/mtp-off",
+      "role": "historical-comparison",
+      "note": "Older runtime; historical MTP off; missing newer cold telemetry.",
+      "included": false,
+      "exclusion": "Outside curated DeepSeek baseline selection"
+    },
+    {
+      "source": "deepseek_v4_flash/results/mtp-off-bridge-dev20073",
+      "role": "control",
+      "note": "Build bridge versus mtp-off-image; batch-grid inference only.",
+      "included": false,
+      "exclusion": "Outside curated DeepSeek baseline selection"
+    },
+    {
+      "source": "deepseek_v4_flash/results/mtp-off-bridge-dev20073_queued",
+      "role": "quarantined",
+      "note": "Retained measurement artifacts; exclude from headline comparisons.",
+      "included": false,
+      "exclusion": "Outside curated DeepSeek baseline selection"
+    },
+    {
+      "source": "deepseek_v4_flash/results/mtp-off-image",
+      "role": "primary",
+      "note": "Main batch/context/prefix base on dev20051; context discrepancy unresolved.",
+      "included": true,
+      "path": "references/deepseek-v4-flash/results/mtp-off-image",
+      "points": 11,
+      "scope": "active-historical-reference"
+    },
+    {
+      "source": "deepseek_v4_flash/results/mtp-on",
+      "role": "supplemental",
+      "note": "Additional or historical arm; not included in the selected 95-file audit. Consult raw data and current caveats.",
+      "included": false,
+      "exclusion": "Outside curated DeepSeek baseline selection"
+    },
+    {
+      "source": "deepseek_v4_flash/results/mtp-on-noreuse",
+      "role": "historical-comparison",
+      "note": "Older runtime MTP; compare mtp-off; missing newer cold telemetry.",
+      "included": false,
+      "exclusion": "Outside curated DeepSeek baseline selection"
+    },
+    {
+      "source": "deepseek_v4_flash/results/util085-dev20073",
+      "role": "control",
+      "note": "Finer grid on separate build/utilization; do not splice into main arm.",
+      "included": false,
+      "exclusion": "Outside curated DeepSeek baseline selection"
+    },
+    {
+      "source": "deepseek_v4_flash/results/util085-dev20073_queued",
+      "role": "quarantined",
+      "note": "Retained measurement artifacts; exclude from headline comparisons.",
+      "included": false,
+      "exclusion": "Outside curated DeepSeek baseline selection"
+    }
+  ]
+}

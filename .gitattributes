@@ -1,0 +1,9 @@
+# Portable source/document line endings.
+* text=auto
+*.sh text eol=lf
+*.py text eol=lf
+
+# Evidence hashes cover exact bytes; never normalize imported artifacts.
+references/**/results/** -text
+references/**/logs/** -text
+references/**/config.json -text
