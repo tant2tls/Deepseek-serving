@@ -1,0 +1,20 @@
+{
+  "declared": "2026-09-28",
+  "study": "v41-vs-0731",
+  "purpose": "Primary DSpark arms (docs/speculative-decoding.md step 3): fixed vs adaptive verification, both checkpoints",
+  "runtime": "vLLM 0.30.1rc1.dev223+g44af287eb (~/vllm), unchanged from the speculation-off arms",
+  "launch_order": ["v41 dspark-fixed-k5", "v41 dspark-adaptive-k5", "v4-0731 dspark-fixed-k5", "v4-0731 dspark-adaptive-k5"],
+  "speculative_config": {"method": "dspark", "num_speculative_tokens": 5, "revision": "<same pinned target revision>",
+                         "draft_sample_method": "probabilistic", "rejection_sample_method": "standard",
+                         "enable_adaptive_verification": "false (fixed) | true (adaptive)"},
+  "server": "bench/serve.sh; same TP8+EP, 0.90 memory, max-model-len 262144, max-num-seqs 64, prefix caching OFF",
+  "workload": "run_matrix.py --workloads concurrency --conc-list 1,4,16,64 --repeats 3: random 16384 in / 256 out, ignore_eos, temperature 0, thinking=false, n=max(16,4c), same seeds as the ar concurrency points; warmup c1/16/64 disjoint seeds",
+  "runs": "2 models x 2 arms x 4 loads x 3 repeats = 48",
+  "ar_baseline_reuse": "Reuse existing ar concurrency points (v41 config off; 0731 config off-profidle, idle profiler shown equivalent on V4.1). Identical workload, seeds, sampling, prefix-cache-off, runtime; only speculative config differs.",
+  "validity": "unchanged: all requests complete, output = n x 256, server prompt tokens >= 98% target",
+  "telemetry_added": "spec_decode num_drafts / num_draft_tokens (scheduled = proposed) / num_accepted_tokens deltas; per-position acceptance recoverable from saved metrics_{before,after}.prom. Verified-candidate count under adaptive verification is not exported by this build: report as unavailable.",
+  "correctness": "Post hoc: compare generated texts (--save-detailed) with the matching ar run, same prompts, greedy target; report mismatch rate, not a losslessness proof.",
+  "caveats": ["Random-token prompts: acceptance is workload-specific and not representative of real text; real-text sets (step 4) are out of scope for this pass.",
+              "Probabilistic draft sampling with a greedy target, per the doc fragment; greedy-draft is a separate arm."],
+  "not_in_scope_this_pass": ["k{1,3,7} width sweeps", "16K/2048 sustained", "64K/128K context", "speculative prefix caching", "DSpark component traces"]
+}

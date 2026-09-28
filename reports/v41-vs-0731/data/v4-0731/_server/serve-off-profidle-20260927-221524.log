@@ -1,0 +1,427 @@
+(APIServer pid=177768) INFO 09-27 22:15:38 [api_utils.py:347] 
+(APIServer pid=177768) INFO 09-27 22:15:38 [api_utils.py:347]        █     █     █▄   ▄█
+(APIServer pid=177768) INFO 09-27 22:15:38 [api_utils.py:347]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.30.1rc1.dev223+g44af287eb
+(APIServer pid=177768) INFO 09-27 22:15:38 [api_utils.py:347]   █▄█▀ █     █     █     █  model   deepseek-ai/DeepSeek-V4-Flash-0731
+(APIServer pid=177768) INFO 09-27 22:15:38 [api_utils.py:347]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=177768) INFO 09-27 22:15:38 [api_utils.py:347] 
+(APIServer pid=177768) INFO 09-27 22:15:38 [api_utils.py:286] non-default args: {'model_tag': 'deepseek-ai/DeepSeek-V4-Flash-0731', 'enable_auto_tool_choice': True, 'tool_call_parser': 'deepseek_v4', 'host': '0.0.0.0', 'model': 'deepseek-ai/DeepSeek-V4-Flash-0731', 'tokenizer_mode': 'deepseek_v4', 'revision': '7872f01b1d1fe23eabc4c98b48bffcef5a386062', 'max_model_len': 262144, 'reasoning_parser': 'deepseek_v4', 'tensor_parallel_size': 8, 'enable_expert_parallel': True, 'gpu_memory_utilization': 0.9, 'enable_prefix_caching': False, 'language_model_only': True, 'max_num_seqs': 64, 'profiler_config': ProfilerConfig(profiler='torch', torch_profiler_dir='/root/Deepseek-serving/results/v41-vs-0731/v4-0731/profiles', torch_profiler_activities=None, proton_profiler_dir='', proton_context='shadow', proton_data='tree', proton_backend=None, proton_mode=None, proton_hook=None, proton_output_format=None, proton_graph_attribution=False, torch_profiler_with_stack=False, torch_profiler_with_flops=False, torch_profiler_use_gzip=True, torch_profiler_dump_cuda_time_total=True, torch_profiler_record_shapes=True, torch_profiler_with_memory=False, capture_torch_profiler=False, detailed_trace_annotation=False, ignore_frontend=True, delay_iterations=0, max_iterations=0, warmup_iterations=0, active_iterations=5, wait_iterations=0)}
+(APIServer pid=177768) INFO 09-27 22:15:38 [config.py:941] Detected quantization_config.scale_fmt=ue8m0; enabling UE8M0 for DeepGEMM.
+(APIServer pid=177768) INFO 09-27 22:15:53 [model.py:699] Resolved architecture: DeepseekV4ForCausalLM
+(APIServer pid=177768) INFO 09-27 22:15:53 [model.py:2109] Using max model len 262144
+(APIServer pid=177768) INFO 09-27 22:15:54 [scheduler.py:308] Chunked prefill is enabled with max_num_batched_tokens=8192.
+(APIServer pid=177768) INFO 09-27 22:15:54 [vllm.py:843] Auto-enabling VLLM_USE_BREAKABLE_CUDAGRAPH=1. Set VLLM_USE_BREAKABLE_CUDAGRAPH=0 to opt out.
+(APIServer pid=177768) INFO 09-27 22:15:54 [kernel.py:408] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native'], gelu_and_mul_sparse=['triton', 'native'])
+(APIServer pid=177768) INFO 09-27 22:15:59 [compilation.py:331] Enabled custom fusions: norm_quant, act_quant, allreduce_rms
+(EngineCore pid=179005) INFO 09-27 22:16:12 [core.py:129] Initializing a V1 LLM engine (v0.30.1rc1.dev223+g44af287eb) with config: model='deepseek-ai/DeepSeek-V4-Flash-0731', speculative_config=None, tokenizer='deepseek-ai/DeepSeek-V4-Flash-0731', skip_tokenizer_init=False, tokenizer_mode=deepseek_v4, revision=7872f01b1d1fe23eabc4c98b48bffcef5a386062, tokenizer_revision=7872f01b1d1fe23eabc4c98b48bffcef5a386062, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=262144, download_dir=None, load_format=auto, tensor_parallel_size=8, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=deepseek_v4_fp8, quantization_config=None, enforce_eager=False, aux_output_config=AuxOutputConfig(enable_return_routed_experts=False, max_bytes=None), kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='deepseek_v4', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, per_request_spec_decode_metrics='none', kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=deepseek-ai/DeepSeek-V4-Flash-0731, enable_prefix_caching=False, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['+quant_fp8', 'all', '+quant_fp8'], 'ir_enable_torch_wrap': False, 'splitting_ops': [], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [64, 8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': True, 'fuse_act_quant': True, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': True, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 128, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)
+(EngineCore pid=179005) INFO 09-27 22:16:12 [multiproc_executor.py:153] DP group leader: node_rank=0, node_rank_within_dp=0, master_addr=127.0.0.1, mq_connect_ip=<PRIVATE_IP> (local), world_size=8, local_world_size=8
+(Worker pid=179357) INFO 09-27 22:16:31 [parallel_state.py:1825] world_size=8 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_b27f8e2d5d2244ef81fa8700b8157793 backend=nccl
+(Worker pid=179360) INFO 09-27 22:16:32 [parallel_state.py:1825] world_size=8 rank=3 local_rank=3 distributed_init_method=file:///tmp/vllm_dist_b27f8e2d5d2244ef81fa8700b8157793 backend=nccl
+(Worker pid=179359) INFO 09-27 22:16:32 [parallel_state.py:1825] world_size=8 rank=2 local_rank=2 distributed_init_method=file:///tmp/vllm_dist_b27f8e2d5d2244ef81fa8700b8157793 backend=nccl
+(Worker pid=179361) INFO 09-27 22:16:32 [parallel_state.py:1825] world_size=8 rank=4 local_rank=4 distributed_init_method=file:///tmp/vllm_dist_b27f8e2d5d2244ef81fa8700b8157793 backend=nccl
+(Worker pid=179358) INFO 09-27 22:16:32 [parallel_state.py:1825] world_size=8 rank=1 local_rank=1 distributed_init_method=file:///tmp/vllm_dist_b27f8e2d5d2244ef81fa8700b8157793 backend=nccl
+(Worker pid=179363) INFO 09-27 22:16:32 [parallel_state.py:1825] world_size=8 rank=6 local_rank=6 distributed_init_method=file:///tmp/vllm_dist_b27f8e2d5d2244ef81fa8700b8157793 backend=nccl
+(Worker pid=179364) INFO 09-27 22:16:32 [parallel_state.py:1825] world_size=8 rank=7 local_rank=7 distributed_init_method=file:///tmp/vllm_dist_b27f8e2d5d2244ef81fa8700b8157793 backend=nccl
+(Worker pid=179362) INFO 09-27 22:16:32 [parallel_state.py:1825] world_size=8 rank=5 local_rank=5 distributed_init_method=file:///tmp/vllm_dist_b27f8e2d5d2244ef81fa8700b8157793 backend=nccl
+(Worker pid=179357) INFO 09-27 22:16:33 [pynccl.py:148] vLLM is using nccl==2.29.7
+(Worker pid=179357) INFO 09-27 22:16:36 [cuda_communicator.py:326] Using ['FLASHINFER', 'CUSTOM', 'SYMM_MEM', 'PYNCCL'] all-reduce backends (in dispatch order) for group 'tp:0' out of potential backends: ['FLASHINFER_PCIE_IPC', 'FLASHINFER', 'NCCL_SYMM_MEM', 'QUICK_REDUCE', 'AITER_CUSTOM', 'CUSTOM', 'SYMM_MEM', 'PYNCCL'].
+(Worker pid=179357) INFO 09-27 22:16:37 [cuda_communicator.py:326] Using ['PYNCCL'] all-reduce backends (in dispatch order) for group 'ep:0' out of potential backends: ['FLASHINFER_PCIE_IPC', 'FLASHINFER', 'NCCL_SYMM_MEM', 'QUICK_REDUCE', 'AITER_CUSTOM', 'CUSTOM', 'SYMM_MEM', 'PYNCCL'].
+(Worker pid=179357) INFO 09-27 22:16:37 [parallel_state.py:2269] rank 0 in world size 8 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, ETP rank 0, EP rank 0, EPLB rank N/A
+(Worker pid=179357) INFO 09-27 22:16:37 [gpu_worker.py:479] Using V2 Model Runner
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:16:38 [model_runner.py:375] Loading model from scratch...
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:16:38 [quant_config.py:79] DeepSeek V4 expert_dtype resolved to 'fp4'
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:16:38 [__init__.py:726] Selected FlashInferFp8DeepGEMMDynamicBlockScaledKernel for Fp8LinearMethod
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:16:38 [deep_gemm.py:197] deep_gemm not found in site-packages, trying vendored vllm.third_party.deep_gemm
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:16:38 [deep_gemm.py:224] DeepGEMM PDL enabled on vllm.third_party.deep_gemm.
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:16:38 [deep_gemm.py:136] DeepGEMM E8M0 enabled on current platform.
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:16:38 [attention.py:121] Using DeepSeek's fp8_ds_mla KV cache format.
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:16:38 [expert_map_manager.py:250] [EP Rank 0/8] Expert parallelism is enabled. Expert placement strategy: linear. Local/global number of experts: 32/256. Experts local to global index map: 0->0, 1->1, 2->2, 3->3, 4->4, 5->5, 6->6, 7->7, 8->8, 9->9, 10->10, 11->11, 12->12, 13->13, 14->14, 15->15, 16->16, 17->17, 18->18, 19->19, 20->20, 21->21, 22->22, 23->23, 24->24, 25->25, 26->26, 27->27, 28->28, 29->29, 30->30, 31->31.
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:16:38 [mxfp4.py:721] Using 'MARLIN' Mxfp4 MoE backend.
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:16:39 [attention.py:952] Using FP8 indexer cache for Lightning Indexer.
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:16:41 [weight_utils.py:1063] Filesystem type for checkpoints: OVERLAY. Checkpoint size: 155.43 GiB. Available RAM: 1076.22 GiB.
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:16:41 [weight_utils.py:1086] Auto-prefetch is disabled because the filesystem (OVERLAY) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+Loading safetensors checkpoint shards:   0% Completed | 0/48 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards:   4% Completed | 2/48 [00:00<00:06,  7.00it/s]
+Loading safetensors checkpoint shards:   6% Completed | 3/48 [00:00<00:08,  5.19it/s]
+Loading safetensors checkpoint shards:   8% Completed | 4/48 [00:00<00:09,  4.52it/s]
+Loading safetensors checkpoint shards:  10% Completed | 5/48 [00:01<00:10,  4.25it/s]
+Loading safetensors checkpoint shards:  12% Completed | 6/48 [00:01<00:10,  4.02it/s]
+Loading safetensors checkpoint shards:  15% Completed | 7/48 [00:01<00:10,  3.95it/s]
+Loading safetensors checkpoint shards:  17% Completed | 8/48 [00:01<00:10,  3.90it/s]
+Loading safetensors checkpoint shards:  19% Completed | 9/48 [00:02<00:10,  3.88it/s]
+Loading safetensors checkpoint shards:  21% Completed | 10/48 [00:02<00:09,  3.84it/s]
+Loading safetensors checkpoint shards:  23% Completed | 11/48 [00:02<00:09,  3.84it/s]
+Loading safetensors checkpoint shards:  25% Completed | 12/48 [00:02<00:09,  3.83it/s]
+Loading safetensors checkpoint shards:  27% Completed | 13/48 [00:03<00:08,  3.90it/s]
+Loading safetensors checkpoint shards:  29% Completed | 14/48 [00:03<00:08,  3.93it/s]
+Loading safetensors checkpoint shards:  31% Completed | 15/48 [00:03<00:08,  3.99it/s]
+Loading safetensors checkpoint shards:  33% Completed | 16/48 [00:03<00:08,  3.98it/s]
+Loading safetensors checkpoint shards:  35% Completed | 17/48 [00:04<00:07,  4.01it/s]
+Loading safetensors checkpoint shards:  38% Completed | 18/48 [00:04<00:07,  4.02it/s]
+Loading safetensors checkpoint shards:  40% Completed | 19/48 [00:04<00:07,  4.06it/s]
+Loading safetensors checkpoint shards:  42% Completed | 20/48 [00:04<00:06,  4.04it/s]
+Loading safetensors checkpoint shards:  44% Completed | 21/48 [00:05<00:06,  4.05it/s]
+Loading safetensors checkpoint shards:  46% Completed | 22/48 [00:05<00:06,  4.05it/s]
+Loading safetensors checkpoint shards:  48% Completed | 23/48 [00:05<00:06,  4.06it/s]
+Loading safetensors checkpoint shards:  50% Completed | 24/48 [00:05<00:05,  4.06it/s]
+Loading safetensors checkpoint shards:  52% Completed | 25/48 [00:06<00:05,  4.06it/s]
+Loading safetensors checkpoint shards:  54% Completed | 26/48 [00:06<00:05,  4.16it/s]
+Loading safetensors checkpoint shards:  56% Completed | 27/48 [00:06<00:04,  4.22it/s]
+Loading safetensors checkpoint shards:  58% Completed | 28/48 [00:06<00:04,  4.23it/s]
+Loading safetensors checkpoint shards:  60% Completed | 29/48 [00:07<00:04,  4.10it/s]
+Loading safetensors checkpoint shards:  62% Completed | 30/48 [00:07<00:04,  4.00it/s]
+Loading safetensors checkpoint shards:  65% Completed | 31/48 [00:07<00:04,  3.92it/s]
+Loading safetensors checkpoint shards:  67% Completed | 32/48 [00:07<00:04,  3.84it/s]
+Loading safetensors checkpoint shards:  69% Completed | 33/48 [00:08<00:03,  3.82it/s]
+Loading safetensors checkpoint shards:  71% Completed | 34/48 [00:08<00:03,  3.77it/s]
+Loading safetensors checkpoint shards:  73% Completed | 35/48 [00:08<00:03,  3.76it/s]
+Loading safetensors checkpoint shards:  75% Completed | 36/48 [00:08<00:03,  3.80it/s]
+Loading safetensors checkpoint shards:  77% Completed | 37/48 [00:09<00:02,  3.96it/s]
+Loading safetensors checkpoint shards:  79% Completed | 38/48 [00:09<00:02,  3.89it/s]
+Loading safetensors checkpoint shards:  81% Completed | 39/48 [00:09<00:02,  3.86it/s]
+Loading safetensors checkpoint shards:  83% Completed | 40/48 [00:09<00:02,  3.81it/s]
+Loading safetensors checkpoint shards:  85% Completed | 41/48 [00:10<00:01,  3.88it/s]
+Loading safetensors checkpoint shards:  88% Completed | 42/48 [00:10<00:01,  4.06it/s]
+Loading safetensors checkpoint shards:  90% Completed | 43/48 [00:10<00:01,  4.18it/s]
+Loading safetensors checkpoint shards:  92% Completed | 44/48 [00:10<00:00,  4.25it/s]
+Loading safetensors checkpoint shards:  98% Completed | 47/48 [00:11<00:00,  7.94it/s]
+Loading safetensors checkpoint shards: 100% Completed | 48/48 [00:11<00:00,  4.34it/s]
+
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:16:52 [default_loader.py:484] Loading weights took 11.08 seconds
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:16:52 [mxfp4.py:2011] Using MoEPrepareAndFinalizeNoDPEPModular
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:16:52 [mxfp4.py:2012] Using MarlinExperts
+(Worker_TP1_EP1 pid=179358) INFO 09-27 22:16:52 [model_runner.py:407] Model loading took 19.79 GiB memory and 14.558340 seconds
+(Worker_TP1_EP1 pid=179358) INFO 09-27 22:16:52 [interface.py:692] Setting kv cache block size to 256 for DEEPSEEK_SPARSE_SWA/FLASHMLA_SPARSE_DSV4/DEEPSEEK_V4_INDEXER/CompressorBackend backend(s).
+(Worker_TP3_EP3 pid=179360) INFO 09-27 22:16:52 [model_runner.py:407] Model loading took 19.79 GiB memory and 14.668794 seconds
+(Worker_TP3_EP3 pid=179360) INFO 09-27 22:16:52 [interface.py:692] Setting kv cache block size to 256 for DEEPSEEK_SPARSE_SWA/FLASHMLA_SPARSE_DSV4/DEEPSEEK_V4_INDEXER/CompressorBackend backend(s).
+(Worker_TP4_EP4 pid=179361) INFO 09-27 22:16:53 [model_runner.py:407] Model loading took 19.79 GiB memory and 14.922522 seconds
+(Worker_TP2_EP2 pid=179359) INFO 09-27 22:16:53 [model_runner.py:407] Model loading took 19.79 GiB memory and 15.115413 seconds
+(Worker_TP6_EP6 pid=179363) INFO 09-27 22:16:53 [model_runner.py:407] Model loading took 19.79 GiB memory and 14.953257 seconds
+(Worker_TP4_EP4 pid=179361) INFO 09-27 22:16:53 [interface.py:692] Setting kv cache block size to 256 for DEEPSEEK_SPARSE_SWA/FLASHMLA_SPARSE_DSV4/DEEPSEEK_V4_INDEXER/CompressorBackend backend(s).
+(Worker_TP2_EP2 pid=179359) INFO 09-27 22:16:53 [interface.py:692] Setting kv cache block size to 256 for DEEPSEEK_SPARSE_SWA/FLASHMLA_SPARSE_DSV4/DEEPSEEK_V4_INDEXER/CompressorBackend backend(s).
+(Worker_TP6_EP6 pid=179363) INFO 09-27 22:16:53 [interface.py:692] Setting kv cache block size to 256 for DEEPSEEK_SPARSE_SWA/FLASHMLA_SPARSE_DSV4/DEEPSEEK_V4_INDEXER/CompressorBackend backend(s).
+(Worker_TP7_EP7 pid=179364) INFO 09-27 22:16:53 [model_runner.py:407] Model loading took 19.79 GiB memory and 14.985760 seconds
+(Worker_TP7_EP7 pid=179364) INFO 09-27 22:16:53 [interface.py:692] Setting kv cache block size to 256 for DEEPSEEK_SPARSE_SWA/FLASHMLA_SPARSE_DSV4/DEEPSEEK_V4_INDEXER/CompressorBackend backend(s).
+(Worker_TP5_EP5 pid=179362) INFO 09-27 22:16:53 [model_runner.py:407] Model loading took 19.79 GiB memory and 15.153950 seconds
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:16:53 [model_runner.py:407] Model loading took 19.79 GiB memory and 15.393171 seconds
+(Worker_TP5_EP5 pid=179362) INFO 09-27 22:16:53 [interface.py:692] Setting kv cache block size to 256 for DEEPSEEK_SPARSE_SWA/FLASHMLA_SPARSE_DSV4/DEEPSEEK_V4_INDEXER/CompressorBackend backend(s).
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:16:53 [topk_topp_sampler.py:124] Using FlashInfer for top-p & top-k sampling.
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:16:53 [torch_utils.py:286] Reducing Torch threads from 26 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:16:53 [interface.py:692] Setting kv cache block size to 256 for DEEPSEEK_SPARSE_SWA/FLASHMLA_SPARSE_DSV4/DEEPSEEK_V4_INDEXER/CompressorBackend backend(s).
+(EngineCore pid=179005) INFO 09-27 22:16:53 [torch_utils.py:286] Reducing Torch threads from 26 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(EngineCore pid=179005) INFO 09-27 22:16:53 [utils.py:340] Using BLHNC KV cache layout.
+[22:17:16] : Warning: T.vectorized loop over `i_hci` with extent 4 is lowered as a serial loop because TileLang could not find a valid vectorization plan. Scalar accumulator updates inside the loop are a common cause; move reductions to T.unroll or T.serial if this is intended.
+[22:17:16] : Warning: T.vectorized loop over `i_hci` with extent 4 is lowered as a serial loop because TileLang could not find a valid vectorization plan. Scalar accumulator updates inside the loop are a common cause; move reductions to T.unroll or T.serial if this is intended.
+[22:17:16] : Warning: T.vectorized loop over `i_hci` with extent 4 is lowered as a serial loop because TileLang could not find a valid vectorization plan. Scalar accumulator updates inside the loop are a common cause; move reductions to T.unroll or T.serial if this is intended.
+[22:17:16] : Warning: T.vectorized loop over `i_hci` with extent 4 is lowered as a serial loop because TileLang could not find a valid vectorization plan. Scalar accumulator updates inside the loop are a common cause; move reductions to T.unroll or T.serial if this is intended.
+[22:17:16] : Warning: T.vectorized loop over `i_hci` with extent 4 is lowered as a serial loop because TileLang could not find a valid vectorization plan. Scalar accumulator updates inside the loop are a common cause; move reductions to T.unroll or T.serial if this is intended.
+[22:17:16] : Warning: T.vectorized loop over `i_hci` with extent 4 is lowered as a serial loop because TileLang could not find a valid vectorization plan. Scalar accumulator updates inside the loop are a common cause; move reductions to T.unroll or T.serial if this is intended.
+[22:17:16] : Warning: T.vectorized loop over `i_hci` with extent 4 is lowered as a serial loop because TileLang could not find a valid vectorization plan. Scalar accumulator updates inside the loop are a common cause; move reductions to T.unroll or T.serial if this is intended.
+[22:17:16] : Warning: T.vectorized loop over `i_hci` with extent 4 is lowered as a serial loop because TileLang could not find a valid vectorization plan. Scalar accumulator updates inside the loop are a common cause; move reductions to T.unroll or T.serial if this is intended.
+2026-09-27 22:16:55  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:04  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang`
+2026-09-27 22:17:16  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_post_tilelang` with `out_idx=None`
+2026-09-27 22:17:17  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_post_tilelang`
+2026-09-27 22:17:20  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:29  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+2026-09-27 22:17:39  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `hc_head_fuse_tilelang` with `out_idx=None`
+2026-09-27 22:17:42  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `hc_head_fuse_tilelang`
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:17:44 [indexer.py:896] DSA indexer decode path: use_flattening=False supports_varlen=False (next_n=1, use_fp4_cache=False)
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:17:44 [breakable_cudagraph.py:294] Breakable CUDA graph enabled
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/19 [00:00<?, ?it/s]                                                                         Capturing CUDA graphs (PIECEWISE):   0%|          | 0/19 [00:02<?, ?it/s](EngineCore pid=179005) INFO 09-27 22:17:54 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+                                                                         Capturing CUDA graphs (PIECEWISE):   0%|          | 0/19 [00:11<?, ?it/s]                                                                         Capturing CUDA graphs (PIECEWISE):   0%|          | 0/19 [00:20<?, ?it/s]                                                                         Capturing CUDA graphs (PIECEWISE):   0%|          | 0/19 [00:29<?, ?it/s]Capturing CUDA graphs (PIECEWISE):   5%|▌         | 1/19 [00:38<11:34, 38.59s/it]Capturing CUDA graphs (PIECEWISE):  11%|█         | 2/19 [00:40<04:54, 17.30s/it]Capturing CUDA graphs (PIECEWISE):  16%|█▌        | 3/19 [00:41<02:33,  9.57s/it]Capturing CUDA graphs (PIECEWISE):  21%|██        | 4/19 [00:41<01:29,  5.94s/it]Capturing CUDA graphs (PIECEWISE):  26%|██▋       | 5/19 [00:42<00:55,  3.94s/it]Capturing CUDA graphs (PIECEWISE):  32%|███▏      | 6/19 [00:42<00:35,  2.73s/it]Capturing CUDA graphs (PIECEWISE):  37%|███▋      | 7/19 [00:42<00:23,  1.96s/it]Capturing CUDA graphs (PIECEWISE):  42%|████▏     | 8/19 [00:43<00:16,  1.46s/it]2026-09-27 22:17:46  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:56  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang`
+2026-09-27 22:18:04  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:18:13  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:18:27 [flashinfer_all_reduce.py:216] Initialized FlashInfer Allreduce norm fusion workspace with backend=mnnvl
+2026-09-27 22:16:55  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:04  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang`
+2026-09-27 22:17:16  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_post_tilelang` with `out_idx=None`
+2026-09-27 22:17:17  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_post_tilelang`
+2026-09-27 22:17:20  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:28  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+2026-09-27 22:17:39  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `hc_head_fuse_tilelang` with `out_idx=None`
+2026-09-27 22:17:42  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `hc_head_fuse_tilelang`
+2026-09-27 22:17:46  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:55  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang`
+2026-09-27 22:18:04  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:18:13  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+2026-09-27 22:16:55  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:05  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang`
+2026-09-27 22:17:16  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_post_tilelang` with `out_idx=None`
+2026-09-27 22:17:17  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_post_tilelang`
+2026-09-27 22:17:20  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:29  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+2026-09-27 22:17:39  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `hc_head_fuse_tilelang` with `out_idx=None`
+2026-09-27 22:17:42  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `hc_head_fuse_tilelang`
+2026-09-27 22:17:46  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:56  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang`
+2026-09-27 22:18:04  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:18:13  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+2026-09-27 22:16:55  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:05  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang`
+2026-09-27 22:17:16  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_post_tilelang` with `out_idx=None`
+2026-09-27 22:17:17  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_post_tilelang`
+2026-09-27 22:17:20  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:29  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+2026-09-27 22:17:39  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `hc_head_fuse_tilelang` with `out_idx=None`
+2026-09-27 22:17:42  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `hc_head_fuse_tilelang`
+2026-09-27 22:17:46  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:56  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang`
+2026-09-27 22:18:04  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:18:13  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+2026-09-27 22:16:55  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:04  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang`
+2026-09-27 22:17:16  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_post_tilelang` with `out_idx=None`
+2026-09-27 22:17:17  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_post_tilelang`
+2026-09-27 22:17:20  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:29  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+2026-09-27 22:17:39  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `hc_head_fuse_tilelang` with `out_idx=None`
+2026-09-27 22:17:42  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `hc_head_fuse_tilelang`
+2026-09-27 22:17:46  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:56  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang`
+2026-09-27 22:18:04  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:18:13  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+2026-09-27 22:16:55  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:04  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang`
+2026-09-27 22:17:16  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_post_tilelang` with `out_idx=None`
+2026-09-27 22:17:17  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_post_tilelang`
+2026-09-27 22:17:20  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:29  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+2026-09-27 22:17:39  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `hc_head_fuse_tilelang` with `out_idx=None`
+2026-09-27 22:17:42  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `hc_head_fuse_tilelang`
+2026-09-27 22:17:46  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:56  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang`
+2026-09-27 22:18:04  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:18:13  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+2026-09-27 22:16:55  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:04  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang`
+2026-09-27 22:17:16  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_post_tilelang` with `out_idx=None`
+2026-09-27 22:17:17  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_post_tilelang`
+2026-09-27 22:17:20  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:28  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+2026-09-27 22:17:39  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `hc_head_fuse_tilelang` with `out_idx=None`
+2026-09-27 22:17:42  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `hc_head_fuse_tilelang`
+2026-09-27 22:17:46  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:55  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang`
+2026-09-27 22:18:04  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:18:13  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+2026-09-27 22:16:55  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:04  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang`
+2026-09-27 22:17:16  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_post_tilelang` with `out_idx=None`
+2026-09-27 22:17:17  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_post_tilelang`
+2026-09-27 22:17:20  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:29  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+2026-09-27 22:17:39  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `hc_head_fuse_tilelang` with `out_idx=None`
+2026-09-27 22:17:42  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `hc_head_fuse_tilelang`
+2026-09-27 22:17:46  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:17:55  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_broadcast_with_norm_tilelang`
+2026-09-27 22:18:04  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:18:13  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+Capturing CUDA graphs (PIECEWISE):  47%|████▋     | 9/19 [00:51<00:36,  3.62s/it]Capturing CUDA graphs (PIECEWISE):  53%|█████▎    | 10/19 [00:51<00:23,  2.61s/it]Capturing CUDA graphs (PIECEWISE):  58%|█████▊    | 11/19 [00:52<00:15,  1.91s/it]Capturing CUDA graphs (PIECEWISE):  63%|██████▎   | 12/19 [00:52<00:09,  1.43s/it]                                                                                  Capturing CUDA graphs (PIECEWISE):  63%|██████▎   | 12/19 [00:58<00:09,  1.43s/it]                                                                                  Capturing CUDA graphs (PIECEWISE):  63%|██████▎   | 12/19 [00:59<00:09,  1.43s/it]                                                                                  Capturing CUDA graphs (PIECEWISE):  63%|██████▎   | 12/19 [01:00<00:09,  1.43s/it]                                                                                  Capturing CUDA graphs (PIECEWISE):  63%|██████▎   | 12/19 [01:09<00:09,  1.43s/it](EngineCore pid=179005) INFO 09-27 22:18:54 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+Capturing CUDA graphs (PIECEWISE):  68%|██████▊   | 13/19 [01:15<00:48,  8.07s/it]2026-09-27 22:19:00,555 - INFO - core.py:564 - flashinfer.jit: Building JIT module fp8_blockscale_gemm_90; this can take several minutes on first use.
+2026-09-27 22:18:42  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_fused_tilelang` with `out_idx=None`
+2026-09-27 22:18:44  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_fused_tilelang`
+2026-09-27 22:18:44  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:18:53  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+(EngineCore pid=179005) INFO 09-27 22:19:54 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+2026-09-27 22:18:42  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_fused_tilelang` with `out_idx=None`
+2026-09-27 22:18:44  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_fused_tilelang`
+2026-09-27 22:18:44  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:18:53  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+2026-09-27 22:18:42  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_fused_tilelang` with `out_idx=None`
+2026-09-27 22:18:44  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_fused_tilelang`
+2026-09-27 22:18:44  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:18:53  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+2026-09-27 22:18:42  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_fused_tilelang` with `out_idx=None`
+2026-09-27 22:18:44  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_fused_tilelang`
+2026-09-27 22:18:44  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:18:53  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+2026-09-27 22:18:42  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_fused_tilelang` with `out_idx=None`
+2026-09-27 22:18:44  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_fused_tilelang`
+2026-09-27 22:18:44  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:18:53  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+2026-09-27 22:18:42  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_fused_tilelang` with `out_idx=None`
+2026-09-27 22:18:44  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_fused_tilelang`
+2026-09-27 22:18:44  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:18:53  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+2026-09-27 22:18:42  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_fused_tilelang` with `out_idx=None`
+2026-09-27 22:18:44  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_fused_tilelang`
+2026-09-27 22:18:44  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:18:53  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+2026-09-27 22:18:42  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_fused_tilelang` with `out_idx=None`
+2026-09-27 22:18:44  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_fused_tilelang`
+2026-09-27 22:18:44  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `mhc_pre_big_fuse_with_norm_tilelang` with `out_idx=None`
+2026-09-27 22:18:54  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `mhc_pre_big_fuse_with_norm_tilelang`
+CUDA error: invalid argument
+(EngineCore pid=179005) ERROR 09-27 22:20:20 [multiproc_executor.py:314] Worker proc VllmWorker-5 died unexpectedly (exit code: None), shutting down executor.
+(EngineCore pid=179005) INFO 09-27 22:20:20 [multiproc_executor.py:474] [shutdown] Executor: waiting for worker exit count=8
+(Worker_TP0_EP0 pid=179357) INFO 09-27 22:20:20 [multiproc_executor.py:838] Parent process exited, terminating worker queues
+(EngineCore pid=179005) WARNING 09-27 22:20:25 [multiproc_executor.py:486] [shutdown] Executor: workers still running after grace period; sending SIGTERM count=7
+(EngineCore pid=179005) WARNING 09-27 22:20:29 [multiproc_executor.py:496] [shutdown] Executor: workers still running after SIGTERM; sending SIGKILL count=7
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436] EngineCore failed to start.
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436] Traceback (most recent call last):
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]   File "/root/vllm/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 1398, in run_engine_core
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]     engine_core = EngineCoreProc(*args, engine_index=dp_rank, **kwargs)
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]   File "/root/vllm/lib/python3.12/site-packages/vllm/tracing/otel.py", line 175, in sync_wrapper
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]     return func(*args, **kwargs)
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]            ^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]   File "/root/vllm/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 1154, in __init__
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]     super().__init__(
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]   File "/root/vllm/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 151, in __init__
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]     kv_cache_config = self._initialize_kv_caches(vllm_config)
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]   File "/root/vllm/lib/python3.12/site-packages/vllm/tracing/otel.py", line 175, in sync_wrapper
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]     return func(*args, **kwargs)
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]            ^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]   File "/root/vllm/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 312, in _initialize_kv_caches
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]     available_gpu_memory = self.model_executor.determine_available_memory()
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]   File "/root/vllm/lib/python3.12/site-packages/vllm/v1/executor/abstract.py", line 150, in determine_available_memory
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]     return self.collective_rpc("determine_available_memory")
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]   File "/root/vllm/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 450, in collective_rpc
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]     return future if non_block else future.result()
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]                                     ^^^^^^^^^^^^^^^
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]   File "/root/vllm/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 99, in result
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]     return super().result()
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]            ^^^^^^^^^^^^^^^^
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]   File "/usr/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]     return self.__get_result()
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]            ^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]   File "/usr/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]     raise self._exception
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]   File "/root/vllm/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 103, in _wait_for_response
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]     response = self.aggregate(self.get_response())
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]                               ^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]   File "/root/vllm/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 435, in get_response
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]     status, result = mq.dequeue(timeout=dequeue_timeout)
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]   File "/root/vllm/lib/python3.12/site-packages/vllm/distributed/device_communicators/shm_broadcast.py", line 900, in dequeue
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]     with self.acquire_read(timeout, indefinite) as buf:
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]   File "/usr/lib/python3.12/contextlib.py", line 137, in __enter__
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]     return next(self.gen)
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]            ^^^^^^^^^^^^^^
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]   File "/root/vllm/lib/python3.12/site-packages/vllm/distributed/device_communicators/shm_broadcast.py", line 808, in acquire_read
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436]     raise RuntimeError("cancelled")
+(EngineCore pid=179005) ERROR 09-27 22:20:29 [core.py:1436] RuntimeError: cancelled
+Process EngineCore:
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/root/vllm/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 1440, in run_engine_core
+    raise e
+  File "/root/vllm/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 1398, in run_engine_core
+    engine_core = EngineCoreProc(*args, engine_index=dp_rank, **kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/vllm/lib/python3.12/site-packages/vllm/tracing/otel.py", line 175, in sync_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/vllm/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 1154, in __init__
+    super().__init__(
+  File "/root/vllm/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 151, in __init__
+    kv_cache_config = self._initialize_kv_caches(vllm_config)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/vllm/lib/python3.12/site-packages/vllm/tracing/otel.py", line 175, in sync_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/vllm/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 312, in _initialize_kv_caches
+    available_gpu_memory = self.model_executor.determine_available_memory()
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/vllm/lib/python3.12/site-packages/vllm/v1/executor/abstract.py", line 150, in determine_available_memory
+    return self.collective_rpc("determine_available_memory")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/vllm/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 450, in collective_rpc
+    return future if non_block else future.result()
+                                    ^^^^^^^^^^^^^^^
+  File "/root/vllm/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 99, in result
+    return super().result()
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/root/vllm/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 103, in _wait_for_response
+    response = self.aggregate(self.get_response())
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/root/vllm/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 435, in get_response
+    status, result = mq.dequeue(timeout=dequeue_timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/vllm/lib/python3.12/site-packages/vllm/distributed/device_communicators/shm_broadcast.py", line 900, in dequeue
+    with self.acquire_read(timeout, indefinite) as buf:
+  File "/usr/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/root/vllm/lib/python3.12/site-packages/vllm/distributed/device_communicators/shm_broadcast.py", line 808, in acquire_read
+    raise RuntimeError("cancelled")
+RuntimeError: cancelled
+(APIServer pid=177768) INFO 09-27 22:20:31 [utils.py:638] [shutdown] Process manager: send sigterm to process EngineCore
+Traceback (most recent call last):
+  File "/root/vllm/bin/vllm", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/root/vllm/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 118, in main
+    args.dispatch_function(args)
+  File "/root/vllm/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 154, in cmd
+    uvloop.run(run_server(args))
+  File "/root/vllm/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+    return __asyncio.run(
+           ^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/root/vllm/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+    return await main
+           ^^^^^^^^^^
+  File "/root/vllm/lib/python3.12/site-packages/vllm/entrypoints/launchers/api_server/entry.py", line 172, in run_server
+    await run_server_worker(listen_address, sock, args, **uvicorn_kwargs)
+  File "/root/vllm/lib/python3.12/site-packages/vllm/entrypoints/launchers/api_server/entry.py", line 185, in run_server_worker
+    async with build_async_engine_client(
+  File "/usr/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/vllm/lib/python3.12/site-packages/vllm/entrypoints/launchers/api_server/entry.py", line 58, in build_async_engine_client
+    async with build_async_engine_client_from_engine_args(
+  File "/usr/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/vllm/lib/python3.12/site-packages/vllm/entrypoints/launchers/api_server/entry.py", line 92, in build_async_engine_client_from_engine_args
+    async_llm = AsyncLLM.from_vllm_config(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/vllm/lib/python3.12/site-packages/vllm/v1/engine/async_llm.py", line 248, in from_vllm_config
+    return cls(
+           ^^^^
+  File "/root/vllm/lib/python3.12/site-packages/vllm/v1/engine/async_llm.py", line 180, in __init__
+    self.engine_core = EngineCoreClient.make_async_mp_client(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/vllm/lib/python3.12/site-packages/vllm/tracing/otel.py", line 175, in sync_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/vllm/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 167, in make_async_mp_client
+    return AsyncMPClient(
+           ^^^^^^^^^^^^^^
+  File "/root/vllm/lib/python3.12/site-packages/vllm/tracing/otel.py", line 175, in sync_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/vllm/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 1100, in __init__
+    super().__init__(
+  File "/root/vllm/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 674, in __init__
+    with launch_core_engines(
+  File "/usr/lib/python3.12/contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "/root/vllm/lib/python3.12/site-packages/vllm/v1/engine/utils.py", line 1230, in launch_core_engines
+    wait_for_engine_startup(
+  File "/root/vllm/lib/python3.12/site-packages/vllm/v1/engine/utils.py", line 1310, in wait_for_engine_startup
+    raise RuntimeError(
+RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}
+/usr/lib/python3.12/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 8 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/usr/lib/python3.12/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 9 leaked shared_memory objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

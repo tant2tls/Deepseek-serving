@@ -29,6 +29,13 @@ case "$CONFIG_ID" in
     PROFILE_DIR=${PROFILE_DIR:?set PROFILE_DIR to an absolute trace directory}
     mkdir -p "$PROFILE_DIR"
     set -- --profiler-config "{\"profiler\":\"torch\",\"torch_profiler_dir\":\"$PROFILE_DIR\",\"torch_profiler_record_shapes\":true,\"torch_profiler_with_stack\":false,\"ignore_frontend\":true}" "$@" ;;
+  # DSpark arms (docs/speculative-decoding.md): prefix caching off to match the
+  # `ar` concurrency baseline. The draft ships inside the target checkpoint but
+  # its revision is resolved separately (default None = main), so pin it here.
+  dspark-fixed-k5|dspark-adaptive-k5)
+    PREFIX_FLAG=--no-enable-prefix-caching
+    [ "$CONFIG_ID" = dspark-adaptive-k5 ] && ADAPTIVE=true || ADAPTIVE=false
+    set -- --speculative-config "{\"method\":\"dspark\",\"num_speculative_tokens\":5,\"revision\":\"$REVISION\",\"draft_sample_method\":\"probabilistic\",\"rejection_sample_method\":\"standard\",\"enable_adaptive_verification\":$ADAPTIVE}" "$@" ;;
   *) echo "unknown config $CONFIG_ID" >&2; exit 2 ;;
 esac
 

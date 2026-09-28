@@ -1,0 +1,156 @@
+
+step 0 PREFILL execute_context_1(8192)_generation_0(0): span 424.72 ms, kernel sum 392.16 ms, 2098 kernels
+  moe_expert_gemm           73.28 ms   18.7%  n=80
+  moe_route_combine          7.77 ms    2.0%  n=219
+  allreduce                108.37 ms   27.6%  n=81
+  allgather_other_comm       2.87 ms    0.7%  n=4
+  attention_core            48.21 ms   12.3%  n=40
+  indexer_topk               2.22 ms    0.6%  n=21
+  qkv_rope_kvcache           9.41 ms    2.4%  n=48
+  dense_gemm                90.33 ms   23.0%  n=1032
+  mhc_residual_norm         32.31 ms    8.2%  n=161
+  engram                     3.45 ms    0.9%  n=4
+  other_elementwise         13.92 ms    3.6%  n=408
+
+step 1 PREFILL execute_context_1(8192)_generation_0(0): span 398.05 ms, kernel sum 398.43 ms, 2095 kernels
+  moe_expert_gemm           73.15 ms   18.4%  n=80
+  moe_route_combine          7.92 ms    2.0%  n=219
+  allreduce                106.68 ms   26.8%  n=81
+  allgather_other_comm       2.87 ms    0.7%  n=4
+  attention_core            49.49 ms   12.4%  n=40
+  indexer_topk               6.06 ms    1.5%  n=21
+  qkv_rope_kvcache           9.46 ms    2.4%  n=48
+  dense_gemm                91.50 ms   23.0%  n=1032
+  mhc_residual_norm         32.09 ms    8.1%  n=161
+  engram                     3.93 ms    1.0%  n=4
+  other_elementwise         15.29 ms    3.8%  n=405
+
+step 2 PREFILL execute_context_1(8192)_generation_0(0): span 404.76 ms, kernel sum 405.01 ms, 2140 kernels
+  moe_expert_gemm           73.53 ms   18.2%  n=80
+  moe_route_combine          8.07 ms    2.0%  n=238
+  allreduce                106.62 ms   26.3%  n=81
+  allgather_other_comm       2.85 ms    0.7%  n=4
+  attention_core            49.58 ms   12.2%  n=40
+  indexer_topk              10.19 ms    2.5%  n=27
+  qkv_rope_kvcache           9.50 ms    2.3%  n=48
+  dense_gemm                91.74 ms   22.7%  n=1032
+  mhc_residual_norm         32.05 ms    7.9%  n=161
+  engram                     3.92 ms    1.0%  n=4
+  other_elementwise         16.96 ms    4.2%  n=425
+
+step 3 PREFILL execute_context_1(8192)_generation_0(0): span 410.18 ms, kernel sum 410.53 ms, 2140 kernels
+  moe_expert_gemm           73.33 ms   17.9%  n=80
+  moe_route_combine          8.16 ms    2.0%  n=238
+  allreduce                106.93 ms   26.0%  n=81
+  allgather_other_comm       2.86 ms    0.7%  n=4
+  attention_core            49.73 ms   12.1%  n=40
+  indexer_topk              13.46 ms    3.3%  n=27
+  qkv_rope_kvcache           9.49 ms    2.3%  n=48
+  dense_gemm                91.76 ms   22.4%  n=1032
+  mhc_residual_norm         32.03 ms    7.8%  n=161
+  engram                     3.93 ms    1.0%  n=4
+  other_elementwise         18.85 ms    4.6%  n=425
+
+step 4 PREFILL execute_context_1(8192)_generation_0(0): span 417.45 ms, kernel sum 417.66 ms, 2196 kernels
+  moe_expert_gemm           73.87 ms   17.7%  n=80
+  moe_route_combine          8.38 ms    2.0%  n=257
+  allreduce                105.52 ms   25.3%  n=81
+  allgather_other_comm       2.87 ms    0.7%  n=4
+  attention_core            49.81 ms   11.9%  n=40
+  indexer_topk              18.88 ms    4.5%  n=36
+  qkv_rope_kvcache           9.50 ms    2.3%  n=48
+  dense_gemm                91.94 ms   22.0%  n=1032
+  mhc_residual_norm         32.04 ms    7.7%  n=161
+  engram                     3.93 ms    0.9%  n=4
+  other_elementwise         20.93 ms    5.0%  n=453
+
+step 5 PREFILL execute_context_1(8192)_generation_0(0): span 424.95 ms, kernel sum 425.12 ms, 2223 kernels
+  moe_expert_gemm           73.35 ms   17.3%  n=80
+  moe_route_combine          8.49 ms    2.0%  n=258
+  allreduce                106.47 ms   25.0%  n=81
+  allgather_other_comm       2.88 ms    0.7%  n=4
+  attention_core            49.89 ms   11.7%  n=40
+  indexer_topk              23.85 ms    5.6%  n=42
+  qkv_rope_kvcache           9.51 ms    2.2%  n=48
+  dense_gemm                91.97 ms   21.6%  n=1032
+  mhc_residual_norm         32.06 ms    7.5%  n=161
+  engram                     3.93 ms    0.9%  n=4
+  other_elementwise         22.71 ms    5.3%  n=473
+
+step 6 PREFILL execute_context_1(8192)_generation_0(0): span 430.54 ms, kernel sum 430.77 ms, 2241 kernels
+  moe_expert_gemm           73.75 ms   17.1%  n=80
+  moe_route_combine          8.67 ms    2.0%  n=276
+  allreduce                106.44 ms   24.7%  n=81
+  allgather_other_comm       2.88 ms    0.7%  n=4
+  attention_core            50.01 ms   11.6%  n=40
+  indexer_topk              26.72 ms    6.2%  n=42
+  qkv_rope_kvcache           9.52 ms    2.2%  n=48
+  dense_gemm                91.84 ms   21.3%  n=1032
+  mhc_residual_norm         32.10 ms    7.5%  n=161
+  engram                     3.86 ms    0.9%  n=4
+  other_elementwise         24.99 ms    5.8%  n=473
+
+step 7 PREFILL execute_context_1(8192)_generation_0(0): span 434.16 ms, kernel sum 434.38 ms, 2241 kernels
+  moe_expert_gemm           73.39 ms   16.9%  n=80
+  moe_route_combine          8.63 ms    2.0%  n=276
+  allreduce                106.67 ms   24.6%  n=81
+  allgather_other_comm       2.88 ms    0.7%  n=4
+  attention_core            50.06 ms   11.5%  n=40
+  indexer_topk              28.37 ms    6.5%  n=42
+  qkv_rope_kvcache           9.46 ms    2.2%  n=48
+  dense_gemm                91.94 ms   21.2%  n=1032
+  mhc_residual_norm         32.12 ms    7.4%  n=161
+  engram                     3.97 ms    0.9%  n=4
+  other_elementwise         26.89 ms    6.2%  n=473
+
+step 8 PREFILL execute_context_1(4)_generation_0(0): span 11.75 ms, kernel sum 12.32 ms, 1492 kernels
+  moe_expert_gemm            1.86 ms   15.1%  n=80
+  moe_route_combine          0.65 ms    5.3%  n=201
+  allreduce                  0.80 ms    6.5%  n=81
+  allgather_other_comm       0.06 ms    0.5%  n=4
+  attention_core             0.83 ms    6.7%  n=40
+  indexer_topk               1.69 ms   13.7%  n=21
+  qkv_rope_kvcache           0.16 ms    1.3%  n=48
+  dense_gemm                 4.31 ms   35.0%  n=395
+  mhc_residual_norm          0.90 ms    7.3%  n=161
+  engram                     0.02 ms    0.1%  n=4
+  other_elementwise          1.04 ms    8.5%  n=457
+
+step 9 DECODE execute_context_0(0)_generation_1(1): span 0.47 ms, kernel sum 0.33 ms, 84 kernels
+  moe_expert_gemm            0.01 ms    1.6%  n=2
+  moe_route_combine          0.01 ms    3.9%  n=5
+  allreduce                  0.05 ms   15.6%  n=3
+  allgather_other_comm       0.01 ms    4.3%  n=1
+  attention_core             0.02 ms    5.0%  n=2
+  indexer_topk               0.00 ms    1.5%  n=2
+  qkv_rope_kvcache           0.00 ms    0.8%  n=1
+  dense_gemm                 0.08 ms   25.3%  n=9
+  mhc_residual_norm          0.02 ms    5.9%  n=4
+  engram                     0.01 ms    2.1%  n=2
+  other_elementwise          0.11 ms   34.0%  n=53
+
+step 10 DECODE execute_context_0(0)_generation_1(1): span 0.47 ms, kernel sum 0.34 ms, 84 kernels
+  moe_expert_gemm            0.01 ms    1.6%  n=2
+  moe_route_combine          0.01 ms    3.8%  n=5
+  allreduce                  0.06 ms   18.1%  n=3
+  allgather_other_comm       0.01 ms    4.1%  n=1
+  attention_core             0.02 ms    4.8%  n=2
+  indexer_topk               0.01 ms    1.5%  n=2
+  qkv_rope_kvcache           0.00 ms    0.8%  n=1
+  dense_gemm                 0.08 ms   24.3%  n=9
+  mhc_residual_norm          0.02 ms    5.7%  n=4
+  engram                     0.01 ms    2.1%  n=2
+  other_elementwise          0.11 ms   33.1%  n=53
+
+step 11 DECODE execute_context_0(0)_generation_1(1): span 0.49 ms, kernel sum 0.37 ms, 84 kernels
+  moe_expert_gemm            0.05 ms   13.8%  n=2
+  moe_route_combine          0.01 ms    3.9%  n=5
+  allreduce                  0.04 ms    9.8%  n=3
+  allgather_other_comm       0.01 ms    3.8%  n=1
+  attention_core             0.02 ms    4.5%  n=2
+  indexer_topk               0.00 ms    1.3%  n=2
+  qkv_rope_kvcache           0.00 ms    0.7%  n=1
+  dense_gemm                 0.09 ms   24.4%  n=9
+  mhc_residual_norm          0.02 ms    5.4%  n=4
+  engram                     0.01 ms    2.0%  n=2
+  other_elementwise          0.11 ms   30.4%  n=53

@@ -1,186 +1,267 @@
-# DeepSeek V4.1 Flash — speculation-off serving baseline
+# DeepSeek V4.1 Flash vs V4 Flash 0731 — serving, prefill components, and DSpark
 
-Study `v41-vs-0731`, phase 1 of [target.md](target.md): **V4.1 Flash only, speculation off**. Measured 2026-09-27 on one reserved 8×H100 node. The matched DeepSeek V4 Flash **0731** baseline and all DSpark arms are still **pending**; this report makes no V4.1/0731 comparison. The historical preview (`deepseek-ai/DeepSeek-V4-Flash`, revision unverified) is not a 0731 baseline and is not compared here.
+Study `v41-vs-0731` ([target.md](target.md)). One reserved 8×H100 node, one pinned vLLM build, identical server settings, harness, prompts, and seeds for both checkpoints. Measured 2026-09-27/28.
 
-All 75 planned performance points (25 points × 3 repeats) completed and passed validation. An added prefill/decode phase (section 4: 6 control runs, 27 isolated runs, and 2 diagnostic traces) also passed. Two harness failures from an aborted launch attempt are kept in the [failure table](#failures-and-deviations). Machine-readable aggregates: [reports/v41-vs-0731/v41_off_summary.csv](reports/v41-vs-0731/v41_off_summary.csv); full tables including telemetry: [reports/v41-vs-0731/v41_off_tables.md](reports/v41-vs-0731/v41_off_tables.md).
+| Checkpoint | Revision | Role |
+| --- | --- | --- |
+| `deepseek-ai/DeepSeek-V4.1-Flash` | `dba1be0a40aa45a94ad051997016db3960a90277` | V4.1 |
+| `deepseek-ai/DeepSeek-V4-Flash-0731` | `7872f01b1d1fe23eabc4c98b48bffcef5a386062` | V4 official release ("0731") |
 
-## Setup (identical for every point)
+The historical `deepseek-ai/DeepSeek-V4-Flash` results (preview, revision unverified) are **not** a 0731 baseline and are not compared here.
+
+**Scope and validity.** Speculation off: 144 valid runs per model (concurrency c1–c64, context 16K–260K, prefix cache-off/cold/prewarmed, isolated c1 prefill/decode sweep), plus prefill traces. DSpark fixed and adaptive (width 5): 48 of 48 runs valid (2 models × 2 arms × c1/4/16/64 × 3 repeats). Plus a sequential prefix-reuse check on both models. All failures are kept and listed in [Failures and deviations](#failures-and-deviations). Values are **mean ± sample SD over 3 repeats**. Ratios are **V4.1 / 0731** (> 1 is better for throughput, worse for latency) unless a row says otherwise. A difference is "inconclusive" when |Δmean| ≤ 2·√(SD₁² + SD₂²).
+
+Evidence labels: **measured** (endpoint numbers), **trace+source** (profiler kernels plus runtime code), **arithmetic** (follows from measured numbers), **hypothesis** (a declared test is still needed).
+
+## Key insights
+
+1. **On this runtime, 0731 is faster than V4.1 on nearly every uncached workload. V4.1's prefill is the reason.** V4.1/0731 output throughput is 0.74–0.90 across concurrency, 0.78–0.87 across context, and about 0.79 for cache-off prefix. Uncached prefill costs V4.1 **54.5 µs/token vs 41.6 µs for 0731** at 16K (c1). At 16K/256 both models are prefill-bound, so this gap flows directly into throughput. *Measured.*
+2. **V4.1's prefill deficit is kernel-path and communication cost, not model FLOPs.** Per 8,192-token chunk (rank 0), V4.1 needs 399 ms of kernel time vs 293 ms for 0731, even though V4.1 has fewer layers (40 vs 43). The largest gaps are dense GEMM (91.5 vs 39.7 ms; V4.1 runs Marlin FP8, 0731 runs DeepGEMM/FlashInfer FP8 block-scale), TP all-reduce (107.7 vs 79.4 ms; ring-LL vs symm-mem multimem), and MoE (73.0 vs 53.3 ms). *Trace+source.* This vLLM build also does not implement V4.1's CED prefill skip: all 40 layers process every prompt token. The paper's 8B-prefill design point is therefore not what was measured.
+3. **V4.1 wins everything with prefix caching on: 1.05–1.33× cold and 1.07–2.24× prewarmed.** The mechanism is measured directly. On V4.1 a new 64K prefix becomes reusable **on the 2nd request**. 0731 needs a **3rd**, because its SWA prefix checkpoint is pinned only when a second request computes the shared junction. As a result, "prewarm with one request per prefix" does not warm 0731. *Measured (sequential check and exact hit counters) + source.*
+4. **DSpark speeds up low-concurrency decode, but gains vanish once prefill dominates.** Relative to each model's own speculation-off run, V4.1 gets 1.55× at c1 and 1.11× at c4, and 0731 gets 1.87× and 1.30×. At c16–c64 both land at 0.98–1.04×. *Measured.*
+5. **0731's drafter accepts more:** 45–49% of proposed tokens vs V4.1's 29–34% (3.2–3.5 vs 2.4–2.7 tokens per verification round) on random-token prompts. V4.1 therefore stays at 0.70–0.85× of 0731 with DSpark on. *Measured; acceptance is workload-specific.*
+6. **At c64, DSpark moves latency from TPOT to TTFT without changing end-to-end latency.** TPOT falls by 22–36% (mean), while TTFT p50 rises from about 3 s to 17–18 s. Mean E2E is unchanged (V4.1 55.9 → 56.0 s, 0731 41.6 → 40.4 s) and equals concurrency ÷ request rate. This is Little's law in a closed loop: when throughput is fixed by prefill, finishing decode sooner only adds time spent waiting to prefill. *Arithmetic on measured values.*
+7. **Adaptive verification is active but performs about the same as fixed (≤ 4%).** It costs memory: an extra variable-length CUDA-graph route takes KV capacity from 7.38M to 6.25M tokens on V4.1 and from 1.56M to 1.38M on 0731. *Measured (server logs and endpoint numbers).*
+8. **Capacity differs by 5.4×.** At 0.90 memory utilization, V4.1 holds 9.18M KV tokens vs 1.71M for 0731. No workload here came close to either limit: peak KV use was ≤ 13.5% on V4.1 and ≤ 29.7% on 0731, with zero preemptions. *Measured.*
+
+## Setup (identical for both models)
 
 | Item | Value |
 | --- | --- |
-| Hardware | 8× NVIDIA H100 80GB HBM3, all-pairs NV18 NVLink, 2 NUMA nodes (GPU0–3 / GPU4–7), 208 CPUs, 1.7 TiB RAM; driver 580.105.08; SM max clock 1980 MHz, 700 W limit |
-| Runtime | vLLM `0.30.1rc1.dev223+g44af287eb`, torch `2.13.0+cu132` (CUDA 13.2), Triton `3.7.1`, env `~/vllm` |
-| Checkpoint | `deepseek-ai/DeepSeek-V4.1-Flash` @ `dba1be0a40aa45a94ad051997016db3960a90277` (served ID verified before every sweep) |
-| Precision | FP8 attention/dense (block 32×32, UE8M0 scales), FP4 experts; KV cache `fp8_ds_mla` (resolved), block size 64 |
-| Parallelism | TP 8 + expert parallel |
-| Limits | `max_model_len` 262,144; `max_num_seqs` 64; `max_num_batched_tokens` 8,192 (vLLM default, chunked prefill); GPU mem util 0.90 |
-| KV capacity | 270,198 blocks = 9,179,728 tokens (identical in both launches) |
-| Speculation | off (`speculative_config=None` in engine log) |
-| Requests | `vllm bench serve`, `openai-chat`, `/v1/chat/completions`, unlimited arrival rate with client concurrency cap, `ignore_eos`, 256 output tokens, `temperature=0`, `chat_template_kwargs.thinking=false` |
-| Launches | (1) prefix caching **off** → concurrency, context, prefix cache-off; (2) prefix caching **on** → prefix cold/prewarmed; (3) prefix caching off + idle profiler → control, isolated c1 sweep, traces (section 4). |
+| Hardware | 8× NVIDIA H100 80GB HBM3, all-pairs NV18 NVLink, 2 NUMA nodes, driver 580.105.08 |
+| Runtime | vLLM `0.30.1rc1.dev223+g44af287eb`, torch `2.13.0+cu132`, Triton `3.7.1` ([environment.txt](reports/v41-vs-0731/environment.txt)) |
+| Server | TP 8 + expert parallel, `--language-model-only`, GPU memory utilization 0.90, `max_model_len` 262,144, `max_num_seqs` 64, default `max_num_batched_tokens` 8,192 (chunked prefill), default KV dtype |
+| Tokenizer / parsers | `deepseek_v41` vs `deepseek_v4`. `chat_template_kwargs.thinking=false` maps to chat mode in both |
+| Requests | `vllm bench serve`, `openai-chat`, unlimited arrival rate with a client concurrency cap, `ignore_eos`, 256 output tokens, `temperature=0`, thinking off, random-token prompts (same token counts; prefix prompt files are shared text and tokenize to the same 67,584 tokens in both) |
+| KV capacity (speculation off) | V4.1 9,179,728 tokens; 0731 1,711,998 tokens |
+| Launches per model | `off` or `off-profidle` (prefix caching off; idle torch profiler, shown to have no effect: V4.1 c1 88.4 vs 88.7, c64 292.3 vs 292.2 tok/s) → concurrency, context, prefix cache-off, isolated, traces · `off-prefix` → prefix cold/prewarmed · one launch per DSpark arm |
 
-Launch script: [bench/serve.sh](bench/serve.sh). Harness: [bench/run_matrix.py](bench/run_matrix.py). Declared plan (written before collection): [reports/v41-vs-0731/plan.json](reports/v41-vs-0731/plan.json). Environment inventory: [reports/v41-vs-0731/environment.txt](reports/v41-vs-0731/environment.txt). Per-run evidence (manifests, per-request `bench.json`, summaries, telemetry, server/harness logs): [reports/v41-vs-0731/data/v41/](reports/v41-vs-0731/data/v41/), with what was changed or excluded recorded in its `CURATION.json`.
+Plans were declared before collection: [plan.json](reports/v41-vs-0731/plan.json), [plan_0731_addendum.json](reports/v41-vs-0731/plan_0731_addendum.json), and [plan_dspark.json](reports/v41-vs-0731/plan_dspark.json). A run is valid only if every request completed, output equals n×256 tokens, and server-counted prompt tokens are at least 98% of the target. Warmups use disjoint seeds, and repeat order alternates. Per-run evidence (manifests, per-request `bench.json`, summaries, Prometheus scrapes, 1 Hz scheduler/KV/GPU polling, and server/harness logs) is in [reports/v41-vs-0731/data/](reports/v41-vs-0731/data/). Each model's `CURATION.json` records what was gzipped, sanitized, or excluded.
 
-**Method notes.** Each point ran 3 repeats in alternating order (ascending, then descending). Warmup used disjoint seeds. Measured prompts differ per repeat. Every run has its own immutable directory with raw `bench.json` (per-request TTFT/ITL samples), `manifest.json`, `/metrics` scrapes before and after, 1 Hz scheduler/KV polling, and 1 Hz `nvidia-smi` samples. A point is valid only if all requests completed, none failed, output tokens equal n×256, and server-counted prompt tokens are at least 98% of the target. Values below are **mean ± sample std across 3 repeats**. The percentiles (p50/p95) are computed within each repeat over its requests. Latencies are in ms.
+Full tables: [comparison_tables.md](reports/v41-vs-0731/comparison_tables.md) (every metric, V4.1 vs 0731) · [v41_off_tables.md](reports/v41-vs-0731/v41_off_tables.md) and [v4-0731_off_tables.md](reports/v41-vs-0731/v4-0731_off_tables.md) (per model, with telemetry) · [dspark_tables.md](reports/v41-vs-0731/dspark_tables.md) (DSpark vs own baseline, acceptance). CSV versions sit alongside them.
 
-## 1. Concurrency scaling (16,384 in / 256 out, prefix cache off)
+## 1. Speculation off: V4.1 vs 0731
 
-| Conc. | Requests/rep | Output tok/s | Req/s | TTFT p50 | TTFT p95 | TPOT p50 | TPOT p95 | ITL p95 | E2E p50 | E2E p95 | Peak running / waiting | Peak KV | GPU-s / out tok |
-|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| 1 | 16 | 88.4 ± 0.0 | 0.345 | 882 ± 2 | 896 ± 4 | 7.9 ± 0.0 | 7.9 | 8.1 | 2,893 | 2,906 | 1 / 0 | 1.4% | 0.090 |
-| 2 | 16 | 138.1 ± 0.1 | 0.540 | 1,477 ± 4 | 1,691 ± 3 | 8.7 ± 0.0 | 9.5 | 8.2 | 3,703 | 3,732 | 2 / 0 | 1.5% | 0.058 |
-| 4 | 16 | 190.1 ± 0.1 | 0.742 | 2,465 ± 2 | 3,269 ± 8 | 11.5 ± 0.0 | 16.1 | 9.0 | 5,379 | 5,418 | 4 / 2 | 1.7% | 0.042 |
-| 8 | 32 | 231.4 ± 0.8 | 0.904 | 4,058 ± 14 | 5,647 ± 17 | 18.7 ± 0.0 | 29.5 | 19.0 | 8,836 | 9,630 | 8 / 6 | 2.2% | 0.035 |
-| 16 | 64 | 260.3 ± 0.6 | 1.017 | 4,385 ± 284 | 10,812 ± 33 | 44.2 ± 0.8 | 55.3 | 401.8 | 15,702 | 21,953 | 16 / 13 | 3.0% | 0.031 |
-| 32 | 128 | 280.0 ± 0.3 | 1.094 | 3,850 ± 205 | 21,151 ± 16 | 98.8 ± 0.9 | 105.3 | 419.2 | 29,182 | 46,234 | 32 / 28 | 4.7% | 0.029 |
-| 48 | 192 | 287.0 ± 1.0 | 1.121 | 3,604 ± 223 | 31,644 ± 86 | 152.8 ± 1.0 | 155.7 | 426.6 | 42,627 | 70,670 | 48 / 44 | 6.5% | 0.028 |
-| 64 | 256 | 292.3 ± 0.4 | 1.142 | 3,308 ± 6 | 42,164 ± 154 | 205.4 ± 0.5 | 206.5 | 430.1 | 55,795 | 94,418 | 64 / 59 | 8.3% | 0.027 |
+### 1a. Concurrency (16,384 in / 256 out)
 
-Slide-13 question (how much throughput concurrency buys, at what latency cost): going from c1 to c8 gives 2.6× output throughput for 4.6× TTFT p50 and 2.4× TPOT. Going from c8 to c64 adds only **+26%** throughput, while TPOT p50 rises **11×** (18.7 → 205 ms) and TTFT p95 rises **7.5×** (5.6 → 42 s). Engine batch equals client concurrency: peak running requests reached the cap at every point. There were no preemptions, and KV use never exceeded 8.3% of the pool.
-
-## 2. Context scaling (256 out, concurrency 8, 16 requests/repeat, prefix cache off)
-
-| Input tokens | Output tok/s | TTFT p50 | TTFT p95 | TPOT p50 | TPOT p95 | ITL p50 | ITL p95 | E2E p50 | E2E p95 | Peak KV | Preempt | GPU-s / out tok |
-|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| 16,384 | 231.0 ± 0.5 | 4,056 ± 8 | 6,215 ± 11 | 18.7 ± 0.1 | 29.4 | 9.4 | 18.8 | 8,809 | 10,158 | 2.2% | 0 | 0.035 |
-| 65,536 | 68.5 ± 0.1 | 14,491 ± 154 | 25,206 ± 20 | 59.9 ± 0.5 | 99.9 | 9.6 | 440.5 | 29,755 | 40,046 | 4.5% | 0 | 0.117 |
-| 131,072 | 33.3 ± 0.0 | 30,296 ± 515 | 54,020 ± 80 | 121.6 ± 2.2 | 206.5 | 9.8 | 504.0 | 61,267 | 84,670 | 7.5% | 0 | 0.241 |
-| 260,000 | 14.8 ± 0.0 | 68,344 ± 298 | 123,490 ± 165 | 273.0 ± 1.8 | 467.2 | 422.2 | 676.5 | 137,700 | 193,082 | 13.5% | 0 | 0.541 |
-
-All four context points, including 260,000 input + 256 output inside the 262,144 limit, completed without failures or preemptions. The 16K point matches the concurrency sweep's c8 point (231.0 vs 231.4 tok/s) even though request counts differ (16 vs 32). This batch/context agreement in one controlled session is what the preview reference flagged as unresolved for the old runs.
-
-## 3. Prefix reuse (65,536 shared prefix + 2,048 suffix, 256 out, c8, 64 requests/repeat)
-
-The three cache states use **identical prompt files and request order** within each repeat, with new prompts for each repeat. *Cache-off* ran on launch 1. *Cold* ran after `POST /reset_prefix_cache`. *Prewarmed* ran after a reset followed by one request per prefix, each with a disjoint suffix.
-
-| Distinct prefixes | State | Output tok/s | TTFT p50 | TTFT p95 | TPOT p50 | E2E p50 | E2E p95 | Token hit rate | vs cache-off (tok/s) |
-|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| 1 | cache off | 66.6 ± 0.2 | 14,843 ± 18 | 17,853 ± 144 | 62.4 | 30,759 | 32,913 | — | 1.00× |
-| 1 | cold | 475.3 ± 0.8 | 867 ± 2 | 4,663 ± 53 | 11.7 | 3,846 | 7,044 | 95.5% | 7.14× |
-| 1 | prewarmed | 524.4 ± 0.3 | 791 ± 73 | 1,331 ± 36 | 12.0 | 3,838 | 4,418 | 97.0% | 7.87× |
-| 4 | cache off | 66.3 ± 0.1 | 14,900 ± 21 | 17,783 ± 175 | 62.7 | 30,857 | 32,884 | — | 1.00× |
-| 4 | cold | 369.5 ± 1.3 | 835 ± 73 | 12,400 ± 1,979 | 12.0 | 3,862 | 15,948 | 90.9% | 5.57× |
-| 4 | prewarmed | 520.7 ± 0.4 | 773 ± 78 | 1,328 ± 31 | 12.1 | 3,865 | 4,334 | 97.0% | 7.85× |
-| 16 | cache off | 66.4 ± 0.1 | 14,860 ± 47 | 17,863 ± 97 | 62.7 | 30,848 | 32,526 | — | 1.00× |
-| 16 | cold | 194.2 ± 0.5 | 2,015 ± 1,919 | 15,599 ± 1,568 | 12.7 | 7,503 | 24,891 | 72.7% | 2.92× |
-| 16 | prewarmed | 520.6 ± 0.7 | 765 ± 91 | 1,332 ± 17 | 12.2 | 3,871 | 4,387 | 97.0% | 7.84× |
-
-Hit counts match the design exactly in every repeat. Cold runs hit (64 − N) × 65,536 tokens; prewarmed runs hit all 64 × 65,536. Cache-off runs recorded zero prefix queries. The cold 16-prefix TTFT p50 is order-sensitive: per repeat it was 0.87, 0.94, and 4.23 s. Its mean is reported but should not be read as a stable value.
-
-## 4. Prefill and decode in isolation, and the CED check
-
-This phase was added after the first three workloads, in response to the V4.1 paper ([arXiv:2609.19969](https://arxiv.org/abs/2609.19969), Section 2.2). The paper says the **Causal Encoder-Decoder (CED)** design lets prompt tokens pass through only the bottom L/2 = 20 layers. The upper 20 "decoder" layers take their global KV from the layer-20 hidden state, and only the last n_win = 128 prompt tokens are replayed through them for sliding-window KV ("Decoder SWA Bounded Replay"). This gives "8B activated parameters per token during prefill and 16B during decode" and "nearly halves prefill computation."
-
-It ran on one extra launch (`off-profidle`): the same settings as `off`, plus a torch profiler that is configured but idle except between `/start_profile` and `/stop_profile`. **Control:** repeating c1 and c64 at 16K on this launch gave 88.7 ± 0.1 and 292.2 ± 0.3 output tok/s, against 88.4 ± 0.0 and 292.3 ± 0.4 on the baseline launch. The idle profiler setting has no measurable effect, so these points are comparable to sections 1–3.
-
-### 4a. Isolated sweep: one request at a time (c1, 4 requests × 3 repeats, 256 output tokens)
-
-At c1 there is no queueing, so TTFT ≈ prefill plus the first step, and TPOT is pure decode at that context.
-
-| Input tokens | TTFT p50 (ms) | Prefill tok/s (input ÷ TTFT) | µs per prompt token | TPOT p50 (ms) | Output tok/s |
+| Conc. | V4.1 tok/s | 0731 tok/s | Ratio | TTFT p50 V4.1 / 0731 (ms) | TPOT p50 V4.1 / 0731 (ms) |
 |---:|---:|---:|---:|---:|---:|
-| 1,024 | 148 ± 1 | 6,960 | 143.7 | 7.84 | 118.6 |
-| 2,048 | 153 ± 1 | 13,389 | 74.7 | 7.84 | 118.5 |
-| 4,096 | 245 ± 0 | 16,749 | 59.7 | 7.84 | 113.7 |
-| 8,192 | 452 ± 10 | 18,118 | 55.2 | 7.85 | 104.1 |
-| 16,384 | 894 ± 15 | 18,335 | 54.5 | 7.84 | 88.4 |
-| 32,768 | 1,769 ± 10 | 18,530 | 54.0 | 7.81 | 68.0 |
-| 65,536 | 3,618 ± 21 | 18,114 | 55.2 | 7.78 | 45.7 |
-| 131,072 | 7,740 ± 8 | 16,934 | 59.1 | 7.70 | 26.4 |
-| 260,000 | 17,796 ± 34 | 14,610 | 68.4 | 7.56 | 13.0 |
+| 1 | 88.4 ± 0.0 | 98.3 ± 0.0 | 0.90 | 882 / 681 | 7.9 / 7.5 |
+| 2 | 138.1 ± 0.1 | 159.3 ± 0.1 | 0.87 | 1,477 / 1,125 | 8.7 / 8.2 |
+| 4 | 190.1 ± 0.1 | 232.5 ± 0.0 | 0.82 | 2,465 / 1,864 | 11.5 / 10.0 |
+| 8 | 231.4 ± 0.8 | 295.7 ± 0.4 | 0.78 | 4,059 / 3,052 | 18.7 / 15.2 |
+| 16 | 260.3 ± 0.6 | 329.2 ± 15.7 | 0.79 | 4,385 / 3,537 | 44.2 / 33.2 |
+| 32 | 280.0 ± 0.3 | 356.1 ± 29.0 | 0.79 | 3,850 / 3,264 | 98.8 / 75.7 |
+| 48 | 287.0 ± 1.0 | 377.0 ± 14.2 | 0.76 | 3,605 / 3,284 (inconclusive) | 152.8 / 111.6 |
+| 64 | 292.3 ± 0.4 | 392.4 ± 0.2 | 0.74 | 3,308 / 3,191 (inconclusive) | 205.4 / 150.0 |
 
-- **Decode is flat in context.** TPOT is 7.56–7.85 ms from 1K to 260K input. This matches the paper's near-constant decode FLOPs claim (its Figure 2). Decode is not where V4.1's long-context cost lives.
-- **Prefill is about 54–55 µs per prompt token (≈18.3K tok/s) from 8K to 64K input.** It rises to 59 µs at 128K and 68 µs at 260K. Below 4K, fixed per-request overhead dominates.
-- The same ≈18.5K tok/s ceiling limits the c64 concurrency point (section 1), so it is a property of prefill on this runtime, not of batching.
+At c64 the server-counted prompt rate is about 18.7K tok/s for V4.1 and about 25.1K for 0731. Output throughput equals prompt rate × 256 / 16,388 for both models, which means **concurrency throughput at 16K is prefill-bound** and the ratio widens as prefill dominates (0.90 at c1 → 0.74 at c64). The larger 0731 SDs at c16–c48 come from slower first repeats at new shapes (5–9% lower). These runs are kept, not rerun.
 
-### 4b. Kernel breakdown of one prefill chunk (diagnostic trace, rank 0, 8,192-token chunk)
+### 1b. Context (c8, 16 requests/repeat)
 
-Trace manifests, rank-0 kernel summaries, and per-step breakdown CSVs: [reports/v41-vs-0731/data/v41/profiles/](reports/v41-vs-0731/data/v41/profiles/). The full 8-rank torch traces (~73 MB) are kept locally under `results/`, not published. Breakdown script: [bench/trace_breakdown.py](bench/trace_breakdown.py). The unit is summed GPU kernel time inside the main-stream step span. The categories do not overlap each other, and the denominator is the step's kernel sum.
+| Input | V4.1 tok/s | 0731 tok/s | Ratio | TTFT p50 ratio | TPOT p50 ratio |
+|---:|---:|---:|---:|---:|---:|
+| 16,384 | 231.0 ± 0.5 | 294.8 ± 0.6 | 0.78 | 1.33 | 1.24 |
+| 65,536 | 68.5 ± 0.1 | 85.3 ± 4.2 | 0.80 | 1.22 | 1.23 (inconclusive) |
+| 131,072 | 33.3 ± 0.0 | 39.8 ± 1.8 | 0.84 | 1.18 | 1.23 |
+| 260,000 | 14.8 ± 0.0 | 17.0 ± 0.1 | 0.87 | 1.09 | 1.21 |
 
-| Component | 16K run, chunk 1 | 16K run, chunk 2 | 64K run, chunk 1 | 64K run, chunk 8 (57K context) | Share (16K chunk 2) |
+The gap narrows with context: V4.1's indexer is cheaper at long context (section 3), and a larger share of time goes to attention and indexing, where the models are closer.
+
+### 1c. Isolated prefill and decode (c1, 4 requests × 3 repeats)
+
+| Input | TTFT p50 V4.1 / 0731 (ms) | Prefill µs/token V4.1 / 0731 | TPOT p50 V4.1 / 0731 (ms) | Output tok/s ratio |
+|---:|---:|---:|---:|---:|
+| 1,024 | **148 / 185** | 144 / 180 | 7.84 / 7.5 | 0.97 |
+| 2,048 | **153 / 196** | 75 / 96 | 7.84 / 7.5 | 0.98 |
+| 4,096 | 245 / 210 | 60 / 51 | 7.84 / 7.5 | 0.95 |
+| 8,192 | 452 / 344 | 55.2 / 42.0 | 7.85 / 7.5 | 0.92 |
+| 16,384 | 894 / 682 | 54.5 / 41.6 | 7.84 / 7.5 | 0.90 |
+| 32,768 | 1,769 / 1,369 | 54.0 / 41.8 | 7.81 / 7.5 | 0.88 |
+| 65,536 | 3,618 / 2,855 | 55.2 / 43.6 | 7.78 / 7.5 | 0.85 |
+| 131,072 | 7,741 / 6,359 | 59.1 / 48.5 | 7.70 / 7.5 | 0.85 |
+| 260,000 | 17,796 / 15,538 | 68.4 / 59.8 | 7.56 / 7.4 | 0.88 |
+
+- **Decode is flat in context for both models**, at 7.4–7.85 ms/token from 1K to 260K. 0731 is about 4% faster per step.
+- **V4.1 wins TTFT only at ≤ 2K input.** From 4K upward, 0731 prefills 1.16–1.31× faster.
+
+### 1d. Prefix reuse (65,536 shared prefix + 2,048 suffix, c8, 64 requests/repeat)
+
+| Prefixes | State | V4.1 tok/s | 0731 tok/s | Ratio | TTFT p50 V4.1 / 0731 (ms) | Prefix hits V4.1 / 0731 (× 65,536) |
+|---:|---|---:|---:|---:|---:|---:|
+| 1 | cache off | 66.6 ± 0.2 | 84.3 ± 0.6 | 0.79 | 14,844 / 12,152 | — |
+| 1 | cold | 475.3 ± 0.8 | 453.6 ± 1.1 | **1.05** | 867 / 1,263 | 63 / **62** |
+| 1 | prewarmed | 524.4 ± 0.3 | 488.7 ± 1.9 | **1.07** | 791 / 1,265 | 64 / **63** |
+| 4 | cache off | 66.3 ± 0.1 | 84.6 ± 0.0 | 0.78 | 14,900 / 12,172 | — |
+| 4 | cold | 369.5 ± 1.3 | 320.7 ± 1.2 | **1.15** | 835 / 1,380 | 60 / **56** |
+| 4 | prewarmed | 520.7 ± 0.4 | 399.2 ± 4.4 | **1.30** | 773 / 1,314 | 64 / **60** |
+| 16 | cache off | 66.4 ± 0.1 | 84.6 ± 0.1 | 0.79 | 14,860 / 12,158 | — |
+| 16 | cold | 194.2 ± 0.5 | 146.2 ± 2.8 | **1.33** | 2,015 / 6,941 | 48 / **32** |
+| 16 | prewarmed | 520.6 ± 0.7 | 232.9 ± 1.3 | **2.24** | 765 / 2,900 | 64 / **48** |
+
+Hit counts are per repeat (identical in every repeat). V4.1 misses exactly once per prefix when cold, and never when prewarmed. **0731 misses exactly twice per prefix when cold, and once per prefix even after prewarming**, so its prewarmed result degrades with prefix count (489 → 399 → 233 tok/s) while V4.1's stays flat (≈ 521 tok/s).
+
+**Sequential check** ([bench/prefix_reuse_check.py](bench/prefix_reuse_check.py); c1, chat completions, `max_tokens=1`, reset before each sequence; raw JSON in `data/<model>/_prefix_reuse_check/`):
+
+| Request on a new 64K prefix | V4.1 hit / wall | 0731 hit / wall |
+| --- | --- | --- |
+| 1st | 0 / 3.75 s | 0 / 3.0 s |
+| 2nd (new suffix) | **65,536 / 0.44 s** | 0 / 3.0 s |
+| 3rd (new suffix) | 65,536 / 0.44 s | **65,536 / 0.52 s** |
+| Exact repeat | 67,584 / 0.43 s | 67,584 / 0.36 s |
+
+This holds for every prefix tested, and is not specific to the first prefix after a reset. **Mechanism (source):** vLLM's SWA prefix checkpointing (`shared_prefix_boundary` in `vllm/v1/core/kv_cache_manager.py`) pins the shared-prefix junction only when a second request computes it. V4.1's SWA Bounded Replay keeps SWA state out of prefix caching and rebuilds the window on a hit, so the first computation is already reusable. A cached hit is cheaper on V4.1 (0.44 vs 0.52 s), even though its cold prefill is slower.
+
+## 2. Operating implications
+
+- **Throughput-oriented, uncached, or unique prompts:** 0731 delivers 1.1–1.35× more output tokens per GPU-second on this runtime at every concurrency and context tested.
+- **Shared long prefixes (RAG/agents with system prompts):** V4.1 wins. It needs no special warming, it reuses after one computation, and its 5.4× larger KV pool leaves more room for cached prefixes. When running 0731 with prefix caching, **warm each prefix with two requests using different suffixes**, and verify the hit counters before relying on it.
+- **Short prompts (≤ 2K), latency-sensitive:** V4.1 has 20–22% lower TTFT. Decode is within 4%.
+- **Speculative decoding:** enable DSpark for low-concurrency interactive serving (c ≤ 4): 1.5–1.9× output tok/s and 2–3× lower TPOT at c1. At c ≥ 16 with long prompts it gains nothing and moves latency into TTFT. Use fixed verification: adaptive gives no measured benefit here and costs KV capacity.
+
+## 3. Where prefill time goes (diagnostic traces, rank 0)
+
+One c1 request at 16K (2 chunks + a 4-token tail) and one at 64K (8 chunks + tail) per model, on the `off-profidle` launch. Unit: summed GPU kernel time (ms) inside each 8,192-token prefill step, split by [bench/trace_breakdown.py](bench/trace_breakdown.py) categories. Summaries and per-step CSVs are in `data/<model>/profiles/`; the full 8-rank traces are kept locally only.
+
+| Component | V4.1 16K chunk 2 | 0731 16K chunk 2 | V4.1 − 0731 | V4.1 64K chunk 8 (57K ctx) | 0731 64K chunk 8 |
 |---|---:|---:|---:|---:|---:|
-| Step wall span | 416.5 | 398.8 | 424.7 | 434.2 | — |
-| Kernel sum | 389.8 | 399.2 | 392.2 | 434.4 | 100% |
-| All-reduce (TP) | 106.6 | 107.7 | 108.4 | 106.7 | 27.0% |
-| Dense GEMM (projections, Marlin FP8) | 90.3 | 91.5 | 90.3 | 91.9 | 22.9% |
-| MoE expert GEMM (Marlin W4A16) | 73.2 | 73.0 | 73.3 | 73.4 | 18.3% |
-| Core sparse attention | 48.1 | 49.5 | 48.2 | 50.1 | 12.4% |
-| mHC / residual / norm | 32.1 | 32.1 | 32.3 | 32.1 | 8.0% |
-| Other elementwise | 13.8 | 15.1 | — | — | 3.8% |
-| QKV norm / RoPE / KV insert | 9.4 | 9.6 | 9.4 | 9.5 | 2.4% |
-| MoE routing / combine | 7.8 | 7.9 | — | — | 2.0% |
-| Indexer / top-k | 2.2 | 6.1 | 2.2 | 28.4 | 1.5% |
-| Engram | 3.5 | 4.0 | — | — | 1.0% |
+| **Kernel sum** | **399.2** | **293.1** | **+106.1** | 434.4 | 338.3 |
+| TP all-reduce | 107.7 | 79.4 | +28.3 | 106.7 | 78.7 |
+| Dense GEMM | 91.5 | 39.7 | **+51.8** | 91.9 | 39.8 |
+| MoE expert GEMM | 73.0 | 53.3 | +19.7 | 73.4 | 52.6 |
+| Core sparse attention | 49.5 | 41.9 | +7.6 | 50.1 | 53.2 |
+| mHC / residual / norm | 32.1 | 27.9 | +4.2 | 32.1 | 27.9 |
+| Indexer / top-k | 6.1 | 8.9 | −2.8 | **28.4** | **40.5** |
+| QKV norm / RoPE / KV insert | 9.6 | 10.2 | −0.6 | 9.5 | 10.2 |
+| MoE routing / combine | 7.9 | 7.3 | +0.6 | — | 7.3 |
+| Other elementwise (+ Engram on V4.1) | 19.1 | 24.5 | −5.4 | — | 28.2 |
+| Layers (attention calls per chunk) | 40 | 43 | | 40 | 43 |
 
-All values are in ms; "—" means that component was not extracted for the 64K chunks. Over the 64K prompt's eight chunks, only the indexer grows with context (2.2 → 28.4 ms). Core attention stays about 48–50 ms, consistent with fixed top-k sparse attention. Everything else is per-token work repeated in every layer. The final short chunk of each prompt (4 tokens after 2×8,192 or 8×8,192) still runs all 40 layers.
+- **Dense GEMM explains about half the gap** (2.29 vs 0.92 ms per layer). V4.1's dense FP8 layers (32×32 blocks, UE8M0 scales) resolve to `MarlinFP8ScaledMMLinearKernel`, while 0731's resolve to DeepGEMM/FlashInfer FP8 block-scale GEMM. *Trace+source.* A kernel-path fix is a runtime question, not a model property: *hypothesis*, testable by forcing a block-scale FP8 path for V4.1 if one supports its scale format.
+- **All-reduce explains about a quarter.** V4.1's 83.9 MB messages (`[8192, 5120]` BF16) fall through to PyNCCL ring-LL at about 63 GB/s, while 0731's 67 MB messages use symm-mem multimem all-reduce. *Trace; the cause of the size threshold is a hypothesis.* Test: `nccl-tests` at 84 MB, then a V4.1 arm with `NCCL_PROTO=Simple`/LL128 or a symm-mem size limit that covers 84 MB.
+- **MoE explains about a fifth** (larger per-token expert work in V4.1).
+- **V4.1's indexer scales better** (28.4 vs 40.5 ms at 57K context). This is the only component where V4.1 is cheaper, and it is why the context-scaling ratio improves toward 260K.
+- **CED is not active in this runtime (V4.1).** All 40 layers run the full chunk: 80 MoE GEMM calls with identical grids, 40 attention calls, and equal per-layer time in layers 1–20 and 21–40. The source (`models/deepseek_v41/nvidia/model.py`) loops every scheduled token through all layers. CSA2 cross-layer KV reuse and `swa_bounded_replay` are implemented; the early exit of prompt tokens at layer 20 is not. *Trace+source.* **Projection, not measured:** a CED-aware runtime could cut V4.1's per-chunk work by up to about half, which would more than close the 1.36× chunk-time gap to 0731.
+- **Decode.** On 0731, decode steps are kernel-attributable: 7.8 ms span and 9.9 ms kernel sum, with overlapping streams, so the sum is not the critical path. Dense GEMM is 35%, all-reduce 15%, and MoE 12–14% of the kernel sum. On V4.1, decode runs inside full CUDA graphs, and the trace shows only about 0.47 ms of launch-level work per step. **A V4.1 decode component breakdown is unavailable** from these traces; it needs graph-aware attribution or an eager diagnostic arm.
 
-**Decode steps** are captured by CUDA graphs. The per-step annotation spans only 84 launch-level kernels (about 0.46 ms), not the about 7.8 ms step. **The decode component breakdown is unavailable** from this trace and needs graph-aware attribution (for example, the profiler's `capture_torch_profiler`, or an eager diagnostic arm).
+## 4. DSpark speculative decoding
 
-### 4c. Is CED active in this runtime? No.
+Setup per [docs/speculative-decoding.md](docs/speculative-decoding.md):
 
-In both prefill chunks of the 16K trace, **all 40 layers ran the full 8,192-token chunk**:
+```json
+{"method": "dspark", "num_speculative_tokens": 5, "revision": "<target sha>",
+ "draft_sample_method": "probabilistic", "rejection_sample_method": "standard",
+ "enable_adaptive_verification": false | true}
+```
 
-- 80 MoE expert GEMM calls per chunk (40 layers × w13/w2), with identical launch grids in every layer. The mean per-layer MoE time was 1.83 ms for layers 1–20 and 1.83 ms for layers 21–40.
-- 40 sparse prefill attention calls per chunk, at 1.22–1.25 ms in every layer from 2 to 40, with no drop in the upper half.
-- The runtime source agrees. `models/deepseek_v41/nvidia/model.py` loops every scheduled token through all layers. The cross-layer KV/indexer reuse (CSA2) is implemented: only layers 2/8/14/20 own compressed KV, and 24/28/32/36 reindex. `swa_bounded_replay` is active (V2 model runner), but in this build it only rebuilds sliding-window KV after a prefix hit. No path stops prompt tokens at layer 20.
+The draft ships inside each target checkpoint, but vLLM resolves its revision separately (default `main`), so it is pinned to the target SHA. Resolved draft classes: `DSparkV41DraftModel` (V4.1) and `DSparkDraftModel` (0731). Prefix caching is off. Workload: the concurrency points at c1/4/16/64 with the same seeds, and each model is compared with its own speculation-off run. Launch order: V4.1 fixed → V4.1 adaptive → 0731 fixed → 0731 adaptive, chained without restarts in between ([bench/chain_dspark.sh](bench/chain_dspark.sh)). Tables: [dspark_tables.md](reports/v41-vs-0731/dspark_tables.md), generated by [bench/spec_compare.py](bench/spec_compare.py).
 
-**Conclusion:** vLLM `0.30.1rc1.dev223` runs V4.1 prefill through all 40 layers, so it activates the decode-size parameter set for every prompt token rather than the paper's 8B prefill path. Every prefill number in this report is **V4.1 on this runtime**, not the CED design point.
+### 4a. Throughput vs each model's own speculation-off baseline
 
-**Projection, not a measurement:** the upper 20 layers account for about half of each chunk's per-layer work (the MoE and attention times above are symmetric between halves). A CED-aware runtime could therefore approach the paper's "nearly halves prefill computation", roughly 1.8–2× prompt throughput at ≥ 8K input. At 16K/256, concurrency throughput is prefill-bound (finding 1), so it could rise by a similar factor. Only a CED-capable runtime can confirm this.
+| Conc. | V4.1 off | V4.1 fixed | V4.1 adaptive | 0731 off | 0731 fixed | 0731 adaptive |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 88.4 | 136.7 ± 4.9 (**1.55×**) | 133.1 ± 6.6 (**1.50×**) | 98.3 | 183.4 ± 6.4 (**1.87×**) | 182.0 ± 4.1 (**1.85×**) |
+| 4 | 190.1 | 211.6 ± 2.4 (**1.11×**) | 217.8 ± 3.2 (**1.15×**) | 232.5 | 301.9 ± 7.0 (**1.30×**) | 300.8 ± 4.0 (**1.29×**) |
+| 16 | 260.3 | 261.5 ± 1.2 (1.00×, inconcl.) | 265.3 ± 1.4 (1.02×) | 329.2 | 307.9 ± 106.3 (0.94×, inconcl.; median 366.1) | 342.7 ± 20.2 (1.04×, inconcl.) |
+| 64 | 292.3 | 286.5 ± 0.3 (**0.98×**, worse) | 287.6 ± 0.5 (**0.98×**, worse) | 392.4 | 392.8 ± 2.9 (1.00×, inconcl.) | 394.4 ± 0.8 (1.01×) |
 
-### 4d. All-reduce runs far below NVLink bandwidth (hypothesis)
+0731 fixed at c16, repeat 1, ran at 185 tok/s with TPOT 68.5 ms, vs 366 and 372 tok/s for repeats 2–3, with normal acceptance and no preemptions. This matches 0731's slow-first-repeat-at-new-shapes pattern. It is kept, and the median is shown.
 
-Every prefill all-reduce moves a `[8192, 5120]` BF16 tensor (83.9 MB), 2 per layer, and averages 1.32 ms. That is about 63 GB/s algorithm bandwidth. NCCL 2.29.7 chose `AllReduce_Sum_bf16_RING_LL` (the low-latency protocol) for these large messages. vLLM does not set `NCCL_PROTO`/`NCCL_ALGO` in this configuration. The dispatch order for the TP group is FlashInfer → custom → symm-mem → PyNCCL, and the large prefill messages fell through to PyNCCL. At 27% of prefill kernel time, this is the largest single component. **Controlled follow-up:** run `nccl-tests` all-reduce at 84 MB on this node, then a separate tuning arm with `NCCL_PROTO=Simple` (or LL128) or a symm-mem/custom all-reduce size limit that covers 84 MB, measuring prefill tok/s and the c64 point against this baseline.
+**V4.1 / 0731 output-throughput ratio by arm:**
 
-## Findings (V4.1 only, speculation off)
+| Conc. | Off | Fixed | Adaptive |
+| --- | --- | --- | --- |
+| c1 | 0.90 | 0.75 | 0.73 |
+| c4 | 0.82 | 0.70 | 0.72 |
+| c16 | 0.79 | 0.85 | 0.77 |
+| c64 | 0.74 | 0.73 | 0.73 |
 
-1. **At 16K input, uncached prefill caps whole-serving throughput.** Server-counted prompt processing saturates at about **18.7K prompt tok/s** (c64: 4.20M prompt tokens in 224 s). Output throughput follows it arithmetically: 18.7K × 256 / 16,388 ≈ 292 tok/s, which is exactly the measured c64 value. Uncached prompt rates at c8 cluster at 14.8–17.5K tok/s across 16K–260K contexts and the cache-off prefix runs. *Status: measured endpoint relationship. Section 4 attributes the prefill cost: all 40 layers run on every prompt token, and all-reduce 27%, dense GEMM 23%, MoE GEMM 18%, and attention 12% of chunk kernel time.*
-2. **Decode per step is cheap and nearly flat in context, but prefill chunks stall it.** With no prefill in flight, ITL p50 stays at 9.4–9.8 ms from 16K to 131K context at c8, and 7.9 ms at c1. ITL p95 jumps to about 400–500 ms whenever new prompts are prefilling (c ≥ 16, or ≥ 64K context). At 260K, prefill occupies most of the run, so even ITL p50 is 422 ms. This pattern is consistent with decode steps sharing batches with 8,192-token prefill chunks. The chunk-size link is a **hypothesis**: the controlled test is to rerun c16/c64 at 16K with `max_num_batched_tokens` 4,096/16,384 as a separate tuning arm, plus a timeline trace.
-3. **Memory is not the constraint in these workloads.** Peak KV use was at most 13.5% of the 9.18M-token pool, with zero preemptions anywhere. The vLLM-reported `kv_cache_max_concurrency` at 262,144 tokens is 35 sequences. `max_num_seqs=64` was the binding limit, not KV. Peak GPU memory (about 77–80 GB per GPU) reflects the 0.90 memory budget, not useful occupancy.
-4. **Prefix reuse is V4.1's largest lever for long shared prompts.** A prewarmed 64K prefix gives **7.8×** output throughput and cuts TTFT p50 from 14.9 s to about 0.77 s, with cached prompt tokens processed at about 138K tok/s. Prewarmed results do not depend on prefix count (1, 4, or 16), while cold performance drops with it (475 → 370 → 194 tok/s) because each distinct prefix pays a full 64K fill. Prewarming matters most when many distinct prefixes are in use.
-5. **V4.1's CED prefill saving is not realized on this runtime.** Traces show all 40 layers processing every prompt token (section 4c). The measured prefill cost is about 54.5 µs per prompt token at 8–64K. Decode is context-independent at about 7.8 ms/token (c1). The largest prefill component is TP all-reduce (27%), which runs at about 63 GB/s on the NCCL ring-LL protocol (section 4d, hypothesis). *Status: CED absence confirmed by trace plus source; the size of the missed gain is a projection; the all-reduce inefficiency is a hypothesis with a declared test.*
-6. **Operating points (this hardware, speculation off).** For latency (TPOT < 20 ms, TTFT p95 < 6 s at 16K), stay at **≤ 8 concurrent requests** (231 tok/s, 0.035 GPU-s/token). For throughput with bounded latency, **c16** gives 89% of the c64 throughput at about 1/5 of the TPOT. c32–c64 buys only +8–12% more throughput for 2–4.6× worse TPOT and 2–4× worse TTFT p95. Long-context (≥ 64K) serving without prefix reuse is dominated by TTFT, about 0.22–0.26 s of TTFT p50 per 1K input tokens at c8.
+### 4b. Acceptance (sums over 3 repeats)
 
-Cost per token, if needed: GPU-s/output token × (GPU-hour price / 3600). No price is assumed here. All workloads are synthetic random-token prompts with forced 256-token outputs. They measure serving speed, not answer quality.
+| Model / arm | Accepted / proposed (c1, c4, c16, c64) | Tokens per round | Per-position acceptance, pos 0 → 4 (c64) |
+| --- | --- | --- | --- |
+| V4.1 fixed | 0.315, 0.325, 0.341, 0.341 | 2.57–2.71 | see dspark_tables.md |
+| V4.1 adaptive | 0.291, 0.314, 0.286, 0.332 | 2.43–2.66 | 0.631, 0.397, 0.282, 0.202, 0.150 |
+| 0731 fixed | 0.449, 0.487, 0.490, 0.478 | 3.25–3.45 | 0.699, 0.558, 0.433, 0.370, 0.328 |
+| 0731 adaptive | 0.436, 0.469, 0.445, 0.464 | 3.18–3.35 | 0.695, 0.546, 0.418, 0.353, 0.311 |
 
-**Correctness smoke test** (same server, thinking off, greedy): 4/4 fixed prompts answered correctly (arithmetic, fact, code, word problem), all with `finish_reason=stop` and no reasoning text. This is a sanity check, not the real-text task set the plan requires. Saved at [reports/v41-vs-0731/data/v41/_quality_smoke/responses.json](reports/v41-vs-0731/data/v41/_quality_smoke/responses.json).
+"Proposed" is vLLM's `spec_decode_num_draft_tokens`, which counts **scheduled** drafts: exactly 5.00 per round in all arms, including adaptive. **Verified-candidate counts under adaptive verification are not exported by this build and are unavailable.** Acceptance is flat or slightly rising with load, so the lost gain at high concurrency is not a drafter-quality effect. These are random-token prompts; real-text acceptance will differ (not measured).
+
+### 4c. Why the gain disappears, and where the latency goes (c64)
+
+| Model / arm | Mean TTFT | Mean TPOT | Mean E2E | c ÷ request rate |
+| --- | ---: | ---: | ---: | ---: |
+| V4.1 off | 9.2 s | 183.1 ms | 55.9 s | 56.1 s |
+| V4.1 fixed | 19.8 s | 141.9 ms | 56.0 s | 57.2 s |
+| V4.1 adaptive | 19.9 s | 140.7 ms | 55.8 s | 57.0 s |
+| 0731 off | 7.4 s | 134.1 ms | 41.6 s | 41.8 s |
+| 0731 fixed | 18.6 s | 85.3 ms | 40.4 s | 41.7 s |
+| 0731 adaptive | 18.7 s | 85.4 ms | 40.4 s | 41.5 s |
+
+At 16K/256 the prompt side needs 64× more tokens than the output side, and prefill already saturates the GPUs (section 1a). DSpark speeds up only decode, so request throughput, and therefore mean E2E at fixed concurrency (Little's law), cannot change. Requests finish decoding sooner and then wait longer in the prefill queue. *Arithmetic on measured values.* Consequence: DSpark gains at high concurrency require a decode-bound workload (short prompts or long outputs, for example 16K/2,048 as in docs/speculative-decoding.md step 4, not run here).
+
+The ITL p95 of DSpark arms is **not comparable** with speculation off: several tokens can arrive in one stream chunk. See dspark_tables.md for the raw values.
+
+### 4d. Memory cost
+
+| Arm | V4.1 KV tokens | 0731 KV tokens | Peak graph capture (per-launch log) |
+| --- | ---: | ---: | --- |
+| Off | 9,179,728 | 1,711,998 | — |
+| Fixed | 7,381,775 | 1,558,746 | ≈ 3 GiB |
+| Adaptive | 6,248,184 | 1,375,898 | 6.8 GiB (V4.1), 8.0 GiB (0731) |
+
+Adaptive verification captures an additional full-plus-piecewise CUDA-graph route for variable-length verification. The larger capture is the evidence that the adaptive path is active, since the module logs nothing itself.
+
+### 4e. Output agreement with speculation off (greedy target)
+
+[dspark_output_match.md](reports/v41-vs-0731/dspark_output_match.md) ([bench/compare_outputs.py](bench/compare_outputs.py)) compares each prompt's text with the speculation-off run on the same prompt. Exact matches, summed over repeats:
+
+| Arm | c1 | c4 | c16 | c64 |
+| --- | --- | --- | --- | --- |
+| V4.1 fixed | 3/48 | 1/48 | 2/192 | 18/768 |
+| V4.1 adaptive | 2/48 | 2/48 | 3/192 | 14/768 |
+| 0731 fixed | 7/48 | 11/48 | 47/192 | 147/768 |
+| 0731 adaptive | 12/48 | 14/48 | 52/192 | 148/768 |
+
+Outputs typically diverge after about 60–140 characters. **This is not evidence of lossy speculation.** No same-seed speculation-off repeat exists, so the determinism of greedy decoding itself under batching (random-token prompts invite near-tie logits) is unmeasured. The needed control is a same-seed speculation-off rerun on each model (about 15 min of GPU time), followed by a real-text task comparison.
 
 ## Failures and deviations
 
 | Item | What happened | Effect |
 | --- | --- | --- |
-| Earlier launch crash (before this study) | Triton `FileNotFoundError` in `~/.triton/cache`: 8 TP ranks compiling concurrently on the gocryptfs FUSE mount at `/root` | Fixed by `TRITON_CACHE_DIR=/tmp/triton_cache` (local overlay) in `run.sh` and `bench/serve.sh` |
-| `prefix/off-cache-off/p65536_s2048_n1_c8/repeat-1` | Invalid: `ImportError: Please install vllm[bench]` (missing `pandas` for the custom dataset); no request was sent | Kept on disk; `pandas` installed; valid rerun is `repeat-1-rerun1` |
-| `prefix/off-cache-off/p65536_s2048_n4_c8/repeat-1` | Aborted by the operator while stopping the failing loop; empty log, no summary | Kept on disk; valid rerun is `repeat-1-rerun1` |
-| Prefix prompts | Harness-built JSONL (random tokens, decode/re-encode to exact length) instead of vLLM `prefix_repetition`, so cold/prewarmed/cache-off could share identical prompts and order | Deliberate; files in `results/v41-vs-0731/_prompts/` |
-| `max_num_seqs` | 64 (historical preview used 256); covers the planned c ≤ 64 | Must be matched for 0731 |
-| Telemetry not collected | Per-request queue delay split, CPU scheduling gaps, and all component/kernel timings | Unavailable, not zero; requires the profiling phase |
+| Pre-study V4.1 launch crash | Triton `FileNotFoundError`: 8 TP ranks compiling concurrently on the gocryptfs FUSE mount at `/root` | Fixed by `TRITON_CACHE_DIR=/tmp/triton_cache` |
+| 0731 first launch (`serve-off-profidle-20260927-221524.log`) | `CUDA error: invalid argument` during JIT/warmup; worker died | Kept. Fixed by `FLASHINFER_WORKSPACE_BASE=/tmp/flashinfer_ws`; the relaunch 6 min later succeeded |
+| V4.1 `prefix/off-cache-off/…n1…/repeat-1` | Invalid: `pandas` missing for the custom dataset; no request sent | Kept; valid `repeat-1-rerun1` |
+| V4.1 `prefix/off-cache-off/…n4…/repeat-1` | Aborted by the operator while stopping the failing loop | Kept; valid `repeat-1-rerun1` |
+| 0731 slower first repeats | 5–9% lower at 64K/128K context and c16–c48; 0731 DSpark fixed c16 r1 at half speed | Kept; medians shown where they matter |
+| Model order | V4.1 measured first, 0731 second; no cross-model alternation (would have needed extra restarts) | Recorded in the addendum |
+| Launch config for 0731 | Concurrency/context/prefix cache-off ran on `off-profidle` (V4.1 on `off`); control shows the idle profiler has no effect | Recorded |
+| Prefix prewarm | Harness prewarms with one request per prefix, which does not fully warm 0731 (section 1d) | Reported as a measured model/runtime difference, not rerun |
+| Sequential prefix check | 0731's original script was not saved; `bench/prefix_reuse_check.py` reconstructs it (same prompt files, endpoint, and 67,588-token queries) and was used for V4.1 | Recorded |
+| GPU idle time | A broken readiness loop left the V4.1 DSpark server idle for about 1 h 50 min before its sweep | No data effect; the remaining arms ran through `chain_dspark.sh` |
+| Telemetry unavailable | V4.1 decode components (CUDA graphs); DSpark verified-candidate counts; per-request queue split | Unavailable, not zero |
 
-## Pending (study is incomplete)
+## Not covered (declared follow-ups)
 
-- **DeepSeek V4 Flash 0731**, the same three workloads with identical settings, harness, and prompts. Pin its snapshot in `V4_0731_REVISION`, and alternate model order for any reruns. Two launches, same as V4.1.
-- **DSpark fixed/adaptive** for both checkpoints (c1/4/16/64 at 16K/256, width 5, 3 repeats), per [docs/speculative-decoding.md](docs/speculative-decoding.md). One launch per arm.
-- **Component profiling, remaining**: prefill traces at c1 for 16K and 64K are done (section 4). Still pending: decode-step attribution under CUDA graphs; traces at 16K c16/c64, 260K c8, and cache-off vs prewarmed; per-rank communication/imbalance analysis (MoE per-layer time varies 0.5–3.8 ms across layers on rank 0); and hardware counters for the dominant GEMMs.
-- **All-reduce tuning arm** (section 4d) and a **CED-capable runtime**, if one exists, as separately labeled arms.
-- Real-text quality task set, and the `max_num_batched_tokens` tuning arm (separate from baselines).
+- **DSpark:** same-seed speculation-off determinism control; real-text prompt sets (code/math/chat); decode-bound workload (16K/2,048, short prompts); widths k1/3/7; long context; DSpark component traces; greedy-draft arm.
+- **Prefill:** V4.1 all-reduce tuning arm; a block-scale FP8 dense-GEMM path for V4.1; a CED-capable runtime; `max_num_batched_tokens` tuning; V4.1 decode attribution under CUDA graphs.
+- **Harness:** a 0731-aware prewarm (two touches per prefix) as a separately labeled arm.
+- **Quality:** real-text task set. The 4-prompt smoke checks (`data/<model>/_quality_smoke/`) are sanity checks only.
 
 ## Reproduce
 
-```bash
-# launch 1 (prefix cache off), in tmux
-bash bench/serve.sh v41 off results/v41-vs-0731/v41/_server/serve-off-<ts>.log
-python bench/run_matrix.py --model v41 --config off \
-    --workloads concurrency,context,prefix --prefix-states cache-off
-# launch 2 (prefix cache on)
-bash bench/serve.sh v41 off-prefix results/v41-vs-0731/v41/_server/serve-off-prefix-<ts>.log
-python bench/run_matrix.py --model v41 --config off --workloads prefix --prefix-states cold,prewarmed
-# launch 3 (idle profiler; section 4)
-PROFILE_DIR=$PWD/results/v41-vs-0731/v41/profiles bash bench/serve.sh v41 off-profidle results/v41-vs-0731/v41/_server/serve-off-profidle-<ts>.log
-python bench/run_matrix.py --model v41 --config off-profidle --workloads concurrency,isolated --conc-list 1,64
-python bench/profile_trace.py --label prefill16k_decode8 --isl 16384 --max-tokens 8   # move files into profiles/<label>/
-python bench/trace_breakdown.py results/v41-vs-0731/v41/profiles/<label>/dp0_pp0_tp0_*rank0*.json.gz
-# aggregate
-python bench/summarize.py v41-vs-0731 v41 --csv reports/v41-vs-0731/v41_off_summary.csv
-```
+See [docs/reproduce.md](docs/reproduce.md) for the full command sequence, environment fixes, and timings. In short:
 
-`HF_TOKEN` must come from the environment. The raw local tree is `results/` (git-ignored, 454 MB, mostly prefix prompt JSONL). The published subset is produced by `python bench/curate.py v41-vs-0731 v41` and audited on a clean checkout with `python tools/audit_references.py`.
+```bash
+source /root/vllm/bin/activate            # vLLM 0.30.1rc1.dev223+g44af287eb
+export HF_TOKEN=...  HF_HOME=/workspace/hf
+# per model (v41 | v4-0731): launch in tmux ds-serve, harness in ds-bench
+bash bench/serve.sh <model> off-profidle <log>     # PROFILE_DIR=... required
+python bench/run_matrix.py --model <model> --config off-profidle --workloads concurrency,context,prefix,isolated --prefix-states cache-off
+bash bench/serve.sh <model> off-prefix <log>
+python bench/run_matrix.py --model <model> --config off --workloads prefix --prefix-states cold,prewarmed
+python bench/prefix_reuse_check.py --model <model>
+bash bench/chain_dspark.sh 'v41 dspark-fixed-k5' 'v41 dspark-adaptive-k5' 'v4-0731 dspark-fixed-k5' 'v4-0731 dspark-adaptive-k5'
+python bench/summarize.py v41-vs-0731 <model> --csv ...; python bench/compare.py --csv ...; python bench/spec_compare.py --csv ...
+python bench/curate.py v41-vs-0731 <model>
+```

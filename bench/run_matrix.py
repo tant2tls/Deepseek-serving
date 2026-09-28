@@ -75,7 +75,11 @@ def prom_max(text, name):
 
 COUNTERS = ["vllm:prompt_tokens_total", "vllm:generation_tokens_total",
             "vllm:num_preemptions_total", "vllm:prefix_cache_queries_total",
-            "vllm:prefix_cache_hits_total", "vllm:request_success_total"]
+            "vllm:prefix_cache_hits_total", "vllm:request_success_total",
+            # DSpark arms. draft_tokens counts scheduler-scheduled (proposed) drafts; under
+            # adaptive verification the verified subset is not exported (null when absent).
+            "vllm:spec_decode_num_drafts_total", "vllm:spec_decode_num_draft_tokens_total",
+            "vllm:spec_decode_num_accepted_tokens_total"]
 GAUGES = ["vllm:num_requests_running", "vllm:num_requests_waiting",
           "vllm:kv_cache_usage_perc"]
 
@@ -206,6 +210,9 @@ def run_point(mk, study, workload, config, point, rep, *, c, n, seed, dataset_ar
         preemptions=delta["vllm:num_preemptions_total"],
         prefix_cache_queries=delta["vllm:prefix_cache_queries_total"],
         prefix_cache_hits=delta["vllm:prefix_cache_hits_total"],
+        spec_num_drafts=delta["vllm:spec_decode_num_drafts_total"],
+        spec_num_draft_tokens=delta["vllm:spec_decode_num_draft_tokens_total"],
+        spec_num_accepted_tokens=delta["vllm:spec_decode_num_accepted_tokens_total"],
         peak_running=poll.peak("vllm:num_requests_running"),
         peak_waiting=poll.peak("vllm:num_requests_waiting"),
         peak_kv_cache_usage_frac=poll.peak("vllm:kv_cache_usage_perc"),

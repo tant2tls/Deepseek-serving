@@ -9,7 +9,7 @@ import argparse, collections, csv, gzip, json, re, statistics as st
 CATS = [  # first match wins
     ("moe_expert_gemm", r"marlin_moe_wna16|fused_moe|grouped_gemm|m_grouped"),
     ("moe_route_combine", r"moe_sum|topk|moe_align|swiglu|router|gate|count_and_sort|expert"),
-    ("allreduce", r"AllReduce|Allreduce|allreduce|oneshotAllr|twoshot"),
+    ("allreduce", r"AllReduce|Allreduce|allreduce|all_reduce|oneshotAllr|twoshot"),
     ("allgather_other_comm", r"AllGather|ReduceScatter|AllToAll|nccl|nvshmem"),
     ("attention_core", r"sparse_attn_fwd|flash_fwd|sparse_prefill|splitkv_mla|flashmla|flash_mla"),
     ("indexer_topk", r"mqa_logits|indexer|top_k|topk_|radix|hierarch"),

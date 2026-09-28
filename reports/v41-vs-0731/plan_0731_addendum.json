@@ -1,0 +1,16 @@
+{
+  "declared": "2026-09-27T22:45, before any 0731 collection",
+  "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
+  "revision": "7872f01b1d1fe23eabc4c98b48bffcef5a386062",
+  "tokenizer_mode_and_parsers": "deepseek_v4 (V4.1 used deepseek_v41); chat_template_kwargs.thinking=false maps to chat mode in both",
+  "server": "identical to V4.1: TP8 + EP, gpu_memory_utilization 0.90, max_model_len 262144, max_num_seqs 64, default max_num_batched_tokens, default KV dtype, --language-model-only, speculation off",
+  "launches": [
+    {"config": "off-profidle", "prefix_caching": false,
+     "workloads": ["concurrency c1..c64", "context 16K..260K", "prefix cache-off", "isolated c1 sweep", "traces prefill16k_decode8, prefill64k_decode4"],
+     "note": "V4.1 ran concurrency/context/prefix-off on 'off' and isolated on 'off-profidle'; V4.1 control showed idle profiler has no measurable effect (c1 88.4 vs 88.7, c64 292.3 vs 292.2 tok/s). Using one launch for 0731 avoids an extra restart."},
+    {"config": "off-prefix", "prefix_caching": true, "workloads": ["prefix cold", "prefix prewarmed"]}
+  ],
+  "workloads_prompts_seeds_repeats": "identical to plan.json / V4.1 harness. Random prompts are generated per model tokenizer to the same token count; prefix JSONL prompt files are the same text files used for V4.1 (token counts recorded if tokenizers differ).",
+  "model_order": "V4.1 measured first (earlier session same day, same node); 0731 second. Cross-model order alternation not done (would need extra restarts) -> recorded deviation.",
+  "validity": "same rules; if 0731 tokenization of the shared prefix files is shorter than 98% of expected, the prompt-token check is relaxed to the measured per-model count and recorded"
+}
