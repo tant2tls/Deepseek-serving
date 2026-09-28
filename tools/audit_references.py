@@ -155,7 +155,15 @@ def main():
         if path.suffix in (".md", ".json", ".log", ".txt", ".csv", ".sh"):
             body = path.read_text(encoding="utf-8")
             check(not credential.search(body), f"Possible credential: {path.relative_to(ROOT)}")
-            check(not private_path.search(body), f"Private absolute path: {path.relative_to(ROOT)}")
+            # bench.json `generated_texts` is model output (forced 256-token continuations of
+            # random prompts), which can contain invented paths such as C:\Users\...; it carries
+            # no host metadata. Scan the rest of the file; credentials are still checked on all.
+            path_body = body
+            if path.name == "bench.json":
+                doc = json.loads(body)
+                doc.pop("generated_texts", None)
+                path_body = json.dumps(doc)
+            check(not private_path.search(path_body), f"Private absolute path: {path.relative_to(ROOT)}")
             check(not re.search(r"^host:\s*(?!<HOST>\s*$)\S+", body, re.M),
                   f"Unredacted host: {path.relative_to(ROOT)}")
 
