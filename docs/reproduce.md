@@ -64,3 +64,21 @@ git clone --branch <branch> . /tmp/audit && cd /tmp/audit && python tools/audit_
 ```
 
 Commit on a feature branch, push, and merge into `main` only when the user asks.
+
+## 6. Reproducibility status (checked 2026-09-28)
+
+**Reproducible from code:**
+- **Runtime:** `install.sh` pins vLLM commit `44af287ebe38d6dc4e102948025f5e3e175aefd6` (it previously installed the moving nightly). A fresh resolution matched the working environment's full lock (`reports/environment-lock.txt`, 205 packages) for 200/201 packages, and `filelock` is now pinned too.
+- **Models:** every checkpoint is pinned by revision in `bench/serve.sh` and `run_matrix.MODELS`, and the drafts are pinned too (DSpark `revision`, DFlash snapshot path).
+- **Requests:** today's `run_matrix.bench_cmd` regenerates byte-identical `vllm bench serve` commands for recorded V4.1, 0731, and MiMo runs (checked against `manifest.json`). Seeds are deterministic, and prompts regenerate from seeds and the pinned tokenizer.
+- **Analysis:** summaries, comparisons, trace breakdowns, and curation are scripted. Re-running them on the curated data reproduces the published tables; the DeepSeek tables were byte-identical after the later tool changes.
+
+**Small gaps (noted, not fixed):**
+- Timings are hardware-specific: 8× H100 80GB SXM, all-pairs NV18 NVLink, driver 580.105.08. `--torch-backend=auto` picks the CUDA build from the driver. Expect repeats to land within the reported SD, not bit-identical.
+- Greedy outputs are not verified deterministic across runs (no same-seed repeat), so the speculative output-match tables are not losslessness evidence.
+- The 0731 sequential prefix check came from an unsaved ad hoc script. `bench/prefix_reuse_check.py` reconstructs it (same prompts, endpoint, and 67,588-token queries) and was used for V4.1 and MiMo.
+- DeepSeek traces were filed into `profiles/<label>/` by hand, and the DeepSeek quality smoke was ad hoc. Both are now scripted (`chain_lib.sh trace`, `bench/quality_smoke.py` with the same 4 prompts).
+- Not published (git-ignored `results/`): prefix prompt JSONL (regenerable from seeds) and full 8-rank torch traces (~73 MB per model; must be re-captured).
+- `environment.txt` was captured only for the DeepSeek study; MiMo ran on the same node and venv the next day, which `reports/environment-lock.txt` covers.
+- Failed or crashed runs are kept as `repeat-N`, with valid reruns as `repeat-N-rerunK`. A reproduction without the failure gets plain `repeat-N` names.
+- Weights must still be downloadable from Hugging Face at the pinned revisions (needs `HF_TOKEN`), and the vLLM per-commit wheel index must stay online.
