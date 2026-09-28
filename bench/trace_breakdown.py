@@ -11,7 +11,7 @@ CATS = [  # first match wins
     ("moe_route_combine", r"moe_sum|topk|moe_align|swiglu|router|gate|count_and_sort|expert"),
     ("allreduce", r"AllReduce|Allreduce|allreduce|all_reduce|oneshotAllr|twoshot"),
     ("allgather_other_comm", r"AllGather|ReduceScatter|AllToAll|nccl|nvshmem"),
-    ("attention_core", r"sparse_attn_fwd|flash_fwd|sparse_prefill|splitkv_mla|flashmla|flash_mla"),
+    ("attention_core", r"sparse_attn_fwd|flash_fwd|FlashAttnFwd|sparse_prefill|splitkv_mla|flashmla|flash_mla"),
     ("indexer_topk", r"mqa_logits|indexer|top_k|topk_|radix|hierarch"),
     ("qkv_rope_kvcache", r"QNorm|qnorm|rope|kv_rope|insert|compress|cache"),
     ("dense_gemm", r"marlin::Marlin|nvjet|gemm|sm90_xmma|cutlass|deep_gemm"),

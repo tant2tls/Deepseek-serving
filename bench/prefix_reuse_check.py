@@ -14,7 +14,7 @@ import time
 import urllib.request
 from pathlib import Path
 
-from run_matrix import MODELS, EXTRA_BODY, http_get, http_post, BASE
+from run_matrix import MODELS, extra_body, http_get, http_post, BASE
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -24,8 +24,8 @@ def counter(txt, name):
                if l.startswith(name + "{") or l.startswith(name + " "))
 
 
-def ask(model, prompt):
-    body = dict(model=model, max_tokens=1, messages=[{"role": "user", "content": prompt}], **EXTRA_BODY)
+def ask(mk, model, prompt):
+    body = dict(model=model, max_tokens=1, messages=[{"role": "user", "content": prompt}], **extra_body(mk))
     before = http_get("/metrics")
     t0 = time.perf_counter()
     req = urllib.request.Request(BASE + "/v1/chat/completions", json.dumps(body).encode(),
@@ -75,7 +75,7 @@ def main():
         http_post("/reset_prefix_cache")
         rows = []
         for step, prompt in steps:
-            q, h, wall = ask(model, prompt)
+            q, h, wall = ask(a.model, model, prompt)
             rows.append(dict(step=step, queried=q, hit=h, wall_ms=wall))
             print(json.dumps(rows[-1]))
         (out / fname).write_text(json.dumps(rows, indent=1) + "\n")

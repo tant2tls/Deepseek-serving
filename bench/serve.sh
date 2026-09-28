@@ -15,6 +15,13 @@ case "$MODEL_KEY" in
     MODEL=deepseek-ai/DeepSeek-V4-Flash-0731
     REVISION=7872f01b1d1fe23eabc4c98b48bffcef5a386062
     PARSER=deepseek_v4 ;;
+  # MiMo: HF tokenizer; config class needs remote code (transformers has no mimo_v2),
+  # pinned to the same revision. Checkpoint also carries vision/audio weights.
+  mimo-v26)
+    MODEL=XiaomiMiMo/MiMo-V2.6-Flash-MOPD
+    REVISION=2479e2d0029eca9a34cc7e7f55a121925f81908e
+    PARSER=mimo; TOKMODE=auto
+    set -- --trust-remote-code --code-revision "$REVISION" "$@" ;;
   *) echo "unknown model key $MODEL_KEY" >&2; exit 2 ;;
 esac
 
@@ -36,6 +43,17 @@ case "$CONFIG_ID" in
     PREFIX_FLAG=--no-enable-prefix-caching
     [ "$CONFIG_ID" = dspark-adaptive-k5 ] && ADAPTIVE=true || ADAPTIVE=false
     set -- --speculative-config "{\"method\":\"dspark\",\"num_speculative_tokens\":5,\"revision\":\"$REVISION\",\"draft_sample_method\":\"probabilistic\",\"rejection_sample_method\":\"standard\",\"enable_adaptive_verification\":$ADAPTIVE}" "$@" ;;
+  # MiMo native speculative arms (docs/mimo-v2.6-plan.md). Classic MTP heads ship in
+  # the target checkpoint (model.mtp.*, 3 layers); DFlash drafter is the dflash/
+  # subfolder of the same pinned snapshot (block 8 -> 7 proposed tokens).
+  mtp-k3)
+    PREFIX_FLAG=--no-enable-prefix-caching
+    set -- --speculative-config "{\"method\":\"mtp\",\"num_speculative_tokens\":3,\"revision\":\"$REVISION\"}" "$@" ;;
+  dflash-k7)
+    PREFIX_FLAG=--no-enable-prefix-caching
+    DRAFT=${HF_HOME:-/workspace/hf}/hub/models--${MODEL//\//--}/snapshots/$REVISION/dflash
+    [ -f "$DRAFT/config.json" ] || { echo "missing DFlash drafter at $DRAFT" >&2; exit 2; }
+    set -- --speculative-config "{\"method\":\"dflash\",\"model\":\"$DRAFT\",\"num_speculative_tokens\":7}" "$@" ;;
   *) echo "unknown config $CONFIG_ID" >&2; exit 2 ;;
 esac
 
@@ -56,7 +74,7 @@ exec vllm serve "$MODEL" \
   --host 0.0.0.0 --port 8000 \
   --tensor-parallel-size 8 --enable-expert-parallel \
   --language-model-only \
-  --tokenizer-mode "$PARSER" --reasoning-parser "$PARSER" \
+  --tokenizer-mode "${TOKMODE:-$PARSER}" --reasoning-parser "$PARSER" \
   --enable-auto-tool-choice --tool-call-parser "$PARSER" \
   --gpu-memory-utilization 0.90 \
   --max-model-len 262144 \

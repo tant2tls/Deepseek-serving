@@ -22,10 +22,19 @@ MODELS = {
     "v4-0731": dict(model="deepseek-ai/DeepSeek-V4-Flash-0731",
                     revision="7872f01b1d1fe23eabc4c98b48bffcef5a386062",
                     tokenizer_mode="deepseek_v4"),
+    # MiMo turns thinking off with enable_thinking=false (template emits <think></think>).
+    "mimo-v26": dict(model="XiaomiMiMo/MiMo-V2.6-Flash-MOPD",
+                     revision="2479e2d0029eca9a34cc7e7f55a121925f81908e",
+                     tokenizer_mode="auto",
+                     extra_body={"chat_template_kwargs": {"enable_thinking": False}}),
 }
 OSL = 256
 # Thinking explicitly disabled; greedy target sampling pinned for every arm.
-EXTRA_BODY = {"chat_template_kwargs": {"thinking": False}}
+EXTRA_BODY = {"chat_template_kwargs": {"thinking": False}}  # DeepSeek default
+
+
+def extra_body(mk):
+    return MODELS[mk].get("extra_body", EXTRA_BODY)
 TEMPERATURE = 0.0
 CONC = [1, 2, 4, 8, 16, 32, 48, 64]
 CTX = [16384, 65536, 131072, 260000]
@@ -149,7 +158,7 @@ def bench_cmd(mk, out_dir, fname, *, c, n, seed, dataset_args, warm=False):
            "--request-rate", "inf", "--max-concurrency", str(c),
            "--num-prompts", str(n), "--seed", str(seed),
            "--ignore-eos", "--temperature", str(TEMPERATURE),
-           "--extra-body", json.dumps(EXTRA_BODY),
+           "--extra-body", json.dumps(extra_body(mk)),
            "--percentile-metrics", "ttft,tpot,itl,e2el",
            "--metric-percentiles", "50,90,95,99",
            "--disable-tqdm", *dataset_args]
@@ -164,9 +173,9 @@ def run_point(mk, study, workload, config, point, rep, *, c, n, seed, dataset_ar
     rdir = unique_dir(ROOT / "results" / study / mk / workload / config / point / f"repeat-{rep}")
     tdir = rdir / "telemetry"; tdir.mkdir(parents=True)
     cmd = bench_cmd(mk, rdir, "bench.json", c=c, n=n, seed=seed, dataset_args=dataset_args)
-    manifest = dict(study=study, model_key=mk, **MODELS[mk], workload=workload, config=config,
+    manifest = dict(study=study, model_key=mk, **{k: v for k, v in MODELS[mk].items() if k != "extra_body"}, workload=workload, config=config,
                     point=point, repeat=rep, concurrency=c, num_prompts=n, seed=seed,
-                    output_len=OSL, temperature=TEMPERATURE, extra_body=EXTRA_BODY,
+                    output_len=OSL, temperature=TEMPERATURE, extra_body=extra_body(mk),
                     reset_prefix_cache=reset_cache, pre_commands=[list(p) for p in pre_cmds],
                     command=cmd, started=datetime.datetime.now().isoformat())
     if reset_cache:
@@ -257,7 +266,7 @@ def build_prefix_files(mk, n_prefixes, out: Path, seed):
     from vllm.tokenizers import get_tokenizer
     from vllm.benchmarks.datasets import gen_prompt_decode_to_target_len
     tok = get_tokenizer(MODELS[mk]["model"], tokenizer_mode=MODELS[mk]["tokenizer_mode"],
-                        revision=MODELS[mk]["revision"])
+                        revision=MODELS[mk]["revision"], trust_remote_code=True)
     rng = np.random.default_rng(seed)
     vocab = tok.vocab_size
 

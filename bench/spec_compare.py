@@ -13,6 +13,11 @@ from run_matrix import PROM_RE
 ROOT = Path(__file__).resolve().parent.parent
 AR = {"v41": "off", "v4-0731": "off-profidle"}  # see compare.py CFG for the profidle control
 ARMS = ["dspark-fixed-k5", "dspark-adaptive-k5"]
+LABEL = "DSpark"
+PRESETS = {  # --preset mimo: MiMo native speculative arms vs its own ar (study mimo-v26)
+    "mimo": dict(AR={"mimo-v26": "off-profidle"}, ARMS=["mtp-k3", "dflash-k7"], LABEL="Speculative",
+                 study="mimo-v26"),
+}
 CONC = [1, 4, 16, 64]
 METRICS = [("output_throughput", "Out tok/s", True), ("median_tpot_ms", "TPOT p50", False),
            ("median_ttft_ms", "TTFT p50", False), ("p95_itl_ms", "ITL p95", False)]
@@ -48,10 +53,13 @@ def stats(vals):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--study", default="v41-vs-0731")
-    ap.add_argument("--csv"); a = ap.parse_args()
+    ap.add_argument("--csv"); ap.add_argument("--preset", choices=PRESETS); a = ap.parse_args()
+    global AR, ARMS, LABEL
+    if a.preset:
+        P = PRESETS[a.preset]; AR, ARMS, LABEL, a.study = P["AR"], P["ARMS"], P["LABEL"], P["study"]
     rows = []
     for mk in AR:
-        print(f"\n### {mk}: DSpark arms / own ar ({AR[mk]})\n")
+        print(f"\n### {mk}: {LABEL} arms / own ar ({AR[mk]})\n")
         print("| Load | Metric | ar | " + " | ".join(ARMS) + " |")
         print("|---|---|---:|" + "---:|" * len(ARMS))
         for c in CONC:
@@ -91,6 +99,8 @@ def main():
                                  drafts=d, proposed=p, accepted=acc, accepted_over_proposed=acc / p,
                                  tokens_per_round=1 + acc / d,
                                  per_position=";".join(f"{pp[i] / d:.4f}" for i in sorted(pp))))
+    if "v41" not in AR:
+        return write_csv(a, rows)
     print("\n### V4.1 / 0731 per arm (output tok/s)\n")
     print("| Load | ar | " + " | ".join(ARMS) + " |")
     print("|---|---:|" + "---:|" * len(ARMS))
@@ -101,6 +111,10 @@ def main():
             y = [s["output_throughput"] for s in runs(a.study, "v4-0731", cfgs[1], c)]
             cells.append(f"{st.mean(x) / st.mean(y):.2f}" if x and y else "pending")
         print(f"| c{c} | " + " | ".join(cells) + " |")
+    write_csv(a, rows)
+
+
+def write_csv(a, rows):
     if a.csv and rows:
         keys = list(dict.fromkeys(k for r in rows for k in r))
         with open(a.csv, "w", newline="") as f:

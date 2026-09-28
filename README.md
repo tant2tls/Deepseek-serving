@@ -10,6 +10,8 @@ This repository contains a curated, portable subset of the earlier `LLMs_frontie
 | --- | --- |
 | Next agent's scope | [AGENTS.md](AGENTS.md) |
 | **V4.1 vs 0731 measured results (speculation off + DSpark)** | [report.md](report.md) |
+| **MiMo-V2.6-Flash vs 0731 vs V4.1 (speculation off + MTP/DFlash)** | [report_mimo.md](report_mimo.md) |
+| How MiMo runs prefill/decode, and why it is faster | [docs/mimo-v2.6-inference.md](docs/mimo-v2.6-inference.md) |
 | Reproduce a study / add a model | [docs/reproduce.md](docs/reproduce.md) |
 | Benchmark/profiling harness | [bench/](bench/) |
 | Curated V4.1 and 0731 run evidence | [reports/v41-vs-0731/](reports/v41-vs-0731/) |
@@ -22,6 +24,8 @@ This repository contains a curated, portable subset of the earlier `LLMs_frontie
 | Verify the curated bundle locally | [tools/audit_references.py](tools/audit_references.py) |
 
 `install.sh`, `run.sh`, and `request.sh` are the Linux installation, V4.1 launch, and smoke-request scaffolds. The matched benchmark harness is in `bench/`. The **V4.1 vs 0731 study is complete** for speculation off (concurrency, context, prefix cache states, isolated prefill/decode, prefill kernel breakdown) and DSpark fixed/adaptive at c1/4/16/64; see [report.md](report.md). Headline: 0731 is 1.1–1.35× faster uncached on this runtime (V4.1 prefill kernel paths, no CED), V4.1 wins 1.05–2.24× with prefix caching (reuse after one computation vs two), and DSpark helps only at low concurrency.
+
+**MiMo-V2.6-Flash-MOPD** (study `mimo-v26`, same node, runtime, and workloads) is 1.27–1.42× faster than 0731 and 1.43–1.73× faster than V4.1 uncached. It skips DeepSeek's sparse-attention/indexer, mHC, and heavy projections; all-reduce is now its largest cost. Details: [report_mimo.md](report_mimo.md).
 
 The GitHub bundle includes small result JSONs, benchmark logs, selected startup logs, manifests, corrected summaries, and source/export SHA-256 provenance. Numeric result JSONs are preserved byte-for-byte. Exported manifests/logs may have private host/path information and terminal formatting removed; [provenance.json](references/provenance.json) records each transformation. Caches, weights, presentations, old executable launch wrappers, quarantined runs, and superseded narratives are excluded with reasons in the reference index. Original files remain in the source repository.
 

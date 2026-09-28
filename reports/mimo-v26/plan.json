@@ -1,0 +1,19 @@
+{
+  "declared": "2026-09-28T07:15, before any MiMo collection",
+  "study": "mimo-v26",
+  "model": "XiaomiMiMo/MiMo-V2.6-Flash-MOPD",
+  "revision": "2479e2d0029eca9a34cc7e7f55a121925f81908e",
+  "runtime": "vLLM 0.30.1rc1.dev223+g44af287eb (~/vllm), same as v41-vs-0731",
+  "server": "bench/serve.sh mimo-v26: TP8 + EP, --language-model-only, gpu_memory_utilization 0.90, max_model_len 262144, max_num_seqs 64, default max_num_batched_tokens, default KV dtype, --trust-remote-code --code-revision <revision>, tokenizer auto, reasoning/tool parser mimo",
+  "request": "chat completions, chat_template_kwargs.enable_thinking=false, temperature 0, ignore_eos, 256 output tokens",
+  "launches": [
+    {"config": "off-profidle", "prefix_caching": false, "workloads": ["smoke 4 prompts", "concurrency c1,2,4,8,16,32,48,64 x3", "context 16384,65536,131072,260000 @c8 x3", "prefix cache-off n1,4,16 x3", "isolated c1 1K..260K x3", "traces prefill16k_decode8, prefill64k_decode4"]},
+    {"config": "off-prefix", "prefix_caching": true, "workloads": ["prefix_reuse_check.py first", "prefix cold,prewarmed x3"]},
+    {"config": "mtp-k3", "workloads": ["concurrency c1,4,16,64 x3"], "speculative_config": {"method": "mtp", "num_speculative_tokens": 3}},
+    {"config": "dflash", "workloads": ["concurrency c1,4,16,64 x3"], "condition": "only if a smoke load of dflash/ passes; otherwise recorded as unsupported with the error"}
+  ],
+  "prompts": "Random-token prompts from the MiMo tokenizer at identical token counts and seeds as v41-vs-0731; prefix prompt files regenerated under results/mimo-v26/_prompts with the same seeds (DeepSeek files do not tokenize to the same counts under MiMo's tokenizer)",
+  "validity": "identical to v41-vs-0731: all requests complete, output = n x 256, server prompt tokens >= 98% target",
+  "comparison": "Cross-study ratios vs V4.1 and 0731 on identical axes, labelled as same runtime/workload, different tokenizer",
+  "estimated_gpu_time": "about 4.5 h"
+}

@@ -29,7 +29,7 @@ This is the procedure that produced [report.md](../report.md) (study `v41-vs-073
 | 2 | `off-prefix` | `run_matrix.py --config off --workloads prefix --prefix-states cold,prewarmed`, then `prefix_reuse_check.py` | ~30 min + 1 min |
 | 3+ | one per speculative arm (for example `dspark-fixed-k5`) | concurrency c1/4/16/64 | ~17–25 min per arm plus ~3.5 min launch |
 
-Chain speculative arms with `bench/chain_dspark.sh '<model> <config>' ...`. It waits for any running sweep, stops the server, launches the next arm, polls `/v1/models` (aborting if the process dies or 30 min pass), runs the sweep, and stops the server at the end. Watch `results/<study>/_chain_dspark.log` with a Monitor filter on `CHAIN|valid=False|Traceback|Error`. **Do not hand-roll readiness loops:** a broken `until` condition once left a ready server idle for 1 h 50 min.
+For new studies, write a chain script on top of `bench/chain_lib.sh` (`launch`, `trace`, `wait_sweep`, `stop_server`); `bench/chain_mimo.sh` is the template (traces → prefix launch → speculative arms → stop). `bench/chain_dspark.sh '<model> <config>' ...` is the older DSpark-only chain. It waits for any running sweep, stops the server, launches the next arm, polls `/v1/models` (aborting if the process dies or 30 min pass), runs the sweep, and stops the server at the end. Watch `results/<study>/_chain_dspark.log` with a Monitor filter on `CHAIN|valid=False|Traceback|Error`. **Do not hand-roll readiness loops:** a broken `until` condition once left a ready server idle for 1 h 50 min.
 
 The first launch of a new model takes about 8–10 min (JIT, DeepGEMM warmup, graph capture); later launches take about 3.5–5 min. Adding a speculative method changes graph-capture memory and KV capacity; record both from the server log.
 
@@ -48,7 +48,10 @@ The first launch of a new model takes about 8–10 min (JIT, DeepGEMM warmup, gr
 python bench/summarize.py <study> <model> --csv reports/<study>/<model>_off_summary.csv > reports/<study>/<model>_off_tables.md
 python bench/compare.py --csv reports/<study>/comparison.csv > reports/<study>/comparison_tables.md
 python bench/spec_compare.py --csv reports/<study>/dspark_comparison.csv > reports/<study>/dspark_tables.md
-python bench/compare_outputs.py <model> <spec-config> <ar-config>
+python bench/compare_models.py --csv ... > ...          # cross-study ratios (edit MODELS/SUBJECT/REFS)
+python bench/spec_compare.py --preset mimo ...          # per-study speculative presets
+python bench/compare_outputs.py <model> <spec-config> <ar-config> --study <study>
+python bench/quality_smoke.py --model <key> --study <study>   # also verifies the thinking switch
 python bench/curate.py <study> <model>     # lossless gzip, IP/ANSI removed from server logs, prompts/full traces excluded, SHA-256 ledger
 ```
 

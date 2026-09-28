@@ -1,0 +1,70 @@
+[
+ {
+  "q": "What is 17 * 19? Answer with just the number.",
+  "expected": "323",
+  "content": "323",
+  "reasoning": null,
+  "finish": "stop",
+  "usage": {
+   "prompt_tokens": 25,
+   "total_tokens": 29,
+   "completion_tokens": 4,
+   "prompt_tokens_details": null,
+   "completion_tokens_details": {
+    "reasoning_tokens": 0
+   }
+  },
+  "ok": true
+ },
+ {
+  "q": "What is the capital of Australia? One word.",
+  "expected": "Canberra",
+  "content": "Canberra",
+  "reasoning": null,
+  "finish": "stop",
+  "usage": {
+   "prompt_tokens": 19,
+   "total_tokens": 22,
+   "completion_tokens": 3,
+   "prompt_tokens_details": null,
+   "completion_tokens_details": {
+    "reasoning_tokens": 0
+   }
+  },
+  "ok": true
+ },
+ {
+  "q": "Write a Python function is_prime(n). Only code.",
+  "expected": "def is_prime",
+  "content": "```python\ndef is_prime(n):\n    if n <= 1:\n        return False\n    if n <= 3:\n        return True\n    if n % 2 == 0 or n % 3 == 0:\n        return False\n    i = 5\n    while i * i <= n:\n        if n % i == 0 or n % (i + 2) == 0:\n            return False\n        i += 6\n    return True\n```",
+  "reasoning": null,
+  "finish": "stop",
+  "usage": {
+   "prompt_tokens": 20,
+   "total_tokens": 123,
+   "completion_tokens": 103,
+   "prompt_tokens_details": null,
+   "completion_tokens_details": {
+    "reasoning_tokens": 0
+   }
+  },
+  "ok": true
+ },
+ {
+  "q": "If a train travels 120 km in 1.5 hours, what is its average speed in km/h? Just the number.",
+  "expected": "80",
+  "content": "80",
+  "reasoning": null,
+  "finish": "stop",
+  "usage": {
+   "prompt_tokens": 38,
+   "total_tokens": 41,
+   "completion_tokens": 3,
+   "prompt_tokens_details": null,
+   "completion_tokens_details": {
+    "reasoning_tokens": 0
+   }
+  },
+  "ok": true
+ }
+]

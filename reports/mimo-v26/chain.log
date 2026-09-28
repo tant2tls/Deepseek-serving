@@ -1,0 +1,77 @@
+[09:06:07] CHAIN launch-1 sweep finished
+/root/vllm/lib/python3.12/site-packages/transformers/modeling_rope_utils.py:1094: FutureWarning: `rope_config_validation` is deprecated and has been removed. Its functionality has been moved to RotaryEmbeddingConfigMixin.validate_rope method. PreTrainedConfig inherits this class, so please call self.validate_rope() instead. Also, make sure to use the new rope_parameters syntax. You can call self.standardize_rope_params() in the meantime.
+  warnings.warn(
+[09:06:36] CHAIN trace prefill16k_decode8 done
+/root/vllm/lib/python3.12/site-packages/transformers/modeling_rope_utils.py:1094: FutureWarning: `rope_config_validation` is deprecated and has been removed. Its functionality has been moved to RotaryEmbeddingConfigMixin.validate_rope method. PreTrainedConfig inherits this class, so please call self.validate_rope() instead. Also, make sure to use the new rope_parameters syntax. You can call self.standardize_rope_params() in the meantime.
+  warnings.warn(
+[09:07:15] CHAIN trace prefill64k_decode4 done
+[09:07:30] CHAIN launched mimo-v26 off-prefix
+[09:09:30] CHAIN ready mimo-v26 off-prefix
+{"step": "A: prewarm prompt (prefix+suffix0), after reset", "queried": 67593.0, "hit": 0.0, "wall_ms": 2333}
+{"step": "B: same prefix, new suffix1", "queried": 67593.0, "hit": 0.0, "wall_ms": 2286}
+{"step": "C: same prefix, new suffix2", "queried": 67593.0, "hit": 65536.0, "wall_ms": 346}
+{"step": "D: exact repeat of C", "queried": 67593.0, "hit": 67584.0, "wall_ms": 282}
+{"step": "E: prefix#2 suffix a (first after reset)", "queried": 67593.0, "hit": 0.0, "wall_ms": 2310}
+{"step": "F: prefix#2 suffix b", "queried": 67593.0, "hit": 0.0, "wall_ms": 2318}
+{"step": "G: prefix#2 suffix c", "queried": 67593.0, "hit": 65536.0, "wall_ms": 366}
+{"step": "H: prefix#3 suffix a (NOT first after reset)", "queried": 67593.0, "hit": 0.0, "wall_ms": 2301}
+{"step": "I: prefix#3 suffix b", "queried": 67593.0, "hit": 0.0, "wall_ms": 2311}
+{"step": "J: prefix#3 suffix c", "queried": 67593.0, "hit": 65536.0, "wall_ms": 366}
+[09:10:43] prefix/p65536_s2048_n1_c8 r1: valid=True out_tps=613.9348802494093 ttft_p50=555.8727379830088 tpot_p50=8.858761351039705 []
+[09:11:59] prefix/p65536_s2048_n1_c8 r1: valid=True out_tps=661.2757941242251 ttft_p50=552.475542499451 tpot_p50=8.886567601824508 []
+[09:13:08] prefix/p65536_s2048_n4_c8 r1: valid=True out_tps=427.0258353499952 ttft_p50=589.8079929756932 tpot_p50=8.93812833123329 []
+[09:14:39] prefix/p65536_s2048_n4_c8 r1: valid=True out_tps=531.7114169063021 ttft_p50=536.5144365059678 tpot_p50=9.121292843095336 []
+[09:16:34] prefix/p65536_s2048_n16_c8 r1: valid=True out_tps=194.17445618762767 ttft_p50=4425.978323008167 tpot_p50=18.05051841953422 []
+[09:18:55] prefix/p65536_s2048_n16_c8 r1: valid=True out_tps=303.12759569037456 ttft_p50=609.6608455409296 tpot_p50=9.556089835264265 []
+[09:20:50] prefix/p65536_s2048_n16_c8 r2: valid=True out_tps=194.15683369835602 ttft_p50=4012.0039389876183 tpot_p50=18.81728424900668 []
+[09:23:12] prefix/p65536_s2048_n16_c8 r2: valid=True out_tps=302.0102592351472 ttft_p50=599.8122589662671 tpot_p50=9.601694954828561 []
+[09:24:21] prefix/p65536_s2048_n4_c8 r2: valid=True out_tps=425.1600611366123 ttft_p50=587.6196039898787 tpot_p50=9.0816474177272 []
+[09:25:52] prefix/p65536_s2048_n4_c8 r2: valid=True out_tps=534.7126992220864 ttft_p50=555.1048475026619 tpot_p50=8.90631689416135 []
+[09:26:48] prefix/p65536_s2048_n1_c8 r2: valid=True out_tps=609.1956684075241 ttft_p50=520.2677835186478 tpot_p50=9.132541747028739 []
+[09:28:06] prefix/p65536_s2048_n1_c8 r2: valid=True out_tps=653.2999330659361 ttft_p50=561.2548605131451 tpot_p50=8.886785247002491 []
+[09:29:03] prefix/p65536_s2048_n1_c8 r3: valid=True out_tps=609.0624097635985 ttft_p50=564.6075475087855 tpot_p50=8.837071039335 []
+[09:30:20] prefix/p65536_s2048_n1_c8 r3: valid=True out_tps=655.227266286938 ttft_p50=567.8935179894324 tpot_p50=8.806721986198395 []
+[09:31:29] prefix/p65536_s2048_n4_c8 r3: valid=True out_tps=425.82040280819285 ttft_p50=577.2240814694669 tpot_p50=9.210756715665589 []
+[09:32:59] prefix/p65536_s2048_n4_c8 r3: valid=True out_tps=534.1697140321676 ttft_p50=561.3790070055984 tpot_p50=8.898355409744942 []
+[09:34:54] prefix/p65536_s2048_n16_c8 r3: valid=True out_tps=194.1806642353375 ttft_p50=2684.9803224613424 tpot_p50=16.69744219215514 []
+[09:37:17] prefix/p65536_s2048_n16_c8 r3: valid=True out_tps=303.9048041006456 ttft_p50=595.4721044981852 tpot_p50=9.705750254900467 []
+[09:37:17] CHAIN sweep done mimo-v26 off-prefix
+[09:37:32] CHAIN launched mimo-v26 mtp-k3
+[09:40:42] CHAIN ready mimo-v26 mtp-k3
+== concurrency warmup (disjoint seeds)
+  warmup c=1 n=1 rc=0
+  warmup c=16 n=16 rc=0
+  warmup c=64 n=64 rc=0
+[09:43:09] concurrency/isl16384_osl256_c1 r1: valid=True out_tps=200.2627595058888 ttft_p50=559.9662515160162 tpot_p50=2.8223816902312797 []
+[09:43:41] concurrency/isl16384_osl256_c4 r1: valid=True out_tps=353.10631111583126 ttft_p50=796.1976895167027 tpot_p50=7.335460792163241 []
+[09:44:41] concurrency/isl16384_osl256_c16 r1: valid=True out_tps=457.6425476292014 ttft_p50=1278.590243513463 tpot_p50=28.930267301963312 []
+[09:47:31] concurrency/isl16384_osl256_c64 r1: valid=True out_tps=517.1131139691162 ttft_p50=5690.4195325041655 tpot_p50=97.81734712533743 []
+[09:50:21] concurrency/isl16384_osl256_c64 r2: valid=True out_tps=516.2527524440735 ttft_p50=5492.459178494755 tpot_p50=99.29225251966557 []
+[09:51:22] concurrency/isl16384_osl256_c16 r2: valid=True out_tps=456.819534883304 ttft_p50=1734.5641205029096 tpot_p50=27.736608335387658 []
+[09:51:54] concurrency/isl16384_osl256_c4 r2: valid=True out_tps=340.52273462895323 ttft_p50=800.1739034662023 tpot_p50=7.352202447181495 []
+[09:52:34] concurrency/isl16384_osl256_c1 r2: valid=True out_tps=201.34195745786647 ttft_p50=553.4222510177642 tpot_p50=2.817809298022778 []
+[09:53:16] concurrency/isl16384_osl256_c1 r3: valid=True out_tps=195.6916576725021 ttft_p50=559.2190380266402 tpot_p50=2.9171175116846593 []
+[09:53:48] concurrency/isl16384_osl256_c4 r3: valid=True out_tps=357.3973293507626 ttft_p50=994.1344149992801 tpot_p50=7.443164037335117 []
+[09:54:50] concurrency/isl16384_osl256_c16 r3: valid=True out_tps=458.5682877226844 ttft_p50=1657.4198114976753 tpot_p50=27.53963197259616 []
+[09:57:40] concurrency/isl16384_osl256_c64 r3: valid=True out_tps=516.4360671047468 ttft_p50=5474.352666496998 tpot_p50=99.9511009941617 []
+[09:57:40] CHAIN sweep done mimo-v26 mtp-k3
+[09:57:55] CHAIN launched mimo-v26 dflash-k7
+[10:01:25] CHAIN ready mimo-v26 dflash-k7
+== concurrency warmup (disjoint seeds)
+  warmup c=1 n=1 rc=0
+  warmup c=16 n=16 rc=0
+  warmup c=64 n=64 rc=0
+[10:03:51] concurrency/isl16384_osl256_c1 r1: valid=True out_tps=224.08070391241603 ttft_p50=556.5029044810217 tpot_p50=2.33051806469174 []
+[10:04:23] concurrency/isl16384_osl256_c4 r1: valid=True out_tps=354.5415342064617 ttft_p50=885.7642439834308 tpot_p50=6.707450472658463 []
+[10:05:24] concurrency/isl16384_osl256_c16 r1: valid=True out_tps=452.9239083937914 ttft_p50=1012.3395709961187 tpot_p50=28.28591191563664 []
+[10:08:16] concurrency/isl16384_osl256_c64 r1: valid=True out_tps=512.3556955683321 ttft_p50=9445.067245018436 tpot_p50=83.21270207456752 []
+[10:11:07] concurrency/isl16384_osl256_c64 r2: valid=True out_tps=512.2917323394346 ttft_p50=9299.465161981061 tpot_p50=82.38592425500518 []
+[10:12:08] concurrency/isl16384_osl256_c16 r2: valid=True out_tps=453.62921468614195 ttft_p50=1012.7485319972038 tpot_p50=28.61750194113519 []
+[10:12:41] concurrency/isl16384_osl256_c4 r2: valid=True out_tps=336.651076513365 ttft_p50=797.3765530041419 tpot_p50=7.833376305985868 []
+[10:13:20] concurrency/isl16384_osl256_c1 r2: valid=True out_tps=213.47028071117256 ttft_p50=542.612138466211 tpot_p50=2.6118900842608554 []
+[10:14:00] concurrency/isl16384_osl256_c1 r3: valid=True out_tps=219.9451077895011 ttft_p50=548.3291474811267 tpot_p50=2.341852596088988 []
+[10:14:31] concurrency/isl16384_osl256_c4 r3: valid=True out_tps=361.53851965370325 ttft_p50=805.2203209954314 tpot_p50=6.6202955863748985 []
+[10:15:31] concurrency/isl16384_osl256_c16 r3: valid=True out_tps=461.6639551715327 ttft_p50=1209.9194364855066 tpot_p50=28.625893343112196 []
+[10:18:23] concurrency/isl16384_osl256_c64 r3: valid=True out_tps=511.8921639289403 ttft_p50=9288.634570490103 tpot_p50=79.81098662164773 []
+[10:18:23] CHAIN sweep done mimo-v26 dflash-k7
+[10:18:38] CHAIN ALL DONE, server stopped

@@ -15,7 +15,9 @@ BASE = "http://localhost:8000"
 MODELS = {  # same pins as bench/run_matrix.py
     "v41": ("deepseek-ai/DeepSeek-V4.1-Flash", "dba1be0a40aa45a94ad051997016db3960a90277", "deepseek_v41"),
     "v4-0731": ("deepseek-ai/DeepSeek-V4-Flash-0731", "7872f01b1d1fe23eabc4c98b48bffcef5a386062", "deepseek_v4"),
+    "mimo-v26": ("XiaomiMiMo/MiMo-V2.6-Flash-MOPD", "2479e2d0029eca9a34cc7e7f55a121925f81908e", "auto"),
 }
+THINKING_OFF = {"mimo-v26": {"enable_thinking": False}}  # DeepSeek default: {"thinking": False}
 
 
 def post(path, body=None, timeout=900):
@@ -34,13 +36,14 @@ def main():
     ap.add_argument("--max-tokens", type=int, default=8)
     ap.add_argument("--seed", type=int, default=90001)
     ap.add_argument("--profile-dir")
+    ap.add_argument("--study", default="v41-vs-0731")
     a = ap.parse_args()
     MODEL, REV, TOK_MODE = MODELS[a.model]
-    a.profile_dir = a.profile_dir or str(ROOT / f"results/v41-vs-0731/{a.model}/profiles")
+    a.profile_dir = a.profile_dir or str(ROOT / f"results/{a.study}/{a.model}/profiles")
 
     from vllm.tokenizers import get_tokenizer
     from vllm.benchmarks.datasets import gen_prompt_decode_to_target_len
-    tok = get_tokenizer(MODEL, tokenizer_mode=TOK_MODE, revision=REV)
+    tok = get_tokenizer(MODEL, tokenizer_mode=TOK_MODE, revision=REV, trust_remote_code=True)
     ids = np.random.default_rng(a.seed).integers(0, tok.vocab_size, size=a.isl).tolist()
     prompt, _, _ = gen_prompt_decode_to_target_len(
         tokenizer=tok, token_sequence=ids, target_token_len=a.isl, add_special_tokens=False)
@@ -49,7 +52,7 @@ def main():
     before = {p for p in pdir.rglob("*") if p.is_file()}
     body = {"model": MODEL, "messages": [{"role": "user", "content": prompt}],
             "max_tokens": a.max_tokens, "ignore_eos": True, "temperature": 0,
-            "chat_template_kwargs": {"thinking": False}}
+            "chat_template_kwargs": THINKING_OFF.get(a.model, {"thinking": False})}
     t_start = time.time()
     print("start_profile", post("/start_profile")[0])
     t0 = time.time()

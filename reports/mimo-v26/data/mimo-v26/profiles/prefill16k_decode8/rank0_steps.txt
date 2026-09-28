@@ -1,0 +1,92 @@
+
+step 0 PREFILL execute_context_1(8192)_generation_0(0): span 238.44 ms, kernel sum 211.13 ms, 872 kernels
+  moe_expert_gemm           71.32 ms   33.8%  n=92
+  moe_route_combine          4.57 ms    2.2%  n=184
+  allreduce                 94.89 ms   44.9%  n=95
+  attention_core             4.19 ms    2.0%  n=48
+  qkv_rope_kvcache           1.09 ms    0.5%  n=48
+  dense_gemm                11.11 ms    5.3%  n=152
+  mhc_residual_norm          8.49 ms    4.0%  n=95
+  other_elementwise         15.48 ms    7.3%  n=158
+
+step 1 PREFILL execute_context_1(8192)_generation_0(0): span 226.55 ms, kernel sum 216.26 ms, 869 kernels
+  moe_expert_gemm           71.63 ms   33.1%  n=92
+  moe_route_combine          4.60 ms    2.1%  n=184
+  allreduce                 94.75 ms   43.8%  n=95
+  attention_core             9.07 ms    4.2%  n=48
+  qkv_rope_kvcache           1.09 ms    0.5%  n=48
+  dense_gemm                11.18 ms    5.2%  n=152
+  mhc_residual_norm          8.49 ms    3.9%  n=95
+  other_elementwise         15.45 ms    7.1%  n=155
+
+step 2 PREFILL execute_context_1(9)_generation_0(0): span 7.72 ms, kernel sum 7.11 ms, 882 kernels
+  moe_expert_gemm            2.91 ms   40.9%  n=94
+  moe_route_combine          0.57 ms    8.0%  n=188
+  allreduce                  1.54 ms   21.7%  n=97
+  attention_core             0.70 ms    9.8%  n=96
+  qkv_rope_kvcache           0.07 ms    1.1%  n=48
+  dense_gemm                 0.98 ms   13.9%  n=204
+  other_elementwise          0.34 ms    4.8%  n=155
+
+step 3 DECODE execute_context_0(0)_generation_1(1): span 5.72 ms, kernel sum 5.31 ms, 880 kernels
+  moe_expert_gemm            1.52 ms   28.7%  n=94
+  moe_route_combine          0.51 ms    9.6%  n=188
+  allreduce                  1.42 ms   26.7%  n=97
+  attention_core             0.59 ms   11.2%  n=96
+  qkv_rope_kvcache           0.07 ms    1.3%  n=48
+  dense_gemm                 0.93 ms   17.5%  n=204
+  other_elementwise          0.27 ms    5.0%  n=153
+
+step 4 DECODE execute_context_0(0)_generation_1(1): span 5.67 ms, kernel sum 5.25 ms, 880 kernels
+  moe_expert_gemm            1.34 ms   25.6%  n=94
+  moe_route_combine          0.50 ms    9.6%  n=188
+  allreduce                  1.54 ms   29.4%  n=97
+  attention_core             0.60 ms   11.3%  n=96
+  qkv_rope_kvcache           0.07 ms    1.3%  n=48
+  dense_gemm                 0.93 ms   17.7%  n=204
+  other_elementwise          0.27 ms    5.1%  n=153
+
+step 5 DECODE execute_context_0(0)_generation_1(1): span 5.69 ms, kernel sum 5.27 ms, 880 kernels
+  moe_expert_gemm            1.34 ms   25.4%  n=94
+  moe_route_combine          0.51 ms    9.6%  n=188
+  allreduce                  1.57 ms   29.7%  n=97
+  attention_core             0.59 ms   11.2%  n=96
+  qkv_rope_kvcache           0.07 ms    1.3%  n=48
+  dense_gemm                 0.93 ms   17.6%  n=204
+  other_elementwise          0.27 ms    5.1%  n=153
+
+step 6 DECODE execute_context_0(0)_generation_1(1): span 5.67 ms, kernel sum 5.25 ms, 880 kernels
+  moe_expert_gemm            1.39 ms   26.6%  n=94
+  moe_route_combine          0.51 ms    9.6%  n=188
+  allreduce                  1.49 ms   28.4%  n=97
+  attention_core             0.60 ms   11.3%  n=96
+  qkv_rope_kvcache           0.07 ms    1.3%  n=48
+  dense_gemm                 0.93 ms   17.6%  n=204
+  other_elementwise          0.27 ms    5.1%  n=153
+
+step 7 DECODE execute_context_0(0)_generation_1(1): span 5.72 ms, kernel sum 5.30 ms, 880 kernels
+  moe_expert_gemm            1.53 ms   28.8%  n=94
+  moe_route_combine          0.51 ms    9.7%  n=188
+  allreduce                  1.40 ms   26.4%  n=97
+  attention_core             0.59 ms   11.2%  n=96
+  qkv_rope_kvcache           0.07 ms    1.3%  n=48
+  dense_gemm                 0.93 ms   17.5%  n=204
+  other_elementwise          0.27 ms    5.1%  n=153
+
+step 8 DECODE execute_context_0(0)_generation_1(1): span 5.69 ms, kernel sum 5.27 ms, 880 kernels
+  moe_expert_gemm            1.66 ms   31.5%  n=94
+  moe_route_combine          0.51 ms    9.6%  n=188
+  allreduce                  1.25 ms   23.6%  n=97
+  attention_core             0.59 ms   11.2%  n=96
+  qkv_rope_kvcache           0.07 ms    1.3%  n=48
+  dense_gemm                 0.93 ms   17.6%  n=204
+  other_elementwise          0.27 ms    5.1%  n=153
+
+step 9 DECODE execute_context_0(0)_generation_1(1): span 5.69 ms, kernel sum 5.27 ms, 880 kernels
+  moe_expert_gemm            1.54 ms   29.2%  n=94
+  moe_route_combine          0.51 ms    9.7%  n=188
+  allreduce                  1.36 ms   25.8%  n=97
+  attention_core             0.59 ms   11.2%  n=96
+  qkv_rope_kvcache           0.07 ms    1.3%  n=48
+  dense_gemm                 0.93 ms   17.6%  n=204
+  other_elementwise          0.27 ms    5.1%  n=153
