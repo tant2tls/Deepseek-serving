@@ -45,4 +45,4 @@ The imported Qwen `config.json` is a small configuration extracted from the cach
 - Weights, hub blobs, general download caches, broad debug/console logs, and failed TP4 experiments: unnecessary for this TP8 reference bundle. Only selected startup logs and the small Qwen config are retained.
 - Later `new_run_report_real/` packages, root final reports, and the reported DeepSeek n5 package: outside the requested model-folder snapshot. This bundle does not claim to be the latest or complete inventory of the source repository. A reported n5 package was also recorded as missing locally in the source handoff; no unverified numbers are imported from it.
 
-If GLM or Qwen is requested later, read its guide, choose compatible arms, and design fresh controls before drawing new comparisons. Until then, continue only the DeepSeek plan.
+If GLM or Qwen is requested later, read its guide, choose compatible arms, and design fresh controls before drawing new comparisons. Until then, follow the active three-model H100 scope in [target.md](../target.md); historical experiment lists do not authorize new work, and all new prefix-cache experiments are deferred.

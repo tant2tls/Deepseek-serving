@@ -1,6 +1,8 @@
 # Reproducing a serving study on one 8×H100 node
 
-This is the procedure that produced [report.md](../report.md) (study `v41-vs-0731`). It also serves as the template for the next model. GPUs are rented by the hour, so the procedure is organized to keep them busy and to stop servers as soon as measurement ends.
+**Active-phase routing, 2026-09-30:** follow [target.md](../target.md) and [the three-model GPU plan](three-model-h100-plan.md) for `spec-realtext-h100-v1`. Extend the harness locally first; use fresh AR controls, variable 256/2048 output lengths, pinned real text and a new no-prefix chain. All new prefix tests, including reuse checks and prewarming, are deferred. H200 and new models are outside the next session. Do not run the historical launch matrix or `chain_mimo.sh` as the active workflow.
+
+The sections below preserve the procedure that produced [report.md](../report.md) (study `v41-vs-0731`) and [report_mimo.md](../report_mimo.md). Their run lists, fixed-256 validity rule and timing estimates are **historical reproduction instructions**, not defaults for the new phase. Environment fixes and curation remain applicable; the new plan's per-request validity, counting and scope take precedence. GPUs are rented by the hour: chain launches, measure promptly and stop servers as soon as measurement ends.
 
 ## 1. Environment
 
@@ -15,6 +17,8 @@ This is the procedure that produced [report.md](../report.md) (study `v41-vs-073
 
 ## 2. Adding a model
 
+Historical extension procedure; no fourth model is authorized by the current three-model plan.
+
 1. Check `config.json` `architectures` against `vllm.model_executor.models.registry.ModelRegistry.get_supported_archs()` in the pinned venv.
 2. Add one entry each to `MODELS` in `bench/run_matrix.py`, the `case` block in `bench/serve.sh`, and `bench/profile_trace.py`: model ID, pinned revision, tokenizer mode, and reasoning/tool parsers.
 3. Confirm that `chat_template_kwargs.thinking=false` (or the model's equivalent) produces non-thinking output, and record the encoded request.
@@ -22,6 +26,8 @@ This is the procedure that produced [report.md](../report.md) (study `v41-vs-073
 5. Write a plan JSON (`results/<study>/plan*.json`, copied to `reports/<study>/`) **before** collecting.
 
 ## 3. Launch plan (each restart costs 3–10 min)
+
+Historical matrix only. The active phase disables prefix caching and uses its own manifest/chain; do not execute the prefix launch or old chained scripts below for it.
 
 | Launch | Config | Workloads | Approx. time |
 | --- | --- | --- | --- |
@@ -36,9 +42,9 @@ The first launch of a new model takes about 8–10 min (JIT, DeepGEMM warmup, gr
 ## 4. Harness rules
 
 - `run_matrix.py` writes immutable run directories under `results/<study>/<model>/<workload>/<config>/<point>/repeat-N`. Reruns become `repeat-N-rerunK`, and nothing is overwritten.
-- A run is valid only with all requests completed, output = n × 256, and server prompt tokens ≥ 98% of the target.
+- Historical fixed-256 runs are valid only with all requests completed, output = n × 256, and server prompt tokens ≥ 98% of the target. New real-text runs validate every request against its declared output budget and actual rendered prompt count; natural-EOS task checks use separate validity rules.
 - Speculative counters (`spec_num_drafts`, `spec_num_draft_tokens` = scheduled drafts, `spec_num_accepted_tokens`) are in `summary.json`. Per-position acceptance comes from `telemetry/metrics_{before,after}.prom`.
-- **Prewarm caveat:** a model whose SWA prefix reuse needs a second touch (0731-style) must be prewarmed with **two** requests per prefix using distinct suffixes. Verify with `prefix_reuse_check.py` before trusting prewarmed numbers.
+- **Historical prewarm caveat (deferred in the active phase):** a model whose SWA prefix reuse needs a second touch (0731-style) requires **two** requests per prefix using distinct suffixes for a fully warm control. The old one-touch measurements remain unchanged; do not run a new prewarm/reuse experiment without an explicit request.
 - Some models are slower on the first repeat at new shapes (0731: 5–9%, and once 50% on a new DSpark shape). Keep those runs, and report medians next to means.
 - Traces: decode under full CUDA graphs is not attributable. After adding a model, check that no large kernel lands in `other_elementwise` in `trace_breakdown.py`.
 

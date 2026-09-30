@@ -1,10 +1,10 @@
-# DeepSeek serving measurements
+# Three-model serving measurements on 8×H100
 
-The active study compares **DeepSeek V4 Flash 0731 (official release) and V4.1 Flash**, from serving throughput/latency down to prefill, decode, and individual component costs. See [target.md](target.md) for the measurement matrix and ordered GPU-session checklist.
+The completed studies compare **DeepSeek V4 Flash 0731 (official release), V4.1 Flash and MiMo-V2.6-Flash-MOPD** on one 8×H100 node. The next phase will test their strengths and weaknesses with fresh real-text AR/speculative baselines, long generation and component profiles. See [target.md](target.md), the [checked evidence review](update.md) and the [next GPU-session plan](docs/three-model-h100-plan.md). This new phase is planned, not measured; harness preparation comes before GPU rental.
 
-The old V4 measurements used the **preview** model ID, with exact revision unverified. They are historical context, not 0731 results. The [speculative-decoding plan](docs/speculative-decoding.md) separates classic preview MTP from native DSpark and compares speculation off, fixed DSpark, and adaptive DSpark for the two primary checkpoints.
+The old V4 measurements used the **preview** model ID, with exact revision unverified. They are historical context, not 0731 results. The [speculative support record](docs/speculative-decoding.md) separates classic preview MTP from native DSpark. **All new prefix-cache experiments are deferred; prefix caching stays off in the active phase.** Existing prefix results are preserved. H200 is a separate optional future study.
 
-This repository contains a curated, portable subset of the earlier `LLMs_frontier_serving` study. Historical GLM and Qwen evidence is retained for a future comparison **only when requested**. It does not expand the active DeepSeek scope.
+This repository contains a curated, portable subset of the earlier `LLMs_frontier_serving` study. Historical GLM and Qwen evidence is retained for a future comparison **only when requested**. It does not expand the three-model scope.
 
 | Need | File |
 | --- | --- |
@@ -15,7 +15,9 @@ This repository contains a curated, portable subset of the earlier `LLMs_frontie
 | Reproduce a study / add a model | [docs/reproduce.md](docs/reproduce.md) |
 | Benchmark/profiling harness | [bench/](bench/) |
 | Curated V4.1 and 0731 run evidence | [reports/v41-vs-0731/](reports/v41-vs-0731/) |
-| DeepSeek measurement and GPU handoff plan | [target.md](target.md) |
+| Active three-model objective and evidence rules | [target.md](target.md) |
+| Reviewed findings, corrections and experiment rationale | [update.md](update.md) |
+| Next GPU session: prerequisites, staged counts and handoff | [docs/three-model-h100-plan.md](docs/three-model-h100-plan.md) |
 | Checkpoint identity and MTP/DSpark experiments | [docs/speculative-decoding.md](docs/speculative-decoding.md) |
 | Historical evidence, selection, and shared caveats | [references/README.md](references/README.md) |
 | Historical DeepSeek V4 preview | [DeepSeek reference](references/deepseek-v4-flash/README.md) |
