@@ -1,0 +1,81 @@
+{
+ "model_key": "v41",
+ "runtime": {
+  "venv": "/root/vllm-latest",
+  "vllm": "0.31.1rc1.dev50+g554340f3d",
+  "torch": "2.13.0+cu132"
+ },
+ "checks": [
+  {
+   "kind": "natural_eos",
+   "domain": "code",
+   "prompt": "Write a Python function that returns the n-th Fibonacci number iteratively. Reply with the code only.",
+   "text": "def fibonacci(n):\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 24,
+    "total_tokens": 61,
+    "completion_tokens": 37,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   }
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "math",
+   "prompt": "What is 17 * 23? Give the final number on the last line.",
+   "text": "17 * 23 = 17 * (20 + 3) = 340 + 51 = 391.\n\n391",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 21,
+    "total_tokens": 47,
+    "completion_tokens": 26,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   }
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "chat",
+   "prompt": "In two sentences, explain why the sky is blue.",
+   "text": "Sunlight is scattered by molecules in the atmosphere, and shorter blue wavelengths scatter far more strongly than longer red ones. So blue light reaches your eyes from all directions across the sky, while reds and yellows mostly pass straight through.",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 15,
+    "total_tokens": 63,
+    "completion_tokens": 48,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   }
+  },
+  {
+   "kind": "forced_256",
+   "request_id": "1k-aux-000",
+   "usage": {
+    "prompt_tokens": 1007,
+    "total_tokens": 1263,
+    "completion_tokens": 256,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "finish_reason": "length"
+  }
+ ],
+ "rendered": {
+  "server_prompt_tokens": 1007,
+  "client_content_tokens": 1003,
+  "template_overhead": 4
+ },
+ "ok": true
+}

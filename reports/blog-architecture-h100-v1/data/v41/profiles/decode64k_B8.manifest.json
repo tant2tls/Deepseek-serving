@@ -1,0 +1,91 @@
+{
+ "kind": "decode",
+ "model_key": "v41",
+ "runtime": {
+  "venv": "/root/vllm-latest",
+  "vllm": "0.31.1rc1.dev50+g554340f3d",
+  "torch": "2.13.0+cu132"
+ },
+ "bucket": "64k",
+ "B": 8,
+ "request_ids": [
+  "64k-aux-000",
+  "64k-aux-001",
+  "64k-aux-002",
+  "64k-aux-003",
+  "64k-aux-004",
+  "64k-aux-005",
+  "64k-aux-006",
+  "64k-aux-007"
+ ],
+ "client_content_tokens": [
+  65498,
+  65510,
+  65509,
+  65240,
+  65511,
+  65529,
+  65340,
+  65508
+ ],
+ "generated_before_window": [
+  638,
+  625,
+  602,
+  614,
+  615,
+  594,
+  590,
+  579
+ ],
+ "tokens_in_window": [
+  36,
+  35,
+  35,
+  36,
+  33,
+  36,
+  36,
+  36
+ ],
+ "window_s": 0.46180224418640137,
+ "unprofiled_window": {
+  "window_s": 1.0000863075256348,
+  "tokens": [
+   79,
+   75,
+   77,
+   79,
+   77,
+   76,
+   79,
+   78
+  ]
+ },
+ "live_gauges": {
+  "vllm:num_requests_running": 8.0,
+  "vllm:num_requests_waiting": 0.0,
+  "vllm:kv_cache_usage_perc": 0.03190658570761329
+ },
+ "label": "decode64k_B8",
+ "files": [
+  "dp0_pp0_tp0_dcp0_ep0_rank0.1791404359893073608.pt.trace.json.gz",
+  "dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+  "dp0_pp0_tp1_dcp0_ep1_rank1.1791404359893450944.pt.trace.json.gz",
+  "dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+  "dp0_pp0_tp2_dcp0_ep2_rank2.1791404359896840312.pt.trace.json.gz",
+  "dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+  "dp0_pp0_tp3_dcp0_ep3_rank3.1791404359923242006.pt.trace.json.gz",
+  "dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+  "dp0_pp0_tp4_dcp0_ep4_rank4.1791404359915043782.pt.trace.json.gz",
+  "dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+  "dp0_pp0_tp5_dcp0_ep5_rank5.1791404359891532606.pt.trace.json.gz",
+  "dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+  "dp0_pp0_tp6_dcp0_ep6_rank6.1791404359886423575.pt.trace.json.gz",
+  "dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+  "dp0_pp0_tp7_dcp0_ep7_rank7.1791404359917001490.pt.trace.json.gz",
+  "dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt"
+ ],
+ "n_rank_files": 16,
+ "note": "diagnostic profiled capture; not a timing result"
+}

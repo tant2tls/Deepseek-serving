@@ -1,0 +1,91 @@
+{
+ "kind": "decode",
+ "model_key": "mimo-v26",
+ "runtime": {
+  "venv": "/root/vllm-latest",
+  "vllm": "0.31.1rc1.dev50+g554340f3d",
+  "torch": "2.13.0+cu132"
+ },
+ "bucket": "1k",
+ "B": 8,
+ "request_ids": [
+  "1k-aux-000",
+  "1k-aux-001",
+  "1k-aux-002",
+  "1k-aux-003",
+  "1k-aux-004",
+  "1k-aux-005",
+  "1k-aux-006",
+  "1k-aux-007"
+ ],
+ "client_content_tokens": [
+  942,
+  1130,
+  1004,
+  935,
+  1100,
+  1029,
+  922,
+  1114
+ ],
+ "generated_before_window": [
+  756,
+  754,
+  596,
+  754,
+  750,
+  750,
+  754,
+  157
+ ],
+ "tokens_in_window": [
+  492,
+  488,
+  0,
+  492,
+  487,
+  491,
+  485,
+  0
+ ],
+ "window_s": 5.0186240673065186,
+ "unprofiled_window": {
+  "window_s": 1.0000791549682617,
+  "tokens": [
+   100,
+   100,
+   0,
+   100,
+   100,
+   96,
+   100,
+   0
+  ]
+ },
+ "live_gauges": {
+  "vllm:num_requests_running": 8.0,
+  "vllm:num_requests_waiting": 0.0,
+  "vllm:kv_cache_usage_perc": 0.002094419941670367
+ },
+ "label": "decode1k_B8",
+ "files": [
+  "dp0_pp0_tp0_dcp0_ep0_rank0.1791403101095183968.pt.trace.json.gz",
+  "dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+  "dp0_pp0_tp1_dcp0_ep1_rank1.1791403101082702985.pt.trace.json.gz",
+  "dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+  "dp0_pp0_tp2_dcp0_ep2_rank2.1791403101081691308.pt.trace.json.gz",
+  "dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+  "dp0_pp0_tp3_dcp0_ep3_rank3.1791403101084400348.pt.trace.json.gz",
+  "dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+  "dp0_pp0_tp4_dcp0_ep4_rank4.1791403101021254156.pt.trace.json.gz",
+  "dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+  "dp0_pp0_tp5_dcp0_ep5_rank5.1791403101023135119.pt.trace.json.gz",
+  "dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+  "dp0_pp0_tp6_dcp0_ep6_rank6.1791403100994108348.pt.trace.json.gz",
+  "dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+  "dp0_pp0_tp7_dcp0_ep7_rank7.1791403101068250423.pt.trace.json.gz",
+  "dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt"
+ ],
+ "n_rank_files": 16,
+ "note": "diagnostic profiled capture; not a timing result"
+}

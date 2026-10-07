@@ -13,7 +13,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 BASE = "http://localhost:8000"
-VENV = "/root/vllm/bin"
+VENV = os.environ.get("VLLM_VENV", "/root/vllm") + "/bin"  # default: pinned build of the completed studies
 
 MODELS = {
     "v41": dict(model="deepseek-ai/DeepSeek-V4.1-Flash",
@@ -27,6 +27,17 @@ MODELS = {
                      revision="2479e2d0029eca9a34cc7e7f55a121925f81908e",
                      tokenizer_mode="auto",
                      extra_body={"chat_template_kwargs": {"enable_thinking": False}}),
+    # Blog study additions (2026-10-07). Qwen: thinking off with enable_thinking=false.
+    # GLM's template has no thinking-off switch (it always opens <think>); the lowest
+    # reasoning effort is the closest setting and is recorded as a deviation.
+    "glm-53": dict(model="zai-org/GLM-5.3-Flash",
+                   revision="eb9eb208eb0d988989d07a6a12d0fdeb5f52574a",
+                   tokenizer_mode="auto",
+                   extra_body={"chat_template_kwargs": {"reasoning_effort": "low"}}),
+    "qwen-38": dict(model="Qwen/Qwen3.8-Flash-Next-FP8",
+                    revision="236dfdf285828023ca3bcd3f37366c58a3469b13",
+                    tokenizer_mode="auto",
+                    extra_body={"chat_template_kwargs": {"enable_thinking": False}}),
 }
 OSL = 256
 # Thinking explicitly disabled; greedy target sampling pinned for every arm.
@@ -169,7 +180,7 @@ def bench_cmd(mk, out_dir, fname, *, c, n, seed, dataset_args, warm=False):
 
 
 def run_point(mk, study, workload, config, point, rep, *, c, n, seed, dataset_args,
-              expect_prompt_tokens=None, reset_cache=False, pre_cmds=()):
+              expect_prompt_tokens=None, reset_cache=False, pre_cmds=(), timeout=None):
     rdir = unique_dir(ROOT / "results" / study / mk / workload / config / point / f"repeat-{rep}")
     tdir = rdir / "telemetry"; tdir.mkdir(parents=True)
     cmd = bench_cmd(mk, rdir, "bench.json", c=c, n=n, seed=seed, dataset_args=dataset_args)
@@ -188,7 +199,10 @@ def run_point(mk, study, workload, config, point, rep, *, c, n, seed, dataset_ar
     (tdir / "metrics_before.prom").write_text(before := http_get("/metrics"))
     with Poller(tdir) as poll, open(rdir / "bench.log", "w") as log:
         t0 = time.time()
-        rc = subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT).returncode
+        try:
+            rc = subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT, timeout=timeout).returncode
+        except subprocess.TimeoutExpired:
+            rc = 124  # bounded run; recorded as a failed attempt
         wall = time.time() - t0
     (tdir / "metrics_after.prom").write_text(after := http_get("/metrics"))
     manifest.update(finished=datetime.datetime.now().isoformat(), returncode=rc, wall_s=wall)

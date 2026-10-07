@@ -1,0 +1,107 @@
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                                   Name    Self CPU %      Self CPU   CPU total %     CPU total  CPU time avg     Self CUDA   Self CUDA %    CUDA total  CUDA time avg    # of Calls  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                        ## Call CompiledFxGraph None ##         0.00%       0.000us         0.00%       0.000us       0.000us     611.765ms        92.53%     611.765ms       6.243ms            98  
+                                 humming::launch_kernel         2.09%       9.883ms         4.20%      19.847ms     105.567us     462.662ms        69.98%     499.607ms       2.657ms           188  
+                execute_context_1(8192)_generation_0(0)         0.00%       0.000us         0.00%       0.000us       0.000us     328.603ms        49.70%     328.603ms     328.603ms             1  
+                execute_context_1(7133)_generation_0(0)         0.00%       0.000us         0.00%       0.000us       0.000us     294.421ms        44.53%     294.421ms     294.421ms             1  
+void humming<MmaOpClass, Shape<0u, 4096u, 4096u>, Sh...         0.00%       0.000us         0.00%       0.000us       0.000us     155.758ms        23.56%     155.758ms       3.314ms            47  
+void humming<MmaOpClass, Shape<0u, 4096u, 4096u>, Sh...         0.00%       0.000us         0.00%       0.000us       0.000us     144.618ms        21.87%     144.618ms       3.077ms            47  
+void humming<MmaOpClass, Shape<0u, 4096u, 2048u>, Sh...         0.00%       0.000us         0.00%       0.000us       0.000us      84.910ms        12.84%      84.910ms       1.807ms            47  
+void humming<MmaOpClass, Shape<0u, 4096u, 2048u>, Sh...         0.00%       0.000us         0.00%       0.000us       0.000us      77.375ms        11.70%      77.375ms       1.646ms            47  
+void (anonymous namespace)::multimem_all_reduce_kern...         0.00%       0.000us         0.00%       0.000us       0.000us      56.083ms         8.48%      56.083ms     289.085us           194  
+                                     record_param_comms         0.31%       1.473ms         1.53%       7.214ms      37.185us      56.083ms         8.48%      57.002ms     293.824us           194  
+                                    Command Buffer Full        30.14%     142.325ms        30.14%     142.325ms     671.345us      44.471ms         6.73%      44.471ms     209.770us           212  
+                   execute_context_0(0)_generation_1(1)         0.00%       0.000us         0.00%       0.000us       0.000us      43.652ms         6.60%      43.652ms       6.236ms             7  
+                                            aten::copy_         1.03%       4.864ms         5.32%      25.118ms      42.500us      16.256ms         2.46%      16.715ms      28.282us           591  
+                         Memcpy DtoD (Device -> Device)         0.00%       0.000us         0.00%       0.000us       0.000us      16.029ms         2.42%      16.029ms      33.256us           482  
+void process_input_kernel<Config, TuningConfig, (Pro...         0.00%       0.000us         0.00%       0.000us       0.000us      14.061ms         2.13%      14.061ms      16.620us           846  
+                                               aten::mm         1.89%       8.911ms         4.21%      19.901ms     100.005us      12.944ms         1.96%      13.351ms      67.089us           199  
+                          humming::launch_process_input         0.36%       1.711ms         7.32%      34.574ms     183.905us      12.810ms         1.94%      13.850ms      73.669us           188  
+                             deep_gemm::fp8_fp4_gemm_nt         1.00%       4.708ms         1.58%       7.444ms      74.442us      10.881ms         1.65%      11.151ms     111.510us           100  
+                                       _vllm_fa3_C::fwd         0.23%       1.083ms         0.43%       2.031ms     112.806us       9.928ms         1.50%       9.928ms     551.557us            18  
+void cutlass::device_kernel<flash::enable_sm90_or_la...         0.00%       0.000us         0.00%       0.000us       0.000us       9.879ms         1.49%       9.879ms     548.817us            18  
+                  triton_red_fused_fused_add_rms_norm_1         0.54%       2.562ms         0.67%       3.169ms      33.713us       9.813ms         1.48%       9.911ms     105.439us            94  
+                  triton_red_fused_fused_add_rms_norm_1         0.00%       0.000us         0.00%       0.000us       0.000us       9.813ms         1.48%       9.813ms     104.391us            94  
+void flashinfer::trtllm_allreduce_fusion::allreduce_...         0.00%       0.000us         0.00%       0.000us       0.000us       7.936ms         1.20%       7.936ms      11.688us           679  
+                  triton_red_fused_fused_add_rms_norm_0         0.46%       2.192ms         1.47%       6.944ms      72.330us       6.229ms         0.94%       6.474ms      67.435us            96  
+                  triton_red_fused_fused_add_rms_norm_0         0.00%       0.000us         0.00%       0.000us       0.000us       6.229ms         0.94%       6.229ms      64.886us            96  
+void humming<MmaOpClass, Shape<0u, 4096u, 4096u>, Sh...         0.00%       0.000us         0.00%       0.000us       0.000us       5.984ms         0.91%       5.984ms      18.187us           329  
+kernel_cutlass_kernel_vllmvllm_flash_attncuteflash_f...         0.00%       0.000us         0.00%       0.000us       0.000us       5.791ms         0.88%       5.791ms      16.498us           351  
+void finalizeMoeRoutingKernel<__nv_bfloat16, __nv_bf...         0.00%       0.000us         0.00%       0.000us       0.000us       5.558ms         0.84%       5.558ms      13.139us           423  
+void deep_gemm::sm90_fp8_gemm_1d2d_impl<(cute::UMMA:...         0.00%       0.000us         0.00%       0.000us       0.000us       5.322ms         0.80%       5.322ms     110.869us            48  
+void deep_gemm::sm90_fp8_gemm_1d2d_impl<(cute::UMMA:...         0.00%       0.000us         0.00%       0.000us       0.000us       4.989ms         0.75%       4.989ms     103.935us            48  
+                          _C::per_token_group_fp8_quant         0.24%       1.146ms         0.43%       2.013ms      20.135us       4.942ms         0.75%       4.989ms      49.889us           100  
+void per_token_group_quant_8bit_register_kernel<c10:...         0.00%       0.000us         0.00%       0.000us       0.000us       4.942ms         0.75%       4.942ms      49.422us           100  
+         nvjet_sm90_tst_256x128_64x4_1x2_h_bz_coopA_TNT         0.00%       0.000us         0.00%       0.000us       0.000us       4.739ms         0.72%       4.739ms      98.726us            48  
+                                  _moe_C::moe_unpermute         0.18%     849.386us         0.39%       1.855ms      19.738us       4.711ms         0.71%       4.837ms      51.454us            94  
+void humming<MmaOpClass, Shape<0u, 4096u, 2048u>, Sh...         0.00%       0.000us         0.00%       0.000us       0.000us       4.602ms         0.70%       4.602ms      13.989us           329  
+         nvjet_sm90_tst_256x152_64x4_2x1_v_bz_coopA_TNT         0.00%       0.000us         0.00%       0.000us       0.000us       4.387ms         0.66%       4.387ms      91.399us            48  
+     preprocessTopkIdKernel(int*, int, int const*, int)         0.00%       0.000us         0.00%       0.000us       0.000us       3.405ms         0.52%       3.405ms       8.050us           423  
+                    vllm::unified_attention_with_output         4.77%      22.547ms         6.47%      30.557ms     318.298us       3.366ms         0.51%      13.294ms     138.479us            96  
+                            _moe_C::moe_prepare_scatter         1.18%       5.571ms        19.01%      89.786ms     955.173us       3.199ms         0.48%       7.282ms      77.472us            94  
+                  reshape_and_cache_kernel_flash_diffkv         0.00%       0.000us         0.00%       0.000us       0.000us       2.621ms         0.40%       2.621ms       6.067us           432  
+void deep_gemm::fp8_gemm_kernel_swapAB<1856u, 4096u,...         0.00%       0.000us         0.00%       0.000us       0.000us       2.601ms         0.39%       2.601ms       7.741us           336  
+                          vllm::unified_kv_cache_update         2.75%      12.995ms         3.18%      15.006ms     156.312us       2.123ms         0.32%       2.123ms      22.112us            96  
+                                     triton_poi_fused_2         0.50%       2.372ms         0.95%       4.509ms      49.012us       1.923ms         0.29%       1.981ms      21.533us            92  
+                                     triton_poi_fused_2         0.00%       0.000us         0.00%       0.000us       0.000us       1.923ms         0.29%       1.923ms      20.900us            92  
+                 nvjet_sm90_tst_64x8_64x16_4x1_v_bz_TNT         0.00%       0.000us         0.00%       0.000us       0.000us       1.910ms         0.29%       1.910ms       5.685us           336  
+void vllm::moe::single_group_topk::detail::single_gr...         0.00%       0.000us         0.00%       0.000us       0.000us       1.904ms         0.29%       1.904ms      20.251us            94  
+## Call CompiledFxGraph fpgxwkfxrrsj4l7v2tmuo5xa27fj...         0.00%       0.000us         0.00%       0.000us       0.000us       1.904ms         0.29%       1.904ms      20.251us            94  
+                                   _moe_C::grouped_topk         0.39%       1.854ms         1.72%       8.113ms      86.307us       1.904ms         0.29%       1.964ms      20.888us            94  
+               nvjet_sm90_tss_128x128_64x6_2x1_v_bz_TNT         0.00%       0.000us         0.00%       0.000us       0.000us       1.672ms         0.25%       1.672ms      35.567us            47  
+void cub::CUB_300001_SM_750_800_860_890_900_1000_120...         0.00%       0.000us         0.00%       0.000us       0.000us       1.669ms         0.25%       1.669ms       8.876us           188  
+          nvjet_sm90_tss_64x8_64x16_4x1_v_bz_splitK_TNT         0.00%       0.000us         0.00%       0.000us       0.000us       1.566ms         0.24%       1.566ms       4.759us           329  
+               nvjet_sm90_tss_128x112_64x7_1x2_h_bz_TNT         0.00%       0.000us         0.00%       0.000us       0.000us       1.498ms         0.23%       1.498ms      31.875us            47  
+void cub::CUB_300001_SM_750_800_860_890_900_1000_120...         0.00%       0.000us         0.00%       0.000us       0.000us       1.457ms         0.22%       1.457ms       4.430us           329  
+void vllm::moe::single_group_topk::detail::single_gr...         0.00%       0.000us         0.00%       0.000us       0.000us       1.018ms         0.15%       1.018ms       3.095us           329  
+void cutlass::device_kernel<flash::enable_sm90_or_la...         0.00%       0.000us         0.00%       0.000us       0.000us     976.496us         0.15%     976.496us      15.500us            63  
+computeExpertOffsetsAndInverseKernel(int const*, lon...         0.00%       0.000us         0.00%       0.000us       0.000us     947.176us         0.14%     947.176us       2.239us           423  
+kernel_cutlass_kernel_vllmvllm_flash_attncuteflash_f...         0.00%       0.000us         0.00%       0.000us       0.000us     662.428us         0.10%     662.428us       2.426us           273  
+void cublasLt::splitKreduce_kernel<32, 16, int, floa...         0.00%       0.000us         0.00%       0.000us       0.000us     622.495us         0.09%     622.495us       1.892us           329  
+void tensorrt_llm::kernels::fp8_blockscale_gemm::sca...         0.00%       0.000us         0.00%       0.000us       0.000us     613.322us         0.09%     613.322us       1.752us           350  
+                 nvjet_sm90_tst_256x8_64x6_4x1_v_bz_TNT         0.00%       0.000us         0.00%       0.000us       0.000us     556.889us         0.08%     556.889us      61.877us             9  
+                                        Memset (Device)         0.00%       0.000us         0.00%       0.000us       0.000us     551.866us         0.08%     551.866us       1.169us           472  
+                                     triton_poi_fused_0         0.00%       0.000us         0.00%       0.000us       0.000us     526.827us         0.08%     526.827us       1.636us           322  
+void deep_gemm::sm90_fp8_gemm_1d2d_impl<(cute::UMMA:...         0.00%       0.000us         0.00%       0.000us       0.000us     368.988us         0.06%     368.988us     184.494us             2  
+                                          memcpy32_post         0.00%       0.000us         0.00%       0.000us       0.000us     338.709us         0.05%     338.709us       1.008us           336  
+void cutlass::device_kernel<flash::FlashAttnFwdCombi...         0.00%       0.000us         0.00%       0.000us       0.000us     309.104us         0.05%     309.104us       4.906us            63  
+void cub::CUB_300001_SM_750_800_860_890_900_1000_120...         0.00%       0.000us         0.00%       0.000us       0.000us     286.962us         0.04%     286.962us       3.053us            94  
+                  triton_red_fused_fused_add_rms_norm_2         0.01%      47.362us         0.01%      66.035us      33.017us     209.890us         0.03%     209.890us     104.945us             2  
+                  triton_red_fused_fused_add_rms_norm_2         0.00%       0.000us         0.00%       0.000us       0.000us     209.890us         0.03%     209.890us     104.945us             2  
+void deep_gemm::sm90_fp8_gemm_1d2d_impl<(cute::UMMA:...         0.00%       0.000us         0.00%       0.000us       0.000us     201.218us         0.03%     201.218us     100.609us             2  
+void flash::prepare_varlen_num_blocks_kernel<1, fals...         0.00%       0.000us         0.00%       0.000us       0.000us     199.902us         0.03%     199.902us       2.468us            81  
+void at::native::elementwise_kernel<128, 2, at::nati...         0.00%       0.000us         0.00%       0.000us       0.000us     156.153us         0.02%     156.153us       3.123us            50  
+                                       vllm::all_gather         0.20%     922.907us         0.28%       1.331ms     147.850us     155.129us         0.02%     155.129us      17.237us             9  
+ncclDevKernel_AllGather_RING_LL(ncclDevKernelArgsSto...         0.00%       0.000us         0.00%       0.000us       0.000us     155.129us         0.02%     155.129us      17.237us             9  
+void cub::CUB_300001_SM_750_800_860_890_900_1000_120...         0.00%       0.000us         0.00%       0.000us       0.000us     134.074us         0.02%     134.074us       1.426us            94  
+                                  _gumbel_sample_kernel         0.00%       0.000us         0.00%       0.000us       0.000us     118.836us         0.02%     118.836us      13.204us             9  
+                            triton_red_fused_rms_norm_0         0.02%      90.199us         0.02%     114.558us      57.279us      90.830us         0.01%      90.830us      45.415us             2  
+                            triton_red_fused_rms_norm_0         0.00%       0.000us         0.00%       0.000us       0.000us      90.830us         0.01%      90.830us      45.415us             2  
+                                            aten::index         0.14%     670.519us         0.47%       2.233ms      82.702us      73.387us         0.01%      75.660us       2.802us            27  
+void deep_gemm::fp8_gemm_kernel_swapAB<4096u, 4096u,...         0.00%       0.000us         0.00%       0.000us       0.000us      69.837us         0.01%      69.837us       9.977us             7  
+                                     triton_poi_fused_1         0.00%       0.000us         0.00%       0.000us       0.000us      67.242us         0.01%      67.242us       4.203us            16  
+                      triton_poi_fused_mul_silu_slice_1         0.01%      34.692us         0.01%      54.237us      27.118us      59.882us         0.01%      59.882us      29.941us             2  
+                      triton_poi_fused_mul_silu_slice_1         0.00%       0.000us         0.00%       0.000us       0.000us      59.882us         0.01%      59.882us      29.941us             2  
+void vllm::vocab_embedding::vocab_parallel_embedding...         0.00%       0.000us         0.00%       0.000us       0.000us      55.205us         0.01%      55.205us       6.134us             9  
+                          _compute_slot_mappings_kernel         0.00%       0.000us         0.00%       0.000us       0.000us      53.417us         0.01%      53.417us       5.935us             9  
+                                    _apply_write_kernel         0.00%       0.000us         0.00%       0.000us       0.000us      48.842us         0.01%      48.842us       8.140us             6  
+                           _C::vocab_parallel_embedding         0.02%      94.306us         0.03%     150.284us      75.142us      45.702us         0.01%      45.702us      22.851us             2  
+void deep_gemm::fp8_gemm_kernel_swapAB<4096u, 2048u,...         0.00%       0.000us         0.00%       0.000us       0.000us      44.520us         0.01%      44.520us       6.360us             7  
+                                     triton_poi_fused_3         0.01%      48.655us         0.01%      69.673us      34.836us      41.607us         0.01%      41.607us      20.804us             2  
+                                     triton_poi_fused_3         0.00%       0.000us         0.00%       0.000us       0.000us      41.607us         0.01%      41.607us      20.804us             2  
+                                     triton_poi_fused_1         0.02%      85.623us         0.02%     104.856us      52.428us      41.030us         0.01%      41.030us      20.515us             2  
+                                           aten::argmax         0.04%     178.265us         0.05%     241.504us      26.834us      39.719us         0.01%      39.719us       4.413us             9  
+void at::native::reduce_kernel<512, 1, at::native::R...         0.00%       0.000us         0.00%       0.000us       0.000us      39.719us         0.01%      39.719us       4.413us             9  
+                         Memcpy DtoH (Device -> Pinned)         0.00%       0.000us         0.00%       0.000us       0.000us      38.697us         0.01%      38.697us       2.150us            18  
+void at::native::index_elementwise_kernel<128, 4, at...         0.00%       0.000us         0.00%       0.000us       0.000us      33.575us         0.01%      33.575us       3.731us             9  
+                            _gather_block_tables_kernel         0.00%       0.000us         0.00%       0.000us       0.000us      32.615us         0.00%      32.615us       3.624us             9  
+                                    _post_update_kernel         0.00%       0.000us         0.00%       0.000us       0.000us      31.558us         0.00%      31.558us       3.506us             9  
+                         Memcpy HtoD (Pinned -> Device)         0.00%       0.000us         0.00%       0.000us       0.000us      31.462us         0.00%      31.462us       1.368us            23  
+                                            aten::fill_         0.05%     243.579us         0.10%     470.854us      10.236us      28.612us         0.00%      29.668us       0.645us            46  
+                   _get_num_sampled_and_rejected_kernel         0.00%       0.000us         0.00%       0.000us       0.000us      26.371us         0.00%      26.371us       2.930us             9  
+                         _prepare_prefill_inputs_kernel         0.00%       0.000us         0.00%       0.000us       0.000us      26.307us         0.00%      26.307us      13.153us             2  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+Self CPU time total: 472.284ms
+Self CUDA time total: 661.127ms
+

@@ -2,6 +2,29 @@
 
 **Active-phase routing, 2026-09-30:** follow [target.md](../target.md) and [the three-model GPU plan](three-model-h100-plan.md) for `spec-realtext-h100-v1`. Extend the harness locally first; use fresh AR controls, variable 256/2048 output lengths, pinned real text and a new no-prefix chain. All new prefix tests, including reuse checks and prewarming, are deferred. H200 and new models are outside the next session. Do not run the historical launch matrix or `chain_mimo.sh` as the active workflow.
 
+## 0. Fresh-node quick setup (verified 2026-10-07, blog study)
+
+Use this when a rented 8×H100 node starts empty. It took about 15 minutes from login to the first server launch; nothing here needs a GPU, so do it first and in parallel.
+
+| Step | Command | Time on the 2026-10-07 node | Notes |
+| --- | --- | --- | --- |
+| 1. Inventory | `nvidia-smi`, `lscpu`, `df -h /workspace`, `ls /workspace/hf/hub` | seconds | Do not assume the previous node's weights, caches or venvs survived. `/workspace/hf` was empty |
+| 2. Runtime | `bash install.sh` (pinned venv `~/vllm` and blog venv `~/vllm-latest`) | about 2 min per venv | Pick the runtime with `export VLLM_VENV=/root/vllm-latest`; the default stays the pinned build |
+| 3. Weights | `export HF_HOME=/workspace/hf HF_XET_HIGH_PERFORMANCE=1`, then `hf download <model> --revision <sha> --max-workers 32` for the three revisions in [target.md](../target.md) | 0731 156 GB in 2 min, MiMo 166 GB in 5 min, V4.1 476 GB in 4 min | All three repositories are public; no `HF_TOKEN` was needed. Download the smallest first so a launch can start early |
+| 4. Public inputs | `python3 -m venv /tmp/blog-inputs-venv && /tmp/blog-inputs-venv/bin/pip install pyarrow`; `/tmp/blog-inputs-venv/bin/python bench/blog_corpus.py`; `$VLLM_VENV/bin/python bench/blog_inputs.py` | about 2 min | The vLLM venv has no `pyarrow`; keep it out of the measured environment. The math and chat datasets are pinned by revision in `bench/blog_corpus.py` |
+| 5. Record the node | `$VLLM_VENV/bin/python bench/blog_study.py env` | seconds | Writes `results/<study>/_env/` |
+| 6. Diagnostics and pilot | `bash bench/blog_launch.sh chain-diag diag:v4-0731 diag:mimo-v26 diag:v41` | see the study report | One idle-profiler launch per model: functional checks, disjoint pilot, live-KV snapshots, traces |
+| 7. Freeze and dry-run | `python bench/blog_report.py pilot`, then `blog_study.py plan --counts '<json>'` and `blog_study.py dry-run <steps>` | seconds | Timing starts only after the dry run prints `DRY RUN OK` |
+| 8. Timing blocks | `bash bench/blog_launch.sh chain-timing timing:<model>:<block> ...` in the declared block order | see the study report | Each step owns its server and stops it on every exit path |
+| 9. Tables | `python bench/blog_report.py serving|memory|components` | seconds to minutes | Standard library only |
+
+Traps met on this node:
+
+- **Detach long chains.** A chain started as a tool-managed background command can be killed by that tool's timeout. `bench/blog_launch.sh` starts it with `setsid nohup`; watch `results/<study>/_logs/chain.log`.
+- **Never `pkill -f` a pattern that also appears in your own command line.** It killed the calling shell and left a half-started chain. Stop a chain with `kill -TERM <pid>` from the launcher's output; the chain then stops its own server group.
+- **First load of a model reads the whole checkpoint from disk**; expect several minutes before graph capture. The engine prints `No available shared memory broadcast block found in 60 seconds` while ranks load; that message alone is not a failure.
+- **No Nsight Compute (`ncu`) on the image.** Hardware HBM byte counters are unavailable unless it is installed and validated beforehand.
+
 The sections below preserve the procedure that produced [report.md](../report.md) (study `v41-vs-0731`) and [report_mimo.md](../report_mimo.md). Their run lists, fixed-256 validity rule and timing estimates are **historical reproduction instructions**, not defaults for the new phase. Environment fixes and curation remain applicable; the new plan's per-request validity, counting and scope take precedence. GPUs are rented by the hour: chain launches, measure promptly and stop servers as soon as measurement ends.
 
 ## 1. Environment

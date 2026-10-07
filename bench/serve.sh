@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Launch one matched DeepSeek server for the 0731 vs V4.1 study.
-# Usage: bench/serve.sh <model-key: v41|v4-0731> <config-id: off|off-prefix|...> <log-path> [extra vllm args]
+# Usage: bench/serve.sh <model-key: v41|v4-0731|mimo-v26|glm-53|qwen-38> <config-id: off|off-prefix|...> <log-path> [extra vllm args]
 # Credentials come from the environment (HF_TOKEN); never hardcode them here.
 set -euo pipefail
 
@@ -22,6 +22,16 @@ case "$MODEL_KEY" in
     REVISION=2479e2d0029eca9a34cc7e7f55a121925f81908e
     PARSER=mimo; TOKMODE=auto
     set -- --trust-remote-code --code-revision "$REVISION" "$@" ;;
+  # Added 2026-10-07 at Tan's request for the blog study (same common deployment).
+  # Reasoning/tool parsers follow the historical launches in references/.
+  glm-53)
+    MODEL=zai-org/GLM-5.3-Flash
+    REVISION=eb9eb208eb0d988989d07a6a12d0fdeb5f52574a
+    PARSER=glm45; TOOL_PARSER=glm47; TOKMODE=auto ;;
+  qwen-38)
+    MODEL=Qwen/Qwen3.8-Flash-Next-FP8
+    REVISION=236dfdf285828023ca3bcd3f37366c58a3469b13
+    PARSER=qwen3; TOOL_PARSER=qwen3_xml; TOKMODE=auto ;;
   *) echo "unknown model key $MODEL_KEY" >&2; exit 2 ;;
 esac
 
@@ -67,7 +77,8 @@ export FLASHINFER_WORKSPACE_BASE=/tmp/flashinfer_ws
 export VLLM_SERVER_DEV_MODE=1
 mkdir -p "$TRITON_CACHE_DIR" "$FLASHINFER_WORKSPACE_BASE" "$(dirname "$LOG")"
 
-source /root/vllm/bin/activate
+# VLLM_VENV selects the runtime; the default is the pinned build of the completed studies.
+source "${VLLM_VENV:-/root/vllm}/bin/activate"
 set -x
 exec vllm serve "$MODEL" \
   --revision "$REVISION" \
@@ -75,7 +86,7 @@ exec vllm serve "$MODEL" \
   --tensor-parallel-size 8 --enable-expert-parallel \
   --language-model-only \
   --tokenizer-mode "${TOKMODE:-$PARSER}" --reasoning-parser "$PARSER" \
-  --enable-auto-tool-choice --tool-call-parser "$PARSER" \
+  --enable-auto-tool-choice --tool-call-parser "${TOOL_PARSER:-$PARSER}" \
   --gpu-memory-utilization 0.90 \
   --max-model-len 262144 \
   --max-num-seqs 64 \

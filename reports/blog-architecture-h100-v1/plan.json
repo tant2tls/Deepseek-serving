@@ -1,0 +1,62 @@
+{
+ "study": "blog-architecture-h100-v1",
+ "frozen": "2026-10-07T20:37:38.504058",
+ "runtime": {
+  "venv": "/root/vllm-latest",
+  "vllm": "0.31.1rc1.dev50+g554340f3d",
+  "torch": "2.13.0+cu132"
+ },
+ "models": {
+  "v4-0731": {
+   "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
+   "revision": "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
+  },
+  "v41": {
+   "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+   "revision": "dba1be0a40aa45a94ad051997016db3960a90277"
+  },
+  "mimo-v26": {
+   "model": "XiaomiMiMo/MiMo-V2.6-Flash-MOPD",
+   "revision": "2479e2d0029eca9a34cc7e7f55a121925f81908e"
+  }
+ },
+ "deployment": "TP8 + EP, utilization 0.90, max_model_len 262144, max_num_seqs 64, max_num_batched_tokens 8192 (explicit), native precision, prefix caching off, speculation off",
+ "requests": "public code/math/chat text, one user message, server-side chat template, temperature 0, thinking off, ignore_eos with 256 output tokens",
+ "inputs_manifest_sha256": "742356f3e1747fafd9696993386911d441258390188ef75dbd6e6d759a15c978",
+ "counts": {
+  "16k:c1": 36,
+  "16k:c8": 75,
+  "1k:c1": 48,
+  "1k:c8": 204,
+  "64k:c1": 18,
+  "64k:c8": 33
+ },
+ "count_rule": "start at max(16, 4c), multiple of 3 for domain balance, raised until the fastest piloted model has a window of at least 60 s; same first-n requests of the timing split for every model",
+ "blocks": {
+  "1": [
+   "v4-0731",
+   "mimo-v26",
+   "v41"
+  ],
+  "2": [
+   "mimo-v26",
+   "v41",
+   "v4-0731"
+  ],
+  "3": [
+   "v41",
+   "v4-0731",
+   "mimo-v26"
+  ]
+ },
+ "point_order": "16k c1, 16k c8, 1k c1, 1k c8, 64k c1, 64k c8 in odd blocks; reversed in even blocks",
+ "warmup": "aux split (disjoint from timing) at every bucket after each launch",
+ "run_timeout_s": 1500,
+ "ready_timeout_s": 1800,
+ "validity": "all requests complete, every request returns exactly 256 output tokens, server prompt tokens at least 98% of the client content tokens, no failed requests",
+ "rerun_rule": "an invalid run is kept; one rerun in a new repeat-N-rerunK directory is paired by manifest identity; the fastest attempt is never selected",
+ "diagnostics": "per model: functional checks, disjoint pilot, live-KV snapshots at 1k/16k/64k x B=1/8, traces prefill16k, prefill64k, decode1k/64k x B=1/8 on the idle-profiler launch",
+ "timing_runs": 54,
+ "trace_captures": 18,
+ "note": "Counts from the disjoint aux-split pilot on all three models (2026-10-07, idle-profiler launches): 75 s on the fastest piloted model per point, floor max(16,4c), multiple of 3. Node allocation: one rented 8xH100 node, estimated 3.0 node-hours for the nine timing launches; stop point: end of block 3 or any step failing twice."
+}

@@ -20,5 +20,16 @@ uv pip install nvitop   # monitoring only; its nvidia-ml-py pin conflicts with t
 uv pip freeze | diff <(grep -v '^#' "$(dirname "$0")/reports/environment-lock.txt") - \
     && echo "environment matches lock" || echo "environment differs from lock (see diff above)"
 
-# For new work on a newer runtime instead (results will not be comparable):
-# uv pip install -U vllm --torch-backend=auto --extra-index-url https://wheels.vllm.ai/nightly
+# Blog study `blog-architecture-h100-v1` (2026-10-07) runs on the then-latest nightly in a SEPARATE
+# venv, so the pinned environment above stays intact for the completed studies:
+#   vLLM 0.31.1rc1.dev50+g554340f3d = commit 554340f3d3259e321be4c07282be7a02a5aeef83, torch 2.13.0+cu132.
+# Select it with `export VLLM_VENV=/root/vllm-latest` (bench/serve.sh and bench/run_matrix.py honour it).
+# Results from the two runtimes are not comparable without fresh controls.
+BLOG_VLLM_COMMIT=554340f3d3259e321be4c07282be7a02a5aeef83
+python3 -m venv ~/vllm-latest
+uv pip install --python ~/vllm-latest/bin/python "vllm==0.31.1rc1.dev50+g554340f3d" pandas \
+    --torch-backend=auto --index-strategy unsafe-best-match --prerelease=allow \
+    --extra-index-url "https://wheels.vllm.ai/${BLOG_VLLM_COMMIT}"
+# To move to the newest nightly instead (a new runtime arm; record the resolved commit):
+# uv pip install --python ~/vllm-latest/bin/python -U vllm pandas --torch-backend=auto \
+#     --index-strategy unsafe-best-match --prerelease=allow --extra-index-url https://wheels.vllm.ai/nightly

@@ -1,0 +1,182 @@
+[19:34:40] CHAIN env recorded: {'venv': '/root/vllm-latest', 'vllm': '0.31.1rc1.dev50+g554340f3d', 'torch': '2.13.0+cu132'}
+[19:35:29] CHAIN step diag:v4-0731 start
+[19:35:29] CHAIN launched v4-0731 off-profidle pgid=24736 log=results/blog-architecture-h100-v1/v4-0731/_server/serve-off-profidle-20261007-193529.log
+[19:37:20] CHAIN step diag:v4-0731 start
+[19:37:20] CHAIN launched v4-0731 off-profidle pgid=25430 log=results/blog-architecture-h100-v1/v4-0731/_server/serve-off-profidle-20261007-193720.log
+[19:45:45] CHAIN stopped v4-0731 off-profidle up=505s gpu_mem_max=0MiB leftover=0
+[19:45:45] CHAIN step diag:v4-0731 FAILED: RuntimeError('server exited rc=1 before readiness')
+[19:45:45] CHAIN step diag:mimo-v26 start
+[19:45:45] CHAIN launched mimo-v26 off-profidle pgid=34558 log=results/blog-architecture-h100-v1/mimo-v26/_server/serve-off-profidle-20261007-194545.log
+[19:53:20] CHAIN ready mimo-v26 off-profidle after 455s
+[19:53:29] CHAIN functional mimo-v26 ok=True rendered={'server_prompt_tokens': 951, 'client_content_tokens': 942, 'template_overhead': 9}
+[19:54:02] CHAIN pilot mimo-v26 ctx16k_osl256_c1 block=1 n=3 valid=True dur=6.675899347988889 out_tps=115.04067990949558 ttft_p50=714.8596050101332 tpot_p50=5.850081231362899 
+[19:54:40] CHAIN pilot mimo-v26 ctx16k_osl256_c8 block=1 n=12 valid=True dur=12.464310438983375 out_tps=246.46369448501648 ttft_p50=2420.191793484264 tpot_p50=20.32694943921467 
+[19:55:16] CHAIN pilot mimo-v26 ctx1k_osl256_c1 block=1 n=6 valid=True dur=9.624077704007505 out_tps=159.59970890097898 ttft_p50=120.47057498421054 tpot_p50=5.791636899983346 
+[19:55:52] CHAIN pilot mimo-v26 ctx1k_osl256_c8 block=1 n=24 valid=True dur=8.884961155010387 out_tps=691.505555602265 ttft_p50=415.49881450191606 tpot_p50=9.960755770546658 
+[19:56:31] CHAIN pilot mimo-v26 ctx64k_osl256_c1 block=1 n=3 valid=True dur=13.633440041012364 out_tps=56.33207742797771 ttft_p50=3079.848680004943 tpot_p50=6.00176157655797 
+[19:57:28] CHAIN pilot mimo-v26 ctx64k_osl256_c8 block=1 n=9 valid=True dur=30.122781312995357 out_tps=76.48696101664505 ttft_p50=11956.084662000649 tpot_p50=54.00145209414939 
+[19:57:35] CHAIN kv mimo-v26 1k B=1 usage=0.00030020019163945477 running=1.0
+[19:58:01] CHAIN trace mimo-v26 decode1k_B1 files=16 {'B': 1, 'window_s': 0.22079753875732422, 'tokens_in_window': [34]}
+[19:58:08] CHAIN kv mimo-v26 1k B=8 usage=0.002094419941670367 running=8.0
+[19:59:44] CHAIN trace mimo-v26 decode1k_B8 files=16 {'B': 8, 'window_s': 5.0186240673065186, 'tokens_in_window': [492, 488, 0, 492, 487, 491, 485, 0]}
+[19:59:51] CHAIN kv mimo-v26 16k B=1 usage=0.0018710151478922299 running=1.0
+[20:00:05] CHAIN kv mimo-v26 16k B=8 usage=0.015544086667097168 running=8.0
+[20:00:48] CHAIN kv mimo-v26 64k B=1 usage=0.007033760304109737 running=1.0
+[20:01:15] CHAIN trace mimo-v26 decode64k_B1 files=16 {'B': 1, 'window_s': 0.22090387344360352, 'tokens_in_window': [35]}
+[20:01:45] CHAIN kv mimo-v26 64k B=8 usage=0.05864899441662552 running=8.0
+[20:03:25] CHAIN trace mimo-v26 decode64k_B8 files=16 {'B': 8, 'window_s': 5.018880367279053, 'tokens_in_window': [447, 362, 447, 447, 0, 445, 447, 0]}
+[20:03:40] CHAIN trace mimo-v26 prefill16k files=16 {'request_wall_s': 0.7392594814300537}
+[20:04:11] CHAIN trace mimo-v26 prefill64k files=16 {'request_wall_s': 2.950063943862915}
+[20:07:11] CHAIN stopped mimo-v26 off-profidle up=1286s gpu_mem_max=0MiB leftover=1
+[20:07:11] CHAIN step diag:mimo-v26 done
+[20:07:11] CHAIN step diag:v41 start
+[20:07:12] CHAIN launched v41 off-profidle pgid=54571 log=results/blog-architecture-h100-v1/v41/_server/serve-off-profidle-20261007-200711.log
+[20:13:07] CHAIN ready v41 off-profidle after 355s
+[20:13:16] CHAIN functional v41 ok=True rendered={'server_prompt_tokens': 1007, 'client_content_tokens': 1003, 'template_overhead': 4}
+[20:13:50] CHAIN pilot v41 ctx16k_osl256_c1 block=1 n=3 valid=True dur=8.621695033012656 out_tps=89.07761142783541 ttft_p50=560.5029230064247 tpot_p50=9.04505036465422 
+[20:14:27] CHAIN pilot v41 ctx16k_osl256_c8 block=1 n=12 valid=True dur=12.102726552984677 out_tps=253.82710140157698 ttft_p50=1905.2015380002558 tpot_p50=20.781667250911614 
+[20:15:05] CHAIN pilot v41 ctx1k_osl256_c1 block=1 n=6 valid=True dur=14.54639232502086 out_tps=105.59319215926601 ttft_p50=125.40858751162887 tpot_p50=8.989770556902785 
+[20:15:40] CHAIN pilot v41 ctx1k_osl256_c8 block=1 n=24 valid=True dur=10.66851518600015 out_tps=575.9001972516772 ttft_p50=355.7532710110536 tpot_p50=12.327891092133417 
+[20:16:18] CHAIN pilot v41 ctx64k_osl256_c1 block=1 n=3 valid=True dur=13.630079205991933 out_tps=56.345967502696446 ttft_p50=2255.7414850161877 tpot_p50=8.998583364711306 
+[20:17:06] CHAIN pilot v41 ctx64k_osl256_c8 block=1 n=9 valid=True dur=24.052725408022525 out_tps=95.78956068036788 ttft_p50=8612.120927020442 tpot_p50=43.57286955289287 
+[20:17:13] CHAIN kv v41 1k B=1 usage=0.00023914058851004505 running=1.0
+[20:17:34] CHAIN trace v41 decode1k_B1 files=16 {'B': 1, 'window_s': 0.32108092308044434, 'tokens_in_window': [33]}
+[20:17:41] CHAIN kv v41 1k B=8 usage=0.0018085007006072296 running=8.0
+[20:18:03] CHAIN trace v41 decode1k_B8 files=16 {'B': 8, 'window_s': 0.40150022506713867, 'tokens_in_window': [32, 32, 32, 32, 32, 32, 32, 32]}
+[20:18:10] CHAIN kv v41 16k B=1 usage=0.0011284446520317681 running=1.0
+[20:18:22] CHAIN kv v41 16k B=8 usage=0.008967772069126578 running=8.0
+[20:18:33] CHAIN kv v41 64k B=1 usage=0.004001868285847698 running=1.0
+[20:18:54] CHAIN trace v41 decode64k_B1 files=16 {'B': 1, 'window_s': 0.30113935470581055, 'tokens_in_window': [32]}
+[20:19:17] CHAIN kv v41 64k B=8 usage=0.03190658570761329 running=8.0
+[20:19:39] CHAIN trace v41 decode64k_B8 files=16 {'B': 8, 'window_s': 0.46180224418640137, 'tokens_in_window': [36, 35, 35, 36, 33, 36, 36, 36]}
+[20:19:57] CHAIN trace v41 prefill16k files=16 {'request_wall_s': 0.6322481632232666}
+[20:20:26] CHAIN trace v41 prefill64k files=16 {'request_wall_s': 2.3336422443389893}
+[20:21:58] CHAIN stopped v41 off-profidle (hand-verified: 0 server processes, 0 MiB); step diag:v41 done
+[20:21:59] CHAIN step diag:v4-0731 start
+[20:21:59] CHAIN launched v4-0731 off-profidle pgid=72169 log=results/blog-architecture-h100-v1/v4-0731/_server/serve-off-profidle-20261007-202159.log
+[20:32:54] CHAIN ready v4-0731 off-profidle after 655s
+[20:33:12] CHAIN functional v4-0731 ok=True rendered={'server_prompt_tokens': 1007, 'client_content_tokens': 1003, 'template_overhead': 4}
+[20:33:45] CHAIN pilot v4-0731 ctx16k_osl256_c1 block=1 n=3 valid=True dur=8.233004717010772 out_tps=93.28307542605714 ttft_p50=756.0405900003389 tpot_p50=7.759346254854736 
+[20:34:23] CHAIN pilot v4-0731 ctx16k_osl256_c8 block=1 n=12 valid=True dur=13.534745489014313 out_tps=226.9713902262467 ttft_p50=2669.4153115095105 tpot_p50=21.583099668621834 
+[20:35:07] CHAIN pilot v4-0731 ctx1k_osl256_c1 block=1 n=6 valid=True dur=20.186665657995036 out_tps=76.08983207148225 ttft_p50=211.22840700263623 tpot_p50=7.68228376868601 
+[20:35:41] CHAIN pilot v4-0731 ctx1k_osl256_c8 block=1 n=24 valid=True dur=9.823476731980918 out_tps=625.4404797435758 ttft_p50=495.59378701087553 tpot_p50=10.824537170564701 
+[20:36:20] CHAIN pilot v4-0731 ctx64k_osl256_c1 block=1 n=3 valid=True dur=15.633667104004417 out_tps=49.1247507632604 ttft_p50=3216.5612839744426 tpot_p50=7.804002646954876 
+[20:37:17] CHAIN pilot v4-0731 ctx64k_osl256_c8 block=1 n=9 valid=True dur=32.2539232079871 out_tps=71.43317062990515 ttft_p50=12413.514145009685 tpot_p50=57.98534491765952 
+[20:37:24] CHAIN kv v4-0731 1k B=1 usage=0.0006691464446675344 running=1.0
+[20:37:44] CHAIN plan frozen: {'16k:c1': 36, '16k:c8': 75, '1k:c1': 48, '1k:c8': 204, '64k:c1': 18, '64k:c8': 33}
+[20:37:50] CHAIN trace v4-0731 decode1k_B1 files=16 {'B': 1, 'window_s': 0.40146899223327637, 'tokens_in_window': [49]}
+[20:37:57] CHAIN kv v4-0731 1k B=8 usage=0.005195725335065293 running=8.0
+[20:38:24] CHAIN trace v4-0731 decode1k_B8 files=16 {'B': 8, 'window_s': 0.5419595241546631, 'tokens_in_window': [48, 40, 48, 48, 48, 48, 46, 48]}
+[20:38:32] CHAIN kv v4-0731 16k B=1 usage=0.0018303123339434846 running=1.0
+[20:38:46] CHAIN kv v4-0731 16k B=8 usage=0.014603137115978826 running=8.0
+[20:38:57] CHAIN kv v4-0731 64k B=1 usage=0.0056287024463206325 running=1.0
+[20:39:24] CHAIN trace v4-0731 decode64k_B1 files=16 {'B': 1, 'window_s': 0.40143442153930664, 'tokens_in_window': [49]}
+[20:39:55] CHAIN kv v4-0731 64k B=8 usage=0.04483281179272203 running=8.0
+[20:40:23] CHAIN trace v4-0731 decode64k_B8 files=16 {'B': 8, 'window_s': 0.5621252059936523, 'tokens_in_window': [47, 48, 48, 48, 48, 47, 48, 42]}
+[20:40:43] CHAIN trace v4-0731 prefill16k files=16 {'request_wall_s': 0.819953203201294}
+[20:41:23] CHAIN trace v4-0731 prefill64k files=16 {'request_wall_s': 3.32846999168396}
+[20:41:26] CHAIN stopped v4-0731 off-profidle up=1167s gpu_mem_max=0MiB leftover=0
+[20:41:26] CHAIN step diag:v4-0731 done
+[20:41:26] CHAIN chain finished; no server left running
+[20:41:27] CHAIN step timing:v4-0731:1 start
+[20:41:27] CHAIN launched v4-0731 off pgid=98612 log=results/blog-architecture-h100-v1/v4-0731/_server/serve-off-20261007-204127.log
+[20:43:32] CHAIN ready v4-0731 off after 125s
+[20:46:55] CHAIN serving v4-0731 ctx16k_osl256_c1 block=1 n=36 valid=True dur=98.47700048598927 out_tps=93.58530372085407 ttft_p50=755.820912992931 tpot_p50=7.75617369406117 
+[20:48:42] CHAIN serving v4-0731 ctx16k_osl256_c8 block=1 n=75 valid=True dur=80.42150095102261 out_tps=238.74212459293648 ttft_p50=2843.163715006085 tpot_p50=21.901495525540383 
+[20:50:50] CHAIN serving v4-0731 ctx1k_osl256_c1 block=1 n=48 valid=True dur=103.93198170300457 out_tps=118.23117195161464 ttft_p50=205.65694700053427 tpot_p50=7.677213143096214 
+[20:52:49] CHAIN serving v4-0731 ctx1k_osl256_c8 block=1 n=204 valid=True dur=94.62265092201415 out_tps=551.9185891657363 ttft_p50=486.86228100268636 tpot_p50=10.811940737253549 
+[20:54:50] CHAIN serving v4-0731 ctx64k_osl256_c1 block=1 n=18 valid=True dur=95.34735414100578 out_tps=48.32855658674486 ttft_p50=3303.868261500611 tpot_p50=7.814414925501206 
+[20:57:18] CHAIN serving v4-0731 ctx64k_osl256_c8 block=1 n=33 valid=True dur=120.17175026101177 out_tps=70.29938385395099 ttft_p50=8730.886014003772 tpot_p50=74.18759412933414 
+[20:57:22] CHAIN stopped v4-0731 off up=955s gpu_mem_max=0MiB leftover=0
+[20:57:22] CHAIN step timing:v4-0731:1 done
+[20:57:22] CHAIN step timing:mimo-v26:1 start
+[20:57:22] CHAIN launched mimo-v26 off pgid=111175 log=results/blog-architecture-h100-v1/mimo-v26/_server/serve-off-20261007-205722.log
+[20:59:22] CHAIN ready mimo-v26 off after 120s
+[21:02:31] CHAIN serving mimo-v26 ctx16k_osl256_c1 block=1 n=36 valid=True dur=80.29453180599376 out_tps=114.77742995335645 ttft_p50=754.7110860032262 tpot_p50=5.858821313720945 
+[21:04:16] CHAIN serving mimo-v26 ctx16k_osl256_c8 block=1 n=75 valid=True dur=76.25783094498911 out_tps=251.77742091629253 ttft_p50=2976.6466240107547 tpot_p50=20.064044843185876 
+[21:06:00] CHAIN serving mimo-v26 ctx1k_osl256_c1 block=1 n=48 valid=True dur=76.4470011020021 out_tps=160.73881019353922 ttft_p50=113.47757198382169 tpot_p50=5.783775258825306 
+[21:07:42] CHAIN serving mimo-v26 ctx1k_osl256_c8 block=1 n=204 valid=True dur=75.77561005199095 out_tps=689.1927358178735 ttft_p50=404.81390700733755 tpot_p50=9.929397896071439 
+[21:09:33] CHAIN serving mimo-v26 ctx64k_osl256_c1 block=1 n=18 valid=True dur=83.08619154299959 out_tps=55.46047922554282 ttft_p50=3144.0466454951093 tpot_p50=5.999795066742865 
+[21:11:52] CHAIN serving mimo-v26 ctx64k_osl256_c8 block=1 n=33 valid=True dur=108.33799500300665 out_tps=77.97818299817665 ttft_p50=8676.790276978863 tpot_p50=68.50507983917316 
+[21:11:54] CHAIN stopped mimo-v26 off up=872s gpu_mem_max=0MiB leftover=0
+[21:11:54] CHAIN step timing:mimo-v26:1 done
+[21:11:54] CHAIN step timing:v41:1 start
+[21:11:54] CHAIN launched v41 off pgid=123454 log=results/blog-architecture-h100-v1/v41/_server/serve-off-20261007-211154.log
+[21:14:19] CHAIN ready v41 off after 145s
+[21:17:43] CHAIN serving v41 ctx16k_osl256_c1 block=1 n=36 valid=True dur=102.99958192801569 out_tps=89.4760913344374 ttft_p50=552.1745605074102 tpot_p50=9.044341470557722 
+[21:19:18] CHAIN serving v41 ctx16k_osl256_c8 block=1 n=75 valid=True dur=68.71218596497783 out_tps=279.42641804157006 ttft_p50=1837.7728479972575 tpot_p50=20.533875745205282 
+[21:21:37] CHAIN serving v41 ctx1k_osl256_c1 block=1 n=48 valid=True dur=115.94081691998872 out_tps=105.98510797521811 ttft_p50=120.25263700343203 tpot_p50=8.988764194153047 
+[21:23:36] CHAIN serving v41 ctx1k_osl256_c8 block=1 n=204 valid=True dur=94.47747015798814 out_tps=552.7667063128322 ttft_p50=353.65503799403086 tpot_p50=12.31224354506041 
+[21:25:25] CHAIN serving v41 ctx64k_osl256_c1 block=1 n=18 valid=True dur=82.74087868997594 out_tps=55.69193937697762 ttft_p50=2297.096539507038 tpot_p50=9.011085205894036 
+[21:27:17] CHAIN serving v41 ctx64k_osl256_c8 block=1 n=33 valid=True dur=84.6573293270194 out_tps=99.79053281218641 ttft_p50=5969.53506898717 tpot_p50=54.779968992236306 
+[21:27:40] CHAIN stopped v41 off up=946s gpu_mem_max=0MiB leftover=0
+[21:27:40] CHAIN step timing:v41:1 done
+[21:27:40] CHAIN step timing:mimo-v26:2 start
+[21:27:40] CHAIN launched mimo-v26 off pgid=134401 log=results/blog-architecture-h100-v1/mimo-v26/_server/serve-off-20261007-212740.log
+[21:29:40] CHAIN ready mimo-v26 off after 120s
+[21:33:16] CHAIN serving mimo-v26 ctx64k_osl256_c8 block=2 n=33 valid=True dur=106.10659905799548 out_tps=79.6180452017175 ttft_p50=8196.415667014662 tpot_p50=67.70067944319224 
+[21:35:11] CHAIN serving mimo-v26 ctx64k_osl256_c1 block=2 n=18 valid=True dur=83.32653447901248 out_tps=55.30051176148002 ttft_p50=3147.4982259824174 tpot_p50=6.012903407841519 
+[21:36:55] CHAIN serving mimo-v26 ctx1k_osl256_c8 block=2 n=204 valid=True dur=76.28611482301494 out_tps=684.5806752796436 ttft_p50=420.3468555060681 tpot_p50=9.933673399991319 
+[21:38:39] CHAIN serving mimo-v26 ctx1k_osl256_c1 block=2 n=48 valid=True dur=76.70430818697787 out_tps=160.1996066511182 ttft_p50=115.61041699314956 tpot_p50=5.800096296098119 
+[21:40:31] CHAIN serving mimo-v26 ctx16k_osl256_c8 block=2 n=75 valid=True dur=77.077786407026 out_tps=249.0990062767271 ttft_p50=2836.399308987893 tpot_p50=20.210461686228346 
+[21:42:19] CHAIN serving mimo-v26 ctx16k_osl256_c1 block=2 n=36 valid=True dur=81.23081919399556 out_tps=113.45447567123921 ttft_p50=769.8812474991428 tpot_p50=5.8623220842884045 
+[21:42:21] CHAIN stopped mimo-v26 off up=881s gpu_mem_max=0MiB leftover=0
+[21:42:21] CHAIN step timing:mimo-v26:2 done
+[21:42:21] CHAIN step timing:v41:2 start
+[21:42:22] CHAIN launched v41 off pgid=151474 log=results/blog-architecture-h100-v1/v41/_server/serve-off-20261007-214221.log
+[21:44:47] CHAIN ready v41 off after 145s
+[21:47:53] CHAIN serving v41 ctx64k_osl256_c8 block=2 n=33 valid=True dur=83.05432190498686 out_tps=101.7165609956386 ttft_p50=5531.11055798945 tpot_p50=55.01649740389457 
+[21:49:41] CHAIN serving v41 ctx64k_osl256_c1 block=2 n=18 valid=True dur=81.75636393201421 out_tps=56.36258486045019 ttft_p50=2237.9600345011568 tpot_p50=9.008229527435283 
+[21:51:39] CHAIN serving v41 ctx1k_osl256_c8 block=2 n=204 valid=True dur=93.44724771598703 out_tps=558.8607613005757 ttft_p50=481.6844779998064 tpot_p50=12.326743307879523 
+[21:53:58] CHAIN serving v41 ctx1k_osl256_c1 block=2 n=48 valid=True dur=115.87065848600469 out_tps=106.049280814989 ttft_p50=119.86794050608296 tpot_p50=8.98431947251654 
+[21:55:33] CHAIN serving v41 ctx16k_osl256_c8 block=2 n=75 valid=True dur=69.19035031198291 out_tps=277.4953431139775 ttft_p50=1819.7333680000156 tpot_p50=21.057138768568013 
+[21:57:42] CHAIN serving v41 ctx16k_osl256_c1 block=2 n=36 valid=True dur=103.40850884802057 out_tps=89.12225988622222 ttft_p50=564.309844005038 tpot_p50=9.045927115720605 
+[21:58:04] CHAIN stopped v41 off up=943s gpu_mem_max=0MiB leftover=0
+[21:58:04] CHAIN step timing:v41:2 done
+[21:58:04] CHAIN step timing:v4-0731:2 start
+[21:58:04] CHAIN launched v4-0731 off pgid=162305 log=results/blog-architecture-h100-v1/v4-0731/_server/serve-off-20261007-215804.log
+[22:00:09] CHAIN ready v4-0731 off after 125s
+[22:03:54] CHAIN serving v4-0731 ctx64k_osl256_c8 block=2 n=33 valid=True dur=117.91430287700496 out_tps=71.64525247468927 ttft_p50=9378.113501006737 tpot_p50=71.22765749809332 
+[22:05:54] CHAIN serving v4-0731 ctx64k_osl256_c1 block=2 n=18 valid=True dur=94.16217328698258 out_tps=48.936848408925066 ttft_p50=3237.234633488697 tpot_p50=7.811751752902352 
+[22:07:42] CHAIN serving v4-0731 ctx1k_osl256_c8 block=2 n=204 valid=True dur=83.98860474600224 out_tps=621.7986375405981 ttft_p50=487.680807011202 tpot_p50=10.81486710189732 
+[22:09:50] CHAIN serving v4-0731 ctx1k_osl256_c1 block=2 n=48 valid=True dur=104.08045338001102 out_tps=118.06251415080739 ttft_p50=207.51002999895718 tpot_p50=7.681982847063018 
+[22:11:38] CHAIN serving v4-0731 ctx16k_osl256_c8 block=2 n=75 valid=True dur=81.71101638799882 out_tps=234.97443611312084 ttft_p50=2911.530724988552 tpot_p50=22.152735525513908 
+[22:13:42] CHAIN serving v4-0731 ctx16k_osl256_c1 block=2 n=36 valid=True dur=99.02872020599898 out_tps=93.06391096268769 ttft_p50=768.3985480107367 tpot_p50=7.7633728136824365 
+[22:13:45] CHAIN stopped v4-0731 off up=941s gpu_mem_max=0MiB leftover=0
+[22:13:45] CHAIN step timing:v4-0731:2 done
+[22:13:45] CHAIN step timing:v41:3 start
+[22:13:45] CHAIN launched v41 off pgid=172400 log=results/blog-architecture-h100-v1/v41/_server/serve-off-20261007-221345.log
+[22:16:10] CHAIN ready v41 off after 145s
+[22:19:34] CHAIN serving v41 ctx16k_osl256_c1 block=3 n=36 valid=True dur=103.2811110529874 out_tps=89.23219266368869 ttft_p50=561.5331204899121 tpot_p50=9.035715588263473 
+[22:21:09] CHAIN serving v41 ctx16k_osl256_c8 block=3 n=75 valid=True dur=68.63836599001661 out_tps=279.72693876180887 ttft_p50=1786.9433719897643 tpot_p50=20.85672709805544 
+[22:23:29] CHAIN serving v41 ctx1k_osl256_c1 block=3 n=48 valid=True dur=115.99251507499139 out_tps=105.93787014666914 ttft_p50=121.6195239830995 tpot_p50=8.986696276434825 
+[22:25:24] CHAIN serving v41 ctx1k_osl256_c8 block=3 n=204 valid=True dur=90.52045617299154 out_tps=576.9303669901522 ttft_p50=355.02989700762555 tpot_p50=12.30959200589032 
+[22:27:13] CHAIN serving v41 ctx64k_osl256_c1 block=3 n=18 valid=True dur=82.70983325800626 out_tps=55.71284354576968 ttft_p50=2298.888599005295 tpot_p50=9.006941827429532 
+[22:29:06] CHAIN serving v41 ctx64k_osl256_c8 block=3 n=33 valid=True dur=84.5771455669892 out_tps=99.88513969543669 ttft_p50=5921.125440014293 tpot_p50=54.898267294115875 
+[22:29:28] CHAIN stopped v41 off up=943s gpu_mem_max=0MiB leftover=0
+[22:29:28] CHAIN step timing:v41:3 done
+[22:29:28] CHAIN step timing:v4-0731:3 start
+[22:29:29] CHAIN launched v4-0731 off pgid=183461 log=results/blog-architecture-h100-v1/v4-0731/_server/serve-off-20261007-222928.log
+[22:31:34] CHAIN ready v4-0731 off after 125s
+[22:34:55] CHAIN serving v4-0731 ctx16k_osl256_c1 block=3 n=36 valid=True dur=98.47565146599663 out_tps=93.58658574787148 ttft_p50=754.149779008003 tpot_p50=7.762402525472948 
+[22:36:42] CHAIN serving v4-0731 ctx16k_osl256_c8 block=3 n=75 valid=True dur=80.4474628540047 out_tps=238.665078037874 ttft_p50=2843.003669026075 tpot_p50=21.89148043524291 
+[22:38:50] CHAIN serving v4-0731 ctx1k_osl256_c1 block=3 n=48 valid=True dur=104.232568034 out_tps=117.89021638603141 ttft_p50=212.196144493646 tpot_p50=7.680999568615602 
+[22:40:38] CHAIN serving v4-0731 ctx1k_osl256_c8 block=3 n=204 valid=True dur=83.89374053198844 out_tps=622.501746481159 ttft_p50=485.72012651129626 tpot_p50=10.814385151024908 
+[22:42:39] CHAIN serving v4-0731 ctx64k_osl256_c1 block=3 n=18 valid=True dur=95.40591089500231 out_tps=48.298894238023394 ttft_p50=3305.9470414882526 tpot_p50=7.814068854820696 
+[22:45:03] CHAIN serving v4-0731 ctx64k_osl256_c8 block=3 n=33 valid=True dur=116.42839128599735 out_tps=72.55962146937289 ttft_p50=8740.444023977034 tpot_p50=74.09261674118027 
+[22:45:06] CHAIN stopped v4-0731 off up=938s gpu_mem_max=0MiB leftover=0
+[22:45:06] CHAIN step timing:v4-0731:3 done
+[22:45:06] CHAIN step timing:mimo-v26:3 start
+[22:45:06] CHAIN launched mimo-v26 off pgid=193542 log=results/blog-architecture-h100-v1/mimo-v26/_server/serve-off-20261007-224506.log
+[22:47:07] CHAIN ready mimo-v26 off after 120s
+[22:50:15] CHAIN serving mimo-v26 ctx16k_osl256_c1 block=3 n=36 valid=True dur=80.36628504598048 out_tps=114.67495349234062 ttft_p50=761.621716490481 tpot_p50=5.856410886318532 
+[22:52:00] CHAIN serving mimo-v26 ctx16k_osl256_c8 block=3 n=75 valid=True dur=76.2528311870119 out_tps=251.79392949897868 ttft_p50=2819.697097991593 tpot_p50=20.2170975685494 
+[22:53:42] CHAIN serving mimo-v26 ctx1k_osl256_c1 block=3 n=48 valid=True dur=76.32828264601994 out_tps=160.98881795869602 ttft_p50=111.93450649443548 tpot_p50=5.783773023536995 
+[22:55:24] CHAIN serving mimo-v26 ctx1k_osl256_c8 block=3 n=204 valid=True dur=75.76648409999325 out_tps=689.2757479821431 ttft_p50=403.0006404937012 tpot_p50=9.928945519598475 
+[22:57:15] CHAIN serving mimo-v26 ctx64k_osl256_c1 block=3 n=18 valid=True dur=83.081080095988 out_tps=55.46389135379718 ttft_p50=3134.919625998009 tpot_p50=6.010394680368551 
+[22:59:33] CHAIN serving mimo-v26 ctx64k_osl256_c8 block=3 n=33 valid=True dur=108.42550285998732 out_tps=77.91524850854621 ttft_p50=8345.302651025122 tpot_p50=68.58381179216154 
+[22:59:36] CHAIN stopped mimo-v26 off up=869s gpu_mem_max=0MiB leftover=0
+[22:59:36] CHAIN step timing:mimo-v26:3 done
+[22:59:36] CHAIN chain finished; no server left running
+[22:59:37] CHAIN step diag:qwen-38 start
+[22:59:37] CHAIN launched qwen-38 off-profidle pgid=203276 log=results/blog-architecture-h100-v1/qwen-38/_server/serve-off-profidle-20261007-225937.log

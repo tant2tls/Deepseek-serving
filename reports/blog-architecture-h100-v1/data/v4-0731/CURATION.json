@@ -1,0 +1,2611 @@
+{
+ "study": "blog-architecture-h100-v1",
+ "model": "v4-0731",
+ "policy": "numbers unaltered; gzip is lossless; logs: private IPs and ANSI codes removed",
+ "excluded": {
+  "reason": {
+   "_prompts": "prefix prompt JSONL (~400 MB), regenerable with bench/run_matrix.py build_prefix_files and the recorded seeds",
+   "*.pt.trace.json.gz": "full per-rank torch profiler traces (~73 MB); kept locally per AGENTS.md",
+   "profiler_out_[1-7].txt": "per-rank duplicates of the rank-0 kernel summary"
+  },
+  "files": [
+   "profiles/decode1k_B1/dp0_pp0_tp0_dcp0_ep0_rank0.1791405447399822894.pt.trace.json.gz",
+   "profiles/decode1k_B1/dp0_pp0_tp1_dcp0_ep1_rank1.1791405447398970204.pt.trace.json.gz",
+   "profiles/decode1k_B1/dp0_pp0_tp2_dcp0_ep2_rank2.1791405447397025551.pt.trace.json.gz",
+   "profiles/decode1k_B1/dp0_pp0_tp3_dcp0_ep3_rank3.1791405447401689042.pt.trace.json.gz",
+   "profiles/decode1k_B1/dp0_pp0_tp4_dcp0_ep4_rank4.1791405447398779191.pt.trace.json.gz",
+   "profiles/decode1k_B1/dp0_pp0_tp5_dcp0_ep5_rank5.1791405447403709326.pt.trace.json.gz",
+   "profiles/decode1k_B1/dp0_pp0_tp6_dcp0_ep6_rank6.1791405447404657352.pt.trace.json.gz",
+   "profiles/decode1k_B1/dp0_pp0_tp7_dcp0_ep7_rank7.1791405447403626176.pt.trace.json.gz",
+   "profiles/decode1k_B8/dp0_pp0_tp0_dcp0_ep0_rank0.1791405480469264790.pt.trace.json.gz",
+   "profiles/decode1k_B8/dp0_pp0_tp1_dcp0_ep1_rank1.1791405480467835223.pt.trace.json.gz",
+   "profiles/decode1k_B8/dp0_pp0_tp2_dcp0_ep2_rank2.1791405480461318491.pt.trace.json.gz",
+   "profiles/decode1k_B8/dp0_pp0_tp3_dcp0_ep3_rank3.1791405480464610434.pt.trace.json.gz",
+   "profiles/decode1k_B8/dp0_pp0_tp4_dcp0_ep4_rank4.1791405480475846827.pt.trace.json.gz",
+   "profiles/decode1k_B8/dp0_pp0_tp5_dcp0_ep5_rank5.1791405480478693390.pt.trace.json.gz",
+   "profiles/decode1k_B8/dp0_pp0_tp6_dcp0_ep6_rank6.1791405480478126898.pt.trace.json.gz",
+   "profiles/decode1k_B8/dp0_pp0_tp7_dcp0_ep7_rank7.1791405480470274069.pt.trace.json.gz",
+   "profiles/decode64k_B1/dp0_pp0_tp0_dcp0_ep0_rank0.1791405540422679616.pt.trace.json.gz",
+   "profiles/decode64k_B1/dp0_pp0_tp1_dcp0_ep1_rank1.1791405540406293287.pt.trace.json.gz",
+   "profiles/decode64k_B1/dp0_pp0_tp2_dcp0_ep2_rank2.1791405540419868111.pt.trace.json.gz",
+   "profiles/decode64k_B1/dp0_pp0_tp3_dcp0_ep3_rank3.1791405540358561344.pt.trace.json.gz",
+   "profiles/decode64k_B1/dp0_pp0_tp4_dcp0_ep4_rank4.1791405540406544323.pt.trace.json.gz",
+   "profiles/decode64k_B1/dp0_pp0_tp5_dcp0_ep5_rank5.1791405540415432898.pt.trace.json.gz",
+   "profiles/decode64k_B1/dp0_pp0_tp6_dcp0_ep6_rank6.1791405540359733523.pt.trace.json.gz",
+   "profiles/decode64k_B1/dp0_pp0_tp7_dcp0_ep7_rank7.1791405540370477071.pt.trace.json.gz",
+   "profiles/decode64k_B8/dp0_pp0_tp0_dcp0_ep0_rank0.1791405598728166137.pt.trace.json.gz",
+   "profiles/decode64k_B8/dp0_pp0_tp1_dcp0_ep1_rank1.1791405598724737121.pt.trace.json.gz",
+   "profiles/decode64k_B8/dp0_pp0_tp2_dcp0_ep2_rank2.1791405598708269683.pt.trace.json.gz",
+   "profiles/decode64k_B8/dp0_pp0_tp3_dcp0_ep3_rank3.1791405598724535605.pt.trace.json.gz",
+   "profiles/decode64k_B8/dp0_pp0_tp4_dcp0_ep4_rank4.1791405598647266025.pt.trace.json.gz",
+   "profiles/decode64k_B8/dp0_pp0_tp5_dcp0_ep5_rank5.1791405598651579058.pt.trace.json.gz",
+   "profiles/decode64k_B8/dp0_pp0_tp6_dcp0_ep6_rank6.1791405598705160342.pt.trace.json.gz",
+   "profiles/decode64k_B8/dp0_pp0_tp7_dcp0_ep7_rank7.1791405598702699750.pt.trace.json.gz",
+   "profiles/prefill16k/dp0_pp0_tp0_dcp0_ep0_rank0.1791405624812412321.pt.trace.json.gz",
+   "profiles/prefill16k/dp0_pp0_tp1_dcp0_ep1_rank1.1791405624810764919.pt.trace.json.gz",
+   "profiles/prefill16k/dp0_pp0_tp2_dcp0_ep2_rank2.1791405624810561778.pt.trace.json.gz",
+   "profiles/prefill16k/dp0_pp0_tp3_dcp0_ep3_rank3.1791405624822553106.pt.trace.json.gz",
+   "profiles/prefill16k/dp0_pp0_tp4_dcp0_ep4_rank4.1791405624821710505.pt.trace.json.gz",
+   "profiles/prefill16k/dp0_pp0_tp5_dcp0_ep5_rank5.1791405624840259817.pt.trace.json.gz",
+   "profiles/prefill16k/dp0_pp0_tp6_dcp0_ep6_rank6.1791405624810550379.pt.trace.json.gz",
+   "profiles/prefill16k/dp0_pp0_tp7_dcp0_ep7_rank7.1791405624857146745.pt.trace.json.gz",
+   "profiles/prefill64k/dp0_pp0_tp0_dcp0_ep0_rank0.1791405649017063450.pt.trace.json.gz",
+   "profiles/prefill64k/dp0_pp0_tp1_dcp0_ep1_rank1.1791405649021722772.pt.trace.json.gz",
+   "profiles/prefill64k/dp0_pp0_tp2_dcp0_ep2_rank2.1791405649012356372.pt.trace.json.gz",
+   "profiles/prefill64k/dp0_pp0_tp3_dcp0_ep3_rank3.1791405649048169440.pt.trace.json.gz",
+   "profiles/prefill64k/dp0_pp0_tp4_dcp0_ep4_rank4.1791405648999082813.pt.trace.json.gz",
+   "profiles/prefill64k/dp0_pp0_tp5_dcp0_ep5_rank5.1791405649000241467.pt.trace.json.gz",
+   "profiles/prefill64k/dp0_pp0_tp6_dcp0_ep6_rank6.1791405648993228358.pt.trace.json.gz",
+   "profiles/prefill64k/dp0_pp0_tp7_dcp0_ep7_rank7.1791405649032938830.pt.trace.json.gz"
+  ]
+ },
+ "files": [
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/_functional/functional.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/_functional/functional.json",
+   "source_sha256": "a63dcbac8317eddcbc47efd9497336d171a75836f387916918bc2c3c33033b12",
+   "published_sha256": "a63dcbac8317eddcbc47efd9497336d171a75836f387916918bc2c3c33033b12",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/_kv/live_16k_B1.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/_kv/live_16k_B1.json",
+   "source_sha256": "281abcf3e9da4967c6ca0dacdf834826e6044d4f4b53c4da15305dd9c884b7c3",
+   "published_sha256": "281abcf3e9da4967c6ca0dacdf834826e6044d4f4b53c4da15305dd9c884b7c3",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/_kv/live_16k_B8.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/_kv/live_16k_B8.json",
+   "source_sha256": "6d59e54be120cb5b1c980f92ce9440b5aaeab172436b0fee8b91b9057210ded0",
+   "published_sha256": "6d59e54be120cb5b1c980f92ce9440b5aaeab172436b0fee8b91b9057210ded0",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/_kv/live_1k_B1.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/_kv/live_1k_B1.json",
+   "source_sha256": "06a159fc163bc8942ed50a7620e43c982c12983373e7a4efbacce03c338d49de",
+   "published_sha256": "06a159fc163bc8942ed50a7620e43c982c12983373e7a4efbacce03c338d49de",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/_kv/live_1k_B8.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/_kv/live_1k_B8.json",
+   "source_sha256": "bea4911345c2bb14834a4cb3d689d8bf24f7c9c90831948959782eb05507432c",
+   "published_sha256": "bea4911345c2bb14834a4cb3d689d8bf24f7c9c90831948959782eb05507432c",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/_kv/live_64k_B1.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/_kv/live_64k_B1.json",
+   "source_sha256": "8cb076a32fab9e50e2fa047a3ff3311fb2466447b39286ac80b1cec042c1c2ce",
+   "published_sha256": "8cb076a32fab9e50e2fa047a3ff3311fb2466447b39286ac80b1cec042c1c2ce",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/_kv/live_64k_B8.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/_kv/live_64k_B8.json",
+   "source_sha256": "3ecf180e27d823b1f354937a35fa8baf1b7083e4b1095d2f1980bbf612445a96",
+   "published_sha256": "3ecf180e27d823b1f354937a35fa8baf1b7083e4b1095d2f1980bbf612445a96",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/_server/serve-off-20261007-204127.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/_server/serve-off-20261007-204127.log",
+   "source_sha256": "8462bbf66012dd15b0ccbc8e6df3b4ed763bc9678305e8ccd31da5e8a38e0cf0",
+   "published_sha256": "03db3c9418e7ff73681dd33301e281dbbba292cdb1f9fd5707decca5f53e4f4a",
+   "operations": [
+    "private IPv4 -> <PRIVATE_IP>"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/_server/serve-off-20261007-215804.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/_server/serve-off-20261007-215804.log",
+   "source_sha256": "4e2c569d40458e33d8809acfc7e3ffabe651b99def5adcd18ae2cef869245d4c",
+   "published_sha256": "afeac10d5026db616869ca085c14877a47792bb306958dce2336a6358fe8fe54",
+   "operations": [
+    "private IPv4 -> <PRIVATE_IP>"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/_server/serve-off-20261007-222928.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/_server/serve-off-20261007-222928.log",
+   "source_sha256": "affafa01d9552bdfc0bcdd8b49428411079934491ba6f091291e5d16f09d0221",
+   "published_sha256": "9b0c92cee648346439e0baa904fc740e5ae10593d8703735dc895e6f01d35d9f",
+   "operations": [
+    "private IPv4 -> <PRIVATE_IP>"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/_server/serve-off-profidle-20261007-193529.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/_server/serve-off-profidle-20261007-193529.log",
+   "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "published_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/_server/serve-off-profidle-20261007-193720.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/_server/serve-off-profidle-20261007-193720.log",
+   "source_sha256": "5d77056a00f91817b822c2ebf819e2dd1c134b0a2de73d3d7294cd7086d28313",
+   "published_sha256": "4af46e23a78ee559c960df71c413f4647216347f2436db05f791af516a8fc8da",
+   "operations": [
+    "private IPv4 -> <PRIVATE_IP>"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/_server/serve-off-profidle-20261007-202159.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/_server/serve-off-profidle-20261007-202159.log",
+   "source_sha256": "18201a6e56625d43605a672308af132dd67bddef9705d9c2cfb22c75cf1e05f6",
+   "published_sha256": "c399d47f45cc94d54a1540b77a09d2648cabe6ef22c6bd9fd2ac69a4369f2b93",
+   "operations": [
+    "private IPv4 -> <PRIVATE_IP>"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx16k_osl256_c1/repeat-1/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx16k_osl256_c1/repeat-1/bench.json",
+   "source_sha256": "14bc24ab685034cb28612495d3edccb837baa8ff5f134ae58c9894cf01c4daae",
+   "published_sha256": "14bc24ab685034cb28612495d3edccb837baa8ff5f134ae58c9894cf01c4daae",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx16k_osl256_c1/repeat-1/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx16k_osl256_c1/repeat-1/bench.log",
+   "source_sha256": "32366c9f958eb4dec987befb99e016c0b6262d77b9faa69d0fb0f9d1118daca0",
+   "published_sha256": "32366c9f958eb4dec987befb99e016c0b6262d77b9faa69d0fb0f9d1118daca0",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx16k_osl256_c1/repeat-1/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx16k_osl256_c1/repeat-1/blog_validation.json",
+   "source_sha256": "aa48ddee3f671826aeef22d77324b5bc4f50642a620dceecf6162a8087e6b548",
+   "published_sha256": "aa48ddee3f671826aeef22d77324b5bc4f50642a620dceecf6162a8087e6b548",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx16k_osl256_c1/repeat-1/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx16k_osl256_c1/repeat-1/manifest.json",
+   "source_sha256": "c329d3c047bd5f3461a122ceaf5582acb0ba72028a2ca525197b6292ef25348d",
+   "published_sha256": "c329d3c047bd5f3461a122ceaf5582acb0ba72028a2ca525197b6292ef25348d",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx16k_osl256_c1/repeat-1/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx16k_osl256_c1/repeat-1/summary.json",
+   "source_sha256": "6201d9126cf92ff1e79fc8e2fe9ef79ed2a74d84e6f5bb8ed6d14e3f77fb0e7c",
+   "published_sha256": "6201d9126cf92ff1e79fc8e2fe9ef79ed2a74d84e6f5bb8ed6d14e3f77fb0e7c",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx16k_osl256_c1/repeat-1/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx16k_osl256_c1/repeat-1/telemetry/metrics_after.prom",
+   "source_sha256": "d68997a65ea62a0f765e8f43ebdd72dc5f3b42fff3de72de9824196cf615314e",
+   "published_sha256": "d68997a65ea62a0f765e8f43ebdd72dc5f3b42fff3de72de9824196cf615314e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx16k_osl256_c1/repeat-1/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx16k_osl256_c1/repeat-1/telemetry/metrics_before.prom",
+   "source_sha256": "61b57fb95980b4e2d0c5934f55cf846dad51dcd8ed83ec9287f264de4e6a8b98",
+   "published_sha256": "61b57fb95980b4e2d0c5934f55cf846dad51dcd8ed83ec9287f264de4e6a8b98",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx16k_osl256_c1/repeat-1/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx16k_osl256_c1/repeat-1/telemetry/nvsmi.csv",
+   "source_sha256": "0a1b50b5b42440f414aeee8a6eb8619f42904ced21a8ec20ef1da9601cf855a5",
+   "published_sha256": "0a1b50b5b42440f414aeee8a6eb8619f42904ced21a8ec20ef1da9601cf855a5",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx16k_osl256_c1/repeat-1/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx16k_osl256_c1/repeat-1/telemetry/poll.jsonl",
+   "source_sha256": "0249140a38add2654e134cde52947e0d1528629e0d5129622510130b6d635b16",
+   "published_sha256": "0249140a38add2654e134cde52947e0d1528629e0d5129622510130b6d635b16",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx16k_osl256_c8/repeat-1/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx16k_osl256_c8/repeat-1/bench.json",
+   "source_sha256": "f24295e1eab31522207ed780a87f7729847ada248867b67a1430a49f267b1c76",
+   "published_sha256": "f24295e1eab31522207ed780a87f7729847ada248867b67a1430a49f267b1c76",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx16k_osl256_c8/repeat-1/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx16k_osl256_c8/repeat-1/bench.log",
+   "source_sha256": "552b68114e9e4fa1461ea22a8db291e1f3c617b31275c6244ac2d4fb794dc3e5",
+   "published_sha256": "552b68114e9e4fa1461ea22a8db291e1f3c617b31275c6244ac2d4fb794dc3e5",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx16k_osl256_c8/repeat-1/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx16k_osl256_c8/repeat-1/blog_validation.json",
+   "source_sha256": "307c60454a2d276ae4b9d96e6183f0753db4b300397320f3626c2421f934ef29",
+   "published_sha256": "307c60454a2d276ae4b9d96e6183f0753db4b300397320f3626c2421f934ef29",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx16k_osl256_c8/repeat-1/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx16k_osl256_c8/repeat-1/manifest.json",
+   "source_sha256": "7521c4bb896c8e9044b6a1b17a0d9815690609b9eeca9ea3be7e9d6ccd9e3382",
+   "published_sha256": "7521c4bb896c8e9044b6a1b17a0d9815690609b9eeca9ea3be7e9d6ccd9e3382",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx16k_osl256_c8/repeat-1/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx16k_osl256_c8/repeat-1/summary.json",
+   "source_sha256": "30eb43195cac78f99fb5f6dd15cb95f7123a630b2dbe5e1f294e262c9892c698",
+   "published_sha256": "30eb43195cac78f99fb5f6dd15cb95f7123a630b2dbe5e1f294e262c9892c698",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx16k_osl256_c8/repeat-1/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx16k_osl256_c8/repeat-1/telemetry/metrics_after.prom",
+   "source_sha256": "f9b120b03f0d70760936645b4e30439c2c7246de3dd6943a89635d4b23baedbf",
+   "published_sha256": "f9b120b03f0d70760936645b4e30439c2c7246de3dd6943a89635d4b23baedbf",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx16k_osl256_c8/repeat-1/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx16k_osl256_c8/repeat-1/telemetry/metrics_before.prom",
+   "source_sha256": "4a76cc42f7376273be0947bd6000bcf15c221e6eecd38eafe6517caf518f4471",
+   "published_sha256": "4a76cc42f7376273be0947bd6000bcf15c221e6eecd38eafe6517caf518f4471",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx16k_osl256_c8/repeat-1/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx16k_osl256_c8/repeat-1/telemetry/nvsmi.csv",
+   "source_sha256": "49625189cfa7a5cfe7b93801c53d1ed3a55684cb8eff2b8ccaaed887eb71f75f",
+   "published_sha256": "49625189cfa7a5cfe7b93801c53d1ed3a55684cb8eff2b8ccaaed887eb71f75f",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx16k_osl256_c8/repeat-1/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx16k_osl256_c8/repeat-1/telemetry/poll.jsonl",
+   "source_sha256": "6ae78f5a59db39293c10677fd7d8d629186bcfcbf057b1ebdb011a47b0a2acac",
+   "published_sha256": "6ae78f5a59db39293c10677fd7d8d629186bcfcbf057b1ebdb011a47b0a2acac",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx1k_osl256_c1/repeat-1/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx1k_osl256_c1/repeat-1/bench.json",
+   "source_sha256": "cbcf9fd1a6486cd04687c3cf33574898fa13cff022deb9a69e93b7c22ed72c17",
+   "published_sha256": "cbcf9fd1a6486cd04687c3cf33574898fa13cff022deb9a69e93b7c22ed72c17",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx1k_osl256_c1/repeat-1/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx1k_osl256_c1/repeat-1/bench.log",
+   "source_sha256": "38dcd8d83135abd1eacdc95773e0eff2e2b907bc382fa28de4c1a953a1ed845e",
+   "published_sha256": "38dcd8d83135abd1eacdc95773e0eff2e2b907bc382fa28de4c1a953a1ed845e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx1k_osl256_c1/repeat-1/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx1k_osl256_c1/repeat-1/blog_validation.json",
+   "source_sha256": "53cbfd585f2e1176d8205c6603df4a087938c4d41fde81eafb526fa43534c02a",
+   "published_sha256": "53cbfd585f2e1176d8205c6603df4a087938c4d41fde81eafb526fa43534c02a",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx1k_osl256_c1/repeat-1/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx1k_osl256_c1/repeat-1/manifest.json",
+   "source_sha256": "32f93f210b718a579b01bc3f2a6bc43a93d9112dec94366209f36700c9cc2fc9",
+   "published_sha256": "32f93f210b718a579b01bc3f2a6bc43a93d9112dec94366209f36700c9cc2fc9",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx1k_osl256_c1/repeat-1/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx1k_osl256_c1/repeat-1/summary.json",
+   "source_sha256": "468a226019f76f363e8ecf162c6e7883420cf4c0cf0d488c0600ada0c1d9331b",
+   "published_sha256": "468a226019f76f363e8ecf162c6e7883420cf4c0cf0d488c0600ada0c1d9331b",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx1k_osl256_c1/repeat-1/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx1k_osl256_c1/repeat-1/telemetry/metrics_after.prom",
+   "source_sha256": "e7ac2dacc3e9d728ba6d1bf1a6ef7587babcace606f4b68cd69d97a4defe14c1",
+   "published_sha256": "e7ac2dacc3e9d728ba6d1bf1a6ef7587babcace606f4b68cd69d97a4defe14c1",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx1k_osl256_c1/repeat-1/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx1k_osl256_c1/repeat-1/telemetry/metrics_before.prom",
+   "source_sha256": "5c57dae78c1688bd49577e44f2c70b6a7596b51e2072b406d1315a66de518822",
+   "published_sha256": "5c57dae78c1688bd49577e44f2c70b6a7596b51e2072b406d1315a66de518822",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx1k_osl256_c1/repeat-1/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx1k_osl256_c1/repeat-1/telemetry/nvsmi.csv",
+   "source_sha256": "e54adea3d9562a2ff00df7b44063bca01e50d80ab89c4fb437393b8fd143fc76",
+   "published_sha256": "e54adea3d9562a2ff00df7b44063bca01e50d80ab89c4fb437393b8fd143fc76",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx1k_osl256_c1/repeat-1/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx1k_osl256_c1/repeat-1/telemetry/poll.jsonl",
+   "source_sha256": "10a92408c743bedb8d340366224d899f417b72e5e268a505fd6f15b8b9a7d26a",
+   "published_sha256": "10a92408c743bedb8d340366224d899f417b72e5e268a505fd6f15b8b9a7d26a",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx1k_osl256_c8/repeat-1/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx1k_osl256_c8/repeat-1/bench.json",
+   "source_sha256": "36cf0883242e7b8a0075bcc5015a7c929f35b5894dd08d72b0cca053fc9880f9",
+   "published_sha256": "36cf0883242e7b8a0075bcc5015a7c929f35b5894dd08d72b0cca053fc9880f9",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx1k_osl256_c8/repeat-1/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx1k_osl256_c8/repeat-1/bench.log",
+   "source_sha256": "24eae501cb82d0f32205cc21bc9629379a236366efc731fc4dc2264d8ed468a3",
+   "published_sha256": "24eae501cb82d0f32205cc21bc9629379a236366efc731fc4dc2264d8ed468a3",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx1k_osl256_c8/repeat-1/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx1k_osl256_c8/repeat-1/blog_validation.json",
+   "source_sha256": "4af0a726207e349858e67a2099471aa4786636aab1acd3814131c41af59e8957",
+   "published_sha256": "4af0a726207e349858e67a2099471aa4786636aab1acd3814131c41af59e8957",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx1k_osl256_c8/repeat-1/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx1k_osl256_c8/repeat-1/manifest.json",
+   "source_sha256": "5cec39b404c524caf1f027bdd3bf0aa73aaca49926a1c9256628fe6e60c679b5",
+   "published_sha256": "5cec39b404c524caf1f027bdd3bf0aa73aaca49926a1c9256628fe6e60c679b5",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx1k_osl256_c8/repeat-1/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx1k_osl256_c8/repeat-1/summary.json",
+   "source_sha256": "8348f6ed2525616adebee603520bf82615dfaf1400d575cf517e5a61a597fb2e",
+   "published_sha256": "8348f6ed2525616adebee603520bf82615dfaf1400d575cf517e5a61a597fb2e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx1k_osl256_c8/repeat-1/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx1k_osl256_c8/repeat-1/telemetry/metrics_after.prom",
+   "source_sha256": "d2648338abd2c22723ec389e8edc7205b058a4db3bd6281fafe26222f5d427de",
+   "published_sha256": "d2648338abd2c22723ec389e8edc7205b058a4db3bd6281fafe26222f5d427de",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx1k_osl256_c8/repeat-1/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx1k_osl256_c8/repeat-1/telemetry/metrics_before.prom",
+   "source_sha256": "e7ac2dacc3e9d728ba6d1bf1a6ef7587babcace606f4b68cd69d97a4defe14c1",
+   "published_sha256": "e7ac2dacc3e9d728ba6d1bf1a6ef7587babcace606f4b68cd69d97a4defe14c1",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx1k_osl256_c8/repeat-1/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx1k_osl256_c8/repeat-1/telemetry/nvsmi.csv",
+   "source_sha256": "1b83d5dee356a2d5ac426da151cd462e0b209481580d738430d7ff901cb728c1",
+   "published_sha256": "1b83d5dee356a2d5ac426da151cd462e0b209481580d738430d7ff901cb728c1",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx1k_osl256_c8/repeat-1/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx1k_osl256_c8/repeat-1/telemetry/poll.jsonl",
+   "source_sha256": "9e35ad2740dfc91a93585f3d1116591e4596aabd05bf260bcb989e15dfaffb9e",
+   "published_sha256": "9e35ad2740dfc91a93585f3d1116591e4596aabd05bf260bcb989e15dfaffb9e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx64k_osl256_c1/repeat-1/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx64k_osl256_c1/repeat-1/bench.json",
+   "source_sha256": "35b278b550588c0bda3239f83ae7abfbebac7efd29f4dc12ac460fa97d6c12e4",
+   "published_sha256": "35b278b550588c0bda3239f83ae7abfbebac7efd29f4dc12ac460fa97d6c12e4",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx64k_osl256_c1/repeat-1/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx64k_osl256_c1/repeat-1/bench.log",
+   "source_sha256": "25b6cb7d29640078333a658f1e4c798f982ce3b0277d22c4c6d92dd8037a9b40",
+   "published_sha256": "25b6cb7d29640078333a658f1e4c798f982ce3b0277d22c4c6d92dd8037a9b40",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx64k_osl256_c1/repeat-1/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx64k_osl256_c1/repeat-1/blog_validation.json",
+   "source_sha256": "7dcec944cf5150978d28560e09fefa8ecbf021b9fee399e47013407385373480",
+   "published_sha256": "7dcec944cf5150978d28560e09fefa8ecbf021b9fee399e47013407385373480",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx64k_osl256_c1/repeat-1/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx64k_osl256_c1/repeat-1/manifest.json",
+   "source_sha256": "66288d0bc146bb8da55a9d924dedb1011aafdbf751ee6a6aee01aeede53824f7",
+   "published_sha256": "66288d0bc146bb8da55a9d924dedb1011aafdbf751ee6a6aee01aeede53824f7",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx64k_osl256_c1/repeat-1/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx64k_osl256_c1/repeat-1/summary.json",
+   "source_sha256": "e7f74ff7fab158008be3d14282dd36aae9e2cee7950eec4838cc910e3962250e",
+   "published_sha256": "e7f74ff7fab158008be3d14282dd36aae9e2cee7950eec4838cc910e3962250e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx64k_osl256_c1/repeat-1/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx64k_osl256_c1/repeat-1/telemetry/metrics_after.prom",
+   "source_sha256": "59f213e739333aa918d0b866b1c32cff5e17ab44cc6205c552a0d2f53a8369fd",
+   "published_sha256": "59f213e739333aa918d0b866b1c32cff5e17ab44cc6205c552a0d2f53a8369fd",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx64k_osl256_c1/repeat-1/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx64k_osl256_c1/repeat-1/telemetry/metrics_before.prom",
+   "source_sha256": "6d1fe01092be28dd05cc6f375ce3c9bf11350ea89f2b9dbd24cb7cafcdb91cb4",
+   "published_sha256": "6d1fe01092be28dd05cc6f375ce3c9bf11350ea89f2b9dbd24cb7cafcdb91cb4",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx64k_osl256_c1/repeat-1/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx64k_osl256_c1/repeat-1/telemetry/nvsmi.csv",
+   "source_sha256": "3de835d82f3428bcbebbb1aab6f73fab2aa61af3b62df33f29b030e9fa0a202d",
+   "published_sha256": "3de835d82f3428bcbebbb1aab6f73fab2aa61af3b62df33f29b030e9fa0a202d",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx64k_osl256_c1/repeat-1/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx64k_osl256_c1/repeat-1/telemetry/poll.jsonl",
+   "source_sha256": "3f326084e44dcdbd3d3fc88fbe3028ee9e095614d9be1870c696b27edbfdb760",
+   "published_sha256": "3f326084e44dcdbd3d3fc88fbe3028ee9e095614d9be1870c696b27edbfdb760",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx64k_osl256_c8/repeat-1/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx64k_osl256_c8/repeat-1/bench.json",
+   "source_sha256": "5a87fc1095054754638a264232405039d35a3a26269f40db82dfe014be9190f0",
+   "published_sha256": "5a87fc1095054754638a264232405039d35a3a26269f40db82dfe014be9190f0",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx64k_osl256_c8/repeat-1/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx64k_osl256_c8/repeat-1/bench.log",
+   "source_sha256": "d45468c2ca87e302a88d7ee67cfe27470592cc53ec253ca9488e83ad6eb28daa",
+   "published_sha256": "d45468c2ca87e302a88d7ee67cfe27470592cc53ec253ca9488e83ad6eb28daa",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx64k_osl256_c8/repeat-1/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx64k_osl256_c8/repeat-1/blog_validation.json",
+   "source_sha256": "cffab644b474c54fe143b38a5d16cd8c0a3ad1e8ccb26e9358b309636a64c719",
+   "published_sha256": "cffab644b474c54fe143b38a5d16cd8c0a3ad1e8ccb26e9358b309636a64c719",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx64k_osl256_c8/repeat-1/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx64k_osl256_c8/repeat-1/manifest.json",
+   "source_sha256": "c10c6d8712c6d6097e0eeb186fc500c8c2ab6c68a56b80f5a3e1e9b58b51b460",
+   "published_sha256": "c10c6d8712c6d6097e0eeb186fc500c8c2ab6c68a56b80f5a3e1e9b58b51b460",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx64k_osl256_c8/repeat-1/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx64k_osl256_c8/repeat-1/summary.json",
+   "source_sha256": "18a49702ecc90bd7373826687cd83eeb55fd3b6754262dd1bf1e8d28fde60957",
+   "published_sha256": "18a49702ecc90bd7373826687cd83eeb55fd3b6754262dd1bf1e8d28fde60957",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx64k_osl256_c8/repeat-1/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx64k_osl256_c8/repeat-1/telemetry/metrics_after.prom",
+   "source_sha256": "895501b45f554c755865d470874894e26d813c1c5480ace120e92d915d9be1f1",
+   "published_sha256": "895501b45f554c755865d470874894e26d813c1c5480ace120e92d915d9be1f1",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx64k_osl256_c8/repeat-1/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx64k_osl256_c8/repeat-1/telemetry/metrics_before.prom",
+   "source_sha256": "a895c4f173d32101eaad38693721451578d983ab00791904420d53a87f10f015",
+   "published_sha256": "a895c4f173d32101eaad38693721451578d983ab00791904420d53a87f10f015",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx64k_osl256_c8/repeat-1/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx64k_osl256_c8/repeat-1/telemetry/nvsmi.csv",
+   "source_sha256": "bfaf70530f00c5f4e29650b37297667e0c2da91ba68a2bd3197d60b1f840809f",
+   "published_sha256": "bfaf70530f00c5f4e29650b37297667e0c2da91ba68a2bd3197d60b1f840809f",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/pilot/off-profidle/ctx64k_osl256_c8/repeat-1/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/pilot/off-profidle/ctx64k_osl256_c8/repeat-1/telemetry/poll.jsonl",
+   "source_sha256": "62d55d04bea7618a3b701144a41ae49147a4048c5645317f56803578eefdccdc",
+   "published_sha256": "62d55d04bea7618a3b701144a41ae49147a4048c5645317f56803578eefdccdc",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode1k_B1/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode1k_B1/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "source_sha256": "a7ac029c2a67d9d0caeb0eba423e38da19fc54639ebb429e729edf1d07427766",
+   "published_sha256": "a7ac029c2a67d9d0caeb0eba423e38da19fc54639ebb429e729edf1d07427766",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode1k_B1/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode1k_B1/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "source_sha256": "b4985bfbb905765dda2f22edca56fd79fc369a4b4597af7fc0c0ec31436eac92",
+   "published_sha256": "b4985bfbb905765dda2f22edca56fd79fc369a4b4597af7fc0c0ec31436eac92",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode1k_B1/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode1k_B1/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "source_sha256": "b93e735340c333781c9672bca9b673f0113543045ca8fff3fcd305ee3aadf7e6",
+   "published_sha256": "b93e735340c333781c9672bca9b673f0113543045ca8fff3fcd305ee3aadf7e6",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode1k_B1/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode1k_B1/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "source_sha256": "c745037fa56cc9e4b365c0ad6d8764f8e45151f8ec7333a10d711af803e2b276",
+   "published_sha256": "c745037fa56cc9e4b365c0ad6d8764f8e45151f8ec7333a10d711af803e2b276",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode1k_B1/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode1k_B1/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "source_sha256": "35ee8b39eba4e371213b223c016c25851369529ed744486446a52f9c9e4d77be",
+   "published_sha256": "35ee8b39eba4e371213b223c016c25851369529ed744486446a52f9c9e4d77be",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode1k_B1/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode1k_B1/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "source_sha256": "27b5c8ef875a883d5d49733206e99543f2efe1f969e9a187916b4ae8718496ed",
+   "published_sha256": "27b5c8ef875a883d5d49733206e99543f2efe1f969e9a187916b4ae8718496ed",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode1k_B1/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode1k_B1/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "source_sha256": "a305c0737bda1b2b82a624cc79955b22e0455f0e521ec9ba8ce6eac7c9cda862",
+   "published_sha256": "a305c0737bda1b2b82a624cc79955b22e0455f0e521ec9ba8ce6eac7c9cda862",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode1k_B1/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode1k_B1/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "source_sha256": "64bcd472d1119e47f52efc5f1438b4c1373ba6942a4c32e02f457d28e2ea0784",
+   "published_sha256": "64bcd472d1119e47f52efc5f1438b4c1373ba6942a4c32e02f457d28e2ea0784",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode1k_B1.manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode1k_B1.manifest.json",
+   "source_sha256": "57d25ee4adca79c3faeea443a4cbf237dbb73b4c49072afa0e47137c87674196",
+   "published_sha256": "57d25ee4adca79c3faeea443a4cbf237dbb73b4c49072afa0e47137c87674196",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode1k_B8/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode1k_B8/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "source_sha256": "065a871d056fff4bd1edaf9872dbe59e07dd1e8b4bba59d4d6915a483b3b4a21",
+   "published_sha256": "065a871d056fff4bd1edaf9872dbe59e07dd1e8b4bba59d4d6915a483b3b4a21",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode1k_B8/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode1k_B8/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "source_sha256": "3e775bef6e7413d6bd1ff21b96089c832b0b186cd6cbe3d2f4122688e1b21e43",
+   "published_sha256": "3e775bef6e7413d6bd1ff21b96089c832b0b186cd6cbe3d2f4122688e1b21e43",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode1k_B8/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode1k_B8/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "source_sha256": "222b164d82ecd898d638b04f93abb90abadd2aeae9ea5109f1a061c8683c190f",
+   "published_sha256": "222b164d82ecd898d638b04f93abb90abadd2aeae9ea5109f1a061c8683c190f",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode1k_B8/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode1k_B8/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "source_sha256": "cb194e0477ada42994ff41a145091a5774a11802e1f0ab8a6270bd6cba82288e",
+   "published_sha256": "cb194e0477ada42994ff41a145091a5774a11802e1f0ab8a6270bd6cba82288e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode1k_B8/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode1k_B8/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "source_sha256": "44d950d2e1e5df466858d976ed9436dd72a4fa55f1e8ac3771b6ff0dc09554c1",
+   "published_sha256": "44d950d2e1e5df466858d976ed9436dd72a4fa55f1e8ac3771b6ff0dc09554c1",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode1k_B8/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode1k_B8/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "source_sha256": "8efe0a3da2b9e28bd3cc316afd49b404d6b25fedfb5e20b9e4df7ac55464153a",
+   "published_sha256": "8efe0a3da2b9e28bd3cc316afd49b404d6b25fedfb5e20b9e4df7ac55464153a",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode1k_B8/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode1k_B8/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "source_sha256": "accaaccf0101ace78cf0aafe3be2375207d3a2f42439eed8a54ef7c26b440f6b",
+   "published_sha256": "accaaccf0101ace78cf0aafe3be2375207d3a2f42439eed8a54ef7c26b440f6b",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode1k_B8/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode1k_B8/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "source_sha256": "12bf5926e7ce96644a8cc8b2539f79557e6056093b06ce85b314d5641707e3f5",
+   "published_sha256": "12bf5926e7ce96644a8cc8b2539f79557e6056093b06ce85b314d5641707e3f5",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode1k_B8.manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode1k_B8.manifest.json",
+   "source_sha256": "1a2d74c58c18929c864f0a746b2a9842fc504afcbf26cbc831e319dfc337fa90",
+   "published_sha256": "1a2d74c58c18929c864f0a746b2a9842fc504afcbf26cbc831e319dfc337fa90",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode64k_B1/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode64k_B1/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "source_sha256": "1db2cdb213ae1900aa4a931b830c7d50fbf12b245a34575ef26a045a4cdc909d",
+   "published_sha256": "1db2cdb213ae1900aa4a931b830c7d50fbf12b245a34575ef26a045a4cdc909d",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode64k_B1/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode64k_B1/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "source_sha256": "0342481c954ced099cc38059615f42a8acef1d27161365dbbb4caceed84098ba",
+   "published_sha256": "0342481c954ced099cc38059615f42a8acef1d27161365dbbb4caceed84098ba",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode64k_B1/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode64k_B1/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "source_sha256": "1bbdea03aa769e80c006c8ba9571d24e826722872a7dc9e80d5e604d6fc87041",
+   "published_sha256": "1bbdea03aa769e80c006c8ba9571d24e826722872a7dc9e80d5e604d6fc87041",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode64k_B1/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode64k_B1/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "source_sha256": "b2fabd3200c7ef0dd83f926c7d8320574222a23dcac3108d953adfb83dc05048",
+   "published_sha256": "b2fabd3200c7ef0dd83f926c7d8320574222a23dcac3108d953adfb83dc05048",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode64k_B1/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode64k_B1/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "source_sha256": "b7c381ec3b3444cb2a808b3f850b1dac7d3a6af8ad382879b279fc806c048d03",
+   "published_sha256": "b7c381ec3b3444cb2a808b3f850b1dac7d3a6af8ad382879b279fc806c048d03",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode64k_B1/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode64k_B1/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "source_sha256": "9b08adb7035b913ff05dd37ab1804e84edd190e6cd94c6245f3e43c1a0eac959",
+   "published_sha256": "9b08adb7035b913ff05dd37ab1804e84edd190e6cd94c6245f3e43c1a0eac959",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode64k_B1/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode64k_B1/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "source_sha256": "65f3f18ba9511c59db472a08cb78a2bb0661998d373b4207d732b24208b8db43",
+   "published_sha256": "65f3f18ba9511c59db472a08cb78a2bb0661998d373b4207d732b24208b8db43",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode64k_B1/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode64k_B1/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "source_sha256": "dd899f59d13839df9f7d9c7d7047123a9d6326e2b041744b5a72680e3c1c286e",
+   "published_sha256": "dd899f59d13839df9f7d9c7d7047123a9d6326e2b041744b5a72680e3c1c286e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode64k_B1.manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode64k_B1.manifest.json",
+   "source_sha256": "08f56e1b2eb527df0079164db3cc64f6bec0de7beaed58f98e4142bfd8132057",
+   "published_sha256": "08f56e1b2eb527df0079164db3cc64f6bec0de7beaed58f98e4142bfd8132057",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode64k_B8/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode64k_B8/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "source_sha256": "3f87404485fd3c9b900f002a02d2d70f9fb9ecc35f4eca55e63c0f70ef22aa30",
+   "published_sha256": "3f87404485fd3c9b900f002a02d2d70f9fb9ecc35f4eca55e63c0f70ef22aa30",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode64k_B8/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode64k_B8/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "source_sha256": "cfea6e5e553f235c6d533ab9a7e3296fe4823c5ad21bab943dc2547f4150aa98",
+   "published_sha256": "cfea6e5e553f235c6d533ab9a7e3296fe4823c5ad21bab943dc2547f4150aa98",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode64k_B8/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode64k_B8/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "source_sha256": "d1198e79515b6dd9961b0a6516668bc8c79b73adc70dfdc88c1b8a63f102a3e4",
+   "published_sha256": "d1198e79515b6dd9961b0a6516668bc8c79b73adc70dfdc88c1b8a63f102a3e4",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode64k_B8/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode64k_B8/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "source_sha256": "85f5c05274a0a30f202bdba94b6cec36ba15b45a4bc5a61652edde1950e1aec1",
+   "published_sha256": "85f5c05274a0a30f202bdba94b6cec36ba15b45a4bc5a61652edde1950e1aec1",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode64k_B8/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode64k_B8/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "source_sha256": "f76c48fcf6e6ec28379360cae50e478f3ff9d383491d1934cf2ee6f9f6e6aae8",
+   "published_sha256": "f76c48fcf6e6ec28379360cae50e478f3ff9d383491d1934cf2ee6f9f6e6aae8",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode64k_B8/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode64k_B8/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "source_sha256": "42b79a02ef9645e999e842b09fcb398fa70e2631459118570d9d84ea2e6ca661",
+   "published_sha256": "42b79a02ef9645e999e842b09fcb398fa70e2631459118570d9d84ea2e6ca661",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode64k_B8/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode64k_B8/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "source_sha256": "fbdb9d51851ef802ad753d7276b3f9d1d3f1a10dcd218e91989ace7cf6d71340",
+   "published_sha256": "fbdb9d51851ef802ad753d7276b3f9d1d3f1a10dcd218e91989ace7cf6d71340",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode64k_B8/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode64k_B8/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "source_sha256": "8f030a79f310bd225c06a53b8dadfd1fefcec26af429b7ab47065f3e94612e06",
+   "published_sha256": "8f030a79f310bd225c06a53b8dadfd1fefcec26af429b7ab47065f3e94612e06",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/decode64k_B8.manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/decode64k_B8.manifest.json",
+   "source_sha256": "def32101f65d6da2d452b702b3e2c2cbf7b5c1e4773aa2f4fdb6471789a092ec",
+   "published_sha256": "def32101f65d6da2d452b702b3e2c2cbf7b5c1e4773aa2f4fdb6471789a092ec",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/prefill16k/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/prefill16k/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "source_sha256": "ed7f72e38c0ae88db5ee732e2ddd735e64bda2e73c3649484fc7e1b2fe4702f8",
+   "published_sha256": "ed7f72e38c0ae88db5ee732e2ddd735e64bda2e73c3649484fc7e1b2fe4702f8",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/prefill16k/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/prefill16k/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "source_sha256": "45146aab4909d4714e7d647865bfdd423d8cfb0f731b4a662cfaabab5a3b09ee",
+   "published_sha256": "45146aab4909d4714e7d647865bfdd423d8cfb0f731b4a662cfaabab5a3b09ee",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/prefill16k/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/prefill16k/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "source_sha256": "acfe68dd4cc571ff9cec63551dec87b734385d2d3752938f83962fcb6ed7854b",
+   "published_sha256": "acfe68dd4cc571ff9cec63551dec87b734385d2d3752938f83962fcb6ed7854b",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/prefill16k/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/prefill16k/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "source_sha256": "f3b72400e407aaf34264c1b842ada130bbba42e89bf5f2acd5c860d8d3c0b736",
+   "published_sha256": "f3b72400e407aaf34264c1b842ada130bbba42e89bf5f2acd5c860d8d3c0b736",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/prefill16k/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/prefill16k/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "source_sha256": "20aad92cc639f0dd8c952fffd3c40997751e6a97ef8b344f84b45da55d439034",
+   "published_sha256": "20aad92cc639f0dd8c952fffd3c40997751e6a97ef8b344f84b45da55d439034",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/prefill16k/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/prefill16k/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "source_sha256": "b2a6c63a4b1bc18ee0dfba8ae3f6eb61d4a7e0fa7254028edceb1a414ef57d80",
+   "published_sha256": "b2a6c63a4b1bc18ee0dfba8ae3f6eb61d4a7e0fa7254028edceb1a414ef57d80",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/prefill16k/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/prefill16k/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "source_sha256": "fbce5f7922a132656ad363858bb1c4495d6fc54059672377112acbf7b62b810b",
+   "published_sha256": "fbce5f7922a132656ad363858bb1c4495d6fc54059672377112acbf7b62b810b",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/prefill16k/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/prefill16k/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "source_sha256": "3996561590d984f566d7f12af18458cd336dcebfb0429c7a0dff9d2448ecf36d",
+   "published_sha256": "3996561590d984f566d7f12af18458cd336dcebfb0429c7a0dff9d2448ecf36d",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/prefill16k.manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/prefill16k.manifest.json",
+   "source_sha256": "1d578696a2ba3801e1837e1296bc4a8576e4302b5e7f054b5d898b95b4e4eb2d",
+   "published_sha256": "1d578696a2ba3801e1837e1296bc4a8576e4302b5e7f054b5d898b95b4e4eb2d",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/prefill64k/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/prefill64k/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "source_sha256": "eca34f2a54d2d96b995bb87ffdc2da51320b7a20afd7bfa1a8d066c31abb7c59",
+   "published_sha256": "eca34f2a54d2d96b995bb87ffdc2da51320b7a20afd7bfa1a8d066c31abb7c59",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/prefill64k/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/prefill64k/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "source_sha256": "7a82a01120a6f4f3567ef06406b3b242e193198d6baa8c0328fa41a538dd6704",
+   "published_sha256": "7a82a01120a6f4f3567ef06406b3b242e193198d6baa8c0328fa41a538dd6704",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/prefill64k/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/prefill64k/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "source_sha256": "b48841a5a0bde43f992129d3e47f694bfd66057e5706e727fcdb984d5e38f6ec",
+   "published_sha256": "b48841a5a0bde43f992129d3e47f694bfd66057e5706e727fcdb984d5e38f6ec",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/prefill64k/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/prefill64k/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "source_sha256": "4008e0e864138d633fa3317acb4c9e3d215fee25a822db82638615c1d24eb200",
+   "published_sha256": "4008e0e864138d633fa3317acb4c9e3d215fee25a822db82638615c1d24eb200",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/prefill64k/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/prefill64k/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "source_sha256": "982aec7ae5a8cedd1356a3944544ed174f1cfffedd496530736177ce7881f88b",
+   "published_sha256": "982aec7ae5a8cedd1356a3944544ed174f1cfffedd496530736177ce7881f88b",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/prefill64k/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/prefill64k/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "source_sha256": "4ebe4a9e659049647344ebfaf4acdae0f9766a2385796968aa52446143b72711",
+   "published_sha256": "4ebe4a9e659049647344ebfaf4acdae0f9766a2385796968aa52446143b72711",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/prefill64k/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/prefill64k/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "source_sha256": "ac99fea73fe818261792ae423b6628ed2203a921f4792633d388523527cf91f5",
+   "published_sha256": "ac99fea73fe818261792ae423b6628ed2203a921f4792633d388523527cf91f5",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/prefill64k/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/prefill64k/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "source_sha256": "bd0c890d7ce389a0cc8f05924bafaa3d09c0c5ea7cfd0429ef79f3b121b437fc",
+   "published_sha256": "bd0c890d7ce389a0cc8f05924bafaa3d09c0c5ea7cfd0429ef79f3b121b437fc",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/profiles/prefill64k.manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/profiles/prefill64k.manifest.json",
+   "source_sha256": "861cd886b3a1822d9658071e51578f44223eb3f476490d3794e3b76257034334",
+   "published_sha256": "861cd886b3a1822d9658071e51578f44223eb3f476490d3794e3b76257034334",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-1/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-1/bench.json",
+   "source_sha256": "6d88636cc2fcfb283239f4f35d0b7cb18f7fe4a38e079f6ba69d67eefd756611",
+   "published_sha256": "6d88636cc2fcfb283239f4f35d0b7cb18f7fe4a38e079f6ba69d67eefd756611",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-1/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-1/bench.log",
+   "source_sha256": "64b8e6cdee2973b5e049fd3bc31ef2ab8b1cadf311d90a84e3a48d3efda1918c",
+   "published_sha256": "64b8e6cdee2973b5e049fd3bc31ef2ab8b1cadf311d90a84e3a48d3efda1918c",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-1/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-1/blog_validation.json",
+   "source_sha256": "fb7bb7c8d0e11b0538e6b9b95ba47675ce3094019d7a09ddacc91708d530aae6",
+   "published_sha256": "fb7bb7c8d0e11b0538e6b9b95ba47675ce3094019d7a09ddacc91708d530aae6",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-1/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-1/manifest.json",
+   "source_sha256": "9f02ca7cbbacd2a76a5889c44b0e540e9ad6c3bc4a853badc9c21c52d27caed8",
+   "published_sha256": "9f02ca7cbbacd2a76a5889c44b0e540e9ad6c3bc4a853badc9c21c52d27caed8",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-1/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-1/summary.json",
+   "source_sha256": "fcc5baca84356a4f96825a9eff18a93bde77422bbb0be6bb8aaa90e3abfa7193",
+   "published_sha256": "fcc5baca84356a4f96825a9eff18a93bde77422bbb0be6bb8aaa90e3abfa7193",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-1/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-1/telemetry/metrics_after.prom",
+   "source_sha256": "29c0c10a396156f75b352c5f44c7058f3d73c79679ff8192280429d66f1fc4e2",
+   "published_sha256": "29c0c10a396156f75b352c5f44c7058f3d73c79679ff8192280429d66f1fc4e2",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-1/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-1/telemetry/metrics_before.prom",
+   "source_sha256": "2922a8084ec40a69c9a986b36a13382213190fae3491833066985cb32f502c7b",
+   "published_sha256": "2922a8084ec40a69c9a986b36a13382213190fae3491833066985cb32f502c7b",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-1/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-1/telemetry/nvsmi.csv",
+   "source_sha256": "279dbc5bcf3cdab0d9d5d23c989be3182fe2c55e9cefaf25dc205271f3514cb7",
+   "published_sha256": "279dbc5bcf3cdab0d9d5d23c989be3182fe2c55e9cefaf25dc205271f3514cb7",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-1/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-1/telemetry/poll.jsonl",
+   "source_sha256": "a845f3eec65e01c984df4dff8a0ce366335ce70190765ebccd79c07e7a1a2e7a",
+   "published_sha256": "a845f3eec65e01c984df4dff8a0ce366335ce70190765ebccd79c07e7a1a2e7a",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-2/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-2/bench.json",
+   "source_sha256": "6339fb3f068f67347d0c8bf137218c409417ffc2fe3394df9edff4cbb714dbfd",
+   "published_sha256": "6339fb3f068f67347d0c8bf137218c409417ffc2fe3394df9edff4cbb714dbfd",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-2/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-2/bench.log",
+   "source_sha256": "bee73739294026ea9e3b72dcbc3b4583bb167e1ea6c0bc1d8d3bf1312bf8569f",
+   "published_sha256": "bee73739294026ea9e3b72dcbc3b4583bb167e1ea6c0bc1d8d3bf1312bf8569f",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-2/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-2/blog_validation.json",
+   "source_sha256": "a3271165c82051fcef88f0361e744f61bb010c156b5fd6d78b3490da7b05c38e",
+   "published_sha256": "a3271165c82051fcef88f0361e744f61bb010c156b5fd6d78b3490da7b05c38e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-2/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-2/manifest.json",
+   "source_sha256": "15435b608db14730142ac3f877a4864ba860861ebeb71d442e78f332df8b7ba9",
+   "published_sha256": "15435b608db14730142ac3f877a4864ba860861ebeb71d442e78f332df8b7ba9",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-2/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-2/summary.json",
+   "source_sha256": "a1e7ccee62229121926f4cb2a0c5c5c6149301e77a08c20e086cf83c7a09a1b5",
+   "published_sha256": "a1e7ccee62229121926f4cb2a0c5c5c6149301e77a08c20e086cf83c7a09a1b5",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-2/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-2/telemetry/metrics_after.prom",
+   "source_sha256": "0e0c9c463e1986e9095f3123fdb31d42db2d139f3bd3b0dcf3d20cca8f119128",
+   "published_sha256": "0e0c9c463e1986e9095f3123fdb31d42db2d139f3bd3b0dcf3d20cca8f119128",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-2/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-2/telemetry/metrics_before.prom",
+   "source_sha256": "fd98ddae971ab1820e0b459861b6a6c7a535ab48e588c46cbd10ae3adeadfc4e",
+   "published_sha256": "fd98ddae971ab1820e0b459861b6a6c7a535ab48e588c46cbd10ae3adeadfc4e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-2/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-2/telemetry/nvsmi.csv",
+   "source_sha256": "68c2c8f48f87df61eea4c15999952b0e2c4a276e57a55abb92d2630fa6b1bae0",
+   "published_sha256": "68c2c8f48f87df61eea4c15999952b0e2c4a276e57a55abb92d2630fa6b1bae0",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-2/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-2/telemetry/poll.jsonl",
+   "source_sha256": "3880a7252a586109831b6e1a8bf34c59650a0869cc892b7586c4afefed0fae30",
+   "published_sha256": "3880a7252a586109831b6e1a8bf34c59650a0869cc892b7586c4afefed0fae30",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-3/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-3/bench.json",
+   "source_sha256": "66abbb5d4a1950e025a91d983d1d39415f3181c2c68ba0e2b798a4d0a100fcc9",
+   "published_sha256": "66abbb5d4a1950e025a91d983d1d39415f3181c2c68ba0e2b798a4d0a100fcc9",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-3/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-3/bench.log",
+   "source_sha256": "06ae1f617691ed4ed8227e38c987ef9814be504d8d2c460441f2ac5e4f7711a1",
+   "published_sha256": "06ae1f617691ed4ed8227e38c987ef9814be504d8d2c460441f2ac5e4f7711a1",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-3/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-3/blog_validation.json",
+   "source_sha256": "c71bd3f46c414905e948fe85bfef8a1069e001e4d6a76c53b6705ab6abd910f2",
+   "published_sha256": "c71bd3f46c414905e948fe85bfef8a1069e001e4d6a76c53b6705ab6abd910f2",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-3/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-3/manifest.json",
+   "source_sha256": "fdf09c0ded994a1c22a98c0aced46f5347443cdbac38067b7b1a0039fa4ebfa7",
+   "published_sha256": "fdf09c0ded994a1c22a98c0aced46f5347443cdbac38067b7b1a0039fa4ebfa7",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-3/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-3/summary.json",
+   "source_sha256": "10c8ea03df5a8fb4b37113d16903ee1bb7c935ed8f2f09ad80a1153316dbbba1",
+   "published_sha256": "10c8ea03df5a8fb4b37113d16903ee1bb7c935ed8f2f09ad80a1153316dbbba1",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-3/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-3/telemetry/metrics_after.prom",
+   "source_sha256": "98d552765da3ec8ecca24d386b38fef2b603c3d77a672dc607490e09d6cea755",
+   "published_sha256": "98d552765da3ec8ecca24d386b38fef2b603c3d77a672dc607490e09d6cea755",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-3/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-3/telemetry/metrics_before.prom",
+   "source_sha256": "65bba983fbdbcbf5b140c81593ad28c50069d70caf8dabcde32d9d25458c6fcd",
+   "published_sha256": "65bba983fbdbcbf5b140c81593ad28c50069d70caf8dabcde32d9d25458c6fcd",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-3/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-3/telemetry/nvsmi.csv",
+   "source_sha256": "93b9b5511050e51976150239f77cf4ff6b0a2e5af03b3abc459bdc238dde2177",
+   "published_sha256": "93b9b5511050e51976150239f77cf4ff6b0a2e5af03b3abc459bdc238dde2177",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c1/repeat-3/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c1/repeat-3/telemetry/poll.jsonl",
+   "source_sha256": "e311fff03f745b3d932d528d5c2a4e508bb3c0b61eb3d869142a75ec82edc0fd",
+   "published_sha256": "e311fff03f745b3d932d528d5c2a4e508bb3c0b61eb3d869142a75ec82edc0fd",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-1/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-1/bench.json.gz",
+   "source_sha256": "f5ed1f88c70877541b25ad6f1c58b52826f83d822ee0caf25558061e412dacbb",
+   "published_sha256": "4386c81c0f23e30707eb62c245a1c7481a075acac8d8568258042d0573a8e677",
+   "operations": [
+    "gzip (lossless)"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-1/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-1/bench.log",
+   "source_sha256": "31a5605795a830ef255ad108253505f1f42a231514f65b8a181806db301513b4",
+   "published_sha256": "31a5605795a830ef255ad108253505f1f42a231514f65b8a181806db301513b4",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-1/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-1/blog_validation.json",
+   "source_sha256": "32b96a7efd1fec313eec79814b4c227eaf9b03b7c8b347a17b031efb0ccf5c1a",
+   "published_sha256": "32b96a7efd1fec313eec79814b4c227eaf9b03b7c8b347a17b031efb0ccf5c1a",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-1/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-1/manifest.json",
+   "source_sha256": "261ad61939e8217ea6670b96cabe6bea61b5acd78e7fc90cc34b44f7eed1c822",
+   "published_sha256": "261ad61939e8217ea6670b96cabe6bea61b5acd78e7fc90cc34b44f7eed1c822",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-1/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-1/summary.json",
+   "source_sha256": "adf1dfa4105d1cce01c24364dff84b63062ceaf7b7bcd783c9cb4a0bed9c02f1",
+   "published_sha256": "adf1dfa4105d1cce01c24364dff84b63062ceaf7b7bcd783c9cb4a0bed9c02f1",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-1/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-1/telemetry/metrics_after.prom",
+   "source_sha256": "ef38a73ee40ced41aa61b3658165764dd3312101417d1ffc32534fa34dfb3a53",
+   "published_sha256": "ef38a73ee40ced41aa61b3658165764dd3312101417d1ffc32534fa34dfb3a53",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-1/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-1/telemetry/metrics_before.prom",
+   "source_sha256": "6721246e04c2ef30bd0ba918a5f82f8ddc13064a13a77418a76c3291d5935f3b",
+   "published_sha256": "6721246e04c2ef30bd0ba918a5f82f8ddc13064a13a77418a76c3291d5935f3b",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-1/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-1/telemetry/nvsmi.csv",
+   "source_sha256": "27d2fbaa1803ddd4593d433813731dc9885926062b62913e5b219765998c62f2",
+   "published_sha256": "27d2fbaa1803ddd4593d433813731dc9885926062b62913e5b219765998c62f2",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-1/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-1/telemetry/poll.jsonl",
+   "source_sha256": "4a0cf485fdddd017a68047ce23f5373e0c636121a4bfe06958c5628a2ba0496e",
+   "published_sha256": "4a0cf485fdddd017a68047ce23f5373e0c636121a4bfe06958c5628a2ba0496e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-2/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-2/bench.json.gz",
+   "source_sha256": "9cab68c5daf986bcefe76fb33bafecebd7bd29f1e2ccd5673a4abb4c7973e51b",
+   "published_sha256": "11431604d113c6600b706b67f5740c4458eb5361ccd6a55b01722176a2c0240a",
+   "operations": [
+    "gzip (lossless)"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-2/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-2/bench.log",
+   "source_sha256": "14079d79d8acdf0dc89f604711a10379f5a334b6c3374a41c5320741e20bdfaf",
+   "published_sha256": "14079d79d8acdf0dc89f604711a10379f5a334b6c3374a41c5320741e20bdfaf",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-2/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-2/blog_validation.json",
+   "source_sha256": "ea333797864a1f6d373bceda76f31d7a88bb20ba1487b1b4763eabd0b12d6ccf",
+   "published_sha256": "ea333797864a1f6d373bceda76f31d7a88bb20ba1487b1b4763eabd0b12d6ccf",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-2/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-2/manifest.json",
+   "source_sha256": "ccbe353a6236ea52ae3959ac576ba92ac2aa4689d78f2ef674972e1658461840",
+   "published_sha256": "ccbe353a6236ea52ae3959ac576ba92ac2aa4689d78f2ef674972e1658461840",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-2/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-2/summary.json",
+   "source_sha256": "f1791b267cf432ec6cdf58c65adc62479110d8031c962c5dbe9470bdb207d289",
+   "published_sha256": "f1791b267cf432ec6cdf58c65adc62479110d8031c962c5dbe9470bdb207d289",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-2/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-2/telemetry/metrics_after.prom",
+   "source_sha256": "fd98ddae971ab1820e0b459861b6a6c7a535ab48e588c46cbd10ae3adeadfc4e",
+   "published_sha256": "fd98ddae971ab1820e0b459861b6a6c7a535ab48e588c46cbd10ae3adeadfc4e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-2/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-2/telemetry/metrics_before.prom",
+   "source_sha256": "7a57f9ed669a658806f4a3ba4d2e38fc00a1015bbfaa631d840a1dba1dcd5f21",
+   "published_sha256": "7a57f9ed669a658806f4a3ba4d2e38fc00a1015bbfaa631d840a1dba1dcd5f21",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-2/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-2/telemetry/nvsmi.csv",
+   "source_sha256": "761b70eb7d36b56b13a0ec708e31cf2df6f7e11ec3ad8fdb8cde068f0a30f99a",
+   "published_sha256": "761b70eb7d36b56b13a0ec708e31cf2df6f7e11ec3ad8fdb8cde068f0a30f99a",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-2/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-2/telemetry/poll.jsonl",
+   "source_sha256": "85b4a8cd9b6fc6ea1f79954df2de77bcfd1e02d08bebe218eaf0c35f435e5e4e",
+   "published_sha256": "85b4a8cd9b6fc6ea1f79954df2de77bcfd1e02d08bebe218eaf0c35f435e5e4e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-3/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-3/bench.json.gz",
+   "source_sha256": "516c2eb0f5befa39e24ab87453deea201a753eb9074d18622389b6f598d6872f",
+   "published_sha256": "a589e9a37df3634442a3d3d0cfb288f99d4fd3d06c8f33db130cbfc05c36eabb",
+   "operations": [
+    "gzip (lossless)"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-3/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-3/bench.log",
+   "source_sha256": "037b17c4163953e875698744ed447809d62060ca194adcd15579716898453f76",
+   "published_sha256": "037b17c4163953e875698744ed447809d62060ca194adcd15579716898453f76",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-3/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-3/blog_validation.json",
+   "source_sha256": "b1984b335b0a8f2bb0f54ff809f20cbe32563d318758c13ed886adbd34d04628",
+   "published_sha256": "b1984b335b0a8f2bb0f54ff809f20cbe32563d318758c13ed886adbd34d04628",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-3/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-3/manifest.json",
+   "source_sha256": "f97b62df037ab12ba9f6d6e1ed8f79692777bb497ac79982599d6a340d075211",
+   "published_sha256": "f97b62df037ab12ba9f6d6e1ed8f79692777bb497ac79982599d6a340d075211",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-3/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-3/summary.json",
+   "source_sha256": "90ffd74a89441e621b3b76a17644e56548165a9ee9b49a2e7f6a83649ae18f72",
+   "published_sha256": "90ffd74a89441e621b3b76a17644e56548165a9ee9b49a2e7f6a83649ae18f72",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-3/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-3/telemetry/metrics_after.prom",
+   "source_sha256": "de5395eea6e7f82feea8c95bd4592f0789bd66e512d6c5d192dc337fb0de850e",
+   "published_sha256": "de5395eea6e7f82feea8c95bd4592f0789bd66e512d6c5d192dc337fb0de850e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-3/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-3/telemetry/metrics_before.prom",
+   "source_sha256": "94653e3036b7ce10ff707dbdbd308a7ff75fd73fdc540d72b82aab4719095a71",
+   "published_sha256": "94653e3036b7ce10ff707dbdbd308a7ff75fd73fdc540d72b82aab4719095a71",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-3/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-3/telemetry/nvsmi.csv",
+   "source_sha256": "b51043974722280bb4e6a321801fd6cb10ef76842379229c117ede4d53879cad",
+   "published_sha256": "b51043974722280bb4e6a321801fd6cb10ef76842379229c117ede4d53879cad",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx16k_osl256_c8/repeat-3/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx16k_osl256_c8/repeat-3/telemetry/poll.jsonl",
+   "source_sha256": "fecd4ba38388d8857e454504bf8077f0671046f40bb9edfe78592f4e1a68d89e",
+   "published_sha256": "fecd4ba38388d8857e454504bf8077f0671046f40bb9edfe78592f4e1a68d89e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-1/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-1/bench.json.gz",
+   "source_sha256": "7c69ec34d0c2d48a1c1a2e9a91425db9155523b8dc7ad575275953dfcc9351bf",
+   "published_sha256": "ac0a5daf225513c6dd1a579aa05fac3e0ad8e42b4fe5a04a77b38ec2546a8fae",
+   "operations": [
+    "gzip (lossless)"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-1/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-1/bench.log",
+   "source_sha256": "1657c6f4b942a0da8c81c94d278640bf46c60fdf1d1782e56221348c6c3dac16",
+   "published_sha256": "1657c6f4b942a0da8c81c94d278640bf46c60fdf1d1782e56221348c6c3dac16",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-1/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-1/blog_validation.json",
+   "source_sha256": "5b9464d49c56ee6bcc9c6147d31fb33aff4d5fab92ff6ef1e6b6c591a4cb14ce",
+   "published_sha256": "5b9464d49c56ee6bcc9c6147d31fb33aff4d5fab92ff6ef1e6b6c591a4cb14ce",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-1/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-1/manifest.json",
+   "source_sha256": "ae112939f89398df02937b0827240e5d99ab99ba14c4a829434755b1b41a67d6",
+   "published_sha256": "ae112939f89398df02937b0827240e5d99ab99ba14c4a829434755b1b41a67d6",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-1/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-1/summary.json",
+   "source_sha256": "cc6380356ca48110456fc2d61619065fc13ae4d8b572b075718e68ebae6e4cc8",
+   "published_sha256": "cc6380356ca48110456fc2d61619065fc13ae4d8b572b075718e68ebae6e4cc8",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-1/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-1/telemetry/metrics_after.prom",
+   "source_sha256": "3f61c2f3b0943792608ae462142d4b2ab6103e28cdf9078fc49e5f38407a8b8a",
+   "published_sha256": "3f61c2f3b0943792608ae462142d4b2ab6103e28cdf9078fc49e5f38407a8b8a",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-1/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-1/telemetry/metrics_before.prom",
+   "source_sha256": "ef38a73ee40ced41aa61b3658165764dd3312101417d1ffc32534fa34dfb3a53",
+   "published_sha256": "ef38a73ee40ced41aa61b3658165764dd3312101417d1ffc32534fa34dfb3a53",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-1/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-1/telemetry/nvsmi.csv",
+   "source_sha256": "2c560842f2f214e635681985e340b57df67f8aed1b8cfa4a074a9e15250a7cdc",
+   "published_sha256": "2c560842f2f214e635681985e340b57df67f8aed1b8cfa4a074a9e15250a7cdc",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-1/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-1/telemetry/poll.jsonl",
+   "source_sha256": "804a94cf5a00b3971bb83b910a522d8b8149e1780a027d8962c804f55d8dbb7e",
+   "published_sha256": "804a94cf5a00b3971bb83b910a522d8b8149e1780a027d8962c804f55d8dbb7e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-2/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-2/bench.json.gz",
+   "source_sha256": "05467100b1278496e9853e0e09d6631a2bf6870c2b433fe150ef0e56c447e7d5",
+   "published_sha256": "c04798dcfea960cdf47f330db7c6c99f7b08595ca86131b4b408d97877d90e8b",
+   "operations": [
+    "gzip (lossless)"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-2/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-2/bench.log",
+   "source_sha256": "e71b6ef8d1a35a3fbf58b25ffcb76c942a8a8f577d52fd2fe969b51216f31697",
+   "published_sha256": "e71b6ef8d1a35a3fbf58b25ffcb76c942a8a8f577d52fd2fe969b51216f31697",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-2/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-2/blog_validation.json",
+   "source_sha256": "58040f5cb1d41a0bd655ebbe68c1ff053bb13599792902f4fe462946595e9804",
+   "published_sha256": "58040f5cb1d41a0bd655ebbe68c1ff053bb13599792902f4fe462946595e9804",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-2/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-2/manifest.json",
+   "source_sha256": "643eb0218f2f762f988616288d9088a2bb6d86c44b8f4c3a453b89ba85c5ff23",
+   "published_sha256": "643eb0218f2f762f988616288d9088a2bb6d86c44b8f4c3a453b89ba85c5ff23",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-2/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-2/summary.json",
+   "source_sha256": "0f569b583ef5a00f024ee65ffa54ebf081509924ddc35b2201b1a0e35e25ab1c",
+   "published_sha256": "0f569b583ef5a00f024ee65ffa54ebf081509924ddc35b2201b1a0e35e25ab1c",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-2/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-2/telemetry/metrics_after.prom",
+   "source_sha256": "8ca761a31d5ca589de6dc0d1a88df586b14e0d4340c005b1e4b023cd5f2db8ba",
+   "published_sha256": "8ca761a31d5ca589de6dc0d1a88df586b14e0d4340c005b1e4b023cd5f2db8ba",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-2/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-2/telemetry/metrics_before.prom",
+   "source_sha256": "2f27854720eb70d81b13790a8030c3262ebca32ee0bd2a2bb142b6e58e30526a",
+   "published_sha256": "2f27854720eb70d81b13790a8030c3262ebca32ee0bd2a2bb142b6e58e30526a",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-2/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-2/telemetry/nvsmi.csv",
+   "source_sha256": "fde68e9ee3994ef2a51a14ff8b15e8677af0e61659ab2030de716413e13b7367",
+   "published_sha256": "fde68e9ee3994ef2a51a14ff8b15e8677af0e61659ab2030de716413e13b7367",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-2/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-2/telemetry/poll.jsonl",
+   "source_sha256": "ba979014ff82f9978f7283a5c5b3084c34e9ff1c27426d3bd8c45377dcb381d4",
+   "published_sha256": "ba979014ff82f9978f7283a5c5b3084c34e9ff1c27426d3bd8c45377dcb381d4",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-3/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-3/bench.json.gz",
+   "source_sha256": "c63d6cc5c6619395151ad60a61e8c2c2a0aaf81cb65ec0ca38c1ce4f7f147489",
+   "published_sha256": "3ee923f36dd0481c0b48b9e3088a25e8becb29a20b48ee7ddf5d11531ff7066c",
+   "operations": [
+    "gzip (lossless)"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-3/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-3/bench.log",
+   "source_sha256": "c0453850b4b84f0e65808ddb09ecbde2b52ca6b622e8638dbbec54781aef0db0",
+   "published_sha256": "c0453850b4b84f0e65808ddb09ecbde2b52ca6b622e8638dbbec54781aef0db0",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-3/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-3/blog_validation.json",
+   "source_sha256": "f1451128ecac037b0fc9543fd4a2692c8ce48dbdde59308f8d5c8a64a9c38571",
+   "published_sha256": "f1451128ecac037b0fc9543fd4a2692c8ce48dbdde59308f8d5c8a64a9c38571",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-3/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-3/manifest.json",
+   "source_sha256": "851fd6bb254f4a147b7e7ce1e576ff086a6098d6eddb69b4c4c03147ce15832f",
+   "published_sha256": "851fd6bb254f4a147b7e7ce1e576ff086a6098d6eddb69b4c4c03147ce15832f",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-3/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-3/summary.json",
+   "source_sha256": "4732af176ececa9c7c695bda56b3030906097f29a4ab1564d4c41298bf2c66bd",
+   "published_sha256": "4732af176ececa9c7c695bda56b3030906097f29a4ab1564d4c41298bf2c66bd",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-3/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-3/telemetry/metrics_after.prom",
+   "source_sha256": "40c28f9d7e09d5cc031684a5cfa4a4d8c564cbca54fce6e020fad5d90f6410f3",
+   "published_sha256": "40c28f9d7e09d5cc031684a5cfa4a4d8c564cbca54fce6e020fad5d90f6410f3",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-3/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-3/telemetry/metrics_before.prom",
+   "source_sha256": "2c2e351457468cfaca89773ccd9dba36a6d37ff2a092c547e68edf1c417a89ca",
+   "published_sha256": "2c2e351457468cfaca89773ccd9dba36a6d37ff2a092c547e68edf1c417a89ca",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-3/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-3/telemetry/nvsmi.csv",
+   "source_sha256": "b1b6de2f1ce88629c0bb6b6f8c8fe17aab0e12b88249558861e95cb5451af861",
+   "published_sha256": "b1b6de2f1ce88629c0bb6b6f8c8fe17aab0e12b88249558861e95cb5451af861",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c1/repeat-3/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c1/repeat-3/telemetry/poll.jsonl",
+   "source_sha256": "b07888da88df8a07c36fa8df49971e25577cec63d69e985abcbb9cbc0452ce37",
+   "published_sha256": "b07888da88df8a07c36fa8df49971e25577cec63d69e985abcbb9cbc0452ce37",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-1/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-1/bench.json.gz",
+   "source_sha256": "5d493883eec9418fa458d48a07601f269fc4d2dfb54e034d5586e2a9c1af06e9",
+   "published_sha256": "ac28197a21e0251eb5ba067f2e82b5a52b181d12ccf36692823daf2f7cca7f28",
+   "operations": [
+    "gzip (lossless)"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-1/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-1/bench.log",
+   "source_sha256": "a1365eeebe185ec2192201f3e375b074ed6071cb9a52d9c70e365d0afb988998",
+   "published_sha256": "a1365eeebe185ec2192201f3e375b074ed6071cb9a52d9c70e365d0afb988998",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-1/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-1/blog_validation.json",
+   "source_sha256": "17250e1db19089c3ad71829f9eb16d1534153483e56bdebbea3d824941d727f9",
+   "published_sha256": "17250e1db19089c3ad71829f9eb16d1534153483e56bdebbea3d824941d727f9",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-1/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-1/manifest.json",
+   "source_sha256": "e56074b985ea68427771be7d645bd7a619f6ac81df81053266411158934adfa9",
+   "published_sha256": "e56074b985ea68427771be7d645bd7a619f6ac81df81053266411158934adfa9",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-1/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-1/summary.json",
+   "source_sha256": "0cf71ae148be7616f7d7e36dce16fb996834af781ce0540c59235f573ea0b1bf",
+   "published_sha256": "0cf71ae148be7616f7d7e36dce16fb996834af781ce0540c59235f573ea0b1bf",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-1/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-1/telemetry/metrics_after.prom",
+   "source_sha256": "4c23da829c2fd49f9c89cfc5712ed8e7a33646b8550034a2d5e0d27b310631e9",
+   "published_sha256": "4c23da829c2fd49f9c89cfc5712ed8e7a33646b8550034a2d5e0d27b310631e9",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-1/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-1/telemetry/metrics_before.prom",
+   "source_sha256": "f93a33f3d836f68fe44489f6c7a1d1da10d961cebc27e04c45110680a49d4351",
+   "published_sha256": "f93a33f3d836f68fe44489f6c7a1d1da10d961cebc27e04c45110680a49d4351",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-1/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-1/telemetry/nvsmi.csv",
+   "source_sha256": "10f576ca01aa54714a84b1fb6efcb4d4c1b10d9a7aa36128e31f5053a8ddac16",
+   "published_sha256": "10f576ca01aa54714a84b1fb6efcb4d4c1b10d9a7aa36128e31f5053a8ddac16",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-1/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-1/telemetry/poll.jsonl",
+   "source_sha256": "4ee2c5f957917e512ddc98333f6c54aa5703e68a1f481255590fb0be26c8817e",
+   "published_sha256": "4ee2c5f957917e512ddc98333f6c54aa5703e68a1f481255590fb0be26c8817e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-2/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-2/bench.json.gz",
+   "source_sha256": "28fb2b747b700f1e7961a33bc0466be9bb7f18658cc24196d83cd0995cc97236",
+   "published_sha256": "3070c48498449e18e4738e2d9130addbbf61421e61130caab1f8469dff0f0f21",
+   "operations": [
+    "gzip (lossless)"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-2/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-2/bench.log",
+   "source_sha256": "dde2eec588f1285b449c28c31785be887a1e67e66924596b5a23c202be8ef70c",
+   "published_sha256": "dde2eec588f1285b449c28c31785be887a1e67e66924596b5a23c202be8ef70c",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-2/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-2/blog_validation.json",
+   "source_sha256": "f88cd402b0411d75f57998b3f78d12d201ea8261476695225273be88efa3c1ad",
+   "published_sha256": "f88cd402b0411d75f57998b3f78d12d201ea8261476695225273be88efa3c1ad",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-2/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-2/manifest.json",
+   "source_sha256": "5a886a97a6e28fb3abbe3a04c449ae737f69068ae2f4aa9c1a0f8094d891797e",
+   "published_sha256": "5a886a97a6e28fb3abbe3a04c449ae737f69068ae2f4aa9c1a0f8094d891797e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-2/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-2/summary.json",
+   "source_sha256": "ed6ec0fa7abfcedcac62de15c1d53d543caaf3558543bf6b5e5e42604a20ce8e",
+   "published_sha256": "ed6ec0fa7abfcedcac62de15c1d53d543caaf3558543bf6b5e5e42604a20ce8e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-2/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-2/telemetry/metrics_after.prom",
+   "source_sha256": "4ad81c79d3ddc9e0853c718518e205084f17193ffc2e01f1c3aff6987d24c45a",
+   "published_sha256": "4ad81c79d3ddc9e0853c718518e205084f17193ffc2e01f1c3aff6987d24c45a",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-2/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-2/telemetry/metrics_before.prom",
+   "source_sha256": "fbf79c7b4af9afca00cba082a31cfaadb96ccc5ff3041b87b7f9d648bf422c8c",
+   "published_sha256": "fbf79c7b4af9afca00cba082a31cfaadb96ccc5ff3041b87b7f9d648bf422c8c",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-2/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-2/telemetry/nvsmi.csv",
+   "source_sha256": "e54ef76e5aad558d823e10d1fe215dd5b157110525a7c3e5033229e604df451e",
+   "published_sha256": "e54ef76e5aad558d823e10d1fe215dd5b157110525a7c3e5033229e604df451e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-2/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-2/telemetry/poll.jsonl",
+   "source_sha256": "aa3b1a95e1aebb6fc41e788ae6b35edcf27d17eda177288eb43d8779e7471d28",
+   "published_sha256": "aa3b1a95e1aebb6fc41e788ae6b35edcf27d17eda177288eb43d8779e7471d28",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-3/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-3/bench.json.gz",
+   "source_sha256": "5594734ff91c58bd83fcf4982b7716b6a2dc3c254d564f0169b21156e5861dba",
+   "published_sha256": "b595eb7265003f3909bd672b70cc5ac235afdad6d33c1714eea749172ac392b4",
+   "operations": [
+    "gzip (lossless)"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-3/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-3/bench.log",
+   "source_sha256": "9472a9262f9513f245c8e49784f73b98c53b7642892469ee7ed50c098da51369",
+   "published_sha256": "9472a9262f9513f245c8e49784f73b98c53b7642892469ee7ed50c098da51369",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-3/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-3/blog_validation.json",
+   "source_sha256": "c8781599fe657316f2329d88cbbb6065d26cd5fdee931912ae60acb139d0abfc",
+   "published_sha256": "c8781599fe657316f2329d88cbbb6065d26cd5fdee931912ae60acb139d0abfc",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-3/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-3/manifest.json",
+   "source_sha256": "2ebae3c377fa23d05a51d9055b0c21bacf23bcf40699d48660022f61ef9f2758",
+   "published_sha256": "2ebae3c377fa23d05a51d9055b0c21bacf23bcf40699d48660022f61ef9f2758",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-3/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-3/summary.json",
+   "source_sha256": "6ec828f2cf84479be17970e07d4faeb3c3d4225f029de400a0f109a2a7d4c851",
+   "published_sha256": "6ec828f2cf84479be17970e07d4faeb3c3d4225f029de400a0f109a2a7d4c851",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-3/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-3/telemetry/metrics_after.prom",
+   "source_sha256": "9bad69c5d5f2a1602e5cf0c5c2cd5f05c7705d9c254cbd2bab5860b77bbd5714",
+   "published_sha256": "9bad69c5d5f2a1602e5cf0c5c2cd5f05c7705d9c254cbd2bab5860b77bbd5714",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-3/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-3/telemetry/metrics_before.prom",
+   "source_sha256": "d5f870377855b16fcff6cb8907c5b887e65acb5ef7b59bec46bf54112cf2c7c6",
+   "published_sha256": "d5f870377855b16fcff6cb8907c5b887e65acb5ef7b59bec46bf54112cf2c7c6",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-3/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-3/telemetry/nvsmi.csv",
+   "source_sha256": "2d7bff217dc063ee2ef74e7e6ae7bce31912a5d10998cda8665f96b1298b1123",
+   "published_sha256": "2d7bff217dc063ee2ef74e7e6ae7bce31912a5d10998cda8665f96b1298b1123",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx1k_osl256_c8/repeat-3/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx1k_osl256_c8/repeat-3/telemetry/poll.jsonl",
+   "source_sha256": "fb5a3c51209cc83a1a414208ebf4fad719ca3caeae2b0dbba44a60be2811ce62",
+   "published_sha256": "fb5a3c51209cc83a1a414208ebf4fad719ca3caeae2b0dbba44a60be2811ce62",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-1/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-1/bench.json",
+   "source_sha256": "48be1e96abe64fff597d01a8b659c6bd4480dd4a28fa36b860e9612f6d441c09",
+   "published_sha256": "48be1e96abe64fff597d01a8b659c6bd4480dd4a28fa36b860e9612f6d441c09",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-1/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-1/bench.log",
+   "source_sha256": "404e0539e0d29ec52f2da83644122bbcb27095bc00c48d9f6a305c27473070c0",
+   "published_sha256": "404e0539e0d29ec52f2da83644122bbcb27095bc00c48d9f6a305c27473070c0",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-1/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-1/blog_validation.json",
+   "source_sha256": "7b1a5bb1564e6de4a14fb1b9ddebb9475da56fabc27d41c5f8dd5edcb00bf680",
+   "published_sha256": "7b1a5bb1564e6de4a14fb1b9ddebb9475da56fabc27d41c5f8dd5edcb00bf680",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-1/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-1/manifest.json",
+   "source_sha256": "a24e55478f72c80d7bb975a222743a5fb220d90420fe76367546791394c27a34",
+   "published_sha256": "a24e55478f72c80d7bb975a222743a5fb220d90420fe76367546791394c27a34",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-1/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-1/summary.json",
+   "source_sha256": "42599499f2394394d448d774907e2de2e74d3e8baac6e92c53119bfb62797af6",
+   "published_sha256": "42599499f2394394d448d774907e2de2e74d3e8baac6e92c53119bfb62797af6",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-1/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-1/telemetry/metrics_after.prom",
+   "source_sha256": "67731493fc44307bc0f47c35e885a08645072d57ce2ac77968efe6ce313ab44c",
+   "published_sha256": "67731493fc44307bc0f47c35e885a08645072d57ce2ac77968efe6ce313ab44c",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-1/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-1/telemetry/metrics_before.prom",
+   "source_sha256": "1f1c10346d505c7a21b6e42182fe662a6defda23e22b632ba6ef0b31e5bb8e65",
+   "published_sha256": "1f1c10346d505c7a21b6e42182fe662a6defda23e22b632ba6ef0b31e5bb8e65",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-1/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-1/telemetry/nvsmi.csv",
+   "source_sha256": "ab96fda35bf76523f6bac2b47dc07c8fce84c7e18bc744ddfb05c491814bff46",
+   "published_sha256": "ab96fda35bf76523f6bac2b47dc07c8fce84c7e18bc744ddfb05c491814bff46",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-1/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-1/telemetry/poll.jsonl",
+   "source_sha256": "8dc44e9d090ab35cf4f78a8fa86856fa7a939c0d721efa0115c91168a5f96667",
+   "published_sha256": "8dc44e9d090ab35cf4f78a8fa86856fa7a939c0d721efa0115c91168a5f96667",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-2/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-2/bench.json",
+   "source_sha256": "d816339b60347f14aae1e2095b1c54df01c82d7ac89337dad4214d3070405e36",
+   "published_sha256": "d816339b60347f14aae1e2095b1c54df01c82d7ac89337dad4214d3070405e36",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-2/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-2/bench.log",
+   "source_sha256": "841a989155f69b5831bf2789eafb559841800eb8eff0ea0ab1f652b44217e9e1",
+   "published_sha256": "841a989155f69b5831bf2789eafb559841800eb8eff0ea0ab1f652b44217e9e1",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-2/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-2/blog_validation.json",
+   "source_sha256": "bbbd68e930221fc6a9b9589daf65754118a3c8eb3eed7b4aa1edd763d9f25198",
+   "published_sha256": "bbbd68e930221fc6a9b9589daf65754118a3c8eb3eed7b4aa1edd763d9f25198",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-2/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-2/manifest.json",
+   "source_sha256": "21623b41deec608f95abd86f3d65254996a6769e25164b3a73dbe55b27dc7811",
+   "published_sha256": "21623b41deec608f95abd86f3d65254996a6769e25164b3a73dbe55b27dc7811",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-2/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-2/summary.json",
+   "source_sha256": "28afd4915dba451d5fc86eed59ac48f85b6eb840d99fffde2b9906a85cd68c94",
+   "published_sha256": "28afd4915dba451d5fc86eed59ac48f85b6eb840d99fffde2b9906a85cd68c94",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-2/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-2/telemetry/metrics_after.prom",
+   "source_sha256": "432d9bf9d9fe76cb288c34642491617d68c7949b9e24fd33a5706ade72a0a066",
+   "published_sha256": "432d9bf9d9fe76cb288c34642491617d68c7949b9e24fd33a5706ade72a0a066",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-2/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-2/telemetry/metrics_before.prom",
+   "source_sha256": "8d884e78e5aa2849670820e03d0b4ddc200c35effd92a2dc841afcc7f5d38d79",
+   "published_sha256": "8d884e78e5aa2849670820e03d0b4ddc200c35effd92a2dc841afcc7f5d38d79",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-2/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-2/telemetry/nvsmi.csv",
+   "source_sha256": "75c230ac87cf92612fdeca6e268737fc6286bf58a7ed1267e39f55bca5bae329",
+   "published_sha256": "75c230ac87cf92612fdeca6e268737fc6286bf58a7ed1267e39f55bca5bae329",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-2/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-2/telemetry/poll.jsonl",
+   "source_sha256": "af2c1ba2120016ed3112d1e60e57c1fde9c30598a86bfb80988e3404535c0e75",
+   "published_sha256": "af2c1ba2120016ed3112d1e60e57c1fde9c30598a86bfb80988e3404535c0e75",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-3/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-3/bench.json",
+   "source_sha256": "cb8676c3de94b108b4a6289f019c5bfd6004c4acec1645b9270a63639b5b60a1",
+   "published_sha256": "cb8676c3de94b108b4a6289f019c5bfd6004c4acec1645b9270a63639b5b60a1",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-3/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-3/bench.log",
+   "source_sha256": "0059a354c3de8bf0b3e0130b448a9938f0f77413aded322d7134c55f24908209",
+   "published_sha256": "0059a354c3de8bf0b3e0130b448a9938f0f77413aded322d7134c55f24908209",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-3/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-3/blog_validation.json",
+   "source_sha256": "328ebb513f2c0a39933b81eac0516a3145c6a611fd83267f64b60c7b78d27d88",
+   "published_sha256": "328ebb513f2c0a39933b81eac0516a3145c6a611fd83267f64b60c7b78d27d88",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-3/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-3/manifest.json",
+   "source_sha256": "9e423d2bb4f7ee2d91b3a7a9b838875048e297323e4afccabca2caf3bbf63f7d",
+   "published_sha256": "9e423d2bb4f7ee2d91b3a7a9b838875048e297323e4afccabca2caf3bbf63f7d",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-3/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-3/summary.json",
+   "source_sha256": "b692ed7381b131f2624fa30356851099ae1a63680d43e10b3c14cd78b85b5ddf",
+   "published_sha256": "b692ed7381b131f2624fa30356851099ae1a63680d43e10b3c14cd78b85b5ddf",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-3/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-3/telemetry/metrics_after.prom",
+   "source_sha256": "0271c8d962b0c431d9114c9a15849a3a22384a481149d04e8f1db001fba3a54c",
+   "published_sha256": "0271c8d962b0c431d9114c9a15849a3a22384a481149d04e8f1db001fba3a54c",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-3/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-3/telemetry/metrics_before.prom",
+   "source_sha256": "e03e115aef921f0a17ed600ed741683e8023b83397b7b69d76125117bf5504ec",
+   "published_sha256": "e03e115aef921f0a17ed600ed741683e8023b83397b7b69d76125117bf5504ec",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-3/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-3/telemetry/nvsmi.csv",
+   "source_sha256": "6f9d55872affeecc9a9d7eb73e8f23f7c95071e1077db09a695ca7e0284856ab",
+   "published_sha256": "6f9d55872affeecc9a9d7eb73e8f23f7c95071e1077db09a695ca7e0284856ab",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c1/repeat-3/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c1/repeat-3/telemetry/poll.jsonl",
+   "source_sha256": "bee5139e71369a89ed35f6d345bdbc7fa4fbef4a58ee13bda17ee2f8064807db",
+   "published_sha256": "bee5139e71369a89ed35f6d345bdbc7fa4fbef4a58ee13bda17ee2f8064807db",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-1/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-1/bench.json",
+   "source_sha256": "324d1d3656058c74e36a7b3f54f12afa073e9fc0d2a38f1b6e6b323ca4b9e540",
+   "published_sha256": "324d1d3656058c74e36a7b3f54f12afa073e9fc0d2a38f1b6e6b323ca4b9e540",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-1/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-1/bench.log",
+   "source_sha256": "47e5e5b95e49c7215489f36b3b0b2ee3724a23cb2728ece9e6f7a28c61bc2e55",
+   "published_sha256": "47e5e5b95e49c7215489f36b3b0b2ee3724a23cb2728ece9e6f7a28c61bc2e55",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-1/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-1/blog_validation.json",
+   "source_sha256": "9984b81388087311cbbeaac534e9c9ff0f160b6b6a1f9458308ab83e8ddd9221",
+   "published_sha256": "9984b81388087311cbbeaac534e9c9ff0f160b6b6a1f9458308ab83e8ddd9221",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-1/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-1/manifest.json",
+   "source_sha256": "2f8d76c4f4f7343b7b666ab831789de33737a3c76ea39ced4967e8904d57f04e",
+   "published_sha256": "2f8d76c4f4f7343b7b666ab831789de33737a3c76ea39ced4967e8904d57f04e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-1/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-1/summary.json",
+   "source_sha256": "5eb46f716b53826e7c4aaedb2e1976b84c83860c126aab5f91d178de0d4b69eb",
+   "published_sha256": "5eb46f716b53826e7c4aaedb2e1976b84c83860c126aab5f91d178de0d4b69eb",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-1/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-1/telemetry/metrics_after.prom",
+   "source_sha256": "5a2f946c8b760c5988b85974acca9e32619e6b1a5be4d7aa5a1ed430b43d5ffc",
+   "published_sha256": "5a2f946c8b760c5988b85974acca9e32619e6b1a5be4d7aa5a1ed430b43d5ffc",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-1/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-1/telemetry/metrics_before.prom",
+   "source_sha256": "b921ab83caa0e22179b1fa5c8e6a0f202d4f05f52a3e803f44af94e79cf154b2",
+   "published_sha256": "b921ab83caa0e22179b1fa5c8e6a0f202d4f05f52a3e803f44af94e79cf154b2",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-1/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-1/telemetry/nvsmi.csv",
+   "source_sha256": "d3294f16e0031d103db1a1d20d68da3fb7827ddedfe657483d83523a8ef0a78f",
+   "published_sha256": "d3294f16e0031d103db1a1d20d68da3fb7827ddedfe657483d83523a8ef0a78f",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-1/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-1/telemetry/poll.jsonl",
+   "source_sha256": "2805349290eb9d932c4bfdf51b67bad8abad554f4e49a4021a94da70f6ced934",
+   "published_sha256": "2805349290eb9d932c4bfdf51b67bad8abad554f4e49a4021a94da70f6ced934",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-2/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-2/bench.json",
+   "source_sha256": "6d9b237a1e4968b494046bc4db6e0be0aad12a67649e1534c303b4a161815475",
+   "published_sha256": "6d9b237a1e4968b494046bc4db6e0be0aad12a67649e1534c303b4a161815475",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-2/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-2/bench.log",
+   "source_sha256": "8797c7661b7ef10ddab4b00b9a1f866f35c5096407b35cae51780fa340366f9d",
+   "published_sha256": "8797c7661b7ef10ddab4b00b9a1f866f35c5096407b35cae51780fa340366f9d",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-2/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-2/blog_validation.json",
+   "source_sha256": "3152ba0ead62336da73cc371262f0d1be28aa204869ff317ed20463469af8a61",
+   "published_sha256": "3152ba0ead62336da73cc371262f0d1be28aa204869ff317ed20463469af8a61",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-2/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-2/manifest.json",
+   "source_sha256": "bacd7dda846c34f2de6aa46fbd36fe281e79ec2fa4972c2e3fa0a7677f1bd3c4",
+   "published_sha256": "bacd7dda846c34f2de6aa46fbd36fe281e79ec2fa4972c2e3fa0a7677f1bd3c4",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-2/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-2/summary.json",
+   "source_sha256": "eae00cfd3a3288ac10ee77ecc4f7f5483d8a275d310bd11e49206e27a7f6e92a",
+   "published_sha256": "eae00cfd3a3288ac10ee77ecc4f7f5483d8a275d310bd11e49206e27a7f6e92a",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-2/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-2/telemetry/metrics_after.prom",
+   "source_sha256": "fd039b19c2732eac460e7144dcf4fc731b155ea99d4aa7c955ce7f42e312fb5e",
+   "published_sha256": "fd039b19c2732eac460e7144dcf4fc731b155ea99d4aa7c955ce7f42e312fb5e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-2/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-2/telemetry/metrics_before.prom",
+   "source_sha256": "462754bcf0a9f7af9a4126a564d6927d78274a6fcbb757c959ae4ac90b60812f",
+   "published_sha256": "462754bcf0a9f7af9a4126a564d6927d78274a6fcbb757c959ae4ac90b60812f",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-2/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-2/telemetry/nvsmi.csv",
+   "source_sha256": "65a2d2aac993668cb8720b3a460b2803babeb8680a731c1ff27ac3292eb1d3cd",
+   "published_sha256": "65a2d2aac993668cb8720b3a460b2803babeb8680a731c1ff27ac3292eb1d3cd",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-2/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-2/telemetry/poll.jsonl",
+   "source_sha256": "f2b0e34857fc1674f410e9237a8723476af0eb7cb2e0a70d9670f0568258ee71",
+   "published_sha256": "f2b0e34857fc1674f410e9237a8723476af0eb7cb2e0a70d9670f0568258ee71",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-3/bench.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-3/bench.json",
+   "source_sha256": "d7f5cb872778ce17247def542589a297e426b9cc728df0717fdd1c4079db0a08",
+   "published_sha256": "d7f5cb872778ce17247def542589a297e426b9cc728df0717fdd1c4079db0a08",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-3/bench.log",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-3/bench.log",
+   "source_sha256": "1a46ed9de7ed26754050813a0d95e210b4b7d78ce0e9d4583659ecfd871afe1a",
+   "published_sha256": "1a46ed9de7ed26754050813a0d95e210b4b7d78ce0e9d4583659ecfd871afe1a",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-3/blog_validation.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-3/blog_validation.json",
+   "source_sha256": "9073e15fddbfe4833ae91cd68a4a63db3609e9f937af7517e368e6ed35ff1d3e",
+   "published_sha256": "9073e15fddbfe4833ae91cd68a4a63db3609e9f937af7517e368e6ed35ff1d3e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-3/manifest.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-3/manifest.json",
+   "source_sha256": "cd6236ca16b86812256db018fe2d47f8e79b881534c691c8438221ca425a9959",
+   "published_sha256": "cd6236ca16b86812256db018fe2d47f8e79b881534c691c8438221ca425a9959",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-3/summary.json",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-3/summary.json",
+   "source_sha256": "de80f1da159c5b0a1c0ddcf54cacb79f2b25b26ac67c5b3590817e263c88cd19",
+   "published_sha256": "de80f1da159c5b0a1c0ddcf54cacb79f2b25b26ac67c5b3590817e263c88cd19",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-3/telemetry/metrics_after.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-3/telemetry/metrics_after.prom",
+   "source_sha256": "6c96cda55717410f027252126a078b97dd70791fa0ea897c16fd740798c83fcf",
+   "published_sha256": "6c96cda55717410f027252126a078b97dd70791fa0ea897c16fd740798c83fcf",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-3/telemetry/metrics_before.prom",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-3/telemetry/metrics_before.prom",
+   "source_sha256": "53a55731ac68003b9953ac7a6cf7e0163e275cfdc4919ee66692e970158cb5d9",
+   "published_sha256": "53a55731ac68003b9953ac7a6cf7e0163e275cfdc4919ee66692e970158cb5d9",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-3/telemetry/nvsmi.csv",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-3/telemetry/nvsmi.csv",
+   "source_sha256": "261329566690e4eb2254c7e84795d9a7e4b075efdc0ae8c8ba1a20c8b199b962",
+   "published_sha256": "261329566690e4eb2254c7e84795d9a7e4b075efdc0ae8c8ba1a20c8b199b962",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/blog-architecture-h100-v1/v4-0731/serving/off/ctx64k_osl256_c8/repeat-3/telemetry/poll.jsonl",
+   "published": "reports/blog-architecture-h100-v1/data/v4-0731/serving/off/ctx64k_osl256_c8/repeat-3/telemetry/poll.jsonl",
+   "source_sha256": "efc4cf7a6be2b2dec52149ebcfb76cbedefec463c44ed63caf433b4c1f71baea",
+   "published_sha256": "efc4cf7a6be2b2dec52149ebcfb76cbedefec463c44ed63caf433b4c1f71baea",
+   "operations": [
+    "copied"
+   ]
+  }
+ ]
+}

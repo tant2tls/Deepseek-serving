@@ -9,6 +9,8 @@ This repository contains a curated, portable subset of the earlier `LLMs_frontie
 | Need | File |
 | --- | --- |
 | Next agent's scope | [AGENTS.md](AGENTS.md) |
+| Architecture blog plan (attention, KV memory, FFN sparsity) | [blog_target.md](blog_target.md) |
+| Architecture blog measurements on the latest vLLM build | [reports/blog-architecture-h100-v1/](reports/blog-architecture-h100-v1/) |
 | **V4.1 vs 0731 measured results (speculation off + DSpark)** | [report.md](report.md) |
 | **MiMo-V2.6-Flash vs 0731 vs V4.1 (speculation off + MTP/DFlash)** | [report_mimo.md](report_mimo.md) |
 | How MiMo runs prefill/decode, and why it is faster | [docs/mimo-v2.6-inference.md](docs/mimo-v2.6-inference.md) |

@@ -1,0 +1,91 @@
+{
+ "kind": "decode",
+ "model_key": "v41",
+ "runtime": {
+  "venv": "/root/vllm-latest",
+  "vllm": "0.31.1rc1.dev50+g554340f3d",
+  "torch": "2.13.0+cu132"
+ },
+ "bucket": "1k",
+ "B": 8,
+ "request_ids": [
+  "1k-aux-000",
+  "1k-aux-001",
+  "1k-aux-002",
+  "1k-aux-003",
+  "1k-aux-004",
+  "1k-aux-005",
+  "1k-aux-006",
+  "1k-aux-007"
+ ],
+ "client_content_tokens": [
+  1003,
+  1019,
+  989,
+  999,
+  1020,
+  1022,
+  1000,
+  1019
+ ],
+ "generated_before_window": [
+  618,
+  609,
+  613,
+  621,
+  617,
+  618,
+  618,
+  611
+ ],
+ "tokens_in_window": [
+  32,
+  32,
+  32,
+  32,
+  32,
+  32,
+  32,
+  32
+ ],
+ "window_s": 0.40150022506713867,
+ "unprofiled_window": {
+  "window_s": 1.000075101852417,
+  "tokens": [
+   80,
+   78,
+   77,
+   80,
+   80,
+   80,
+   80,
+   80
+  ]
+ },
+ "live_gauges": {
+  "vllm:num_requests_running": 8.0,
+  "vllm:num_requests_waiting": 0.0,
+  "vllm:kv_cache_usage_perc": 0.0018085007006072296
+ },
+ "label": "decode1k_B8",
+ "files": [
+  "dp0_pp0_tp0_dcp0_ep0_rank0.1791404263985814475.pt.trace.json.gz",
+  "dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+  "dp0_pp0_tp1_dcp0_ep1_rank1.1791404263987745612.pt.trace.json.gz",
+  "dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+  "dp0_pp0_tp2_dcp0_ep2_rank2.1791404264005318581.pt.trace.json.gz",
+  "dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+  "dp0_pp0_tp3_dcp0_ep3_rank3.1791404263985588201.pt.trace.json.gz",
+  "dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+  "dp0_pp0_tp4_dcp0_ep4_rank4.1791404263979910387.pt.trace.json.gz",
+  "dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+  "dp0_pp0_tp5_dcp0_ep5_rank5.1791404263978967327.pt.trace.json.gz",
+  "dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+  "dp0_pp0_tp6_dcp0_ep6_rank6.1791404263978405732.pt.trace.json.gz",
+  "dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+  "dp0_pp0_tp7_dcp0_ep7_rank7.1791404263978448492.pt.trace.json.gz",
+  "dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt"
+ ],
+ "n_rank_files": 16,
+ "note": "diagnostic profiled capture; not a timing result"
+}

@@ -1,0 +1,57 @@
+{
+ "study": "blog-architecture-h100-v1",
+ "addendum": "glm_qwen",
+ "declared": "2026-10-07T21:34:36.654004",
+ "requested_by": "Tan, 2026-10-07, during the GPU session: run Qwen3.8-Flash-Next and GLM-5.3-Flash with the same setup after the first three models finish",
+ "models": {
+  "qwen-38": {
+   "model": "Qwen/Qwen3.8-Flash-Next-FP8",
+   "revision": "236dfdf285828023ca3bcd3f37366c58a3469b13"
+  },
+  "glm-53": {
+   "model": "zai-org/GLM-5.3-Flash",
+   "revision": "eb9eb208eb0d988989d07a6a12d0fdeb5f52574a"
+  }
+ },
+ "same_as_plan": [
+  "runtime",
+  "deployment flags",
+  "public inputs and request lists",
+  "request counts",
+  "warmup",
+  "validity",
+  "rerun rule",
+  "diagnostics per model",
+  "timing blocks per model (3)",
+  "point order"
+ ],
+ "blocks": {
+  "1": [
+   "qwen-38",
+   "glm-53"
+  ],
+  "2": [
+   "glm-53",
+   "qwen-38"
+  ],
+  "3": [
+   "qwen-38",
+   "glm-53"
+  ]
+ },
+ "launch_flags": "common deployment only; parsers qwen3/qwen3_xml and glm45/glm47 as in the historical launches; Qwen thinking off with enable_thinking=false; a model-specific flag is added only if the common launch fails, and is then recorded as a deviation",
+ "known_limits": [
+  "The two models are measured after the first three, in the same session; model order is not rotated across all five, so slow drift of the node is confounded with the group.",
+  "Counts were sized on the first three models. If an added model is faster than the fastest of them at a point, its window can be shorter than 60 s; the window is reported, not hidden.",
+  "The historical GLM and Qwen results in references/ used other builds, utilization and prefix settings; they are not controls for these runs."
+ ],
+ "extra_runs": {
+  "timing_runs": 36,
+  "trace_captures": 12,
+  "live_kv_snapshots": 12
+ },
+ "budget": "estimated 2.3 additional node-hours: two diagnostic launches and six timing launches",
+ "deviations_declared_before_running": [
+  "GLM-5.3-Flash cannot run with thinking off: its chat template always opens the assistant turn with <think> and offers only reasoning_effort low/high/max. It runs with reasoning_effort=low. Forced 256-token timing is unaffected in step count, but the generated tokens are reasoning text and the natural-EOS functional check is expected to show reasoning content."
+ ]
+}

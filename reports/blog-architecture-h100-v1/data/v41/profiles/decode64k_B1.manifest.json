@@ -1,0 +1,56 @@
+{
+ "kind": "decode",
+ "model_key": "v41",
+ "runtime": {
+  "venv": "/root/vllm-latest",
+  "vllm": "0.31.1rc1.dev50+g554340f3d",
+  "torch": "2.13.0+cu132"
+ },
+ "bucket": "64k",
+ "B": 1,
+ "request_ids": [
+  "64k-aux-000"
+ ],
+ "client_content_tokens": [
+  65498
+ ],
+ "generated_before_window": [
+  845
+ ],
+ "tokens_in_window": [
+  32
+ ],
+ "window_s": 0.30113935470581055,
+ "unprofiled_window": {
+  "window_s": 1.0000793933868408,
+  "tokens": [
+   110
+  ]
+ },
+ "live_gauges": {
+  "vllm:num_requests_running": 1.0,
+  "vllm:num_requests_waiting": 0.0,
+  "vllm:kv_cache_usage_perc": 0.004001868285847698
+ },
+ "label": "decode64k_B1",
+ "files": [
+  "dp0_pp0_tp0_dcp0_ep0_rank0.1791404315483061130.pt.trace.json.gz",
+  "dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+  "dp0_pp0_tp1_dcp0_ep1_rank1.1791404315481601087.pt.trace.json.gz",
+  "dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+  "dp0_pp0_tp2_dcp0_ep2_rank2.1791404315478821209.pt.trace.json.gz",
+  "dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+  "dp0_pp0_tp3_dcp0_ep3_rank3.1791404315489950083.pt.trace.json.gz",
+  "dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+  "dp0_pp0_tp4_dcp0_ep4_rank4.1791404315485549522.pt.trace.json.gz",
+  "dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+  "dp0_pp0_tp5_dcp0_ep5_rank5.1791404315482890616.pt.trace.json.gz",
+  "dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+  "dp0_pp0_tp6_dcp0_ep6_rank6.1791404315497547958.pt.trace.json.gz",
+  "dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+  "dp0_pp0_tp7_dcp0_ep7_rank7.1791404315478628136.pt.trace.json.gz",
+  "dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt"
+ ],
+ "n_rank_files": 16,
+ "note": "diagnostic profiled capture; not a timing result"
+}
