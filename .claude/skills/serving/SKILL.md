@@ -12,6 +12,7 @@ GPUs are billed by the hour. Do everything that needs no GPU first, never leave 
 - `AGENTS.md` for the current scope and standing rules. Prefix caching stays **off** unless Tan explicitly asks; speculation is off for the blog study.
 - `blog_target.md` for the blog study, `target.md` for model revisions and the later speculative study.
 - `docs/reproduce.md` section 0 for the verified fresh-node procedure and timings.
+- `docs/model-setup.md` for the model you are about to launch: its flags, the log lines that prove the right path is running, its thinking switch and its known pitfalls.
 
 ## 2. Fresh node checklist (no GPU needed)
 

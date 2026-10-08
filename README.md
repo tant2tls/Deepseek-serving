@@ -14,6 +14,7 @@ This repository contains a curated, portable subset of the earlier `LLMs_frontie
 | Architecture blog plan (attention, KV memory, FFN sparsity) | [blog_target.md](blog_target.md) |
 | **Architecture blog results, five models on vLLM `554340f3…`** (attention, live KV, FFN sparsity) | [findings](reports/blog-architecture-h100-v1/findings.md) · [handoff](reports/blog-architecture-h100-v1/handoff.md) · [architecture](reports/blog-architecture-h100-v1/architecture.md) |
 | Does vLLM time V4.1 prefill as its report describes? | [v41_prefill_check.md](reports/blog-architecture-h100-v1/v41_prefill_check.md) |
+| **Per-model setup guide** (download, launch, expected log lines, request, pitfalls) | [docs/model-setup.md](docs/model-setup.md) |
 | Fresh-node setup, serving skill, step-by-step lessons | [docs/reproduce.md](docs/reproduce.md) §0 · [.claude/skills/serving/](.claude/skills/serving/SKILL.md) · [teach_me/](teach_me/README.md) |
 | **V4.1 vs 0731 measured results (speculation off + DSpark)** | [report.md](report.md) |
 | **MiMo-V2.6-Flash vs 0731 vs V4.1 (speculation off + MTP/DFlash)** | [report_mimo.md](report_mimo.md) |
