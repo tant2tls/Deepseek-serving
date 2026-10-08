@@ -1,0 +1,91 @@
+{
+ "kind": "decode",
+ "model_key": "qwen-38-bf16",
+ "runtime": {
+  "venv": "/root/vllm-latest",
+  "vllm": "0.31.1rc1.dev50+g554340f3d",
+  "torch": "2.13.0+cu132"
+ },
+ "bucket": "1k",
+ "B": 8,
+ "request_ids": [
+  "1k-aux-000",
+  "1k-aux-001",
+  "1k-aux-002",
+  "1k-aux-003",
+  "1k-aux-004",
+  "1k-aux-005",
+  "1k-aux-006",
+  "1k-aux-007"
+ ],
+ "client_content_tokens": [
+  1009,
+  1159,
+  1024,
+  1004,
+  1122,
+  1049,
+  975,
+  1143
+ ],
+ "generated_before_window": [
+  1790,
+  1740,
+  1012,
+  1788,
+  1650,
+  1338,
+  1614,
+  1720
+ ],
+ "tokens_in_window": [
+  49,
+  46,
+  0,
+  49,
+  49,
+  0,
+  16,
+  49
+ ],
+ "window_s": 0.4645676612854004,
+ "unprofiled_window": {
+  "window_s": 1.000122308731079,
+  "tokens": [
+   118,
+   118,
+   0,
+   118,
+   118,
+   0,
+   30,
+   103
+  ]
+ },
+ "live_gauges": {
+  "vllm:num_requests_running": 8.0,
+  "vllm:num_requests_waiting": 0.0,
+  "vllm:kv_cache_usage_perc": 0.012760416666666718
+ },
+ "label": "decode1k_B8",
+ "files": [
+  "dp0_pp0_tp0_dcp0_ep0_rank0.1791484313845139871.pt.trace.json.gz",
+  "dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+  "dp0_pp0_tp1_dcp0_ep1_rank1.1791484313181662229.pt.trace.json.gz",
+  "dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+  "dp0_pp0_tp2_dcp0_ep2_rank2.1791484313837457913.pt.trace.json.gz",
+  "dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+  "dp0_pp0_tp3_dcp0_ep3_rank3.1791484313171236818.pt.trace.json.gz",
+  "dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+  "dp0_pp0_tp4_dcp0_ep4_rank4.1791484313190856579.pt.trace.json.gz",
+  "dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+  "dp0_pp0_tp5_dcp0_ep5_rank5.1791484313183918781.pt.trace.json.gz",
+  "dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+  "dp0_pp0_tp6_dcp0_ep6_rank6.1791484313189623698.pt.trace.json.gz",
+  "dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+  "dp0_pp0_tp7_dcp0_ep7_rank7.1791484313644617051.pt.trace.json.gz",
+  "dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt"
+ ],
+ "n_rank_files": 16,
+ "note": "diagnostic profiled capture; not a timing result"
+}

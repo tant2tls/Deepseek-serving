@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Launch one matched DeepSeek server for the 0731 vs V4.1 study.
-# Usage: bench/serve.sh <model-key: v41|v4-0731|mimo-v26|glm-53|qwen-38> <config-id: off|off-prefix|...> <log-path> [extra vllm args]
+# Usage: bench/serve.sh <model-key: v41|v4-0731|mimo-v26|glm-53|qwen-38-bf16> <config-id: off|off-prefix|...> <log-path> [extra vllm args]
 # Credentials come from the environment (HF_TOKEN); never hardcode them here.
 set -euo pipefail
 
@@ -28,9 +28,18 @@ case "$MODEL_KEY" in
     MODEL=zai-org/GLM-5.3-Flash
     REVISION=eb9eb208eb0d988989d07a6a12d0fdeb5f52574a
     PARSER=glm45; TOOL_PARSER=glm47; TOKMODE=auto ;;
+  # Historical FP8 key of blog-architecture-h100-v1. No new FP8 runs (docs/qwen-checkpoint-policy.md):
+  # the mapping stays as a record and launches only with an explicit override.
   qwen-38)
+    [ "${ALLOW_HISTORICAL_QWEN_FP8:-0}" = 1 ] || { echo "qwen-38 is the retired FP8 key; use qwen-38-bf16" >&2; exit 2; }
     MODEL=Qwen/Qwen3.8-Flash-Next-FP8
     REVISION=236dfdf285828023ca3bcd3f37366c58a3469b13
+    PARSER=qwen3; TOOL_PARSER=qwen3_xml; TOKMODE=auto ;;
+  # Original BF16 checkpoint, required for all Qwen work from 2026-10-08. Native precision:
+  # no --dtype and no quantization flag; the loaded dtype is verified from the server log.
+  qwen-38-bf16)
+    MODEL=Qwen/Qwen3.8-Flash-Next
+    REVISION=de4b8e4d43b917e7706784d8bb445c9af86a3540
     PARSER=qwen3; TOOL_PARSER=qwen3_xml; TOKMODE=auto ;;
   *) echo "unknown model key $MODEL_KEY" >&2; exit 2 ;;
 esac

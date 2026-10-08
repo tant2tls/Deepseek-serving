@@ -1,0 +1,58 @@
+{
+ "study": "qwen-bf16-h100-v1",
+ "frozen": "2026-10-08T18:37:42.225322",
+ "runtime": {
+  "venv": "/root/vllm-latest",
+  "vllm": "0.31.1rc1.dev50+g554340f3d",
+  "torch": "2.13.0+cu132"
+ },
+ "models": {
+  "qwen-38-bf16": {
+   "model": "Qwen/Qwen3.8-Flash-Next",
+   "revision": "de4b8e4d43b917e7706784d8bb445c9af86a3540"
+  },
+  "mimo-v26": {
+   "model": "XiaomiMiMo/MiMo-V2.6-Flash-MOPD",
+   "revision": "2479e2d0029eca9a34cc7e7f55a121925f81908e"
+  }
+ },
+ "inputs_reference": "reports/blog-architecture-h100-v1/study/_inputs/manifest.json",
+ "deployment": "TP8 + EP, utilization 0.90, max_model_len 262144, max_num_seqs 64, max_num_batched_tokens 8192 (explicit), native precision, prefix caching off, speculation off",
+ "requests": "public code/math/chat text, one user message, server-side chat template, temperature 0, thinking off, ignore_eos with 256 output tokens",
+ "inputs_manifest_sha256": "8dfed357e3164f635cd14539e808d38bf27c13464ca653d4fcadf7793ff36284",
+ "counts": {
+  "16k:c1": 36,
+  "16k:c8": 75,
+  "1k:c1": 48,
+  "1k:c8": 204,
+  "64k:c1": 18,
+  "64k:c8": 33
+ },
+ "count_rule": "start at max(16, 4c), multiple of 3 for domain balance, raised until the fastest piloted model has a window of at least 60 s; same first-n requests of the timing split for every model",
+ "blocks": {
+  "1": [
+   "qwen-38-bf16",
+   "mimo-v26"
+  ],
+  "2": [
+   "qwen-38-bf16"
+  ],
+  "3": [
+   "qwen-38-bf16"
+  ]
+ },
+ "diagnostic_models": [
+  "qwen-38-bf16"
+ ],
+ "point_order": "16k c1, 16k c8, 1k c1, 1k c8, 64k c1, 64k c8 in odd blocks; reversed in even blocks",
+ "warmup": "aux split (disjoint from timing) at every bucket after each launch",
+ "run_timeout_s": 1500,
+ "ready_timeout_s": 1800,
+ "validity": "all requests complete, every request returns exactly 256 output tokens, server prompt tokens at least 98% of the client content tokens, no failed requests",
+ "rerun_rule": "an invalid run is kept; one rerun in a new repeat-N-rerunK directory is paired by manifest identity; the fastest attempt is never selected",
+ "diagnostics": "per model: functional checks, disjoint pilot, live-KV snapshots at 1k/16k/64k x B=1/8, traces prefill16k, prefill64k, decode1k/64k x B=1/8 on the idle-profiler launch",
+ "timing_runs": 24,
+ "trace_captures": 6,
+ "live_kv_snapshots": 6,
+ "note": "Tan, 2026-10-08: measure the original BF16 Qwen3.8-Flash-Next. Counts are those of blog-architecture-h100-v1, so every model sees the same first-n requests; the BF16 pilot (6/6 valid) was slower than the FP8 pilot at eight clients, so windows are not shorter than the FP8 ones. Launch order: timing:qwen-38-bf16:1 timing:mimo-v26:1 timing:qwen-38-bf16:2 timing:qwen-38-bf16:3. MiMo runs one block as a node control against its three blocks of 2026-10-07 (this node has another CPU, NUMA layout and GPU driver); the control is reported as a ratio per point and is not used to rescale any number. No FP8 run is repeated (docs/qwen-checkpoint-policy.md). Known limits: one model, three launch-separated blocks in one evening, no rotation against other models; MiMo's block is also its first launch on this node. Estimated cost: 1.3 node-hours for the four timing launches."
+}

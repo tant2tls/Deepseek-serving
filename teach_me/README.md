@@ -9,8 +9,9 @@ These lessons show, step by step, how the numbers in [the blog study report](../
 | [3. See where the time goes](03_traces_and_components.md) | Capturing a profiler trace for prefill and for decode at a known batch, and reading it |
 | [4. Measure live KV memory](04_live_kv_memory.md) | Turning the KV-usage gauge into bytes per request and per token |
 | [5. Read the vLLM source](05_reading_vllm_source.md) | A map of file and line references, and how the V4.1 prefill check was done |
+| [6. A new checkpoint is a new study](06_new_checkpoint_new_study.md) | How the original BF16 Qwen checkpoint was measured beside the finished FP8 study: distinct key, same inputs, loaded-dtype check, node control |
 
-The lessons use the three target models as examples. Historical Qwen3.8-Flash-Next **FP8** (`qwen-38`) and GLM-5.3-Flash (`glm-53`) were measured with the same core setup; GLM has no thinking-off switch. **From 2026-10-08, future Qwen work must use the original BF16 checkpoint.** Do not invoke the old FP8 key or assume changing a dtype flag is enough; the [checkpoint policy](../docs/qwen-checkpoint-policy.md) records the BF16 pin and pending harness/measurement work.
+The lessons use the three target models as examples. GLM-5.3-Flash (`glm-53`, no thinking-off switch) and Qwen3.8-Flash-Next were measured with the same core setup. **Qwen has two records:** the historical FP8 checkpoint (`qwen-38`, retired, never launched again) and the original BF16 checkpoint (`qwen-38-bf16`, study `qwen-bf16-h100-v1`, required for all Qwen work from 2026-10-08). Changing a dtype flag does not turn one into the other; lesson 6 and the [checkpoint policy](../docs/qwen-checkpoint-policy.md) explain why.
 
 For a quick reference per model (download, launch, expected log lines, request, pitfalls) see [docs/model-setup.md](../docs/model-setup.md).
 

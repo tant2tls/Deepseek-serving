@@ -2,7 +2,7 @@
 
 Study `blog-architecture-h100-v1`, measured 2026-10-07 on one 8×H100 80GB node. Plan: [blog_target.md](../../blog_target.md). Status of every planned item: [handoff.md](handoff.md).
 
-**Qwen precision:** every Qwen result in this report is from **Qwen3.8-Flash-Next-FP8**, revision `236dfdf285828023ca3bcd3f37366c58a3469b13`. From 2026-10-08, [future Qwen work uses the original BF16 checkpoint only](../../docs/qwen-checkpoint-policy.md). BF16 has not been measured here; these FP8 values and rankings remain historical evidence.
+**Qwen precision:** every Qwen result in this report is from **Qwen3.8-Flash-Next-FP8**, revision `236dfdf285828023ca3bcd3f37366c58a3469b13`. From 2026-10-08, [future Qwen work uses the original BF16 checkpoint only](../../docs/qwen-checkpoint-policy.md). BF16 is not measured in this report; it was measured on 2026-10-08 on a second node in [`qwen-bf16-h100-v1`](../qwen-bf16-h100-v1/findings.md). These FP8 values and rankings remain historical evidence and are not BF16 results.
 
 **Read this first**
 

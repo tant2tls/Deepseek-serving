@@ -1,6 +1,6 @@
 # Reproducing a serving study on one 8×H100 node
 
-**Current Qwen rule (2026-10-08):** use only original BF16 `Qwen/Qwen3.8-Flash-Next` for future Qwen work; see [the pinned policy](qwen-checkpoint-policy.md). The Qwen download sizes, startup timings and `qwen-38` commands in the completed October workflow describe **FP8 history**, not a BF16 procedure. Do not run the old Qwen entry. BF16 requires separate harness wiring, a new study ID and fresh matched controls before an authorized session; no new FP8 runs.
+**Qwen rule (2026-10-08):** use only original BF16 `Qwen/Qwen3.8-Flash-Next` through the key `qwen-38-bf16`; see [the pinned policy](qwen-checkpoint-policy.md). It was measured the same day in the separate study `qwen-bf16-h100-v1` on a second rented node; the exact procedure is [section 0.1](#01-a-second-node-qwen-bf16-in-its-own-study-verified-2026-10-08). The Qwen download sizes, startup timings and `qwen-38` commands of the first October session describe **FP8 history**; that key is refused by the launcher. No new FP8 runs.
 
 **Active-phase routing, 2026-09-30:** follow [target.md](../target.md) and [the three-model GPU plan](three-model-h100-plan.md) for `spec-realtext-h100-v1`. Extend the harness locally first; use fresh AR controls, variable 256/2048 output lengths, pinned real text and a new no-prefix chain. All new prefix tests, including reuse checks and prewarming, are deferred. H200 and new models are outside the next session. Do not run the historical launch matrix or `chain_mimo.sh` as the active workflow.
 
@@ -26,6 +26,29 @@ Traps met on this node:
 - **Never `pkill -f` a pattern that also appears in your own command line.** It killed the calling shell and left a half-started chain. Stop a chain with `kill -TERM <pid>` from the launcher's output; the chain then stops its own server group.
 - **First load of a model reads the whole checkpoint from disk**; expect several minutes before graph capture. The engine prints `No available shared memory broadcast block found in 60 seconds` while ranks load; that message alone is not a failure.
 - **No Nsight Compute (`ncu`) on the image.** Hardware HBM byte counters are unavailable unless it is installed and validated beforehand.
+
+## 0.1 A second node: Qwen BF16 in its own study (verified 2026-10-08)
+
+Study `qwen-bf16-h100-v1` reused the blog protocol on a freshly rented 8×H100 node. Everything below ran with `export VLLM_VENV=/root/vllm-latest HF_HOME=/workspace/hf BLOG_STUDY=qwen-bf16-h100-v1`.
+
+| Step | Command | Time on the 2026-10-08 node | Notes |
+| --- | --- | --- | --- |
+| 1. Inventory | as in section 0 | seconds | `/workspace/hf` was empty again. **The node was not the same hardware**: Xeon 8592V with 4 NUMA nodes and driver 580.173.02, against Xeon 8480+ with 2 NUMA nodes and driver 580.105.08. Compare `results/<study>/_env/` with the published `_env/` of the earlier study before assuming "same environment" |
+| 2. Weights | `hf download Qwen/Qwen3.8-Flash-Next --revision de4b8e4d43b917e7706784d8bb445c9af86a3540 --max-workers 32`, then MiMo for the control | 360 GB in 23 min, MiMo 166 GB in 11 min | About 240 MiB/s, limited by the node's network; a token and a second downloader changed nothing. Verify every file size against the hub metadata before launching |
+| 3. Public inputs | `blog_corpus.py`, `blog_inputs.py`, `blog_inputs.py extra qwen-38-bf16` | about 4 min while the weights download | The rebuilt lists must equal the published lists of `blog-architecture-h100-v1`; the dry run checks every hash |
+| 4. Record the node | `blog_study.py env` | seconds | |
+| 5. Diagnostics | `bash bench/blog_launch.sh chain-diag diag:qwen-38-bf16` | 25 min: 9.7 min first launch, then functional checks, pilot, six KV snapshots, six traces | Check `dtype=torch.bfloat16`, `quantization=None` and `TRITON Unquantized MoE backend` in the server log |
+| 6. Freeze and dry-run | `blog_study.py plan --counts '<same counts as the blog study>' --note '<order, control, limits, cost>'`, then `blog_study.py dry-run <steps>` | seconds | Same counts, so every model sees the same first-n requests |
+| 7. Timing | `bash bench/blog_launch.sh chain-timing timing:qwen-38-bf16:1 timing:mimo-v26:1 timing:qwen-38-bf16:2 timing:qwen-38-bf16:3` | 96 min: about 22 min per Qwen block (4.3 min relaunch, warmup, six points), 30 min for MiMo's first launch and block | MiMo's block is the node control: throughput reproduced within 2%, TTFT and eight-client TPOT medians did not |
+| 7b. Trace control (declared addendum) | `bash bench/blog_launch.sh chain-mimo-diag diag:mimo-v26 --diag-parts functional,kv,trace` | 14 min | MiMo's trace components matched 2026-10-07 within 3%, so trace differences between BF16 and FP8 are not node effects |
+| 8. Tables and publishing | `blog_report.py serving`, `memory`, `components`, `tables`, `compare`, `publish` | about 5 min | `compare` writes the node control and the BF16-versus-FP8 table |
+
+Traps met on this node:
+
+- **A bracket pattern does not protect you if your own command line contains the literal text.** `pgrep -f "hf downloa[d] Qwen"` matched the shell that ran it, because the same command line also contained `hf download Qwen/…` further on, and the kill loop ended the shell. Kill by PID taken from `ps`, in a command that does not mention the target string.
+- **Do not wait by hand for a long download or a diagnostic chain.** A small detached script that waits for the previous stage, checks it (all shards present, pilot valid, server stopped) and starts the next one removed the idle minutes between stages. It refuses to launch if a check fails.
+- **This node's CPUs scale their frequency** (`schedutil`, 800–3,900 MHz; `cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`) and the governor cannot be changed from the container. Short-prompt TTFT then has a slow and a fast level inside one run. Record the governor with the node, and inspect per-request TTFT before using a median.
+- **Killed downloads leave `*.incomplete` blobs** that say nothing about the final state. Judge completeness by comparing each snapshot file's size with the hub metadata.
 
 The sections below preserve the procedure that produced [report.md](../report.md) (study `v41-vs-0731`) and [report_mimo.md](../report_mimo.md). Their run lists, fixed-256 validity rule and timing estimates are **historical reproduction instructions**, not defaults for the new phase. Environment fixes and curation remain applicable; the new plan's per-request validity, counting and scope take precedence. GPUs are rented by the hour: chain launches, measure promptly and stop servers as soon as measurement ends.
 

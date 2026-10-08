@@ -6,11 +6,11 @@ Runs in a scratch environment that has pyarrow (the pinned vLLM venv does not):
 Writes results/<study>/_inputs/corpus/{code,math,chat}.jsonl and sources.json.
 Texts are public and regenerable, so only hashes and provenance are published.
 """
-import gzip, hashlib, json, sys, sysconfig
+import gzip, hashlib, json, os, sys, sysconfig
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-STUDY = "blog-architecture-h100-v1"
+STUDY = os.environ.get("BLOG_STUDY", "blog-architecture-h100-v1")
 OUT = ROOT / "results" / STUDY / "_inputs" / "corpus"
 HUB = Path("/workspace/hf/hub")
 MATH_REV = "21a5633873b6a120296cce3e2df9d5550074f4a3"

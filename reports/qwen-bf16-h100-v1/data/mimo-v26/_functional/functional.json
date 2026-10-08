@@ -1,0 +1,81 @@
+{
+ "model_key": "mimo-v26",
+ "runtime": {
+  "venv": "/root/vllm-latest",
+  "vllm": "0.31.1rc1.dev50+g554340f3d",
+  "torch": "2.13.0+cu132"
+ },
+ "checks": [
+  {
+   "kind": "natural_eos",
+   "domain": "code",
+   "prompt": "Write a Python function that returns the n-th Fibonacci number iteratively. Reply with the code only.",
+   "text": "```python\ndef fibonacci(n):\n    if n < 0:\n        raise ValueError(\"n must be a non-negative integer\")\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a\n```",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 29,
+    "total_tokens": 90,
+    "completion_tokens": 61,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   }
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "math",
+   "prompt": "What is 17 * 23? Give the final number on the last line.",
+   "text": "17 * 23 = 391\n\n391",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 28,
+    "total_tokens": 44,
+    "completion_tokens": 16,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   }
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "chat",
+   "prompt": "In two sentences, explain why the sky is blue.",
+   "text": "The sky is blue because of a phenomenon called Rayleigh scattering. When sunlight enters the atmosphere, it collides with gas molecules, and the shorter blue wavelengths of light are scattered in all directions much more than the longer red wavelengths.",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 20,
+    "total_tokens": 67,
+    "completion_tokens": 47,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   }
+  },
+  {
+   "kind": "forced_256",
+   "request_id": "1k-aux-000",
+   "usage": {
+    "prompt_tokens": 951,
+    "total_tokens": 1207,
+    "completion_tokens": 256,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "finish_reason": "length"
+  }
+ ],
+ "rendered": {
+  "server_prompt_tokens": 951,
+  "client_content_tokens": 942,
+  "template_overhead": 9
+ },
+ "ok": true
+}

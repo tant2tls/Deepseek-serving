@@ -1,0 +1,1117 @@
+{
+ "study": "qwen-bf16-h100-v1",
+ "model": "mimo-v26",
+ "policy": "numbers unaltered; gzip is lossless; logs: private IPs and ANSI codes removed",
+ "excluded": {
+  "reason": {
+   "_prompts": "prefix prompt JSONL (~400 MB), regenerable with bench/run_matrix.py build_prefix_files and the recorded seeds",
+   "*.pt.trace.json.gz": "full per-rank torch profiler traces (~73 MB); kept locally per AGENTS.md",
+   "profiler_out_[1-7].txt": "per-rank duplicates of the rank-0 kernel summary"
+  },
+  "files": [
+   "profiles/decode1k_B1/dp0_pp0_tp0_dcp0_ep0_rank0.1791490753504748172.pt.trace.json.gz",
+   "profiles/decode1k_B1/dp0_pp0_tp1_dcp0_ep1_rank1.1791490747290789139.pt.trace.json.gz",
+   "profiles/decode1k_B1/dp0_pp0_tp2_dcp0_ep2_rank2.1791490747395761967.pt.trace.json.gz",
+   "profiles/decode1k_B1/dp0_pp0_tp3_dcp0_ep3_rank3.1791490747203392514.pt.trace.json.gz",
+   "profiles/decode1k_B1/dp0_pp0_tp4_dcp0_ep4_rank4.1791490753473972602.pt.trace.json.gz",
+   "profiles/decode1k_B1/dp0_pp0_tp5_dcp0_ep5_rank5.1791490750019721325.pt.trace.json.gz",
+   "profiles/decode1k_B1/dp0_pp0_tp6_dcp0_ep6_rank6.1791490753461095807.pt.trace.json.gz",
+   "profiles/decode1k_B1/dp0_pp0_tp7_dcp0_ep7_rank7.1791490753600859692.pt.trace.json.gz",
+   "profiles/decode1k_B8/dp0_pp0_tp0_dcp0_ep0_rank0.1791490889069156802.pt.trace.json.gz",
+   "profiles/decode1k_B8/dp0_pp0_tp1_dcp0_ep1_rank1.1791490889068866910.pt.trace.json.gz",
+   "profiles/decode1k_B8/dp0_pp0_tp2_dcp0_ep2_rank2.1791490889090667991.pt.trace.json.gz",
+   "profiles/decode1k_B8/dp0_pp0_tp3_dcp0_ep3_rank3.1791490889077195434.pt.trace.json.gz",
+   "profiles/decode1k_B8/dp0_pp0_tp4_dcp0_ep4_rank4.1791490889068694975.pt.trace.json.gz",
+   "profiles/decode1k_B8/dp0_pp0_tp5_dcp0_ep5_rank5.1791490889087164949.pt.trace.json.gz",
+   "profiles/decode1k_B8/dp0_pp0_tp6_dcp0_ep6_rank6.1791490889068700211.pt.trace.json.gz",
+   "profiles/decode1k_B8/dp0_pp0_tp7_dcp0_ep7_rank7.1791490889462686839.pt.trace.json.gz",
+   "profiles/decode64k_B1/dp0_pp0_tp0_dcp0_ep0_rank0.1791491018663983856.pt.trace.json.gz",
+   "profiles/decode64k_B1/dp0_pp0_tp1_dcp0_ep1_rank1.1791491018734789959.pt.trace.json.gz",
+   "profiles/decode64k_B1/dp0_pp0_tp2_dcp0_ep2_rank2.1791491018661103065.pt.trace.json.gz",
+   "profiles/decode64k_B1/dp0_pp0_tp3_dcp0_ep3_rank3.1791491018556495143.pt.trace.json.gz",
+   "profiles/decode64k_B1/dp0_pp0_tp4_dcp0_ep4_rank4.1791491018668096951.pt.trace.json.gz",
+   "profiles/decode64k_B1/dp0_pp0_tp5_dcp0_ep5_rank5.1791491018681588593.pt.trace.json.gz",
+   "profiles/decode64k_B1/dp0_pp0_tp6_dcp0_ep6_rank6.1791491018692950168.pt.trace.json.gz",
+   "profiles/decode64k_B1/dp0_pp0_tp7_dcp0_ep7_rank7.1791491018546723399.pt.trace.json.gz",
+   "profiles/decode64k_B8/dp0_pp0_tp0_dcp0_ep0_rank0.1791491164826170482.pt.trace.json.gz",
+   "profiles/decode64k_B8/dp0_pp0_tp1_dcp0_ep1_rank1.1791491164823926990.pt.trace.json.gz",
+   "profiles/decode64k_B8/dp0_pp0_tp2_dcp0_ep2_rank2.1791491164828587365.pt.trace.json.gz",
+   "profiles/decode64k_B8/dp0_pp0_tp3_dcp0_ep3_rank3.1791491164821640425.pt.trace.json.gz",
+   "profiles/decode64k_B8/dp0_pp0_tp4_dcp0_ep4_rank4.1791491164825006955.pt.trace.json.gz",
+   "profiles/decode64k_B8/dp0_pp0_tp5_dcp0_ep5_rank5.1791491164823719881.pt.trace.json.gz",
+   "profiles/decode64k_B8/dp0_pp0_tp6_dcp0_ep6_rank6.1791491164826145646.pt.trace.json.gz",
+   "profiles/decode64k_B8/dp0_pp0_tp7_dcp0_ep7_rank7.1791491164821253300.pt.trace.json.gz",
+   "profiles/prefill16k/dp0_pp0_tp0_dcp0_ep0_rank0.1791491215947697813.pt.trace.json.gz",
+   "profiles/prefill16k/dp0_pp0_tp1_dcp0_ep1_rank1.1791491215946385302.pt.trace.json.gz",
+   "profiles/prefill16k/dp0_pp0_tp2_dcp0_ep2_rank2.1791491215959026126.pt.trace.json.gz",
+   "profiles/prefill16k/dp0_pp0_tp3_dcp0_ep3_rank3.1791491215953509327.pt.trace.json.gz",
+   "profiles/prefill16k/dp0_pp0_tp4_dcp0_ep4_rank4.1791491215954267025.pt.trace.json.gz",
+   "profiles/prefill16k/dp0_pp0_tp5_dcp0_ep5_rank5.1791491215956592512.pt.trace.json.gz",
+   "profiles/prefill16k/dp0_pp0_tp6_dcp0_ep6_rank6.1791491215961675912.pt.trace.json.gz",
+   "profiles/prefill16k/dp0_pp0_tp7_dcp0_ep7_rank7.1791491215946531417.pt.trace.json.gz",
+   "profiles/prefill64k/dp0_pp0_tp0_dcp0_ep0_rank0.1791491246948237746.pt.trace.json.gz",
+   "profiles/prefill64k/dp0_pp0_tp1_dcp0_ep1_rank1.1791491246942066681.pt.trace.json.gz",
+   "profiles/prefill64k/dp0_pp0_tp2_dcp0_ep2_rank2.1791491246963482217.pt.trace.json.gz",
+   "profiles/prefill64k/dp0_pp0_tp3_dcp0_ep3_rank3.1791491246938400268.pt.trace.json.gz",
+   "profiles/prefill64k/dp0_pp0_tp4_dcp0_ep4_rank4.1791491247528840901.pt.trace.json.gz",
+   "profiles/prefill64k/dp0_pp0_tp5_dcp0_ep5_rank5.1791491246955856992.pt.trace.json.gz",
+   "profiles/prefill64k/dp0_pp0_tp6_dcp0_ep6_rank6.1791491246964102431.pt.trace.json.gz",
+   "profiles/prefill64k/dp0_pp0_tp7_dcp0_ep7_rank7.1791491247520112625.pt.trace.json.gz"
+  ]
+ },
+ "files": [
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/_functional/functional.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/_functional/functional.json",
+   "source_sha256": "0311d187d7f26de48ea6d0cde10d5e85e50a72301baa361fa87a0df07cb5a930",
+   "published_sha256": "0311d187d7f26de48ea6d0cde10d5e85e50a72301baa361fa87a0df07cb5a930",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/_kv/live_16k_B1.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/_kv/live_16k_B1.json",
+   "source_sha256": "2b83aa3b9ec39b292b124daca0da3a3a56b8a3b1fcdc1ef5740a647c8a5d1262",
+   "published_sha256": "2b83aa3b9ec39b292b124daca0da3a3a56b8a3b1fcdc1ef5740a647c8a5d1262",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/_kv/live_16k_B8.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/_kv/live_16k_B8.json",
+   "source_sha256": "a7127f0fee2e84940e59b5190f4342eaf8288eeac2f987d6fb0a31c05351fb11",
+   "published_sha256": "a7127f0fee2e84940e59b5190f4342eaf8288eeac2f987d6fb0a31c05351fb11",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/_kv/live_1k_B1.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/_kv/live_1k_B1.json",
+   "source_sha256": "85a26b4f19c6c1aed2cef799e36940e04e3f76ad14ada736ab9c9c9fff8a9b6c",
+   "published_sha256": "85a26b4f19c6c1aed2cef799e36940e04e3f76ad14ada736ab9c9c9fff8a9b6c",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/_kv/live_1k_B8.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/_kv/live_1k_B8.json",
+   "source_sha256": "ad8d7ba93a77eeebad4f715d07b772d46d6b97b5f3d21de6765c34d96be2a09b",
+   "published_sha256": "ad8d7ba93a77eeebad4f715d07b772d46d6b97b5f3d21de6765c34d96be2a09b",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/_kv/live_64k_B1.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/_kv/live_64k_B1.json",
+   "source_sha256": "11481b5a81fa74935bb88e4f8d438e6ada8f8990e63cc8caf567e3d6bca33870",
+   "published_sha256": "11481b5a81fa74935bb88e4f8d438e6ada8f8990e63cc8caf567e3d6bca33870",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/_kv/live_64k_B8.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/_kv/live_64k_B8.json",
+   "source_sha256": "baf80011d84ffecf1ac4f191732b017ef3dd2c090ab7b70ffc01ffcdc67d9217",
+   "published_sha256": "baf80011d84ffecf1ac4f191732b017ef3dd2c090ab7b70ffc01ffcdc67d9217",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/_server/serve-off-20261008-190016.log",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/_server/serve-off-20261008-190016.log",
+   "source_sha256": "894a32049fa4e56de6a4c63f8fc0cb7186c91430e5cb65b9ef10ec1d2dee465e",
+   "published_sha256": "3bda0cb9deb909f4716b8e7e1fe1f61460558ef85646ee9ddf0a93eaf6336aa9",
+   "operations": [
+    "private IPv4 -> <PRIVATE_IP>"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/_server/serve-off-profidle-20261008-201414.log",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/_server/serve-off-profidle-20261008-201414.log",
+   "source_sha256": "2f653f3aecd3fd4f999a285c35ef0514093488e59099b559073027a725c80ddd",
+   "published_sha256": "43c2733a727707286b1dec7da026db8fa14a1e7a75b87c910a47cd011756b706",
+   "operations": [
+    "private IPv4 -> <PRIVATE_IP>"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode1k_B1/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode1k_B1/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "source_sha256": "d66d2dbb07e4b716665b1e515348a67ca5915caa5b8d459853681c9ad5eb6b0f",
+   "published_sha256": "d66d2dbb07e4b716665b1e515348a67ca5915caa5b8d459853681c9ad5eb6b0f",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode1k_B1/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode1k_B1/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "source_sha256": "203a7b8d5c20769100c03576af89d43669c85678deef004a7e62b6138de41acc",
+   "published_sha256": "203a7b8d5c20769100c03576af89d43669c85678deef004a7e62b6138de41acc",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode1k_B1/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode1k_B1/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "source_sha256": "d10983e55353ba42e69bb1c9c003b3c6b14a4fc1f3ea7dd206d2dee5b41139a7",
+   "published_sha256": "d10983e55353ba42e69bb1c9c003b3c6b14a4fc1f3ea7dd206d2dee5b41139a7",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode1k_B1/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode1k_B1/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "source_sha256": "5d55d61d0e73cc3e0910622c171714f05261e97f893b18e11407ee1cfb92ff20",
+   "published_sha256": "5d55d61d0e73cc3e0910622c171714f05261e97f893b18e11407ee1cfb92ff20",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode1k_B1/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode1k_B1/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "source_sha256": "9a431a4c4db309ebd9330760f03f080701bef4333e55198e63d37521c215143a",
+   "published_sha256": "9a431a4c4db309ebd9330760f03f080701bef4333e55198e63d37521c215143a",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode1k_B1/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode1k_B1/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "source_sha256": "f02ba0716480dead512495dfa7f96893f91983a04de9a5041b7b138ab3742698",
+   "published_sha256": "f02ba0716480dead512495dfa7f96893f91983a04de9a5041b7b138ab3742698",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode1k_B1/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode1k_B1/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "source_sha256": "a9f86a78162e6f08ac44800cbbd5f4cae635adf29d55cec5cf5ae903ec52461a",
+   "published_sha256": "a9f86a78162e6f08ac44800cbbd5f4cae635adf29d55cec5cf5ae903ec52461a",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode1k_B1/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode1k_B1/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "source_sha256": "440771bf28df5ab652bf8d7a5fa5b0f5ee1858ee5ecdd2d7623ef1eb66adefaa",
+   "published_sha256": "440771bf28df5ab652bf8d7a5fa5b0f5ee1858ee5ecdd2d7623ef1eb66adefaa",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode1k_B1.manifest.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode1k_B1.manifest.json",
+   "source_sha256": "5852f3fbe584aa0218732d1898d72ef0b6aedc6266c247073ab7981f5bfd6046",
+   "published_sha256": "5852f3fbe584aa0218732d1898d72ef0b6aedc6266c247073ab7981f5bfd6046",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode1k_B8/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode1k_B8/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "source_sha256": "597a715e27df109c4dcb9ec25cb9ff614a3f7b95dfa285e16b47e6122f76d807",
+   "published_sha256": "597a715e27df109c4dcb9ec25cb9ff614a3f7b95dfa285e16b47e6122f76d807",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode1k_B8/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode1k_B8/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "source_sha256": "06d8df41c67b94e55afdf814a034841a32fa5f9f6e9478f52fb4f6bda04311a8",
+   "published_sha256": "06d8df41c67b94e55afdf814a034841a32fa5f9f6e9478f52fb4f6bda04311a8",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode1k_B8/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode1k_B8/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "source_sha256": "5255f6c7ff2656a02914246069953ad0d7abf84b254ecb650297091e6061b1a9",
+   "published_sha256": "5255f6c7ff2656a02914246069953ad0d7abf84b254ecb650297091e6061b1a9",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode1k_B8/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode1k_B8/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "source_sha256": "0533ef95bb969026a909dccd6ad6703016e51e6c67d6d22414ac7260833fbeb1",
+   "published_sha256": "0533ef95bb969026a909dccd6ad6703016e51e6c67d6d22414ac7260833fbeb1",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode1k_B8/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode1k_B8/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "source_sha256": "517c028425e0d8fa71c189320ed7226d068b1e95c59d78f424b9fcc1eef069a5",
+   "published_sha256": "517c028425e0d8fa71c189320ed7226d068b1e95c59d78f424b9fcc1eef069a5",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode1k_B8/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode1k_B8/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "source_sha256": "572c4f8df3a1a460bd33dee7dbec5419241171d578c107b801e4b45354a0b2c2",
+   "published_sha256": "572c4f8df3a1a460bd33dee7dbec5419241171d578c107b801e4b45354a0b2c2",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode1k_B8/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode1k_B8/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "source_sha256": "75b922f40152b4e32d4a76b1b0afae51ad73cf74fe9613fb2fa6b9088493201f",
+   "published_sha256": "75b922f40152b4e32d4a76b1b0afae51ad73cf74fe9613fb2fa6b9088493201f",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode1k_B8/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode1k_B8/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "source_sha256": "1c0adf3d87d6aba7348fd5b2089fe26fc0f557e8b3cfdb0f9f06948e22e2cf2e",
+   "published_sha256": "1c0adf3d87d6aba7348fd5b2089fe26fc0f557e8b3cfdb0f9f06948e22e2cf2e",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode1k_B8.manifest.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode1k_B8.manifest.json",
+   "source_sha256": "b8456535e38193d6ce450f46bdde3832f5d07808c3b5422c32f078c7ec5e5ee4",
+   "published_sha256": "b8456535e38193d6ce450f46bdde3832f5d07808c3b5422c32f078c7ec5e5ee4",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode64k_B1/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode64k_B1/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "source_sha256": "7be57d1e4fbd423717fe9e088e38785cc815ce4adc0312c3192daf75c942345d",
+   "published_sha256": "7be57d1e4fbd423717fe9e088e38785cc815ce4adc0312c3192daf75c942345d",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode64k_B1/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode64k_B1/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "source_sha256": "fc0b4e5b5152decbcbf31bbd339465794fc44393c539ea00af22b39938e8db28",
+   "published_sha256": "fc0b4e5b5152decbcbf31bbd339465794fc44393c539ea00af22b39938e8db28",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode64k_B1/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode64k_B1/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "source_sha256": "41b71c394a8d07f46d52b1e2c834a5868c970433c240b15fe998a1eee61e9ba4",
+   "published_sha256": "41b71c394a8d07f46d52b1e2c834a5868c970433c240b15fe998a1eee61e9ba4",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode64k_B1/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode64k_B1/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "source_sha256": "994b4ae501ca506e57584fe61105674f9d63227ae3962da117358666bc986f7d",
+   "published_sha256": "994b4ae501ca506e57584fe61105674f9d63227ae3962da117358666bc986f7d",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode64k_B1/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode64k_B1/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "source_sha256": "fdaf6b6dc8537741f532f5db15ce3bca86d422a5c84b5db8fd3e6887655154c2",
+   "published_sha256": "fdaf6b6dc8537741f532f5db15ce3bca86d422a5c84b5db8fd3e6887655154c2",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode64k_B1/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode64k_B1/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "source_sha256": "d318f7a8bcc550ad6c296283865dcd5adc49735fed3da778a6ce98eba8c03dff",
+   "published_sha256": "d318f7a8bcc550ad6c296283865dcd5adc49735fed3da778a6ce98eba8c03dff",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode64k_B1/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode64k_B1/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "source_sha256": "df3ace3a9e3e48f3fa59284775cc627399feb9b22b1a14acaab266bf9ce23fe1",
+   "published_sha256": "df3ace3a9e3e48f3fa59284775cc627399feb9b22b1a14acaab266bf9ce23fe1",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode64k_B1/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode64k_B1/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "source_sha256": "1e837f539525c60b75167961520e0a74796f1f86e4cc9955a1c9a6a9a3e26a1f",
+   "published_sha256": "1e837f539525c60b75167961520e0a74796f1f86e4cc9955a1c9a6a9a3e26a1f",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode64k_B1.manifest.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode64k_B1.manifest.json",
+   "source_sha256": "755784cde7555bc7c5edb4e39bd3d5f3f943ac44ff357b4463a749ed900b5bdc",
+   "published_sha256": "755784cde7555bc7c5edb4e39bd3d5f3f943ac44ff357b4463a749ed900b5bdc",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode64k_B8/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode64k_B8/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "source_sha256": "098be933632d39563625511fe84f1aacc4d9a171ef1044d93d928fda4e05b4f7",
+   "published_sha256": "098be933632d39563625511fe84f1aacc4d9a171ef1044d93d928fda4e05b4f7",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode64k_B8/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode64k_B8/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "source_sha256": "0f340fc870418e3f7f4ac447e6be64cc2b040251010d33178500e799a9b2c0f3",
+   "published_sha256": "0f340fc870418e3f7f4ac447e6be64cc2b040251010d33178500e799a9b2c0f3",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode64k_B8/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode64k_B8/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "source_sha256": "7cda0c65327398fb92e53c5f4e231b9f8d411a2e6abb690f3221b0daeed623ff",
+   "published_sha256": "7cda0c65327398fb92e53c5f4e231b9f8d411a2e6abb690f3221b0daeed623ff",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode64k_B8/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode64k_B8/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "source_sha256": "823fbfd07e52e3b5d48789ba7db9cf5b5d2a8338069202fd08e7ed5c3d087c34",
+   "published_sha256": "823fbfd07e52e3b5d48789ba7db9cf5b5d2a8338069202fd08e7ed5c3d087c34",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode64k_B8/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode64k_B8/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "source_sha256": "d62456473e3c8f8f831b02e296c9404e9a85769ffbef7119e557ac73c2a7024a",
+   "published_sha256": "d62456473e3c8f8f831b02e296c9404e9a85769ffbef7119e557ac73c2a7024a",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode64k_B8/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode64k_B8/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "source_sha256": "41f401f151522d8f9b4c035c69c6c71dc67f28aa5df9ef3dbbedac22d5366306",
+   "published_sha256": "41f401f151522d8f9b4c035c69c6c71dc67f28aa5df9ef3dbbedac22d5366306",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode64k_B8/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode64k_B8/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "source_sha256": "c1053a4032503893c290ccc5be89284fdfde64c5a8ca7aef2cecb40da3e8adac",
+   "published_sha256": "c1053a4032503893c290ccc5be89284fdfde64c5a8ca7aef2cecb40da3e8adac",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode64k_B8/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode64k_B8/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "source_sha256": "3391a1950e7e3d9b325360b4ab798b076876f9bbb5879758efde7477d2dd491b",
+   "published_sha256": "3391a1950e7e3d9b325360b4ab798b076876f9bbb5879758efde7477d2dd491b",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/decode64k_B8.manifest.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/decode64k_B8.manifest.json",
+   "source_sha256": "12a66c0df02795e5e346d323e16f62aae6b906153bf6360cceb153b24f014075",
+   "published_sha256": "12a66c0df02795e5e346d323e16f62aae6b906153bf6360cceb153b24f014075",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/prefill16k/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/prefill16k/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "source_sha256": "d8dff910fd9ce9c99571569680fe44c24f1fb8b0dc03d068d2f9e37f134f3ccc",
+   "published_sha256": "d8dff910fd9ce9c99571569680fe44c24f1fb8b0dc03d068d2f9e37f134f3ccc",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/prefill16k/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/prefill16k/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "source_sha256": "b67b36f03542e816266a0538dfc6c26d0e5e531716fc71e16bbb97a24e3fedc5",
+   "published_sha256": "b67b36f03542e816266a0538dfc6c26d0e5e531716fc71e16bbb97a24e3fedc5",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/prefill16k/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/prefill16k/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "source_sha256": "0dc6d5c566729f25b01999c80b796af2b285c4d78e0077ce55d7b6169e0af5df",
+   "published_sha256": "0dc6d5c566729f25b01999c80b796af2b285c4d78e0077ce55d7b6169e0af5df",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/prefill16k/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/prefill16k/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "source_sha256": "47741bf086bde14a26c5289ebb52b8306d6efd4005a05c29d839cedf382d096c",
+   "published_sha256": "47741bf086bde14a26c5289ebb52b8306d6efd4005a05c29d839cedf382d096c",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/prefill16k/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/prefill16k/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "source_sha256": "5bee729ddf25d92f6194bebe3735474f2cc38006023904526ba9296d8871ed47",
+   "published_sha256": "5bee729ddf25d92f6194bebe3735474f2cc38006023904526ba9296d8871ed47",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/prefill16k/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/prefill16k/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "source_sha256": "936108de1c58acbb8e12f676e434ae042084d30ad0dc888b7a722f77021b8ad7",
+   "published_sha256": "936108de1c58acbb8e12f676e434ae042084d30ad0dc888b7a722f77021b8ad7",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/prefill16k/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/prefill16k/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "source_sha256": "7fd2ded383f8984d07bba1db1b97170e1b9d3a0ccab1912201547da4e5df5398",
+   "published_sha256": "7fd2ded383f8984d07bba1db1b97170e1b9d3a0ccab1912201547da4e5df5398",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/prefill16k/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/prefill16k/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "source_sha256": "b85ceb949036a238718c932d8d592621d913621bbbdcae0960fcff5fdff8dd15",
+   "published_sha256": "b85ceb949036a238718c932d8d592621d913621bbbdcae0960fcff5fdff8dd15",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/prefill16k.manifest.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/prefill16k.manifest.json",
+   "source_sha256": "efc3243ebfe080f4aa536d8269367619771ba01db387f669cb8d6cf825f358dd",
+   "published_sha256": "efc3243ebfe080f4aa536d8269367619771ba01db387f669cb8d6cf825f358dd",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/prefill64k/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/prefill64k/dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+   "source_sha256": "b1ca364e32ab3a9a48653ed2549d4d3b6b44b2672dde3d76efe14046997ffac4",
+   "published_sha256": "b1ca364e32ab3a9a48653ed2549d4d3b6b44b2672dde3d76efe14046997ffac4",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/prefill64k/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/prefill64k/dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+   "source_sha256": "809be12477b5b510fd655eec31949528e182130ba2986e1c8824ed42c7542999",
+   "published_sha256": "809be12477b5b510fd655eec31949528e182130ba2986e1c8824ed42c7542999",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/prefill64k/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/prefill64k/dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+   "source_sha256": "f463a5d61d9fd2b02678d21b859efe1c21959abf1668eff9ffac27f461c842b8",
+   "published_sha256": "f463a5d61d9fd2b02678d21b859efe1c21959abf1668eff9ffac27f461c842b8",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/prefill64k/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/prefill64k/dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+   "source_sha256": "1b0e379bc1fc5bc942a54a20c2c92d7b7f29d290c053919209c635af65c2663a",
+   "published_sha256": "1b0e379bc1fc5bc942a54a20c2c92d7b7f29d290c053919209c635af65c2663a",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/prefill64k/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/prefill64k/dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+   "source_sha256": "274e2eeb20e7a396c950a6bd47acc28ce039f25c917da56e00462ab8452e06ee",
+   "published_sha256": "274e2eeb20e7a396c950a6bd47acc28ce039f25c917da56e00462ab8452e06ee",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/prefill64k/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/prefill64k/dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+   "source_sha256": "40486bdb12393ccf629c481301ef6e9f903a4978036f9307ea1d52eb2bb79219",
+   "published_sha256": "40486bdb12393ccf629c481301ef6e9f903a4978036f9307ea1d52eb2bb79219",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/prefill64k/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/prefill64k/dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+   "source_sha256": "4d8a26973acc7342de3110a4fedbfd0447f568dde6f3267b99b0bd163866e0a5",
+   "published_sha256": "4d8a26973acc7342de3110a4fedbfd0447f568dde6f3267b99b0bd163866e0a5",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/prefill64k/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/prefill64k/dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt",
+   "source_sha256": "07a2f0cfa3c1593c4ad7b63455801685e6f9d93faad79c28fa16b771336169e9",
+   "published_sha256": "07a2f0cfa3c1593c4ad7b63455801685e6f9d93faad79c28fa16b771336169e9",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/profiles/prefill64k.manifest.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/profiles/prefill64k.manifest.json",
+   "source_sha256": "926b3333b3a8a58abc6ae7ae168eea2d6cb2c49456308c5bbd0540262fed50c8",
+   "published_sha256": "926b3333b3a8a58abc6ae7ae168eea2d6cb2c49456308c5bbd0540262fed50c8",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx16k_osl256_c1/repeat-1/bench.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx16k_osl256_c1/repeat-1/bench.json",
+   "source_sha256": "700112b49fbe19579a67bbf724259fd5aa7cde06e4033c646fe34700cc806247",
+   "published_sha256": "700112b49fbe19579a67bbf724259fd5aa7cde06e4033c646fe34700cc806247",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx16k_osl256_c1/repeat-1/bench.log",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx16k_osl256_c1/repeat-1/bench.log",
+   "source_sha256": "607b71f1b18941c76f4383f2d7b7a747f2f01078f45488cb29d02ebdbac94f29",
+   "published_sha256": "607b71f1b18941c76f4383f2d7b7a747f2f01078f45488cb29d02ebdbac94f29",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx16k_osl256_c1/repeat-1/blog_validation.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx16k_osl256_c1/repeat-1/blog_validation.json",
+   "source_sha256": "5af819b991f6dec84e1cc28764b1731c4c3d9e8f16369678ab1fabcbfc03f7d9",
+   "published_sha256": "5af819b991f6dec84e1cc28764b1731c4c3d9e8f16369678ab1fabcbfc03f7d9",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx16k_osl256_c1/repeat-1/manifest.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx16k_osl256_c1/repeat-1/manifest.json",
+   "source_sha256": "52e72a4a1ec173908fad19aeb0385427c213e7960c5dac5ef8f5350f7148b6ce",
+   "published_sha256": "52e72a4a1ec173908fad19aeb0385427c213e7960c5dac5ef8f5350f7148b6ce",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx16k_osl256_c1/repeat-1/summary.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx16k_osl256_c1/repeat-1/summary.json",
+   "source_sha256": "8dd161264183c79378eaa9dd1e25af1a60fea3f5eb82146480dfb92eb560fd6f",
+   "published_sha256": "8dd161264183c79378eaa9dd1e25af1a60fea3f5eb82146480dfb92eb560fd6f",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx16k_osl256_c1/repeat-1/telemetry/metrics_after.prom",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx16k_osl256_c1/repeat-1/telemetry/metrics_after.prom",
+   "source_sha256": "65c75b559805d7041c3ebc58ada2bdfa6f90c6bb334ab0ea7847b5c139a71fe4",
+   "published_sha256": "65c75b559805d7041c3ebc58ada2bdfa6f90c6bb334ab0ea7847b5c139a71fe4",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx16k_osl256_c1/repeat-1/telemetry/metrics_before.prom",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx16k_osl256_c1/repeat-1/telemetry/metrics_before.prom",
+   "source_sha256": "c2662ef85d5a09f27ea5224b029c638fc77b2b954bce030527cd7a98e65d0fc5",
+   "published_sha256": "c2662ef85d5a09f27ea5224b029c638fc77b2b954bce030527cd7a98e65d0fc5",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx16k_osl256_c1/repeat-1/telemetry/nvsmi.csv",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx16k_osl256_c1/repeat-1/telemetry/nvsmi.csv",
+   "source_sha256": "5441030b1c69a00873f91b4788bb4ac4dd37d2c09632ca87ff29e73d0bbaea40",
+   "published_sha256": "5441030b1c69a00873f91b4788bb4ac4dd37d2c09632ca87ff29e73d0bbaea40",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx16k_osl256_c1/repeat-1/telemetry/poll.jsonl",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx16k_osl256_c1/repeat-1/telemetry/poll.jsonl",
+   "source_sha256": "36abff81bf4022f1b1f95e64feabe6364417195497ed45c03207cccc13e67be7",
+   "published_sha256": "36abff81bf4022f1b1f95e64feabe6364417195497ed45c03207cccc13e67be7",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx16k_osl256_c8/repeat-1/bench.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx16k_osl256_c8/repeat-1/bench.json.gz",
+   "source_sha256": "9b67ee3bfcf17ef260bc9f6b448642974c90c9e8e02f843c5535ffec4f285267",
+   "published_sha256": "5852e71c29897e4bcd3fd9c6dbc4f81ef3fb73a04755087fc84a314a2414e620",
+   "operations": [
+    "gzip (lossless)"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx16k_osl256_c8/repeat-1/bench.log",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx16k_osl256_c8/repeat-1/bench.log",
+   "source_sha256": "2645958c39b4f8ddbb815a36582aaf1be5b1136e2c4fd5e78c0c225101862b29",
+   "published_sha256": "2645958c39b4f8ddbb815a36582aaf1be5b1136e2c4fd5e78c0c225101862b29",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx16k_osl256_c8/repeat-1/blog_validation.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx16k_osl256_c8/repeat-1/blog_validation.json",
+   "source_sha256": "b413311881f5d2713e9d62389fcd263953ad5f3916e2f13041cc93c00a532bf7",
+   "published_sha256": "b413311881f5d2713e9d62389fcd263953ad5f3916e2f13041cc93c00a532bf7",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx16k_osl256_c8/repeat-1/manifest.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx16k_osl256_c8/repeat-1/manifest.json",
+   "source_sha256": "946e865b464a76da399e0ed3ecac14c2a6a12a53e29eaba58d69392aee748589",
+   "published_sha256": "946e865b464a76da399e0ed3ecac14c2a6a12a53e29eaba58d69392aee748589",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx16k_osl256_c8/repeat-1/summary.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx16k_osl256_c8/repeat-1/summary.json",
+   "source_sha256": "8cc02a5712301aac36eb0a08263eae398b2479aa82cb3ef429ee42ea48aa2de7",
+   "published_sha256": "8cc02a5712301aac36eb0a08263eae398b2479aa82cb3ef429ee42ea48aa2de7",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx16k_osl256_c8/repeat-1/telemetry/metrics_after.prom",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx16k_osl256_c8/repeat-1/telemetry/metrics_after.prom",
+   "source_sha256": "886584f5a05a6d0b350dcbf831968326fd549878ebe248639dcb584af27443fd",
+   "published_sha256": "886584f5a05a6d0b350dcbf831968326fd549878ebe248639dcb584af27443fd",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx16k_osl256_c8/repeat-1/telemetry/metrics_before.prom",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx16k_osl256_c8/repeat-1/telemetry/metrics_before.prom",
+   "source_sha256": "563ca5fce4435bb97bac820a163812e57f36da03d42a8bcdd893012ce2612520",
+   "published_sha256": "563ca5fce4435bb97bac820a163812e57f36da03d42a8bcdd893012ce2612520",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx16k_osl256_c8/repeat-1/telemetry/nvsmi.csv",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx16k_osl256_c8/repeat-1/telemetry/nvsmi.csv",
+   "source_sha256": "f723d670f01f14322524c28d7fd05b4bd677bee7d72ca6de7f6190be611a3b53",
+   "published_sha256": "f723d670f01f14322524c28d7fd05b4bd677bee7d72ca6de7f6190be611a3b53",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx16k_osl256_c8/repeat-1/telemetry/poll.jsonl",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx16k_osl256_c8/repeat-1/telemetry/poll.jsonl",
+   "source_sha256": "c98c437916b4ad393b1c520aa4338a761dce044b2e9fcf4b89da0f8f01f9fb9a",
+   "published_sha256": "c98c437916b4ad393b1c520aa4338a761dce044b2e9fcf4b89da0f8f01f9fb9a",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx1k_osl256_c1/repeat-1/bench.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx1k_osl256_c1/repeat-1/bench.json.gz",
+   "source_sha256": "7cc9f34172c4e74cdb2c7efe49e2d64adf2913ee7c6540c503d27d5c33bee08a",
+   "published_sha256": "c1772fa17733a00655218abf1a18678b3589d6bdc0886575c29788cc01fab6d6",
+   "operations": [
+    "gzip (lossless)"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx1k_osl256_c1/repeat-1/bench.log",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx1k_osl256_c1/repeat-1/bench.log",
+   "source_sha256": "d539f42a63d86f9fdd9ab2c9c6e3f3ede298ab5caee91061c2d7ed785bc0b4aa",
+   "published_sha256": "d539f42a63d86f9fdd9ab2c9c6e3f3ede298ab5caee91061c2d7ed785bc0b4aa",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx1k_osl256_c1/repeat-1/blog_validation.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx1k_osl256_c1/repeat-1/blog_validation.json",
+   "source_sha256": "61feb8a8276378390e5c0d937a1bf1b2c4a6bd5f2d8dcd335a44656ba1f54456",
+   "published_sha256": "61feb8a8276378390e5c0d937a1bf1b2c4a6bd5f2d8dcd335a44656ba1f54456",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx1k_osl256_c1/repeat-1/manifest.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx1k_osl256_c1/repeat-1/manifest.json",
+   "source_sha256": "80078d20e9db0eaffd01b45a41b233785a5f048c13e670692ab929abc1958cc2",
+   "published_sha256": "80078d20e9db0eaffd01b45a41b233785a5f048c13e670692ab929abc1958cc2",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx1k_osl256_c1/repeat-1/summary.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx1k_osl256_c1/repeat-1/summary.json",
+   "source_sha256": "c5087e74862d775bb7d4051808dcda2043bf7be504401aecabf357b4cdf919dd",
+   "published_sha256": "c5087e74862d775bb7d4051808dcda2043bf7be504401aecabf357b4cdf919dd",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx1k_osl256_c1/repeat-1/telemetry/metrics_after.prom",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx1k_osl256_c1/repeat-1/telemetry/metrics_after.prom",
+   "source_sha256": "c4acbeeca1b86323d69e841b718979c8ebaa0e83d6799e75947be431c1bfb3f7",
+   "published_sha256": "c4acbeeca1b86323d69e841b718979c8ebaa0e83d6799e75947be431c1bfb3f7",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx1k_osl256_c1/repeat-1/telemetry/metrics_before.prom",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx1k_osl256_c1/repeat-1/telemetry/metrics_before.prom",
+   "source_sha256": "26ffe4c9ee329872804d4aea55c6bff9e43e29eac3ffd5dde13911b5c2d7114a",
+   "published_sha256": "26ffe4c9ee329872804d4aea55c6bff9e43e29eac3ffd5dde13911b5c2d7114a",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx1k_osl256_c1/repeat-1/telemetry/nvsmi.csv",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx1k_osl256_c1/repeat-1/telemetry/nvsmi.csv",
+   "source_sha256": "1eceba19b19de3b1b82115306de2bcc817e4f1c2872842220149617f637b9ca1",
+   "published_sha256": "1eceba19b19de3b1b82115306de2bcc817e4f1c2872842220149617f637b9ca1",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx1k_osl256_c1/repeat-1/telemetry/poll.jsonl",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx1k_osl256_c1/repeat-1/telemetry/poll.jsonl",
+   "source_sha256": "7ba8ec6cadb53133994abdb02b7202c382f1b59c2838c59c917b2e2f03d488b7",
+   "published_sha256": "7ba8ec6cadb53133994abdb02b7202c382f1b59c2838c59c917b2e2f03d488b7",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx1k_osl256_c8/repeat-1/bench.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx1k_osl256_c8/repeat-1/bench.json.gz",
+   "source_sha256": "a9e051d015c5238d73263b22fea96b32914969d8e670285f2b040c1689c0052d",
+   "published_sha256": "8e4189319742ceec337c5434aba36b5e1ef2447ecd19b8ceb09f3f419317db81",
+   "operations": [
+    "gzip (lossless)"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx1k_osl256_c8/repeat-1/bench.log",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx1k_osl256_c8/repeat-1/bench.log",
+   "source_sha256": "b895593acfc8f03b7e06b70bcb6fe1da26c4fa29768a3f6e2903ed417fbac08d",
+   "published_sha256": "b895593acfc8f03b7e06b70bcb6fe1da26c4fa29768a3f6e2903ed417fbac08d",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx1k_osl256_c8/repeat-1/blog_validation.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx1k_osl256_c8/repeat-1/blog_validation.json",
+   "source_sha256": "19699d46ffe2cf559a5898041d87ef13c6bb008e9fe46dd9602905ac0d4f9596",
+   "published_sha256": "19699d46ffe2cf559a5898041d87ef13c6bb008e9fe46dd9602905ac0d4f9596",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx1k_osl256_c8/repeat-1/manifest.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx1k_osl256_c8/repeat-1/manifest.json",
+   "source_sha256": "593fa8147cc98b33c0bc12295ed6c2abb5ed40353447ff8d2106b1a84aae5d25",
+   "published_sha256": "593fa8147cc98b33c0bc12295ed6c2abb5ed40353447ff8d2106b1a84aae5d25",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx1k_osl256_c8/repeat-1/summary.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx1k_osl256_c8/repeat-1/summary.json",
+   "source_sha256": "d4aa6f9905622d497e4533e88ff72b53d38b62288fc78acbda1182fee9d0dd0b",
+   "published_sha256": "d4aa6f9905622d497e4533e88ff72b53d38b62288fc78acbda1182fee9d0dd0b",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx1k_osl256_c8/repeat-1/telemetry/metrics_after.prom",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx1k_osl256_c8/repeat-1/telemetry/metrics_after.prom",
+   "source_sha256": "31ac1e1bd56b2756bba9aff7dd9a7902cd32c4aa06ee386ee3ea3d09d4833e08",
+   "published_sha256": "31ac1e1bd56b2756bba9aff7dd9a7902cd32c4aa06ee386ee3ea3d09d4833e08",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx1k_osl256_c8/repeat-1/telemetry/metrics_before.prom",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx1k_osl256_c8/repeat-1/telemetry/metrics_before.prom",
+   "source_sha256": "a3329c5c08bc15304501314feec30c83cc7ca561859286c86eeab3d5f2c0e3d0",
+   "published_sha256": "a3329c5c08bc15304501314feec30c83cc7ca561859286c86eeab3d5f2c0e3d0",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx1k_osl256_c8/repeat-1/telemetry/nvsmi.csv",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx1k_osl256_c8/repeat-1/telemetry/nvsmi.csv",
+   "source_sha256": "adf1f31b47e77ad2e9a5498787e4c2cc4c3cd5954a8ef6ef5d2dcc4331a31bb6",
+   "published_sha256": "adf1f31b47e77ad2e9a5498787e4c2cc4c3cd5954a8ef6ef5d2dcc4331a31bb6",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx1k_osl256_c8/repeat-1/telemetry/poll.jsonl",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx1k_osl256_c8/repeat-1/telemetry/poll.jsonl",
+   "source_sha256": "9d1e6fb043600640bfbb068f1804c0d6506c54b8b97cbe55dacbfd81be11de13",
+   "published_sha256": "9d1e6fb043600640bfbb068f1804c0d6506c54b8b97cbe55dacbfd81be11de13",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx64k_osl256_c1/repeat-1/bench.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx64k_osl256_c1/repeat-1/bench.json",
+   "source_sha256": "fdb7041a2ca25080aa7a6544939156c11c298c442e37bfef0d339b0b26f02165",
+   "published_sha256": "fdb7041a2ca25080aa7a6544939156c11c298c442e37bfef0d339b0b26f02165",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx64k_osl256_c1/repeat-1/bench.log",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx64k_osl256_c1/repeat-1/bench.log",
+   "source_sha256": "ac2a1ffdbe3dd0aaa7c68c2a061d40921245c99693ed5f7991af0ce443a5b48c",
+   "published_sha256": "ac2a1ffdbe3dd0aaa7c68c2a061d40921245c99693ed5f7991af0ce443a5b48c",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx64k_osl256_c1/repeat-1/blog_validation.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx64k_osl256_c1/repeat-1/blog_validation.json",
+   "source_sha256": "7d50ec7585e0bdd36fc462f8b4756f1acab2989e45bcc307277d9929b9ee07f8",
+   "published_sha256": "7d50ec7585e0bdd36fc462f8b4756f1acab2989e45bcc307277d9929b9ee07f8",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx64k_osl256_c1/repeat-1/manifest.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx64k_osl256_c1/repeat-1/manifest.json",
+   "source_sha256": "adaa6e9e7dfbdffd915658a3778f41fdd8edf040a2c7131c621cdf72eab7a3e4",
+   "published_sha256": "adaa6e9e7dfbdffd915658a3778f41fdd8edf040a2c7131c621cdf72eab7a3e4",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx64k_osl256_c1/repeat-1/summary.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx64k_osl256_c1/repeat-1/summary.json",
+   "source_sha256": "c5baec767caedda0ff70d1d05d5a930a7f7c0644a5c75e1c6a8d722268b007dc",
+   "published_sha256": "c5baec767caedda0ff70d1d05d5a930a7f7c0644a5c75e1c6a8d722268b007dc",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx64k_osl256_c1/repeat-1/telemetry/metrics_after.prom",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx64k_osl256_c1/repeat-1/telemetry/metrics_after.prom",
+   "source_sha256": "3724bf957e3d28a568abd5e92d5618c8732f70e01f8c4181b6576978ce0980b1",
+   "published_sha256": "3724bf957e3d28a568abd5e92d5618c8732f70e01f8c4181b6576978ce0980b1",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx64k_osl256_c1/repeat-1/telemetry/metrics_before.prom",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx64k_osl256_c1/repeat-1/telemetry/metrics_before.prom",
+   "source_sha256": "b70ee228ebc31622316b492a6ed449a7471b456ef3aeaedca8bb0be0e43dc9ca",
+   "published_sha256": "b70ee228ebc31622316b492a6ed449a7471b456ef3aeaedca8bb0be0e43dc9ca",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx64k_osl256_c1/repeat-1/telemetry/nvsmi.csv",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx64k_osl256_c1/repeat-1/telemetry/nvsmi.csv",
+   "source_sha256": "96bd69401ed5e9b585060a9236baf38b5b1a4f36a402814c00e5fb2ff069741a",
+   "published_sha256": "96bd69401ed5e9b585060a9236baf38b5b1a4f36a402814c00e5fb2ff069741a",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx64k_osl256_c1/repeat-1/telemetry/poll.jsonl",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx64k_osl256_c1/repeat-1/telemetry/poll.jsonl",
+   "source_sha256": "8c62b9c1e79f37229406bd2f6eb01aa140cc102edf2e537316713c068ec70581",
+   "published_sha256": "8c62b9c1e79f37229406bd2f6eb01aa140cc102edf2e537316713c068ec70581",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx64k_osl256_c8/repeat-1/bench.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx64k_osl256_c8/repeat-1/bench.json",
+   "source_sha256": "da1e0d221d2f6f842da493bacfe58453b86a2c2f69e93bfc7db5048b8012f4ec",
+   "published_sha256": "da1e0d221d2f6f842da493bacfe58453b86a2c2f69e93bfc7db5048b8012f4ec",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx64k_osl256_c8/repeat-1/bench.log",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx64k_osl256_c8/repeat-1/bench.log",
+   "source_sha256": "a27d8e4e9308e515bc02f3720b02bc6b91e760ce934bda21c1aaf8fdfe58d5f2",
+   "published_sha256": "a27d8e4e9308e515bc02f3720b02bc6b91e760ce934bda21c1aaf8fdfe58d5f2",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx64k_osl256_c8/repeat-1/blog_validation.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx64k_osl256_c8/repeat-1/blog_validation.json",
+   "source_sha256": "f23d51e47182f63a9865831a18166d87ee05f2f6b79f4783433970da6e7d2937",
+   "published_sha256": "f23d51e47182f63a9865831a18166d87ee05f2f6b79f4783433970da6e7d2937",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx64k_osl256_c8/repeat-1/manifest.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx64k_osl256_c8/repeat-1/manifest.json",
+   "source_sha256": "376d12164cd6648e41ab7bccbe44e9d4984cd61e2c457d11a616e9a65d1d4dcd",
+   "published_sha256": "376d12164cd6648e41ab7bccbe44e9d4984cd61e2c457d11a616e9a65d1d4dcd",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx64k_osl256_c8/repeat-1/summary.json",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx64k_osl256_c8/repeat-1/summary.json",
+   "source_sha256": "511f7f39fc9f914f82bf2e600c2183dc91e3219936faa4f97df33ef892861226",
+   "published_sha256": "511f7f39fc9f914f82bf2e600c2183dc91e3219936faa4f97df33ef892861226",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx64k_osl256_c8/repeat-1/telemetry/metrics_after.prom",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx64k_osl256_c8/repeat-1/telemetry/metrics_after.prom",
+   "source_sha256": "bc100d190718d86cbdf714fb83071416b521746c97fcad3a973fa9405682f180",
+   "published_sha256": "bc100d190718d86cbdf714fb83071416b521746c97fcad3a973fa9405682f180",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx64k_osl256_c8/repeat-1/telemetry/metrics_before.prom",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx64k_osl256_c8/repeat-1/telemetry/metrics_before.prom",
+   "source_sha256": "c31dafef23c248e35e52dad2a9785ac74810319b9fc7a7a8535fd6232e8abb8b",
+   "published_sha256": "c31dafef23c248e35e52dad2a9785ac74810319b9fc7a7a8535fd6232e8abb8b",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx64k_osl256_c8/repeat-1/telemetry/nvsmi.csv",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx64k_osl256_c8/repeat-1/telemetry/nvsmi.csv",
+   "source_sha256": "a7e0a106af5799997281a444318f95bef3acacb782a7e4332db314dbcfe426fb",
+   "published_sha256": "a7e0a106af5799997281a444318f95bef3acacb782a7e4332db314dbcfe426fb",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/qwen-bf16-h100-v1/mimo-v26/serving/off/ctx64k_osl256_c8/repeat-1/telemetry/poll.jsonl",
+   "published": "reports/qwen-bf16-h100-v1/data/mimo-v26/serving/off/ctx64k_osl256_c8/repeat-1/telemetry/poll.jsonl",
+   "source_sha256": "2566efd632ac21660d15aa01ac3e87cb003376925b747d9129a1b281abaddbb7",
+   "published_sha256": "2566efd632ac21660d15aa01ac3e87cb003376925b747d9129a1b281abaddbb7",
+   "operations": [
+    "copied"
+   ]
+  }
+ ]
+}

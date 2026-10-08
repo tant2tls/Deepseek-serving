@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Chain for study blog-architecture-h100-v1 (blog_target.md): AR only, prefix caching off.
+"""Chain for the architecture-blog protocol (blog_target.md): AR only, prefix caching off.
+
+The study is chosen with BLOG_STUDY (default: the completed blog-architecture-h100-v1).
+Study qwen-bf16-h100-v1 (2026-10-08) measures the original BF16 Qwen checkpoint with the same
+protocol and inputs, plus one MiMo timing block as a node control; see STUDIES below.
 
   python bench/blog_study.py env                      # record node/runtime
   python bench/blog_study.py plan --counts '{...}'    # freeze plan.json after the pilots
@@ -20,15 +24,34 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import run_matrix as rm
 
 ROOT = rm.ROOT
-STUDY = "blog-architecture-h100-v1"
+BLOG = "blog-architecture-h100-v1"
+BLOG_RUNTIME = "0.31.1rc1.dev50+g554340f3d"
+# Per study: models that may launch, models with a diagnostic launch, timing blocks, where the
+# revisions are pinned, and the frozen inputs it must reproduce byte for byte.
+STUDIES = {
+    # First three models, then qwen-38 (FP8) and glm-53 by plan_addendum_glm_qwen.json (Tan, 2026-10-07).
+    BLOG: dict(allowed=("v4-0731", "v41", "mimo-v26", "qwen-38", "glm-53"),
+               diag=("v4-0731", "v41", "mimo-v26", "qwen-38", "glm-53"),
+               blocks={"1": ["v4-0731", "mimo-v26", "v41"], "2": ["mimo-v26", "v41", "v4-0731"],
+                       "3": ["v41", "v4-0731", "mimo-v26"]},
+               pins=("target.md",), inputs_reference=None),
+    # Original BF16 Qwen (docs/qwen-checkpoint-policy.md). MiMo runs one timing block as a node
+    # control against its three blocks of 2026-10-07, and (plan_addendum_mimo_trace_control.json)
+    # one diagnostic launch so trace components can be compared across the two nodes as well.
+    "qwen-bf16-h100-v1": dict(allowed=("qwen-38-bf16", "mimo-v26"), diag=("qwen-38-bf16", "mimo-v26"),
+                              blocks={"1": ["qwen-38-bf16", "mimo-v26"], "2": ["qwen-38-bf16"],
+                                      "3": ["qwen-38-bf16"]},
+                              pins=("target.md", "docs/qwen-checkpoint-policy.md"),
+                              inputs_reference=f"reports/{BLOG}/study/_inputs/manifest.json"),
+}
+RETIRED = ("qwen-38",)  # FP8: historical records only, never launched again
+STUDY = os.environ.get("BLOG_STUDY", BLOG)
+SPEC = STUDIES[STUDY]
 SDIR = ROOT / "results" / STUDY
 INP = SDIR / "_inputs"
 LOGS = SDIR / "_logs"
 BASE = rm.BASE
-ALLOWED = ("v4-0731", "v41", "mimo-v26")
-# Added by plan_addendum_glm_qwen.json (Tan, 2026-10-07): same deployment, inputs, counts and rules.
-ADDENDUM = ("qwen-38", "glm-53")
-ALLOWED = ALLOWED + ADDENDUM
+ALLOWED = SPEC["allowed"]
 CONFIGS = {"off": "timing", "off-profidle": "diagnostic"}  # both pass --no-enable-prefix-caching
 SERVE_ARGS = ["--max-num-batched-tokens", "8192"]  # explicit chunk budget
 BUCKETS = ("16k", "1k", "64k")  # 16K first: the priority comparison
@@ -102,6 +125,7 @@ def chat_body(mk, prompt, **kw):
 class Server:
     def __init__(self, mk, cfg):
         assert mk in ALLOWED, f"model {mk} is outside the study"
+        assert mk not in RETIRED, f"{mk} is a retired key (docs/qwen-checkpoint-policy.md)"
         assert cfg in CONFIGS, f"config {cfg} is not a no-prefix AR config"
         self.mk, self.cfg, self.proc = mk, cfg, None
         self.pdir = SDIR / mk / "profiles"
@@ -408,6 +432,8 @@ def write_env():
     for name, cmd in dict(nvidia_smi="nvidia-smi", gpu_query="nvidia-smi --query-gpu=index,name,memory.total,"
                           "clocks.sm,clocks.mem,power.limit,pci.bus_id --format=csv", topology="nvidia-smi topo -m",
                           nvlink="nvidia-smi nvlink -s", lscpu="lscpu", numa="numactl -H", mem="free -g",
+                          cpufreq="cd /sys/devices/system/cpu/cpu0/cpufreq 2>/dev/null && grep . scaling_governor "
+                                  "scaling_driver scaling_min_freq scaling_max_freq || echo 'no cpufreq interface'",
                           freeze=f"{venv}/bin/python -m pip freeze 2>/dev/null || {venv}/bin/uv pip freeze --python {venv}/bin/python").items():
         (out / f"{name}.txt").write_text(sh(cmd))
     (out / "runtime.json").write_text(json.dumps(dict(runtime(), recorded=datetime.datetime.now().isoformat(),
@@ -419,6 +445,7 @@ def write_plan(counts, note):
     plan = dict(
         study=STUDY, frozen=datetime.datetime.now().isoformat(), runtime=runtime(),
         models={mk: {k: rm.MODELS[mk][k] for k in ("model", "revision")} for mk in ALLOWED},
+        inputs_reference=SPEC["inputs_reference"],
         deployment="TP8 + EP, utilization 0.90, max_model_len 262144, max_num_seqs 64, "
                    "max_num_batched_tokens 8192 (explicit), native precision, prefix caching off, speculation off",
         requests="public code/math/chat text, one user message, server-side chat template, temperature 0, "
@@ -427,8 +454,7 @@ def write_plan(counts, note):
         counts=counts, count_rule="start at max(16, 4c), multiple of 3 for domain balance, raised until the "
                                   "fastest piloted model has a window of at least 60 s; same first-n requests "
                                   "of the timing split for every model",
-        blocks={"1": ["v4-0731", "mimo-v26", "v41"], "2": ["mimo-v26", "v41", "v4-0731"],
-                "3": ["v41", "v4-0731", "mimo-v26"]},
+        blocks=SPEC["blocks"], diagnostic_models=list(SPEC["diag"]),
         point_order="16k c1, 16k c8, 1k c1, 1k c8, 64k c1, 64k c8 in odd blocks; reversed in even blocks",
         warmup="aux split (disjoint from timing) at every bucket after each launch",
         run_timeout_s=1500, ready_timeout_s=READY_TIMEOUT_S,
@@ -438,7 +464,8 @@ def write_plan(counts, note):
                    "manifest identity; the fastest attempt is never selected",
         diagnostics="per model: functional checks, disjoint pilot, live-KV snapshots at 1k/16k/64k x B=1/8, "
                     "traces prefill16k, prefill64k, decode1k/64k x B=1/8 on the idle-profiler launch",
-        timing_runs=54, trace_captures=18, note=note)
+        timing_runs=6 * sum(len(v) for v in SPEC["blocks"].values()), trace_captures=6 * len(SPEC["diag"]),
+        live_kv_snapshots=6 * len(SPEC["diag"]), note=note)
     (SDIR / "plan.json").write_text(json.dumps(plan, indent=1))
     log(f"plan frozen: {counts}")
 
@@ -449,9 +476,20 @@ def dry_run(steps):
     problems = []
     if hashlib.sha256((INP / "manifest.json").read_bytes()).hexdigest() != plan["inputs_manifest_sha256"]:
         problems.append("inputs manifest changed after the plan was frozen")
+    if STUDY != BLOG and runtime()["vllm"] != BLOG_RUNTIME:
+        problems.append(f"runtime {runtime()['vllm']} is not the blog build {BLOG_RUNTIME}")
+    if SPEC["inputs_reference"]:  # same request lists as the completed blog study, byte for byte
+        ref = json.loads((ROOT / SPEC["inputs_reference"]).read_text())
+        for b, e in ref["buckets"].items():
+            for split, s in e["splits"].items():
+                mine = man["buckets"].get(b, {}).get("splits", {}).get(split, {})
+                if mine.get("file_sha256") != s["file_sha256"] or \
+                        [r["sha256"] for r in mine.get("requests", [])] != [r["sha256"] for r in s["requests"]]:
+                    problems.append(f"{b}/{split} differs from the reference inputs")
     serve = (ROOT / "bench" / "serve.sh").read_text()
     for mk in ALLOWED:
-        pinned_doc = (ROOT / "target.md").read_text() + "".join(f.read_text() for f in SDIR.glob("plan_addendum_*.json"))
+        pinned_doc = "".join((ROOT / f).read_text() for f in SPEC["pins"]) + \
+            "".join(f.read_text() for f in SDIR.glob("plan_addendum_*.json"))
         if rm.MODELS[mk]["revision"] not in serve or rm.MODELS[mk]["revision"] not in pinned_doc:
             problems.append(f"{mk} revision is not pinned consistently")
     for b in man["buckets"]:
@@ -465,7 +503,8 @@ def dry_run(steps):
     seen = set()
     for st in steps:
         kind, mk, *rest = st.split(":")
-        if mk not in ALLOWED or kind not in ("diag", "timing"):
+        if mk not in ALLOWED or mk in RETIRED or kind not in ("diag", "timing") or \
+                (kind == "diag" and mk not in SPEC["diag"]):
             problems.append(f"step {st} not allowed")
             continue
         if kind == "timing":

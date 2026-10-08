@@ -38,6 +38,11 @@ MODELS = {
                     revision="236dfdf285828023ca3bcd3f37366c58a3469b13",
                     tokenizer_mode="auto",
                     extra_body={"chat_template_kwargs": {"enable_thinking": False}}),
+    # Original BF16 checkpoint (docs/qwen-checkpoint-policy.md); `qwen-38` above is FP8 history.
+    "qwen-38-bf16": dict(model="Qwen/Qwen3.8-Flash-Next",
+                         revision="de4b8e4d43b917e7706784d8bb445c9af86a3540",
+                         tokenizer_mode="auto",
+                         extra_body={"chat_template_kwargs": {"enable_thinking": False}}),
 }
 OSL = 256
 # Thinking explicitly disabled; greedy target sampling pinned for every arm.

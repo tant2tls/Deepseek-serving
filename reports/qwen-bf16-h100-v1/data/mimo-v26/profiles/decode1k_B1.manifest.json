@@ -1,0 +1,56 @@
+{
+ "kind": "decode",
+ "model_key": "mimo-v26",
+ "runtime": {
+  "venv": "/root/vllm-latest",
+  "vllm": "0.31.1rc1.dev50+g554340f3d",
+  "torch": "2.13.0+cu132"
+ },
+ "bucket": "1k",
+ "B": 1,
+ "request_ids": [
+  "1k-aux-000"
+ ],
+ "client_content_tokens": [
+  942
+ ],
+ "generated_before_window": [
+  2743
+ ],
+ "tokens_in_window": [
+  18
+ ],
+ "window_s": 5.011265754699707,
+ "unprofiled_window": {
+  "window_s": 1.0001020431518555,
+  "tokens": [
+   172
+  ]
+ },
+ "live_gauges": {
+  "vllm:num_requests_running": 1.0,
+  "vllm:num_requests_waiting": 0.0,
+  "vllm:kv_cache_usage_perc": 0.000460589904008879
+ },
+ "label": "decode1k_B1",
+ "files": [
+  "dp0_pp0_tp0_dcp0_ep0_rank0.1791490753504748172.pt.trace.json.gz",
+  "dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+  "dp0_pp0_tp1_dcp0_ep1_rank1.1791490747290789139.pt.trace.json.gz",
+  "dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+  "dp0_pp0_tp2_dcp0_ep2_rank2.1791490747395761967.pt.trace.json.gz",
+  "dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+  "dp0_pp0_tp3_dcp0_ep3_rank3.1791490747203392514.pt.trace.json.gz",
+  "dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+  "dp0_pp0_tp4_dcp0_ep4_rank4.1791490753473972602.pt.trace.json.gz",
+  "dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+  "dp0_pp0_tp5_dcp0_ep5_rank5.1791490750019721325.pt.trace.json.gz",
+  "dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+  "dp0_pp0_tp6_dcp0_ep6_rank6.1791490753461095807.pt.trace.json.gz",
+  "dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+  "dp0_pp0_tp7_dcp0_ep7_rank7.1791490753600859692.pt.trace.json.gz",
+  "dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt"
+ ],
+ "n_rank_files": 16,
+ "note": "diagnostic profiled capture; not a timing result"
+}

@@ -8,7 +8,7 @@ Read [update.md](update.md) for the checked evidence and experiment rationale, [
 
 ## Scope and immutable identities
 
-**Qwen checkpoint decision, 2026-10-08:** whenever future Qwen work is in scope, use only original BF16 `Qwen/Qwen3.8-Flash-Next` at `de4b8e4d43b917e7706784d8bb445c9af86a3540`; see [the policy](docs/qwen-checkpoint-policy.md). The October blog's `qwen-38` key/revision remains historical FP8, never a BF16 baseline. The policy does not add Qwen to the three-model speculative matrix below or authorize a rental. BF16 harness and measurements remain pending.
+**Qwen checkpoint decision, 2026-10-08:** whenever future Qwen work is in scope, use only original BF16 `Qwen/Qwen3.8-Flash-Next` at `de4b8e4d43b917e7706784d8bb445c9af86a3540`; see [the policy](docs/qwen-checkpoint-policy.md). The October blog's `qwen-38` key/revision remains historical FP8, never a BF16 baseline. The policy does not add Qwen to the three-model speculative matrix below. BF16 was measured separately on 2026-10-08 in `qwen-bf16-h100-v1` ([findings](reports/qwen-bf16-h100-v1/findings.md)); that study is AR only and is not part of this target.
 
 | Key | Checkpoint | Revision | Initial arms |
 | --- | --- | --- | --- |

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Tables for study blog-architecture-h100-v1 from results/<study>/ (standard library only).
+"""Tables for a blog-protocol study from results/<study>/ (standard library only).
+
+BLOG_STUDY selects the study: blog-architecture-h100-v1 (default, completed) or qwen-bf16-h100-v1.
 
   python bench/blog_report.py pilot        # request counts implied by the disjoint pilot
   python bench/blog_report.py serving      # reports/<study>/serving.csv + serving_tables.md
@@ -8,7 +10,7 @@
   python bench/blog_report.py tables       # components_tables.md and memory_tables.md from the two CSVs
 Missing values are written as empty cells, never zero.
 """
-import collections, csv, glob, gzip, json, math, re, statistics as st, sys
+import collections, csv, glob, gzip, json, math, os, re, statistics as st, sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -37,6 +39,18 @@ MODEL_RULES = {
     "qwen-38": [
         ("moe_expert_gemm", r"fp8_gemm_kernel(_swapAB)?<(1280u, 2560u|2560u, 640u)"),
         ("gemm_input_prep", r"scale_1x128_kernel"),
+        ("moe_route_combine", r"topkGating|expandInputRowsKernel|finalizeMoeRouting|doActivationKernel"),
+        ("recurrent_attention", r"delta_rule|gated_delta|_causal_conv1d|_fused_post_conv|gdn"),
+        ("attention_core", r"_qsa_sparse_paged"),
+        ("indexer_topk", r"_qsa_mqa_paged|FilteredTopK|cooperative_topk|_expand_qsa_indices"),
+        ("mhc_residual_norm", r"_hc_|HcDownSilu|hyper_connection"),
+    ],
+    # Original BF16 checkpoint: same layer kernels as the FP8 key. The experts run in Triton's
+    # `fused_moe_kernel` (two calls per layer, log: "TRITON Unquantized MoE backend"); dense
+    # projections are cuBLAS `nvjet_*` GEMMs, already classified by the shared rules.
+    "qwen-38-bf16": [
+        ("moe_expert_gemm", r"^fused_moe_kernel"),
+        ("moe_route_combine", r"moe_align_block_size|count_and_sort_expert_tokens|moe_sum_vec"),
         ("moe_route_combine", r"topkGating|expandInputRowsKernel|finalizeMoeRouting|doActivationKernel"),
         ("recurrent_attention", r"delta_rule|gated_delta|_causal_conv1d|_fused_post_conv|gdn"),
         ("attention_core", r"_qsa_sparse_paged"),
@@ -72,12 +86,15 @@ def cat(name):
 
 
 ROOT = Path(__file__).resolve().parent.parent
-STUDY = "blog-architecture-h100-v1"
+BLOG = "blog-architecture-h100-v1"
+STUDY = os.environ.get("BLOG_STUDY", BLOG)
 SDIR = ROOT / "results" / STUDY
 RDIR = ROOT / "reports" / STUDY
-MODELS = ["v4-0731", "v41", "mimo-v26", "qwen-38", "glm-53"]
+MODELS = {BLOG: ["v4-0731", "v41", "mimo-v26", "qwen-38", "glm-53"],
+          "qwen-bf16-h100-v1": ["qwen-38-bf16", "mimo-v26"]}[STUDY]
 NAME = {"v4-0731": "V4 Flash 0731", "v41": "V4.1 Flash", "mimo-v26": "MiMo-V2.6-Flash",
-        "qwen-38": "Qwen3.8-Flash-Next", "glm-53": "GLM-5.3-Flash"}
+        "qwen-38": "Qwen3.8-Flash-Next", "glm-53": "GLM-5.3-Flash",
+        "qwen-38-bf16": "Qwen3.8-Flash-Next (BF16)"}
 BUCKETS = ["1k", "16k", "64k"]
 CATN = [c for c, _ in CATS] + ["gemm_input_prep", "recurrent_attention", "other_elementwise"]
 
@@ -348,7 +365,9 @@ def tables():
             for m in MODELS:
                 rs = [r for r in rows if r["model"] == m and r["capture"] == c and sel(r)]
                 cell[(c, m)] = rs
-        mean = lambda rs, k: (sum(num(r, k) for r in rs) / len(rs)) if rs else None
+        def mean(rs, k):  # empty cells (for example no client step time in a window) are skipped, not zero
+            vals = [num(r, k) for r in rs if num(r, k) is not None]
+            return sum(vals) / len(vals) if vals else None
         fmt = lambda v: "n/a" if v is None else (f"{v:.1f}" if v >= 20 else f"{v:.2f}")
         for key, lab in (("span_ms", "**Step span on the rank**"), ("kernel_sum_ms", "**Kernel sum**")):
             out.append(f"| {lab} | " + " | ".join(fmt(mean(cell[(c, m)], key)) for c in caps for m in MODELS) + " |")
@@ -423,7 +442,9 @@ def publish():
         if not src.is_file():
             continue
         raw = src.read_bytes()
-        text = ip.sub("<PRIVATE_IP>", raw.decode("utf-8", errors="replace"))
+        text = raw.decode("utf-8", errors="replace")
+        if STUDY == BLOG or src.name != "freeze.txt":  # later studies: 4-part versions (13.4.0.1) are not addresses
+            text = ip.sub("<PRIVATE_IP>", text)
         out = text.encode()
         ops = ["private IPv4 -> <PRIVATE_IP>"] if out != raw else ["copied"]
         rel = src.relative_to(SDIR)
@@ -445,5 +466,58 @@ def publish():
     print("published study-level files:", len(ledger))
 
 
+def compare():
+    """qwen-bf16-h100-v1 only: this study's serving.csv beside the completed blog study's.
+
+    1. Node control: MiMo's one block here against its three blocks of 2026-10-07 (same build,
+       request lists and counts). 2. BF16 Qwen against the historical FP8 Qwen: another checkpoint,
+       another node and day, so a deployment comparison, not a controlled precision test."""
+    rd = lambda study: [r for r in csv.DictReader(open(ROOT / "reports" / study / "serving.csv")) if r["valid"] == "True"]
+    new, old = rd(STUDY), rd(BLOG)
+    metrics = (("output_tok_s", "Output tok/s", "{:.1f}"), ("ttft_p50_ms", "TTFT p50 ms", "{:.0f}"),
+               ("tpot_p50_ms", "TPOT p50 ms", "{:.2f}"))
+
+    def vals(rows, mk, b, c, k):
+        return [float(r[k]) for r in sorted(rows, key=lambda r: r["block"])
+                if (r["model"], r["bucket"], r["concurrency"]) == (mk, b, str(c)) and r[k]]
+
+    out = [f"# {STUDY}: comparison with blog-architecture-h100-v1\n",
+           "Generated by `BLOG_STUDY=qwen-bf16-h100-v1 python bench/blog_report.py compare` from the two `serving.csv` "
+           "files. Same vLLM build, deployment flags, request lists and counts; **different rented node and day**.\n",
+           "\n## 1. Node control: MiMo-V2.6-Flash, one block here against three blocks on 2026-10-07\n",
+           "Ratio = this node / mean of the 2026-10-07 blocks. \"Inside\" says whether the value lies within the "
+           "min–max of those three blocks.\n",
+           "| Input | c | Metric | This node | 2026-10-07 mean [min, max] | Ratio | Inside |", "| --- | ---: | --- | ---: | --- | ---: | --- |"]
+    ratios = collections.defaultdict(list)
+    for b in BUCKETS:
+        for c in (1, 8):
+            for k, lab, fmt in metrics:
+                n, o = vals(new, "mimo-v26", b, c, k), vals(old, "mimo-v26", b, c, k)
+                if not n or not o:
+                    out.append(f"| {b} | {c} | {lab} | pending | | | |"); continue
+                r = st.mean(n) / st.mean(o)
+                ratios[k].append(r)
+                out.append(f"| {b} | {c} | {lab} | {fmt.format(st.mean(n))} | {fmt.format(st.mean(o))} "
+                           f"[{fmt.format(min(o))}, {fmt.format(max(o))}] | {r:.3f} | "
+                           f"{'yes' if min(o) <= st.mean(n) <= max(o) else 'no'} |")
+    for k, lab, _ in metrics:
+        if ratios[k]:
+            out.append(f"\n{lab}: ratio range {min(ratios[k]):.3f}–{max(ratios[k]):.3f} over the six points.")
+    out += ["\n## 2. Qwen3.8-Flash-Next: original BF16 (this study) against FP8 (2026-10-07/08)\n",
+            "Mean over the valid blocks of each study, individual blocks in brackets. Ratio = BF16 / FP8. The FP8 "
+            "values are historical; no FP8 run was repeated here, so the node difference in section 1 is not removed.\n",
+            "| Input | c | Metric | BF16 | FP8 (historical) | BF16 / FP8 |", "| --- | ---: | --- | --- | --- | ---: |"]
+    for b in BUCKETS:
+        for c in (1, 8):
+            for k, lab, fmt in metrics:
+                n, o = vals(new, "qwen-38-bf16", b, c, k), vals(old, "qwen-38", b, c, k)
+                if not n or not o:
+                    out.append(f"| {b} | {c} | {lab} | pending | | |"); continue
+                cell = lambda v: f"{fmt.format(st.mean(v))} [{', '.join(fmt.format(x) for x in v)}]"
+                out.append(f"| {b} | {c} | {lab} | {cell(n)} | {cell(o)} | {st.mean(n) / st.mean(o):.3f} |")
+    (RDIR / "comparison.md").write_text("\n".join(out) + "\n")
+    print("wrote", (RDIR / "comparison.md").relative_to(ROOT))
+
+
 if __name__ == "__main__":
-    {"pilot": pilot, "serving": serving, "memory": memory, "components": components, "tables": tables, "publish": publish}[sys.argv[1]]()
+    {"compare": compare, "pilot": pilot, "serving": serving, "memory": memory, "components": components, "tables": tables, "publish": publish}[sys.argv[1]]()

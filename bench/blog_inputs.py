@@ -10,15 +10,18 @@ count under each model's tokenizer is saved. The server applies the chat templat
   python bench/blog_inputs.py            # after bench/blog_corpus.py
 Outputs under results/<study>/_inputs/: <bucket>/<split>.jsonl and manifest.json.
 """
-import bisect, hashlib, itertools, json
+import bisect, hashlib, itertools, json, os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-STUDY = "blog-architecture-h100-v1"
+STUDY = os.environ.get("BLOG_STUDY", "blog-architecture-h100-v1")
 INP = ROOT / "results" / STUDY / "_inputs"
 OSL = 256
 REF = "v4-0731"
 DOMAINS = ["code", "math", "chat"]
+# The frozen manifest counts tokens for the first three models only; later models are added with
+# `extra` (extra_tokens.json), so a rebuild on a fresh node reproduces the same request lists.
+MANIFEST_MODELS = ("v41", "v4-0731", "mimo-v26")
 # Reference-tokenizer content budget per bucket, and requests per split (multiples of 3).
 # Splits are disjoint inside a bucket: timing is measured, aux serves pilots, warmups
 # and diagnostic captures, heldout is reserved for confirmation.
@@ -45,7 +48,7 @@ def tokenizers():
     from run_matrix import MODELS
     from vllm.tokenizers import get_tokenizer
     return {mk: get_tokenizer(m["model"], tokenizer_mode=m["tokenizer_mode"], revision=m["revision"],
-                              trust_remote_code=True) for mk, m in MODELS.items()}
+                              trust_remote_code=True) for mk, m in MODELS.items() if mk in MANIFEST_MODELS}
 
 
 def ntok(tok, text):

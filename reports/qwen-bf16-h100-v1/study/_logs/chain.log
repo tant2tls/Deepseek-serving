@@ -1,0 +1,91 @@
+[18:02:12] CHAIN env recorded: {'venv': '/root/vllm-latest', 'vllm': '0.31.1rc1.dev50+g554340f3d', 'torch': '2.13.0+cu132'}
+[18:12:18] CHAIN step diag:qwen-38-bf16 start
+[18:12:19] CHAIN launched qwen-38-bf16 off-profidle pgid=11917 log=results/qwen-bf16-h100-v1/qwen-38-bf16/_server/serve-off-profidle-20261008-181218.log
+[18:21:59] CHAIN ready qwen-38-bf16 off-profidle after 580s
+[18:22:18] CHAIN functional qwen-38-bf16 ok=True rendered={'server_prompt_tokens': 1021, 'client_content_tokens': 1009, 'template_overhead': 12}
+[18:23:32] CHAIN pilot qwen-38-bf16 ctx16k_osl256_c1 block=1 n=3 valid=True dur=9.13552277116105 out_tps=84.06743863902531 ttft_p50=1688.1167339161038 tpot_p50=5.839206188844115 
+[18:24:55] CHAIN pilot qwen-38-bf16 ctx16k_osl256_c8 block=1 n=12 valid=True dur=11.082308190874755 out_tps=277.19857155114175 ttft_p50=3505.39144477807 tpot_p50=11.172319493055637 
+[18:26:20] CHAIN pilot qwen-38-bf16 ctx1k_osl256_c1 block=1 n=6 valid=True dur=12.50257955910638 out_tps=122.85464713409793 ttft_p50=259.4767881091684 tpot_p50=5.860650370481843 
+[18:27:41] CHAIN pilot qwen-38-bf16 ctx1k_osl256_c8 block=1 n=24 valid=True dur=8.105714856181294 out_tps=757.9837323434441 ttft_p50=433.8052808307111 tpot_p50=8.54628090198864 
+[18:29:07] CHAIN pilot qwen-38-bf16 ctx64k_osl256_c1 block=1 n=3 valid=True dur=10.837299462873489 out_tps=70.86636321447247 ttft_p50=2057.1786030195653 tpot_p50=5.751729603199398 
+[18:30:42] CHAIN pilot qwen-38-bf16 ctx64k_osl256_c8 block=1 n=9 valid=True dur=17.693636558018625 out_tps=130.21630643565155 ttft_p50=6626.288268249482 tpot_p50=24.876871745229934 
+[18:30:57] CHAIN kv qwen-38-bf16 1k B=1 usage=0.001822916666666674 running=1.0
+[18:31:35] CHAIN trace qwen-38-bf16 decode1k_B1 files=16 {'B': 1, 'window_s': 0.4856860637664795, 'tokens_in_window': [50]}
+[18:31:50] CHAIN kv qwen-38-bf16 1k B=8 usage=0.012760416666666718 running=8.0
+[18:32:32] CHAIN trace qwen-38-bf16 decode1k_B8 files=16 {'B': 8, 'window_s': 0.4645676612854004, 'tokens_in_window': [49, 46, 0, 49, 49, 0, 16, 49]}
+[18:32:47] CHAIN kv qwen-38-bf16 16k B=1 usage=0.0069010416666667185 running=1.0
+[18:33:05] CHAIN kv qwen-38-bf16 16k B=8 usage=0.0546875 running=8.0
+[18:33:40] CHAIN kv qwen-38-bf16 64k B=1 usage=0.023307291666666674 running=1.0
+[18:34:42] CHAIN trace qwen-38-bf16 decode64k_B1 files=16 {'B': 1, 'window_s': 1.2513792514801025, 'tokens_in_window': [48]}
+[18:35:10] CHAIN kv qwen-38-bf16 64k B=8 usage=0.18958333333333333 running=8.0
+[18:35:50] CHAIN trace qwen-38-bf16 decode64k_B8 files=16 {'B': 8, 'window_s': 0.4457130432128906, 'tokens_in_window': [48, 48, 48, 48, 0, 0, 48, 16]}
+[18:36:23] CHAIN trace qwen-38-bf16 prefill16k files=16 {'request_wall_s': 0.7988860607147217}
+[18:37:15] CHAIN trace qwen-38-bf16 prefill64k files=16 {'request_wall_s': 2.500154495239258}
+[18:37:40] CHAIN stopped qwen-38-bf16 off-profidle up=1521s gpu_mem_max=0MiB leftover=0
+[18:37:40] CHAIN step diag:qwen-38-bf16 done
+[18:37:40] CHAIN chain finished; no server left running
+[18:37:57] CHAIN plan frozen: {'16k:c1': 36, '16k:c8': 75, '1k:c1': 48, '1k:c8': 204, '64k:c1': 18, '64k:c8': 33}
+[18:38:31] CHAIN step timing:qwen-38-bf16:1 start
+[18:38:31] CHAIN launched qwen-38-bf16 off pgid=28966 log=results/qwen-bf16-h100-v1/qwen-38-bf16/_server/serve-off-20261008-183831.log
+[18:42:46] CHAIN ready qwen-38-bf16 off after 255s
+[18:48:35] CHAIN serving qwen-38-bf16 ctx16k_osl256_c1 block=1 n=36 valid=True dur=73.60675071692094 out_tps=125.20590720602748 ttft_p50=548.4479553997517 tpot_p50=5.836362976982605 
+[18:50:40] CHAIN serving qwen-38-bf16 ctx16k_osl256_c8 block=1 n=75 valid=True dur=49.77140754694119 out_tps=385.7636531956986 ttft_p50=1642.2686441801488 tpot_p50=13.095052399690829 
+[18:53:15] CHAIN serving qwen-38-bf16 ctx1k_osl256_c1 block=1 n=48 valid=True dur=80.38015959179029 out_tps=152.8735456909325 ttft_p50=189.09204099327326 tpot_p50=5.851474807908137 
+[18:55:33] CHAIN serving qwen-38-bf16 ctx1k_osl256_c8 block=1 n=204 valid=True dur=66.10484708286822 out_tps=790.0177113265634 ttft_p50=378.54917300865054 tpot_p50=8.562928175224977 
+[18:57:43] CHAIN serving qwen-38-bf16 ctx64k_osl256_c1 block=1 n=18 valid=True dur=60.04065375495702 out_tps=76.74799842797445 ttft_p50=1813.4123175404966 tpot_p50=5.768296990872305 
+[18:59:59] CHAIN serving qwen-38-bf16 ctx64k_osl256_c8 block=1 n=33 valid=True dur=59.05911611719057 out_tps=143.0431160404889 ttft_p50=6187.513971235603 tpot_p50=30.46331197279049 
+[19:00:16] CHAIN stopped qwen-38-bf16 off up=1305s gpu_mem_max=0MiB leftover=0
+[19:00:16] CHAIN step timing:qwen-38-bf16:1 done
+[19:00:16] CHAIN step timing:mimo-v26:1 start
+[19:00:16] CHAIN launched mimo-v26 off pgid=38294 log=results/qwen-bf16-h100-v1/mimo-v26/_server/serve-off-20261008-190016.log
+[19:11:01] CHAIN ready mimo-v26 off after 645s
+[19:16:59] CHAIN serving mimo-v26 ctx16k_osl256_c1 block=1 n=36 valid=True dur=81.76760382205248 out_tps=112.70967436023204 ttft_p50=815.2622224297374 tpot_p50=5.832555100285247 
+[19:19:33] CHAIN serving mimo-v26 ctx16k_osl256_c8 block=1 n=75 valid=True dur=76.93305104691535 out_tps=249.56764015886287 ttft_p50=3120.74704002589 tpot_p50=17.71126148272671 
+[19:22:06] CHAIN serving mimo-v26 ctx1k_osl256_c1 block=1 n=48 valid=True dur=77.35508237406611 out_tps=158.85187660429207 ttft_p50=116.45007901825011 tpot_p50=5.80028566696188 
+[19:24:35] CHAIN serving mimo-v26 ctx1k_osl256_c8 block=1 n=204 valid=True dur=76.8969335728325 out_tps=679.1428158905236 ttft_p50=435.7550845015794 tpot_p50=9.950943960461254 
+[19:27:18] CHAIN serving mimo-v26 ctx64k_osl256_c1 block=1 n=18 valid=True dur=84.59931274317205 out_tps=54.4685275870862 ttft_p50=3235.441106604412 tpot_p50=5.892498780261068 
+[19:30:27] CHAIN serving mimo-v26 ctx64k_osl256_c8 block=1 n=33 valid=True dur=109.0468223663047 out_tps=77.47130834882924 ttft_p50=10943.762901239097 tpot_p50=58.924072717919074 
+[19:30:30] CHAIN stopped mimo-v26 off up=1814s gpu_mem_max=0MiB leftover=0
+[19:30:30] CHAIN step timing:mimo-v26:1 done
+[19:30:30] CHAIN step timing:qwen-38-bf16:2 start
+[19:30:30] CHAIN launched qwen-38-bf16 off pgid=53712 log=results/qwen-bf16-h100-v1/qwen-38-bf16/_server/serve-off-20261008-193030.log
+[19:34:50] CHAIN ready qwen-38-bf16 off after 260s
+[19:40:18] CHAIN serving qwen-38-bf16 ctx64k_osl256_c8 block=2 n=33 valid=True dur=59.61815769178793 out_tps=141.70179567899774 ttft_p50=6517.23300665617 tpot_p50=29.364273976534605 
+[19:42:29] CHAIN serving qwen-38-bf16 ctx64k_osl256_c1 block=2 n=18 valid=True dur=59.16193407820538 out_tps=77.88792019389943 ttft_p50=1805.3304529748857 tpot_p50=5.76660875504946 
+[19:44:47] CHAIN serving qwen-38-bf16 ctx1k_osl256_c8 block=2 n=204 valid=True dur=65.7997149224393 out_tps=793.6812501628384 ttft_p50=381.7723449319601 tpot_p50=8.564271772389903 
+[19:47:14] CHAIN serving qwen-38-bf16 ctx1k_osl256_c1 block=2 n=48 valid=True dur=78.26032786630094 out_tps=157.01442014136052 ttft_p50=120.18481642007828 tpot_p50=5.852145585688013 
+[19:49:19] CHAIN serving qwen-38-bf16 ctx16k_osl256_c8 block=2 n=75 valid=True dur=49.510603374801576 out_tps=387.795718316207 ttft_p50=1669.0408866852522 tpot_p50=12.73305866246422 
+[19:51:46] CHAIN serving qwen-38-bf16 ctx16k_osl256_c1 block=2 n=36 valid=True dur=73.47207433683798 out_tps=125.4354131577746 ttft_p50=536.1295584589243 tpot_p50=5.861022415589177 
+[19:52:02] CHAIN stopped qwen-38-bf16 off up=1291s gpu_mem_max=0MiB leftover=0
+[19:52:02] CHAIN step timing:qwen-38-bf16:2 done
+[19:52:02] CHAIN step timing:qwen-38-bf16:3 start
+[19:52:02] CHAIN launched qwen-38-bf16 off pgid=64185 log=results/qwen-bf16-h100-v1/qwen-38-bf16/_server/serve-off-20261008-195202.log
+[19:56:22] CHAIN ready qwen-38-bf16 off after 260s
+[20:02:09] CHAIN serving qwen-38-bf16 ctx16k_osl256_c1 block=3 n=36 valid=True dur=73.36345884716138 out_tps=125.62112180669887 ttft_p50=526.5437783673406 tpot_p50=5.860048586356581 
+[20:04:10] CHAIN serving qwen-38-bf16 ctx16k_osl256_c8 block=3 n=75 valid=True dur=50.153788233175874 out_tps=382.8225279959915 ttft_p50=1732.935762964189 tpot_p50=13.422865827805271 
+[20:06:41] CHAIN serving qwen-38-bf16 ctx1k_osl256_c1 block=3 n=48 valid=True dur=79.60938024008647 out_tps=154.35366991856705 ttft_p50=131.09036954119802 tpot_p50=5.853052230953585 
+[20:08:56] CHAIN serving qwen-38-bf16 ctx1k_osl256_c8 block=3 n=204 valid=True dur=65.65944257937372 out_tps=795.3768406862118 ttft_p50=377.06836219877005 tpot_p50=8.56455087972184 
+[20:11:04] CHAIN serving qwen-38-bf16 ctx64k_osl256_c1 block=3 n=18 valid=True dur=59.07531804777682 out_tps=78.00211919762 ttft_p50=1804.7625455074012 tpot_p50=5.767432513518952 
+[20:13:21] CHAIN serving qwen-38-bf16 ctx64k_osl256_c8 block=3 n=33 valid=True dur=59.121647105086595 out_tps=142.89182412296438 ttft_p50=6014.200094155967 tpot_p50=31.09484082453099 
+[20:13:39] CHAIN stopped qwen-38-bf16 off up=1297s gpu_mem_max=0MiB leftover=0
+[20:13:39] CHAIN step timing:qwen-38-bf16:3 done
+[20:13:39] CHAIN chain finished; no server left running
+[20:14:14] CHAIN step diag:mimo-v26 start
+[20:14:15] CHAIN launched mimo-v26 off-profidle pgid=74959 log=results/qwen-bf16-h100-v1/mimo-v26/_server/serve-off-profidle-20261008-201414.log
+[20:18:20] CHAIN ready mimo-v26 off-profidle after 245s
+[20:18:37] CHAIN functional mimo-v26 ok=True rendered={'server_prompt_tokens': 951, 'client_content_tokens': 942, 'template_overhead': 9}
+[20:18:53] CHAIN kv mimo-v26 1k B=1 usage=0.000460589904008879 running=1.0
+[20:21:13] CHAIN trace mimo-v26 decode1k_B1 files=16 {'B': 1, 'window_s': 5.011265754699707, 'tokens_in_window': [18]}
+[20:21:27] CHAIN kv mimo-v26 1k B=8 usage=0.0026693278527787356 running=8.0
+[20:22:04] CHAIN trace mimo-v26 decode1k_B8 files=16 {'B': 8, 'window_s': 0.502070426940918, 'tokens_in_window': [49, 49, 49, 0, 0, 49, 49, 0]}
+[20:22:19] CHAIN kv mimo-v26 16k B=1 usage=0.0020063575364023256 running=1.0
+[20:22:39] CHAIN kv mimo-v26 16k B=8 usage=0.016097966076855652 running=8.0
+[20:23:25] CHAIN kv mimo-v26 64k B=1 usage=0.0071722920279564395 running=1.0
+[20:25:26] CHAIN trace mimo-v26 decode64k_B1 files=16 {'B': 1, 'window_s': 5.015789031982422, 'tokens_in_window': [0]}
+[20:26:02] CHAIN kv mimo-v26 64k B=8 usage=0.059149164831867274 running=8.0
+[20:26:54] CHAIN trace mimo-v26 decode64k_B8 files=16 {'B': 8, 'window_s': 0.54837965965271, 'tokens_in_window': [49, 0, 49, 49, 0, 0, 49, 49]}
+[20:27:23] CHAIN trace mimo-v26 prefill16k files=16 {'request_wall_s': 0.7925362586975098}
+[20:28:03] CHAIN trace mimo-v26 prefill64k files=16 {'request_wall_s': 3.0650315284729004}
+[20:28:13] CHAIN stopped mimo-v26 off-profidle up=838s gpu_mem_max=0MiB leftover=0
+[20:28:13] CHAIN step diag:mimo-v26 done
+[20:28:13] CHAIN chain finished; no server left running

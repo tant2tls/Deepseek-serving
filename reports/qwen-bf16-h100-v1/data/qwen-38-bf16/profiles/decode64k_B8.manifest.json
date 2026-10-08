@@ -1,0 +1,91 @@
+{
+ "kind": "decode",
+ "model_key": "qwen-38-bf16",
+ "runtime": {
+  "venv": "/root/vllm-latest",
+  "vllm": "0.31.1rc1.dev50+g554340f3d",
+  "torch": "2.13.0+cu132"
+ },
+ "bucket": "64k",
+ "B": 8,
+ "request_ids": [
+  "64k-aux-000",
+  "64k-aux-001",
+  "64k-aux-002",
+  "64k-aux-003",
+  "64k-aux-004",
+  "64k-aux-005",
+  "64k-aux-006",
+  "64k-aux-007"
+ ],
+ "client_content_tokens": [
+  67177,
+  71239,
+  68520,
+  66220,
+  71142,
+  68163,
+  68750,
+  71160
+ ],
+ "generated_before_window": [
+  1713,
+  1696,
+  1692,
+  1688,
+  1472,
+  861,
+  1663,
+  914
+ ],
+ "tokens_in_window": [
+  48,
+  48,
+  48,
+  48,
+  0,
+  0,
+  48,
+  16
+ ],
+ "window_s": 0.4457130432128906,
+ "unprofiled_window": {
+  "window_s": 1.0000810623168945,
+  "tokens": [
+   113,
+   113,
+   113,
+   113,
+   0,
+   0,
+   113,
+   37
+  ]
+ },
+ "live_gauges": {
+  "vllm:num_requests_running": 8.0,
+  "vllm:num_requests_waiting": 0.0,
+  "vllm:kv_cache_usage_perc": 0.18958333333333333
+ },
+ "label": "decode64k_B8",
+ "files": [
+  "dp0_pp0_tp0_dcp0_ep0_rank0.1791484512328188058.pt.trace.json.gz",
+  "dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+  "dp0_pp0_tp1_dcp0_ep1_rank1.1791484512955896111.pt.trace.json.gz",
+  "dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+  "dp0_pp0_tp2_dcp0_ep2_rank2.1791484512346431798.pt.trace.json.gz",
+  "dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+  "dp0_pp0_tp3_dcp0_ep3_rank3.1791484512319880462.pt.trace.json.gz",
+  "dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+  "dp0_pp0_tp4_dcp0_ep4_rank4.1791484512340281060.pt.trace.json.gz",
+  "dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+  "dp0_pp0_tp5_dcp0_ep5_rank5.1791484512339176322.pt.trace.json.gz",
+  "dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+  "dp0_pp0_tp6_dcp0_ep6_rank6.1791484512340375364.pt.trace.json.gz",
+  "dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+  "dp0_pp0_tp7_dcp0_ep7_rank7.1791484512350561571.pt.trace.json.gz",
+  "dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt"
+ ],
+ "n_rank_files": 16,
+ "note": "diagnostic profiled capture; not a timing result"
+}

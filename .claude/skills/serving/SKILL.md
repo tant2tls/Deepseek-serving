@@ -13,7 +13,7 @@ GPUs are billed by the hour. Do everything that needs no GPU first, never leave 
 - `blog_target.md` for the blog study, `target.md` for model revisions and the later speculative study.
 - `docs/reproduce.md` section 0 for the verified fresh-node procedure and timings.
 - `docs/model-setup.md` for the model you are about to launch: its flags, the log lines that prove the right path is running, its thinking switch and its known pitfalls.
-- [Qwen checkpoint policy](../../../docs/qwen-checkpoint-policy.md): from 2026-10-08 all future Qwen runs use original BF16 `Qwen/Qwen3.8-Flash-Next`; no new FP8 runs, conversion or fallback. The historical `qwen-38` mapping still points to FP8 and must not be launched. Prepare a distinct BF16 key, fresh study and matched controls first; existing FP8 records stay unchanged.
+- [Qwen checkpoint policy](../../../docs/qwen-checkpoint-policy.md): all Qwen runs use original BF16 `Qwen/Qwen3.8-Flash-Next` through the key `qwen-38-bf16` in study `qwen-bf16-h100-v1` (`export BLOG_STUDY=qwen-bf16-h100-v1`). No FP8 runs, conversion or fallback: the old `qwen-38` key is refused by `serve.sh` and by the chain, and its results stay as FP8 history.
 
 ## 2. Fresh node checklist (no GPU needed)
 
@@ -31,12 +31,13 @@ Prefer the chain; it owns the server and cleans up:
 
 ```bash
 export VLLM_VENV=/root/vllm-latest HF_HOME=/workspace/hf
+export BLOG_STUDY=qwen-bf16-h100-v1    # omit for the completed blog-architecture-h100-v1
 bash bench/blog_launch.sh <name> diag:<model> ...            # functional, pilot, live KV, traces
 bash bench/blog_launch.sh <name> timing:<model>:<block> ...  # six unprofiled points of one block
-tail -f results/blog-architecture-h100-v1/_logs/chain.log
+tail -f results/$BLOG_STUDY/_logs/chain.log
 ```
 
-Model keys recorded for the completed blog study: `v4-0731`, `v41`, `mimo-v26`, `qwen-38` (historical FP8 only; do not launch for new work), and `glm-53` (no thinking-off switch; `reasoning_effort=low`). A BF16 Qwen key and separate study are not implemented yet. Server configs allowed in the blog study: `off` (timing) and `off-profidle` (idle torch profiler for diagnostics). Both pass `--no-enable-prefix-caching`.
+Model keys: `v4-0731`, `v41`, `mimo-v26`, `glm-53` (no thinking-off switch; `reasoning_effort=low`) and `qwen-38-bf16` (original BF16). `qwen-38` is the retired FP8 key of the completed blog study and is refused. Each study lists the keys it may launch in `STUDIES` of `bench/blog_study.py`: `qwen-bf16-h100-v1` allows `qwen-38-bf16` (diagnostics and three timing blocks) and `mimo-v26` (one timing block as node control). Server configs allowed in the blog study: `off` (timing) and `off-profidle` (idle torch profiler for diagnostics). Both pass `--no-enable-prefix-caching`.
 
 A manual launch, only when the chain does not fit:
 
