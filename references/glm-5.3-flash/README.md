@@ -1,6 +1,6 @@
 # GLM-5.3-Flash historical reference
 
-**Dormant: do not start GLM work unless the user explicitly requests it.** The active study remains [DeepSeek V4 versus V4.1](../../target.md).
+**September archive; separate from the completed October comparison.** GLM-5.3-Flash was subsequently measured alongside DeepSeek V4 Flash 0731, V4.1 Flash, MiMo-V2.6-Flash-MOPD and Qwen FP8 on the same node/runtime/core settings. Its 18 valid timing runs, six trace captures and six live-KV snapshots are documented in the [October five-model findings](../../reports/blog-architecture-h100-v1/findings.md#8-added-models-qwen38-flash-next-and-glm-53-flash), with [GLM run evidence](../../reports/blog-architecture-h100-v1/data/glm-53/). The older results below use different builds/settings; do not merge them with the October measurements. They do not authorize new runs or expand the separate [later speculative study](../../target.md).
 
 This bundle preserves 42 result JSONs, their 42 benchmark logs, six manifests, and seven selected startup logs from `LLMs_frontier_serving/GLM-5.3-Flash`. Numerical JSONs are unchanged. Text exports and original hashes are recorded in [provenance.json](../provenance.json). See [RESULTS.md](RESULTS.md) for every retained point and the [shared methodology and caveats](../README.md).
 

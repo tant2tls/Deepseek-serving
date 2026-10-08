@@ -1,6 +1,6 @@
 # Qwen3.8-Flash-Next-FP8 historical reference
 
-**Dormant: do not start Qwen work unless the user explicitly requests it.** The active study remains [DeepSeek V4 versus V4.1](../../target.md).
+**September FP8 archive; separate from the completed October comparison.** Qwen3.8-Flash-Next FP8 was subsequently measured alongside the two DeepSeek deployments, MiMo and GLM on the same node/runtime/core settings; see the [October five-model findings](../../reports/blog-architecture-h100-v1/findings.md#8-added-models-qwen38-flash-next-and-glm-53-flash) and [Qwen run evidence](../../reports/blog-architecture-h100-v1/data/qwen-38/). The older results below use different builds/settings and are not controls for that study. All future Qwen work uses the [original BF16 checkpoint only](../../docs/qwen-checkpoint-policy.md); both archives preserve FP8 evidence, and no new FP8 runs are permitted.
 
 This bundle preserves 19 result JSONs, their 19 benchmark logs, three manifests, three selected startup logs, and one small checkpoint configuration from `LLMs_frontier_serving/Qwen3.8-Flash-Next-FP8`. Numerical JSONs are unchanged. Text exports and original hashes are recorded in [provenance.json](../provenance.json). See [RESULTS.md](RESULTS.md) for every retained point and the [shared methodology and caveats](../README.md).
 
