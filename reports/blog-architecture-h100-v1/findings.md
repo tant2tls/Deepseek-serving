@@ -10,7 +10,7 @@ Study `blog-architecture-h100-v1`, measured 2026-10-07 on one 8×H100 80GB node.
 - **Evidence labels:** *measured* (unprofiled timing, three launch-separated repeat blocks), *trace* (profiler diagnostics, GPU kernel sums, not wall time), *snapshot* (live KV gauge), *source/log/config*, *estimate* (arithmetic, never a measurement).
 - **Scope of a "win":** these are comparisons of three *deployments* (checkpoint + precision + kernels + this build), on these workloads. They do not rank architectures in isolation and say nothing about answer quality.
 
-Models: DeepSeek V4 Flash 0731, DeepSeek V4.1 Flash, MiMo-V2.6-Flash-MOPD. Results for Qwen3.8-Flash-Next and GLM-5.3-Flash are added in [section 8](#8-added-models-qwen38-flash-next-and-glm-53-flash) when their runs complete.
+Sections 1–7 and 9 cover the three target models: DeepSeek V4 Flash 0731, DeepSeek V4.1 Flash, MiMo-V2.6-Flash-MOPD. Qwen3.8-Flash-Next and GLM-5.3-Flash were added during the session and are in [section 8](#8-added-models-qwen38-flash-next-and-glm-53-flash), with all five models side by side. **Qwen is the fastest of the five at five of six points; it and GLM also hold the most KV per token.**
 
 ## 1. Answers in one table
 
@@ -207,7 +207,92 @@ Full check: [v41_prefill_check.md](v41_prefill_check.md).
 
 ## 8. Added models: Qwen3.8-Flash-Next and GLM-5.3-Flash
 
-Requested by Tan during the session, declared in [plan_addendum_glm_qwen.json](plan_addendum_glm_qwen.json) and [blog_target.md](../../blog_target.md) section 10. **Pending:** their diagnostics and three timing blocks run after the first three models. Known before running: GLM-5.3-Flash has no thinking-off switch in its chat template and runs at the lowest reasoning effort (a declared deviation), and the two models are measured after the others, so model order is not rotated across all five.
+Requested by Tan during the session and declared in [plan_addendum_glm_qwen.json](plan_addendum_glm_qwen.json) and [blog_target.md](../../blog_target.md) section 10. Same build, deployment, request lists, counts and rules. **36 of 36 timing runs valid**, 12 traces and 12 live-KV snapshots. Architecture facts: [architecture.md](architecture.md).
+
+**Read these with three caveats:**
+
+- **Order.** Both models ran after the first three, in the same night. Model order was not rotated across all five, so a slow drift of the node would look like a group difference.
+- **Thinking.** GLM-5.3-Flash has no thinking-off switch. It ran at the lowest reasoning effort; one of its three natural-EOS test answers still carried a short reasoning passage. Forced 256-token timing counts the same number of decode steps either way.
+- **Window length.** Counts were sized on the first three models. Qwen's windows were 46–85 s (46 s at 16K/c8, 58 s at 1K/c8 and 64K/c8); GLM's were 59–91 s.
+
+### Serving, all five models
+
+*Measured.* Mean ± sample SD over three blocks. The same text tokenizes to about 5% more tokens for Qwen (17,199 against 16,351 at "16K"), so Qwen does slightly more work per request than the others.
+
+| Output tok/s | 0731 | V4.1 | MiMo | Qwen | GLM |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 1K, c1 | 118.1 ± 0.2 | 106.0 ± 0.1 | **160.6 ± 0.4** | 145.0 ± 0.1 | 137.3 ± 1.8 |
+| 1K, c8 | 598.7 ± 40.5 | 562.9 ± 12.6 | 687.7 ± 2.7 | **897.5 ± 3.0** | 705.8 ± 1.7 |
+| 16K, c1 | 93.4 ± 0.3 | 89.3 ± 0.2 | 114.3 ± 0.7 | **120.5 ± 0.1** | 109.4 ± 6.9 |
+| 16K, c8 | 237.5 ± 2.2 | 278.9 ± 1.2 | 250.9 ± 1.6 | **412.6 ± 1.6** | 322.3 ± 6.1 |
+| 64K, c1 | 48.5 ± 0.4 | 55.9 ± 0.4 | 55.4 ± 0.1 | **77.0 ± 0.2** | 66.4 ± 2.1 |
+| 64K, c8 | 71.5 ± 1.1 | 100.5 ± 1.1 | 78.5 ± 1.0 | **145.1 ± 0.3** | 115.7 ± 0.2 |
+
+| p50 | 0731 | V4.1 | MiMo | Qwen | GLM |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| TTFT ms, 1K c1 | 208 | 121 | **114** | 153 | 166 |
+| TTFT ms, 16K c1 | 759 | 559 | 762 | 529 | **527** |
+| TTFT ms, 64K c1 | 3,282 | 2,278 | 3,142 | **1,724** | 2,080 |
+| TTFT ms, 64K c8 | 8,950 | 5,807 | 8,406 | **4,845** | 5,410 |
+| TPOT ms, 1K c1 | 7.68 | 8.99 | **5.79** | 6.31 | 6.59 |
+| TPOT ms, 64K c1 | 7.81 | 9.01 | **6.01** | 6.36 | 6.62 |
+| TPOT ms, 1K c8 | 10.81 | 12.32 | 9.93 | **7.61** | 9.91 |
+| TPOT ms, 64K c8 | 73.2 | 54.9 | 68.3 | **34.7** | 46.7 |
+
+GLM's first block was slower at one client (16K: 101.4, then 113.7 and 113.0 tok/s; 64K: 64.0, then 67.5 and 67.7); medians are 113.0 and 67.5. Kept.
+
+**What this says.** Qwen has the highest throughput at five of the six points, by 1.31× to 1.48× over the best of the first three at eight clients. MiMo keeps the fastest single-stream decode (5.8 ms per token) and so wins 1K with one client. GLM is second at the three eight-client points and at 64K with one client, and third at 1K and 16K with one client.
+
+### Why: where the time goes
+
+*Trace*, rank mean, ms. Full table: [components_tables.md](components_tables.md).
+
+| One 8,192-token prefill chunk at 64K | 0731 | V4.1 | MiMo | Qwen | GLM |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Step span on the rank | 405 | 262 | 361 | 192 | 242 |
+| Attention path (softmax core + recurrent update + indexer + KV work) | 110.7 | 47.6 | 36.5 | 47.4 | 69.4 |
+| of which recurrent-layer state update | – | – | – | 5.1 | 15.7 |
+| MoE expert GEMM | 158.5 | 125.4 | 244.0 | 10.4 | 25.1 |
+| MoE routing, activation, combine | 3.1 | 3.4 | 4.8 | 7.5 | 9.4 |
+| Dense GEMM (projections) | 40.1 | 30.7 | 11.9 | 32.8 | 27.1 |
+| Residual streams / norm | 28.4 | 17.4 | 8.6 | 32.1 | 39.0 |
+| TP all-reduce | 31.9 | 21.8 | 33.7 | 33.0 | 34.5 |
+
+| One decode step | 0731 | V4.1 | MiMo | Qwen | GLM |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Client step time, 1K, B=1 (unprofiled window) | 7.75 | 9.01 | 5.78 | 6.33 | 6.67 |
+| Client step time, 64K, B=8 (unprofiled window) | 11.50 | 12.66 | 11.11 | 7.94 | 10.20 |
+| MoE expert GEMM, B=1 → B=8 | 1.29 → 3.7 | 1.49 → 4.2 | 1.44 → 4.9 | 1.04 → 1.45 | 0.92 → 2.9 |
+| Attention path, 64K, B=8 | 2.04 | 2.14 | 1.95 | 0.77 | 0.76 |
+
+**How to explain it:**
+
+1. **The FFN decides the prefill ranking, and the expert kernel matters more than the expert count.** Qwen and GLM run FP8 experts on the DeepGEMM path; the first three run 4-bit experts on `HUMMING`. GLM's experts have the same shape as 0731's and MiMo's (hidden 4,096, width 2,048) and nine are active per token, yet its expert time per chunk is 25 ms against 158 and 244 ms. That is a 6–10× gap at equal or larger nominal work. Four-bit experts halve the bytes but, on this build, cost far more compute per token in prefill. This is a comparison across models, not a controlled test; it is the strongest single-change candidate in the handoff.
+2. **Qwen's experts are small.** 512 experts of width 640 on a 2,560-wide state: about 54M active expert weights per layer (*estimate*) against 176–248M for the others. Its expert time is 10 ms per chunk and grows only 1.4× from one to eight decoding sequences (the others grow 2.8–3.4×), which is why its step time barely rises with batch (6.3 → 7.9 ms) and why it wins every eight-client point.
+3. **Recurrent attention is cheap and flat.** In both models three of every four layers keep a fixed-size state instead of a growing KV. Their update costs 5–16 ms per chunk and 0.2–0.3 ms per decode step, independent of context. The remaining sparse-attention layers behave like DeepSeek's: an attention core that barely grows and an indexer that grows with context (Qwen 4.8 → 12.2 ms, GLM 2.0 → 13.1 ms per chunk from 16K to 64K).
+4. **Decode attention is the smallest of the five** (0.76–0.77 ms per step at 64K with eight sequences, against about 2 ms for the first three): few softmax layers, and sparse reads in those.
+5. **What they pay instead:** residual-stream mixing (32–39 ms per chunk, 1.4–1.9 ms per decode step) and projections (27–33 ms per chunk, 2.3 ms per decode step) are as large as in the DeepSeek models. MiMo remains the only model without that cost, which is why it still has the fastest single-stream decode.
+
+### Live KV, all five models
+
+*Snapshot.* Same method and caveats as section 5; table in [memory_tables.md](memory_tables.md).
+
+| | 0731 | V4.1 | MiMo | Qwen | GLM |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| KiB per live token per GPU at 64K | 4.22 | **1.85** | 5.69 | 13.16 | 12.00 |
+| One live 64K request, whole node | 2.14 GiB | **0.93 GiB** | 2.77 GiB | 6.85 GiB | 5.77 GiB |
+| Eight live 64K requests, share of the KV pool | 4.5% | 3.2% | 5.9% | 13.6% | 20.7% |
+| KV pool per GPU | 47.43 GiB | 29.14 GiB | 49.18 GiB | 51.44 GiB | 28.73 GiB |
+| Weights per GPU | 19.79 GiB | 36.32 GiB | 20.10 GiB | 17.36 GiB | 38.8 GiB |
+
+**The fastest models hold the most state.** Qwen and GLM keep 2–7× more KV bytes per token than the first three. Their sparse-attention layers *read* few positions but *store* all of them uncompressed: for Qwen, 12 layers × one KV head per GPU × 512 values × 2 bytes ≈ 12.3 KiB per token (*estimate*) against 13.2 measured. The recurrent layers add a fixed state per request, visible as a higher cost per token at 1K (27–35 KiB). GLM combines that with the smallest pool, so eight 64K requests already occupy a fifth of it. For long shared contexts or many long sessions this is the opposite end of the trade-off from V4.1. It says nothing about prefix reuse, which was not run.
+
+### Strengths and weaknesses of the added models
+
+| Model | Strength on this build | Weakness on this build | Explanation and confidence |
+| --- | --- | --- | --- |
+| Qwen3.8-Flash-Next | Highest throughput at five of six points (412.6 tok/s at 16K/c8, 145.1 at 64K/c8); fastest TTFT at 64K (1.72 s); step time nearly flat with batch | Largest KV per token (13.2 KiB per GPU); MiMo decodes faster alone | Small FP8 experts and mostly recurrent layers (config + trace, medium). Stores uncompressed KV in 12 layers (estimate + snapshot, medium) |
+| GLM-5.3-Flash | Second-fastest at eight clients (322 tok/s at 16K, 116 at 64K); TTFT 527 ms at 16K | KV 12.0 KiB per token with the smallest pool; largest weights (38.8 GiB per GPU); no thinking-off switch; slower first block at one client | FP8 experts on DeepGEMM (trace, medium). mHC and projections as costly as DeepSeek's (trace, medium) |
 
 ## 9. Strengths and weaknesses
 
@@ -217,7 +302,7 @@ Requested by Tan during the session, declared in [plan_addendum_glm_qwen.json](p
 | DeepSeek V4.1 Flash | Fastest prefill (TTFT 559 ms at 16K, 2.28 s at 64K, about 26–31% below the others); highest throughput at 16K/c8 and 64K/c8 (1.11× and 1.28× MiMo); smallest KV per token (1.85 KiB per GPU) | Slowest decode (9.0 ms/token); largest weights (36.3 GiB per GPU) and smallest KV pool | Prefill skip runs 21 of 40 layers on prompt tokens (source + log + trace, high). Shared, compressed KV (config + snapshot, medium). Decode pays projections, mHC and the widest experts (trace, medium) | Skip applies only to steps ≥ 768 tokens; Engram tables sit in host memory |
 | DeepSeek V4 Flash 0731 | Flat decode with context; smaller weights than V4.1 | Never the fastest; slowest at 16K/c8 and at both 64K points, in the middle at 1K and 16K/c1; indexer cost grows to match attention at 64K; KV blocks of 256 tokens waste memory on short requests | Sparse attention keeps the core cheap but the search grows (trace, medium). Every layer runs on every prompt token (trace, medium) | Slow first block at 1K/c8 kept |
 
-No single model is best. The rule that survives the data: **work that is skipped is the only reliably cheap work.** MiMo skips the selection machinery, V4.1 skips half the layers during prefill, and each wins where its skipped work would have dominated.
+Among these three, no single model is best. The rule that survives the data, and that the two added models in section 8 confirm (fewer softmax-attention layers, smaller or faster experts): **work that is skipped is the only reliably cheap work.** MiMo skips the selection machinery, V4.1 skips half the layers during prefill, and each wins where its skipped work would have dominated.
 
 ## 10. What is still open
 

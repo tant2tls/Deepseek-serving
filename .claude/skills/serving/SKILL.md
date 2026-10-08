@@ -1,6 +1,6 @@
 ---
 name: serving
-description: Serve and measure DeepSeek V4 Flash 0731, DeepSeek V4.1 Flash or MiMo-V2.6-Flash-MOPD with vLLM on a rented 8×H100 node in this repository. Use when asked to set up a fresh node, launch or stop one of these servers, run a timing or diagnostic chain, or check why a launch failed.
+description: Serve and measure DeepSeek V4 Flash 0731, DeepSeek V4.1 Flash, MiMo-V2.6-Flash-MOPD, Qwen3.8-Flash-Next or GLM-5.3-Flash with vLLM on a rented 8×H100 node in this repository. Use when asked to set up a fresh node, launch or stop one of these servers, run a timing or diagnostic chain, or check why a launch failed.
 ---
 
 # Serving the three models on 8×H100
@@ -34,7 +34,7 @@ bash bench/blog_launch.sh <name> timing:<model>:<block> ...  # six unprofiled po
 tail -f results/blog-architecture-h100-v1/_logs/chain.log
 ```
 
-Model keys: `v4-0731`, `v41`, `mimo-v26`. Server configs allowed in the blog study: `off` (timing) and `off-profidle` (idle torch profiler for diagnostics). Both pass `--no-enable-prefix-caching`.
+Model keys: `v4-0731`, `v41`, `mimo-v26`, and for the blog study only `qwen-38` and `glm-53` (GLM has no thinking-off switch; it runs with `reasoning_effort=low`). Server configs allowed in the blog study: `off` (timing) and `off-profidle` (idle torch profiler for diagnostics). Both pass `--no-enable-prefix-caching`.
 
 A manual launch, only when the chain does not fit:
 
@@ -48,7 +48,7 @@ Common deployment, do not change inside a study: TP 8 + expert parallel, memory 
 
 ## 4. Check often while it runs
 
-- Readiness is bounded (30 min). A first launch of a model takes 7–9 minutes (weights from disk plus JIT); later launches are faster.
+- Readiness is bounded (30 min). A first launch of a model takes 6–11 minutes (weights from disk plus JIT; Qwen took 19); later launches take about 2. The chain relaunches once by itself if the first launch dies before readiness.
 - Watch `chain.log` for `ready`, `valid=`, `FAILED`, `stopped`. A run with `valid=False` is kept; rerun into a new directory, never overwrite.
 - Before trusting numbers, read `<model>/_functional/functional.json`: natural-EOS answers stop, no reasoning text, forced request returns exactly 256 tokens.
 - Client concurrency is not the engine batch. Read the actual batch from the trace annotations or the running-requests gauge.

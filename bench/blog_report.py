@@ -31,7 +31,34 @@ MOE_SHAPES = {"mimo-v26": {(4096, 4096), (4096, 2048)}, "v4-0731": {(4096, 4096)
 MODEL = None  # set per trace: MiMo has no attention indexer, so its top-k kernels belong to the MoE router
 
 
+# Model-specific kernels of the two added models, checked before everything else. Assigned from
+# kernel names and the checkpoint config (expert shapes); see architecture.md for the layer types.
+MODEL_RULES = {
+    "qwen-38": [
+        ("moe_expert_gemm", r"fp8_gemm_kernel(_swapAB)?<(1280u, 2560u|2560u, 640u)"),
+        ("gemm_input_prep", r"scale_1x128_kernel"),
+        ("moe_route_combine", r"topkGating|expandInputRowsKernel|finalizeMoeRouting|doActivationKernel"),
+        ("recurrent_attention", r"delta_rule|gated_delta|_causal_conv1d|_fused_post_conv|gdn"),
+        ("attention_core", r"_qsa_sparse_paged"),
+        ("indexer_topk", r"_qsa_mqa_paged|FilteredTopK|cooperative_topk|_expand_qsa_indices"),
+        ("mhc_residual_norm", r"_hc_|HcDownSilu|hyper_connection"),
+    ],
+    "glm-53": [
+        ("moe_expert_gemm", r"fp8_gemm_kernel(_swapAB)?<(4096u, 4096u|4096u, 2048u)"),
+        ("gemm_input_prep", r"scale_1x128_kernel"),
+        ("moe_route_combine", r"single_group_topk|topkGating|expandInputRowsKernel|finalizeMoeRouting|doActivationKernel"),
+        ("recurrent_attention", r"_flash_kda|kda_fwd|delta_rule|gated_delta|_causal_conv1d"),
+        ("attention_core", r"MLAPageAttention"),
+        ("indexer_topk", r"mqa_logits|topKPerRow|cooperative_topk"),
+        ("mhc_residual_norm", r"mhc_|hc_prenorm"),
+    ],
+}
+
+
 def cat(name):
+    for c, pat in MODEL_RULES.get(MODEL, ()):
+        if re.search(pat, name):
+            return c
     m = re.match(r"void humming<\w+, Shape<0u, (\d+)u, (\d+)u>", name)
     if m:
         return "moe_expert_gemm" if (int(m[1]), int(m[2])) in MOE_SHAPES.get(MODEL, ()) else "dense_gemm"
@@ -52,7 +79,7 @@ MODELS = ["v4-0731", "v41", "mimo-v26", "qwen-38", "glm-53"]
 NAME = {"v4-0731": "V4 Flash 0731", "v41": "V4.1 Flash", "mimo-v26": "MiMo-V2.6-Flash",
         "qwen-38": "Qwen3.8-Flash-Next", "glm-53": "GLM-5.3-Flash"}
 BUCKETS = ["1k", "16k", "64k"]
-CATN = [c for c, _ in CATS] + ["gemm_input_prep", "other_elementwise"]
+CATN = [c for c, _ in CATS] + ["gemm_input_prep", "recurrent_attention", "other_elementwise"]
 
 
 def load(p):
@@ -294,7 +321,9 @@ def tables():
     global MODELS
     MODELS = [m for m in MODELS if any(r["model"] == m for r in rows)]
     num = lambda r, k: float(r[k]) if r.get(k) not in (None, "") else None
-    label = {"attention_core": "Attention core", "indexer_topk": "Indexer / top-k / candidates",
+    label = {"attention_core": "Attention core (softmax attention over stored KV)",
+             "recurrent_attention": "Recurrent (linear) attention state update",
+             "indexer_topk": "Indexer / top-k / candidates",
              "qkv_rope_kvcache": "Q/K/V norm, RoPE, KV insert, attention metadata",
              "dense_gemm": "Dense GEMM (attention projections; MiMo also layer-0 FFN)",
              "gemm_input_prep": "GEMM input quantization", "mhc_residual_norm": "mHC / residual / norm",
@@ -330,9 +359,9 @@ def tables():
             vals = [mean(cell[(c, m)], f"{k}_ms") for c in caps for m in MODELS]
             if any(v and v >= 0.005 for v in vals):
                 out.append(f"| {label[k]} | " + " | ".join(fmt(v) if v and v >= 0.005 else "–" for v in vals) + " |")
-        att = lambda rs: sum(mean(rs, f"{k}_ms") or 0 for k in ("attention_core", "indexer_topk", "qkv_rope_kvcache"))
+        att = lambda rs: sum(mean(rs, f"{k}_ms") or 0 for k in ("attention_core", "recurrent_attention", "indexer_topk", "qkv_rope_kvcache"))
         ffn = lambda rs: sum(mean(rs, f"{k}_ms") or 0 for k in ("moe_expert_gemm", "moe_route_combine"))
-        out.append("| *Attention path without projections (core + indexer + KV work)* | " + " | ".join(
+        out.append("| *Attention path without projections (core + recurrent + indexer + KV work)* | " + " | ".join(
             fmt(att(cell[(c, m)])) for c in caps for m in MODELS) + " |")
         out.append("| *FFN path (expert GEMM + routing/activation/combine)* | " + " | ".join(
             fmt(ffn(cell[(c, m)])) for c in caps for m in MODELS) + " |")

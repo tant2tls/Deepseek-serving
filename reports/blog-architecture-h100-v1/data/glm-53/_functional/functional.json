@@ -1,0 +1,81 @@
+{
+ "model_key": "glm-53",
+ "runtime": {
+  "venv": "/root/vllm-latest",
+  "vllm": "0.31.1rc1.dev50+g554340f3d",
+  "torch": "2.13.0+cu132"
+ },
+ "checks": [
+  {
+   "kind": "natural_eos",
+   "domain": "code",
+   "prompt": "Write a Python function that returns the n-th Fibonacci number iteratively. Reply with the code only.",
+   "text": "```python\ndef fibonacci(n):\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a\n```",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 32,
+    "total_tokens": 75,
+    "completion_tokens": 43,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   }
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "math",
+   "prompt": "What is 17 * 23? Give the final number on the last line.",
+   "text": "17 × 23 = 391\n\nYou can verify: 17 × 23 = 17 × 20 + 17 × 3 = 340 + 51 = 391\n\n391",
+   "reasoning": "17*23 = 391",
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 29,
+    "total_tokens": 81,
+    "completion_tokens": 52,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 7
+    }
+   }
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "chat",
+   "prompt": "In two sentences, explain why the sky is blue.",
+   "text": "The sky appears blue because sunlight is made up of all colors, and as it passes through the atmosphere, shorter blue wavelengths are scattered in all directions by air molecules more strongly than other colors. This phenomenon, called Rayleigh scattering, sends blue light across the sky to our eyes from every direction, making the whole sky look blue.",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 23,
+    "total_tokens": 91,
+    "completion_tokens": 68,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   }
+  },
+  {
+   "kind": "forced_256",
+   "request_id": "1k-aux-000",
+   "usage": {
+    "prompt_tokens": 936,
+    "total_tokens": 1192,
+    "completion_tokens": 256,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "finish_reason": "length"
+  }
+ ],
+ "rendered": {
+  "server_prompt_tokens": 936,
+  "client_content_tokens": 924,
+  "template_overhead": 12
+ },
+ "ok": false
+}

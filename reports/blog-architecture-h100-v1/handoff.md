@@ -26,7 +26,7 @@ Session of 2026-10-07 on one rented 8×H100 80GB node. Results: [findings.md](fi
 
 ### Added models (Qwen3.8-Flash-Next, GLM-5.3-Flash)
 
-Declared in [plan_addendum_glm_qwen.json](plan_addendum_glm_qwen.json). State at the time this file was first written: **queued and starting** (diagnostics, then three timing blocks each: 36 timing runs, 12 traces, 12 KV snapshots). The section "Added models" at the end is updated when they finish.
+Declared in [plan_addendum_glm_qwen.json](plan_addendum_glm_qwen.json). **Done**: 36/36 timing runs valid, 12 traces, 12 KV snapshots. Details and deviations are in section 6.
 
 ## 2. Failures, deviations and what they affect
 
@@ -89,4 +89,27 @@ Raw runs live in the git-ignored `results/blog-architecture-h100-v1/`. The curat
 
 ## 6. Added models: Qwen3.8-Flash-Next and GLM-5.3-Flash
 
-Pending at first publication. This section is replaced with their status table, deviations and any failed or unsupported points when the chain finishes.
+Finished 2026-10-08 01:14 node time. All servers stopped; 0 MiB on all eight GPUs.
+
+| Item | Planned | State | Evidence |
+| --- | ---: | --- | --- |
+| Architecture facts (config, log) | 2 | **Done** | [architecture.md](architecture.md), last section |
+| Functional checks | 2 | Qwen **pass**. GLM **does not pass "thinking off"** (declared: no such switch; lowest reasoning effort; 1 of 3 answers carried reasoning text). Forced-256 check passes for both | `data/<model>/_functional/functional.json` |
+| Disjoint pilot | 12 runs | **Done**, 12/12 valid | `data/<model>/pilot/` |
+| Unprofiled timing | 36 runs | **Done, 36/36 valid**, three blocks each, the two models alternating | [serving.csv](serving.csv) |
+| Diagnostic traces | 12 | **Done, 12/12** | [components.csv](components.csv) |
+| Live KV snapshots | 12 | **Done, 12/12** | [memory.csv](memory.csv) |
+| Hardware counters, routing statistics | – | Not collected, as for the first three | – |
+
+Deviations and limits specific to these two:
+
+- GLM's first diagnostic launch died in the one-time JIT build (`CUDA error: invalid argument`); the chain relaunched it automatically. No data affected.
+- Qwen's first launch took 19 minutes (JIT of several kernel modules); later launches about 2.
+- Qwen's timing windows were 46–85 s and GLM's 59–91 s; three Qwen points are under 60 s because counts were sized on slower models.
+- GLM's first block was slower at one client (16K and 64K); kept, medians reported.
+- Model order is not rotated across all five models; the two ran after the first three in the same night.
+- The kernel-to-component map for these two models was written from kernel names and expert shapes during the session (`MODEL_RULES` in `bench/blog_report.py`); the residual-stream and projection lines in particular are name-based.
+
+Time: diagnostics 22:59–23:47 (two first launches, one failed launch), timing 23:47–01:14, about 2.3 hours. Whole session, first launch to last stop: about 5.8 hours of node time for 90 timing runs, 30 traces and 30 live-KV snapshots across five models.
+
+Follow-up this result makes more valuable: a single-change test of the expert kernel on one of the first three models (handoff section 5, item 2), because GLM's FP8 experts of the same shape ran 6–10× faster per prefill chunk than the 4-bit experts.

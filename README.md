@@ -1,5 +1,7 @@
 # Three-model serving measurements on 8×H100
 
+**Latest (2026-10-07/08):** the architecture blog study measured DeepSeek V4 Flash 0731, V4.1 Flash, MiMo-V2.6-Flash-MOPD, Qwen3.8-Flash-Next and GLM-5.3-Flash on one 8×H100 node with the then-latest vLLM (`554340f3…`): 90/90 valid timing runs, 30 traces, 30 live-KV snapshots. Start at [findings.md](reports/blog-architecture-h100-v1/findings.md). Those numbers come from a different vLLM build than the studies below and must not be mixed with them.
+
 The completed studies compare **DeepSeek V4 Flash 0731 (official release), V4.1 Flash and MiMo-V2.6-Flash-MOPD** on one 8×H100 node. The next phase will test their strengths and weaknesses with fresh real-text AR/speculative baselines, long generation and component profiles. See [target.md](target.md), the [checked evidence review](update.md) and the [next GPU-session plan](docs/three-model-h100-plan.md). This new phase is planned, not measured; harness preparation comes before GPU rental.
 
 The old V4 measurements used the **preview** model ID, with exact revision unverified. They are historical context, not 0731 results. The [speculative support record](docs/speculative-decoding.md) separates classic preview MTP from native DSpark. **All new prefix-cache experiments are deferred; prefix caching stays off in the active phase.** Existing prefix results are preserved. H200 is a separate optional future study.
@@ -10,7 +12,9 @@ This repository contains a curated, portable subset of the earlier `LLMs_frontie
 | --- | --- |
 | Next agent's scope | [AGENTS.md](AGENTS.md) |
 | Architecture blog plan (attention, KV memory, FFN sparsity) | [blog_target.md](blog_target.md) |
-| Architecture blog measurements on the latest vLLM build | [reports/blog-architecture-h100-v1/](reports/blog-architecture-h100-v1/) |
+| **Architecture blog results, five models on vLLM `554340f3…`** (attention, live KV, FFN sparsity) | [findings](reports/blog-architecture-h100-v1/findings.md) · [handoff](reports/blog-architecture-h100-v1/handoff.md) · [architecture](reports/blog-architecture-h100-v1/architecture.md) |
+| Does vLLM time V4.1 prefill as its report describes? | [v41_prefill_check.md](reports/blog-architecture-h100-v1/v41_prefill_check.md) |
+| Fresh-node setup, serving skill, step-by-step lessons | [docs/reproduce.md](docs/reproduce.md) §0 · [.claude/skills/serving/](.claude/skills/serving/SKILL.md) · [teach_me/](teach_me/README.md) |
 | **V4.1 vs 0731 measured results (speculation off + DSpark)** | [report.md](report.md) |
 | **MiMo-V2.6-Flash vs 0731 vs V4.1 (speculation off + MTP/DFlash)** | [report_mimo.md](report_mimo.md) |
 | How MiMo runs prefill/decode, and why it is faster | [docs/mimo-v2.6-inference.md](docs/mimo-v2.6-inference.md) |

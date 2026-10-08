@@ -10,13 +10,13 @@ Use this when a rented 8×H100 node starts empty. It took about 15 minutes from 
 | --- | --- | --- | --- |
 | 1. Inventory | `nvidia-smi`, `lscpu`, `df -h /workspace`, `ls /workspace/hf/hub` | seconds | Do not assume the previous node's weights, caches or venvs survived. `/workspace/hf` was empty |
 | 2. Runtime | `bash install.sh` (pinned venv `~/vllm` and blog venv `~/vllm-latest`) | about 2 min per venv | Pick the runtime with `export VLLM_VENV=/root/vllm-latest`; the default stays the pinned build |
-| 3. Weights | `export HF_HOME=/workspace/hf HF_XET_HIGH_PERFORMANCE=1`, then `hf download <model> --revision <sha> --max-workers 32` for the three revisions in [target.md](../target.md) | 0731 156 GB in 2 min, MiMo 166 GB in 5 min, V4.1 476 GB in 4 min | All three repositories are public; no `HF_TOKEN` was needed. Download the smallest first so a launch can start early |
+| 3. Weights | `export HF_HOME=/workspace/hf HF_XET_HIGH_PERFORMANCE=1`, then `hf download <model> --revision <sha> --max-workers 32` for the three revisions in [target.md](../target.md) | 0731 156 GB in 2 min, MiMo 166 GB in 5 min, V4.1 476 GB in 4 min | All repositories are public; no `HF_TOKEN` was needed. Download the smallest first so a launch can start early. The two models added to the blog study took 4 min (Qwen, 186 GB) and 3 min (GLM, 328 GB); their revisions are in [blog_target.md](../blog_target.md) section 10 |
 | 4. Public inputs | `python3 -m venv /tmp/blog-inputs-venv && /tmp/blog-inputs-venv/bin/pip install pyarrow`; `/tmp/blog-inputs-venv/bin/python bench/blog_corpus.py`; `$VLLM_VENV/bin/python bench/blog_inputs.py` | about 2 min | The vLLM venv has no `pyarrow`; keep it out of the measured environment. The math and chat datasets are pinned by revision in `bench/blog_corpus.py` |
 | 5. Record the node | `$VLLM_VENV/bin/python bench/blog_study.py env` | seconds | Writes `results/<study>/_env/` |
-| 6. Diagnostics and pilot | `bash bench/blog_launch.sh chain-diag diag:v4-0731 diag:mimo-v26 diag:v41` | see the study report | One idle-profiler launch per model: functional checks, disjoint pilot, live-KV snapshots, traces |
+| 6. Diagnostics and pilot | `bash bench/blog_launch.sh chain-diag diag:v4-0731 diag:mimo-v26 diag:v41` | 15–25 min per model, mostly the first launch | One idle-profiler launch per model: functional checks, disjoint pilot, live-KV snapshots, traces |
 | 7. Freeze and dry-run | `python bench/blog_report.py pilot`, then `blog_study.py plan --counts '<json>'` and `blog_study.py dry-run <steps>` | seconds | Timing starts only after the dry run prints `DRY RUN OK` |
-| 8. Timing blocks | `bash bench/blog_launch.sh chain-timing timing:<model>:<block> ...` in the declared block order | see the study report | Each step owns its server and stops it on every exit path |
-| 9. Tables | `python bench/blog_report.py serving|memory|components` | seconds to minutes | Standard library only |
+| 8. Timing blocks | `bash bench/blog_launch.sh chain-timing timing:<model>:<block> ...` in the declared block order | 14.5–16 min per model-block (six points); 54 runs took 2 h 18 min | Each step owns its server and stops it on every exit path |
+| 9. Tables and publishing | `python bench/blog_report.py serving`, `memory`, `components`, `tables`, `publish` | seconds; `components` reads every rank trace and takes about 15 min for five models | Standard library only |
 
 Traps met on this node:
 

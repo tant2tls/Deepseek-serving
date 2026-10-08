@@ -27,7 +27,7 @@ Read [README.md](README.md), then [target.md](target.md) and [docs/reproduce.md]
 | Architecture blog plan | **Prepared and executed:** [blog_target.md](blog_target.md); study `blog-architecture-h100-v1` on vLLM `554340f3…` |
 | Blog harness, public inputs, frozen plan, dry run | **Done:** `bench/blog_*.py`, `bench/blog_launch.sh`; [plan.json](reports/blog-architecture-h100-v1/plan.json) |
 | Blog measurements, first three models | **Done 2026-10-07:** 54/54 timing runs valid, 18/18 traces, 18/18 live-KV snapshots; [findings](reports/blog-architecture-h100-v1/findings.md) |
-| Blog measurements, Qwen3.8-Flash-Next and GLM-5.3-Flash | **Added by Tan 2026-10-07; see [handoff](reports/blog-architecture-h100-v1/handoff.md) section 6 for their state** |
+| Blog measurements, Qwen3.8-Flash-Next and GLM-5.3-Flash | **Done 2026-10-08** (added by Tan): 36/36 timing runs valid, 12/12 traces, 12/12 live-KV snapshots; GLM ran without a thinking-off switch (declared deviation); [findings](reports/blog-architecture-h100-v1/findings.md) section 8 |
 | Blog HBM hardware counters (6 point sets) | **Not collected:** no Nsight Compute on the image; estimates only |
 | Blog routing statistics (tokens per expert, coverage, padding) | **Unsupported** without runtime instrumentation |
 | Later speculative-study harness and datasets | **Pending for later:** variable outputs, real-text inputs and manifest-driven execution |
@@ -39,7 +39,7 @@ Read [README.md](README.md), then [target.md](target.md) and [docs/reproduce.md]
 
 The blog study's first session is complete for the first three models. Work from [the handoff](reports/blog-architecture-h100-v1/handoff.md); do not rerun finished points.
 
-1. Read [findings.md](reports/blog-architecture-h100-v1/findings.md) and the handoff. Confirm the state of the Qwen/GLM addendum in handoff section 6 and finish or record whatever is pending there.
+1. Read [findings.md](reports/blog-architecture-h100-v1/findings.md) and the handoff. All five models are measured; nothing is queued or running.
 2. Write the blog from the findings: question → measurement → explanation → limitation, with the figures listed in [blog_target.md](blog_target.md) section 9. Keep timing (plain launches) apart from traces and snapshots (profiler launches), and state the vLLM build beside every number.
 3. Before any new rental, prepare locally what the open questions need: Nsight Compute installed and validated for the six HBM point sets; a declared manifest for any conditional follow-up; a routing-instrumentation patch if expert statistics are wanted. Declare points and cost first.
 4. On a new node follow [docs/reproduce.md](docs/reproduce.md) section 0 and the [serving skill](.claude/skills/serving/SKILL.md): inventory, both venvs, pinned downloads, rebuild inputs and check their hashes against the published manifest, record the node, then use `bench/blog_launch.sh`. Do **not** invoke `chain_mimo.sh` or `chain_dspark.sh`.
@@ -80,6 +80,8 @@ These actions remain preserved for when Tan resumes [target.md](target.md); they
 - **Live KV bytes are an approximation.** They are the usage gauge times the per-rank pool. Models with several KV cache groups and block sizes (0731: 256-token blocks) make short-context values dominated by block rounding. Compare bytes, never token capacities, across models.
 - **HBM counters were unavailable.** The image has no Nsight Compute, and replaying kernels of an 8-rank server under it was not attempted on rented time. HBM statements in the blog study are labelled estimates derived from live KV bytes and trace time; the measured HBM comparison stays open.
 - **Operational traps met on 2026-10-07.** The first launch of a model can die with `CUDA error: invalid argument` while eight ranks JIT-build one FlashInfer module; relaunch once. Start chains detached (`bench/blog_launch.sh`); a tool-managed background command was killed by its timeout. Never `pkill -f` or `pgrep -f` a pattern that also appears in your own command line. Reap the server's group leader before waiting on its process group, or the stop waits out every grace period.
+
+- **Five-model picture on vLLM `554340f3…` (blog study).** Qwen3.8-Flash-Next has the highest throughput at five of six points; MiMo has the fastest single-stream decode; V4.1 has the fastest prefill among the three targets and the smallest KV per token; Qwen and GLM hold 2–7× more KV per token than the three targets. FP8 experts (Qwen, GLM) ran 6–10× faster per prefill chunk than the 4-bit `HUMMING` experts of the same shape; this is a cross-model observation, not a controlled test. Qwen and GLM were measured after the three targets, without rotating order across all five.
 
 # Measurement guideline
 

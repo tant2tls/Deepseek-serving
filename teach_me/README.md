@@ -10,6 +10,8 @@ These lessons show, step by step, how the numbers in [the blog study report](../
 | [4. Measure live KV memory](04_live_kv_memory.md) | Turning the KV-usage gauge into bytes per request and per token |
 | [5. Read the vLLM source](05_reading_vllm_source.md) | A map of file and line references, and how the V4.1 prefill check was done |
 
+The lessons use the three target models as examples. Qwen3.8-Flash-Next (`qwen-38`) and GLM-5.3-Flash (`glm-53`) were measured the same way; only the model key changes, and GLM has no thinking-off switch.
+
 **Everything here refers to one build.** Line numbers are for vLLM `0.31.1rc1.dev50+g554340f3d` (commit `554340f3d3259e321be4c07282be7a02a5aeef83`) installed at `/root/vllm-latest`. Write `$V` for `/root/vllm-latest/lib/python3.12/site-packages/vllm`. On another build, find the same code with `grep -n "<text>" -r $V` using the quoted strings in lesson 5.
 
 ## The mental model in five sentences

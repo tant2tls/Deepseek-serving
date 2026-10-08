@@ -86,3 +86,33 @@ None of the three has hardware structured weight sparsity. "Sparse" here always 
 - Tensor-by-tensor shapes of every projection; the table uses config fields.
 - Resident weight bytes split by dense, expert and metadata. Only the per-GPU total from the load log is recorded.
 - Which exact kernels serve 0731's low-rank projections on this build; see `components.csv` and `components_unclassified.md`.
+
+## Added models: Qwen3.8-Flash-Next and GLM-5.3-Flash
+
+Same build and deployment. Entries are from the pinned checkpoint configs and this study's server logs; kernel-level statements are in [components_tables.md](components_tables.md). Neither model was in the first three, so read this section together with the order caveat in [findings.md](findings.md).
+
+Both models replace most softmax-attention layers with **recurrent ("linear") attention**: a layer keeps a fixed-size state per request and updates it once per token, so its cost and memory do not grow with context. Every fourth layer is a sparse softmax-attention layer with an indexer, which is where long-range lookup happens.
+
+| | Qwen3.8-Flash-Next-FP8 | GLM-5.3-Flash |
+| --- | --- | --- |
+| Revision | `236dfdf2…a3469b13` | `eb9eb208…5f52574a` |
+| Served class | `Qwen4ExpForConditionalGeneration` (text only) | `Glm5NextForConditionalGeneration` (text only) |
+| Layers | 48: 36 recurrent + 12 softmax-attention (every 4th: 3, 7, …, 47) | 45: 34 recurrent + 11 sparse-attention (3, 7, …, 43) |
+| Hidden size | 2560 | 4096 |
+| Softmax-attention layers | 24 heads × 256, 2 KV heads; the config calls them "full attention", the executed kernels are sparse (`_qsa_sparse_…`) with an indexer of budget 2,048 and compression ratio 4 | 64 heads, MLA without positional part (`mla_use_nope`), Q rank 1536, KV rank 512; indexer 32 heads × 128, top-2,048, K-pool 4 |
+| Recurrent layers | gated delta rule, 16 key heads × 128 and 48 value heads × 128, causal conv kernel 4 | recurrent layers handled through the same Mamba-style state pages |
+| Residual scheme | 4 hyper-connection streams, low rank 320 | mHC, 4 streams |
+| Extra modules | n-gram (PLE) embedding at one layer | – |
+| Routed experts / active per token | 512 / 10, plus a shared expert of the same width | 288 / 8, plus 1 shared |
+| Expert intermediate width | 640 | 2048 |
+| Dense FFN layers | none | first 3 layers, width 12,288 |
+| Fraction of routed experts a token uses | 10/512 = 2.0% | 8/288 = 2.8% |
+| Weight format | FP8, 128×128 blocks (experts too) | FP8 E4M3 |
+| MoE backend (log) | `FLASHINFER_CUTLASS` FP8 | `FLASHINFER_CUTLASS` FP8 |
+| FP8 linear kernel (log) | DeepGEMM / FlashInfer | `FlashInferFp8DeepGEMMDynamicBlockScaledKernel` |
+| KV block size (log) | attention block 400 tokens, equal to the recurrent-state page | attention block 640 tokens, equal to the recurrent-state page |
+| Weights per GPU (log) | 17.36 GiB | 38.8 GiB |
+| KV pool per GPU (log) | 51.44 GiB (4,194,304 tokens) | 28.73 GiB (2,618,281 tokens) |
+| Thinking off | `enable_thinking=false`, verified | **not available**; lowest `reasoning_effort` used |
+
+**Estimate**, not measured: one Qwen expert has about 3 × 2560 × 640 = 4.9M weights, so a token's eleven experts touch about 54M weights per layer, against 176–248M for the first three models. Qwen's experts are small and numerous; GLM's are the same size as 0731's and MiMo's (25.2M) with nine active (227M per layer).

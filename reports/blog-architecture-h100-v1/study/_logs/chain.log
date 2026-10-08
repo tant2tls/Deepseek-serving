@@ -180,3 +180,121 @@
 [22:59:36] CHAIN chain finished; no server left running
 [22:59:37] CHAIN step diag:qwen-38 start
 [22:59:37] CHAIN launched qwen-38 off-profidle pgid=203276 log=results/blog-architecture-h100-v1/qwen-38/_server/serve-off-profidle-20261007-225937.log
+[23:18:47] CHAIN ready qwen-38 off-profidle after 1150s
+[23:18:57] CHAIN functional qwen-38 ok=True rendered={'server_prompt_tokens': 1021, 'client_content_tokens': 1009, 'template_overhead': 12}
+[23:19:28] CHAIN pilot qwen-38 ctx16k_osl256_c1 block=1 n=3 valid=True dur=6.433061363000888 out_tps=119.38328529198796 ttft_p50=537.4974739970639 tpot_p50=6.3669254666641715 
+[23:20:02] CHAIN pilot qwen-38 ctx16k_osl256_c8 block=1 n=12 valid=True dur=9.635941140004434 out_tps=318.80643056715337 ttft_p50=2479.3505375128007 tpot_p50=10.954130166689593 
+[23:20:37] CHAIN pilot qwen-38 ctx1k_osl256_c1 block=1 n=6 valid=True dur=10.741748724976787 out_tps=142.99347707031 ttft_p50=177.79557350149844 tpot_p50=6.310721727455601 
+[23:21:08] CHAIN pilot qwen-38 ctx1k_osl256_c8 block=1 n=24 valid=True dur=6.840368196979398 out_tps=898.1972641053294 ttft_p50=323.8909870124189 tpot_p50=7.598762821597869 
+[23:21:42] CHAIN pilot qwen-38 ctx64k_osl256_c1 block=1 n=3 valid=True dur=10.034912478004117 out_tps=76.53280501283959 ttft_p50=1712.7447349776048 tpot_p50=6.354342882439275 
+[23:22:25] CHAIN pilot qwen-38 ctx64k_osl256_c8 block=1 n=9 valid=True dur=17.120281267998507 out_tps=134.57722825539508 ttft_p50=6208.707172976574 tpot_p50=30.136224882353062 
+[23:22:32] CHAIN kv qwen-38 1k B=1 usage=0.0010401891252954654 running=1.0
+[23:22:58] CHAIN trace qwen-38 decode1k_B1 files=16 {'B': 1, 'window_s': 0.3412506580352783, 'tokens_in_window': [48]}
+[23:23:05] CHAIN kv qwen-38 1k B=8 usage=0.007754137115839277 running=8.0
+[23:23:43] CHAIN trace qwen-38 decode1k_B8 files=16 {'B': 8, 'window_s': 0.38134098052978516, 'tokens_in_window': [48, 48, 46, 48, 48, 48, 48, 48]}
+[23:23:50] CHAIN kv qwen-38 16k B=1 usage=0.00463356973995277 running=1.0
+[23:24:01] CHAIN kv qwen-38 16k B=8 usage=0.03829787234042559 running=8.0
+[23:24:12] CHAIN kv qwen-38 64k B=1 usage=0.016643026004728112 running=1.0
+[23:24:39] CHAIN trace qwen-38 decode64k_B1 files=16 {'B': 1, 'window_s': 0.32112646102905273, 'tokens_in_window': [48]}
+[23:24:58] CHAIN kv qwen-38 64k B=8 usage=0.13626477541371163 running=8.0
+[23:25:32] CHAIN trace qwen-38 decode64k_B8 files=16 {'B': 8, 'window_s': 0.40143322944641113, 'tokens_in_window': [48, 48, 48, 48, 48, 48, 48, 16]}
+[23:25:53] CHAIN trace qwen-38 prefill16k files=16 {'request_wall_s': 0.6162736415863037}
+[23:26:30] CHAIN trace qwen-38 prefill64k files=16 {'request_wall_s': 2.0595343112945557}
+[23:26:39] CHAIN stopped qwen-38 off-profidle up=1622s gpu_mem_max=0MiB leftover=0
+[23:26:39] CHAIN step diag:qwen-38 done
+[23:26:39] CHAIN step diag:glm-53 start
+[23:26:39] CHAIN launched glm-53 off-profidle pgid=221909 log=results/blog-architecture-h100-v1/glm-53/_server/serve-off-profidle-20261007-232639.log
+[23:31:24] CHAIN stopped glm-53 off-profidle up=285s gpu_mem_max=0MiB leftover=0
+[23:31:24] CHAIN step diag:glm-53 FAILED: RuntimeError('server exited rc=1 before readiness')
+[23:31:24] CHAIN step diag:glm-53 start (retry after a failed launch)
+[23:31:24] CHAIN launched glm-53 off-profidle pgid=228205 log=results/blog-architecture-h100-v1/glm-53/_server/serve-off-profidle-20261007-233124.log
+[23:39:49] CHAIN ready glm-53 off-profidle after 505s
+[23:39:59] CHAIN functional glm-53 ok=False rendered={'server_prompt_tokens': 936, 'client_content_tokens': 924, 'template_overhead': 12}
+[23:39:59] CHAIN functional check FAILED for glm-53; continuing with diagnostics only
+[23:40:32] CHAIN pilot glm-53 ctx16k_osl256_c1 block=1 n=3 valid=True dur=7.182458622002741 out_tps=106.92717360700263 ttft_p50=547.5951000116765 tpot_p50=6.63209500387037 
+[23:41:07] CHAIN pilot glm-53 ctx16k_osl256_c8 block=1 n=12 valid=True dur=10.468550999008585 out_tps=293.4503543318393 ttft_p50=1952.650650506257 tpot_p50=16.74642769800152 
+[23:41:44] CHAIN pilot glm-53 ctx1k_osl256_c1 block=1 n=6 valid=True dur=11.542981406004401 out_tps=133.06787440556798 ttft_p50=177.25040299410466 tpot_p50=6.595081872621771 
+[23:42:18] CHAIN pilot glm-53 ctx1k_osl256_c8 block=1 n=24 valid=True dur=8.64586078299908 out_tps=710.6290691241927 ttft_p50=330.78359450155403 tpot_p50=9.914609631375116 
+[23:42:57] CHAIN pilot glm-53 ctx64k_osl256_c1 block=1 n=3 valid=True dur=13.694988358998671 out_tps=56.07890856623944 ttft_p50=2075.785555993207 tpot_p50=6.63427774903967 
+[23:43:44] CHAIN pilot glm-53 ctx64k_osl256_c8 block=1 n=9 valid=True dur=20.85130845301319 out_tps=110.49666284453495 ttft_p50=7702.970034006285 tpot_p50=37.387537623541064 
+[23:43:51] CHAIN kv glm-53 1k B=1 usage=0.0019305019305019266 running=1.0
+[23:44:15] CHAIN trace glm-53 decode1k_B1 files=16 {'B': 1, 'window_s': 0.3412001132965088, 'tokens_in_window': [49]}
+[23:44:23] CHAIN kv glm-53 1k B=8 usage=0.015444015444015413 running=8.0
+[23:44:48] CHAIN trace glm-53 decode1k_B8 files=16 {'B': 8, 'window_s': 0.501793384552002, 'tokens_in_window': [49, 49, 49, 49, 49, 49, 49, 49]}
+[23:44:55] CHAIN kv glm-53 16k B=1 usage=0.007480694980695035 running=1.0
+[23:45:07] CHAIN kv glm-53 16k B=8 usage=0.060810810810810856 running=8.0
+[23:45:17] CHAIN kv glm-53 64k B=1 usage=0.025096525096525046 running=1.0
+[23:45:42] CHAIN trace glm-53 decode64k_B1 files=16 {'B': 1, 'window_s': 0.3411879539489746, 'tokens_in_window': [49]}
+[23:46:04] CHAIN kv glm-53 64k B=8 usage=0.2065637065637066 running=8.0
+[23:46:29] CHAIN trace glm-53 decode64k_B8 files=16 {'B': 8, 'window_s': 0.5018923282623291, 'tokens_in_window': [48, 48, 48, 48, 48, 48, 48, 48]}
+[23:46:47] CHAIN trace glm-53 prefill16k files=16 {'request_wall_s': 0.563178539276123}
+[23:47:20] CHAIN trace glm-53 prefill64k files=16 {'request_wall_s': 2.0203747749328613}
+[23:47:23] CHAIN stopped glm-53 off-profidle up=959s gpu_mem_max=0MiB leftover=0
+[23:47:23] CHAIN step diag:glm-53 done
+[23:47:23] CHAIN step timing:qwen-38:1 start
+[23:47:23] CHAIN launched qwen-38 off pgid=246442 log=results/blog-architecture-h100-v1/qwen-38/_server/serve-off-20261007-234723.log
+[23:51:28] CHAIN ready qwen-38 off after 245s
+[23:54:16] CHAIN serving qwen-38 ctx16k_osl256_c1 block=1 n=36 valid=True dur=76.54226764000487 out_tps=120.40406280285393 ttft_p50=529.4025629846146 tpot_p50=6.36745969994295 
+[23:55:29] CHAIN serving qwen-38 ctx16k_osl256_c8 block=1 n=75 valid=True dur=46.739944411005126 out_tps=410.7835437536223 ttft_p50=1564.5937520021107 tpot_p50=12.730368658758735 
+[23:57:18] CHAIN serving qwen-38 ctx1k_osl256_c1 block=1 n=48 valid=True dur=84.75517952101654 out_tps=144.98228980746802 ttft_p50=153.43035450496245 tpot_p50=6.310600945132547 
+[23:58:41] CHAIN serving qwen-38 ctx1k_osl256_c8 block=1 n=204 valid=True dur=58.264520806027576 out_tps=896.325916312991 ttft_p50=299.06096498598345 tpot_p50=7.614122388265826 
+[00:00:07] CHAIN serving qwen-38 ctx64k_osl256_c1 block=1 n=18 valid=True dur=59.83588880798197 out_tps=77.0106384612658 ttft_p50=1721.082005999051 tpot_p50=6.3691633215343 
+[00:01:33] CHAIN serving qwen-38 ctx64k_osl256_c8 block=1 n=33 valid=True dur=58.176481684000464 out_tps=145.21331911901 ttft_p50=4788.870560005307 tpot_p50=34.71010857645203 
+[00:01:40] CHAIN stopped qwen-38 off up=857s gpu_mem_max=0MiB leftover=0
+[00:01:40] CHAIN step timing:qwen-38:1 done
+[00:01:40] CHAIN step timing:glm-53:1 start
+[00:01:41] CHAIN launched glm-53 off pgid=256265 log=results/blog-architecture-h100-v1/glm-53/_server/serve-off-20261008-000140.log
+[00:05:11] CHAIN ready glm-53 off after 210s
+[00:08:22] CHAIN serving glm-53 ctx16k_osl256_c1 block=1 n=36 valid=True dur=90.88005341100506 out_tps=101.40839110558879 ttft_p50=516.8351970205549 tpot_p50=6.656542394079688 
+[00:09:49] CHAIN serving glm-53 ctx16k_osl256_c8 block=1 n=75 valid=True dur=60.894456980982795 out_tps=315.29963402081273 ttft_p50=1596.67366600479 tpot_p50=17.479086678370138 
+[00:11:46] CHAIN serving glm-53 ctx1k_osl256_c1 block=1 n=48 valid=True dur=90.8610486650141 out_tps=135.2394692835135 ttft_p50=164.28229850134812 tpot_p50=6.590263243175714 
+[00:13:25] CHAIN serving glm-53 ctx1k_osl256_c8 block=1 n=204 valid=True dur=73.90002117899712 out_tps=706.6845065376302 ttft_p50=320.5685780121712 tpot_p50=9.911999594096057 
+[00:15:04] CHAIN serving glm-53 ctx64k_osl256_c1 block=1 n=18 valid=True dur=71.95071347799967 out_tps=64.04384025196617 ttft_p50=2072.14746750833 tpot_p50=6.631460986282749 
+[00:16:45] CHAIN serving glm-53 ctx64k_osl256_c8 block=1 n=33 valid=True dur=72.98919880800531 out_tps=115.74315293173817 ttft_p50=5208.365832018899 tpot_p50=47.450801494129585 
+[00:16:47] CHAIN stopped glm-53 off up=907s gpu_mem_max=0MiB leftover=0
+[00:16:47] CHAIN step timing:glm-53:1 done
+[00:16:47] CHAIN step timing:glm-53:2 start
+[00:16:47] CHAIN launched glm-53 off pgid=267361 log=results/blog-architecture-h100-v1/glm-53/_server/serve-off-20261008-001647.log
+[00:20:22] CHAIN ready glm-53 off after 215s
+[00:23:18] CHAIN serving glm-53 ctx64k_osl256_c8 block=2 n=33 valid=True dur=73.15562451499864 out_tps=115.47984254126571 ttft_p50=5642.134848982096 tpot_p50=46.15951362351303 
+[00:24:53] CHAIN serving glm-53 ctx64k_osl256_c1 block=2 n=18 valid=True dur=68.30602407699917 out_tps=67.46110701459583 ttft_p50=2093.1677265034523 tpot_p50=6.60834205878999 
+[00:26:32] CHAIN serving glm-53 ctx1k_osl256_c8 block=2 n=204 valid=True dur=73.87097112997435 out_tps=706.962412990524 ttft_p50=330.12708149908576 tpot_p50=9.899206111817074 
+[00:28:25] CHAIN serving glm-53 ctx1k_osl256_c1 block=2 n=48 valid=True dur=88.79093087898218 out_tps=138.39251236984958 ttft_p50=166.33201397780795 tpot_p50=6.590158192157818 
+[00:29:51] CHAIN serving glm-53 ctx16k_osl256_c8 block=2 n=75 valid=True dur=58.8404930329998 out_tps=326.30589939537 ttft_p50=1628.447833005339 tpot_p50=16.784234913796478 
+[00:31:37] CHAIN serving glm-53 ctx16k_osl256_c1 block=2 n=36 valid=True dur=81.07319457700942 out_tps=113.67505681851416 ttft_p50=529.4113245181506 tpot_p50=6.643588107887326 
+[00:31:41] CHAIN stopped glm-53 off up=893s gpu_mem_max=0MiB leftover=0
+[00:31:41] CHAIN step timing:glm-53:2 done
+[00:31:41] CHAIN step timing:qwen-38:2 start
+[00:31:41] CHAIN launched qwen-38 off pgid=277561 log=results/blog-architecture-h100-v1/qwen-38/_server/serve-off-20261008-003141.log
+[00:35:26] CHAIN ready qwen-38 off after 225s
+[00:38:00] CHAIN serving qwen-38 ctx64k_osl256_c8 block=2 n=33 valid=True dur=58.32013932001428 out_tps=144.85562103417027 ttft_p50=4788.456996990135 tpot_p50=34.68409551366908 
+[00:39:26] CHAIN serving qwen-38 ctx64k_osl256_c1 block=2 n=18 valid=True dur=59.99888274699333 out_tps=76.80143011047846 ttft_p50=1731.5261389885563 tpot_p50=6.36117529219893 
+[00:40:49] CHAIN serving qwen-38 ctx1k_osl256_c8 block=2 n=204 valid=True dur=58.33147488499526 out_tps=895.2970948011072 ttft_p50=300.21751250023954 tpot_p50=7.6118737529374325 
+[00:42:37] CHAIN serving qwen-38 ctx1k_osl256_c1 block=2 n=48 valid=True dur=84.79267646200606 out_tps=144.91817586989382 ttft_p50=155.58461949694902 tpot_p50=6.305399935295367 
+[00:43:49] CHAIN serving qwen-38 ctx16k_osl256_c8 block=2 n=75 valid=True dur=46.452308449021075 out_tps=413.3271443564742 ttft_p50=1567.3501839919481 tpot_p50=12.585817046997631 
+[00:45:30] CHAIN serving qwen-38 ctx16k_osl256_c1 block=2 n=36 valid=True dur=76.475128836988 out_tps=120.5097675565155 ttft_p50=532.5690685131121 tpot_p50=6.357887515617882 
+[00:45:38] CHAIN stopped qwen-38 off up=837s gpu_mem_max=0MiB leftover=0
+[00:45:38] CHAIN step timing:qwen-38:2 done
+[00:45:38] CHAIN step timing:qwen-38:3 start
+[00:45:38] CHAIN launched qwen-38 off pgid=287195 log=results/blog-architecture-h100-v1/qwen-38/_server/serve-off-20261008-004538.log
+[00:49:23] CHAIN ready qwen-38 off after 225s
+[00:52:11] CHAIN serving qwen-38 ctx16k_osl256_c1 block=3 n=36 valid=True dur=76.38882748299511 out_tps=120.64591516411966 ttft_p50=525.9789514966542 tpot_p50=6.365974037223221 
+[00:53:23] CHAIN serving qwen-38 ctx16k_osl256_c8 block=3 n=75 valid=True dur=46.40587593600503 out_tps=413.7407087515668 ttft_p50=1551.3167589961085 tpot_p50=12.703873980425152 
+[00:55:11] CHAIN serving qwen-38 ctx1k_osl256_c1 block=3 n=48 valid=True dur=84.62616067499039 out_tps=145.2033260399521 ttft_p50=151.37407848669682 tpot_p50=6.307183011713456 
+[00:56:33] CHAIN serving qwen-38 ctx1k_osl256_c8 block=3 n=204 valid=True dur=57.965982234018156 out_tps=900.942207606578 ttft_p50=289.75690150400624 tpot_p50=7.6069130587925695 
+[00:57:59] CHAIN serving qwen-38 ctx64k_osl256_c1 block=3 n=18 valid=True dur=59.769536443986 out_tps=77.09613080768098 ttft_p50=1719.2663150053704 tpot_p50=6.362698811754657 
+[00:59:25] CHAIN serving qwen-38 ctx64k_osl256_c8 block=3 n=33 valid=True dur=58.11234855299699 out_tps=145.37357739544183 ttft_p50=4957.6070879993495 tpot_p50=34.5740938941519 
+[00:59:32] CHAIN stopped qwen-38 off up=834s gpu_mem_max=0MiB leftover=0
+[00:59:32] CHAIN step timing:qwen-38:3 done
+[00:59:32] CHAIN step timing:glm-53:3 start
+[00:59:32] CHAIN launched glm-53 off pgid=297187 log=results/blog-architecture-h100-v1/glm-53/_server/serve-off-20261008-005932.log
+[01:03:02] CHAIN ready glm-53 off after 210s
+[01:06:04] CHAIN serving glm-53 ctx16k_osl256_c1 block=3 n=36 valid=True dur=81.53759468600038 out_tps=113.02761671460422 ttft_p50=535.8633835130604 tpot_p50=6.655101215708818 
+[01:07:30] CHAIN serving glm-53 ctx16k_osl256_c8 block=3 n=75 valid=True dur=59.020512207993306 out_tps=325.3106298423431 ttft_p50=1826.2137499987148 tpot_p50=16.786662360776546 
+[01:09:23] CHAIN serving glm-53 ctx1k_osl256_c1 block=3 n=48 valid=True dur=88.84341144800419 out_tps=138.31076271977219 ttft_p50=166.36642049707007 tpot_p50=6.59488813338719 
+[01:11:02] CHAIN serving glm-53 ctx1k_osl256_c8 block=3 n=204 valid=True dur=74.19527932797791 out_tps=703.8722742608117 ttft_p50=338.4541910054395 tpot_p50=9.909942227486503 
+[01:12:37] CHAIN serving glm-53 ctx64k_osl256_c1 block=3 n=18 valid=True dur=68.03742059497745 out_tps=67.72743528052214 ttft_p50=2073.6163909896277 tpot_p50=6.625617237238888 
+[01:14:18] CHAIN serving glm-53 ctx64k_osl256_c8 block=3 n=33 valid=True dur=72.92997220900725 out_tps=115.83714821375767 ttft_p50=5380.975615000352 tpot_p50=46.52238847452727 
+[01:14:21] CHAIN stopped glm-53 off up=889s gpu_mem_max=0MiB leftover=0
+[01:14:21] CHAIN step timing:glm-53:3 done
+[01:14:21] CHAIN chain finished; no server left running

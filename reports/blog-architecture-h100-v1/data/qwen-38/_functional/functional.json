@@ -1,0 +1,81 @@
+{
+ "model_key": "qwen-38",
+ "runtime": {
+  "venv": "/root/vllm-latest",
+  "vllm": "0.31.1rc1.dev50+g554340f3d",
+  "torch": "2.13.0+cu132"
+ },
+ "checks": [
+  {
+   "kind": "natural_eos",
+   "domain": "code",
+   "prompt": "Write a Python function that returns the n-th Fibonacci number iteratively. Reply with the code only.",
+   "text": "```python\ndef fibonacci(n: int) -> int:\n    if n < 0:\n        raise ValueError(\"n must be a non-negative integer\")\n    if n == 0:\n        return 0\n    if n == 1:\n        return 1\n    a, b = 0, 1\n    for _ in range(2, n + 1):\n        a, b = b, a + b\n    return b\n```",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 32,
+    "total_tokens": 134,
+    "completion_tokens": 102,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   }
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "math",
+   "prompt": "What is 17 * 23? Give the final number on the last line.",
+   "text": "To calculate $17 \\times 23$, we can break it down using the distributive property:\n\n$$17 \\times 23 = 17 \\times (20 + 3)$$\n\nFirst, multiply 17 by 20:\n$$17 \\times 20 = 340$$\n\nNext, multiply 17 by 3:\n$$17 \\times 3 = 51$$\n\nFinally, add the two results together:\n$$340 + 51 = 391$$\n\n391",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 31,
+    "total_tokens": 156,
+    "completion_tokens": 125,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   }
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "chat",
+   "prompt": "In two sentences, explain why the sky is blue.",
+   "text": "Sunlight enters Earth's atmosphere and scatters in all directions, with shorter blue wavelengths scattering more strongly than longer red wavelengths due to Rayleigh scattering. This preferential scattering of blue light across the sky is what makes it appear blue to our eyes.",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 23,
+    "total_tokens": 74,
+    "completion_tokens": 51,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   }
+  },
+  {
+   "kind": "forced_256",
+   "request_id": "1k-aux-000",
+   "usage": {
+    "prompt_tokens": 1021,
+    "total_tokens": 1277,
+    "completion_tokens": 256,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "finish_reason": "length"
+  }
+ ],
+ "rendered": {
+  "server_prompt_tokens": 1021,
+  "client_content_tokens": 1009,
+  "template_overhead": 12
+ },
+ "ok": true
+}

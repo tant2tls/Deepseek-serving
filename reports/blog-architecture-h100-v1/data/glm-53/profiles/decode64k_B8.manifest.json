@@ -1,0 +1,91 @@
+{
+ "kind": "decode",
+ "model_key": "glm-53",
+ "runtime": {
+  "venv": "/root/vllm-latest",
+  "vllm": "0.31.1rc1.dev50+g554340f3d",
+  "torch": "2.13.0+cu132"
+ },
+ "bucket": "64k",
+ "B": 8,
+ "request_ids": [
+  "64k-aux-000",
+  "64k-aux-001",
+  "64k-aux-002",
+  "64k-aux-003",
+  "64k-aux-004",
+  "64k-aux-005",
+  "64k-aux-006",
+  "64k-aux-007"
+ ],
+ "client_content_tokens": [
+  61979,
+  65976,
+  65650,
+  61002,
+  65685,
+  65268,
+  62759,
+  65676
+ ],
+ "generated_before_window": [
+  788,
+  751,
+  748,
+  796,
+  762,
+  727,
+  749,
+  731
+ ],
+ "tokens_in_window": [
+  48,
+  48,
+  48,
+  48,
+  48,
+  48,
+  48,
+  48
+ ],
+ "window_s": 0.5018923282623291,
+ "unprofiled_window": {
+  "window_s": 1.0000898838043213,
+  "tokens": [
+   98,
+   98,
+   98,
+   98,
+   98,
+   98,
+   98,
+   96
+  ]
+ },
+ "live_gauges": {
+  "vllm:num_requests_running": 8.0,
+  "vllm:num_requests_waiting": 0.0,
+  "vllm:kv_cache_usage_perc": 0.2065637065637066
+ },
+ "label": "decode64k_B8",
+ "files": [
+  "dp0_pp0_tp0_dcp0_ep0_rank0.1791416766533415674.pt.trace.json.gz",
+  "dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+  "dp0_pp0_tp1_dcp0_ep1_rank1.1791416766581884893.pt.trace.json.gz",
+  "dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+  "dp0_pp0_tp2_dcp0_ep2_rank2.1791416766584324837.pt.trace.json.gz",
+  "dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+  "dp0_pp0_tp3_dcp0_ep3_rank3.1791416766554628063.pt.trace.json.gz",
+  "dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+  "dp0_pp0_tp4_dcp0_ep4_rank4.1791416766553972685.pt.trace.json.gz",
+  "dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+  "dp0_pp0_tp5_dcp0_ep5_rank5.1791416766559785216.pt.trace.json.gz",
+  "dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+  "dp0_pp0_tp6_dcp0_ep6_rank6.1791416766531224794.pt.trace.json.gz",
+  "dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+  "dp0_pp0_tp7_dcp0_ep7_rank7.1791416766549153776.pt.trace.json.gz",
+  "dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt"
+ ],
+ "n_rank_files": 16,
+ "note": "diagnostic profiled capture; not a timing result"
+}

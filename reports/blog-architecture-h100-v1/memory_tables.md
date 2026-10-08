@@ -22,6 +22,18 @@ Snapshot with B requests decoding and nothing else running. Live bytes = KV usag
 | MiMo-V2.6-Flash | 16k | 8 | 136,500 | 1.554% | 782.8 | 6.12 | 5.87 |
 | MiMo-V2.6-Flash | 64k | 1 | 63,749 | 0.703% | 354.2 | 2.77 | 5.69 |
 | MiMo-V2.6-Flash | 64k | 8 | 531,564 | 5.865% | 2953.6 | 23.07 | 5.69 |
+| Qwen3.8-Flash-Next | 1k | 1 | 2,018 | 0.104% | 54.8 | 0.43 | 27.80 |
+| Qwen3.8-Flash-Next | 1k | 8 | 15,209 | 0.775% | 408.4 | 3.19 | 27.50 |
+| Qwen3.8-Flash-Next | 16k | 1 | 17,477 | 0.463% | 244.1 | 1.91 | 14.30 |
+| Qwen3.8-Flash-Next | 16k | 8 | 143,853 | 3.830% | 2017.3 | 15.76 | 14.36 |
+| Qwen3.8-Flash-Next | 64k | 1 | 68,205 | 1.664% | 876.7 | 6.85 | 13.16 |
+| Qwen3.8-Flash-Next | 64k | 8 | 558,402 | 13.626% | 7177.7 | 56.08 | 13.16 |
+| GLM-5.3-Flash | 1k | 1 | 1,905 | 0.193% | 56.8 | 0.44 | 30.53 |
+| GLM-5.3-Flash | 1k | 8 | 13,385 | 1.544% | 454.4 | 3.55 | 34.76 |
+| GLM-5.3-Flash | 16k | 1 | 16,208 | 0.748% | 220.1 | 1.72 | 13.90 |
+| GLM-5.3-Flash | 16k | 8 | 133,897 | 6.081% | 1789.0 | 13.98 | 13.68 |
+| GLM-5.3-Flash | 64k | 1 | 62,941 | 2.510% | 738.3 | 5.77 | 12.01 |
+| GLM-5.3-Flash | 64k | 8 | 519,137 | 20.656% | 6077.0 | 47.48 | 11.99 |
 
 ## Reserved pools and weights (server log, per GPU)
 
@@ -30,6 +42,8 @@ Snapshot with B requests decoding and nothing else running. Live bytes = KV usag
 | V4 Flash 0731 | 19.79 GiB | 47.43 GiB | 1,728,531 |
 | V4.1 Flash | 36.32 GiB | 29.14 GiB | 9,092,347 |
 | MiMo-V2.6-Flash | 20.10 GiB | 49.18 GiB | 6,969,972 |
+| Qwen3.8-Flash-Next | 17.36 GiB | 51.44 GiB | 4,194,304 |
+| GLM-5.3-Flash | 38.80 GiB | 28.73 GiB | 2,618,281 |
 
 Token capacities are not comparable across models (different KV formats and block accounting); compare the byte columns. None of this measures reusable-prefix capacity or maximum concurrency.
 
