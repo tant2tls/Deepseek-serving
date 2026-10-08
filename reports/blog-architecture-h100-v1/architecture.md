@@ -1,5 +1,7 @@
 # B0: architecture and implementation facts
 
+**Qwen precision update, 2026-10-08:** the Qwen implementation, kernel and memory observations below describe the measured **FP8** checkpoint. [All future Qwen work uses the original BF16 checkpoint](../../docs/qwen-checkpoint-policy.md); its loaded implementation and measurements are pending. The existing FP8 observations do not establish BF16 runtime support or performance.
+
 Study `blog-architecture-h100-v1`, recorded 2026-10-07 on vLLM `0.31.1rc1.dev50+g554340f3d` (commit `554340f3d3259e321be4c07282be7a02a5aeef83`), TP8 + EP, 8×H100.
 
 Every entry carries its evidence label: **config** (the checkpoint's `config.json` at the pinned revision), **card** (model card in the same snapshot), **log** (server startup log of this study), **source** (vLLM code on the node), **estimate** (arithmetic from shapes). Entries are facts about these deployments, not measurements of speed.

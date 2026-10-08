@@ -1,5 +1,7 @@
 # Handoff: blog-architecture-h100-v1
 
+**Qwen decision, 2026-10-08:** [use the original BF16 checkpoint for all future Qwen work](../../docs/qwen-checkpoint-policy.md). The completed Qwen results and `qwen-38` commands below are FP8 history. Do not rerun those Qwen entries or replace weights inside this frozen study. A distinct BF16 key/study, runtime checks and fresh matched controls are pending; the completed counts below do not include BF16 measurements.
+
 Session of 2026-10-07 on one rented 8×H100 80GB node. Results: [findings.md](findings.md). Plan: [blog_target.md](../../blog_target.md). Build: vLLM `0.31.1rc1.dev50+g554340f3d` (`554340f3d3259e321be4c07282be7a02a5aeef83`) in `/root/vllm-latest`.
 
 ## 1. Status of every planned item
@@ -24,7 +26,7 @@ Session of 2026-10-07 on one rented 8×H100 80GB node. Results: [findings.md](fi
 | Prefix capacity or reuse | – | **Deferred by instruction**; nothing run | – |
 | Conditional follow-ups (1K/c64, 128K, single-change ablation, five-block confirmation) | – | **Not run**; none declared | section 5 |
 
-### Added models (Qwen3.8-Flash-Next, GLM-5.3-Flash)
+### Added models (Qwen3.8-Flash-Next FP8, GLM-5.3-Flash)
 
 Declared in [plan_addendum_glm_qwen.json](plan_addendum_glm_qwen.json). **Done**: 36/36 timing runs valid, 12 traces, 12 KV snapshots. Details and deviations are in section 6.
 
@@ -54,6 +56,8 @@ Declared in [plan_addendum_glm_qwen.json](plan_addendum_glm_qwen.json). **Done**
 A timing step (launch, warmup, six points, stop) takes 14.5–16 minutes; a relaunch of a cached model takes about 2 minutes, a first launch 6–11. No hourly price was supplied, so cost is in node-hours only. Every server was stopped by its chain; `study/_logs/shutdown.jsonl` records 0 MiB on all GPUs after each stop.
 
 ## 4. Exact commands
+
+Historical commands from the completed session. In particular, `qwen-38` selects FP8 and is **not permitted for new Qwen work** under the later BF16-only decision.
 
 ```bash
 # environment

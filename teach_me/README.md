@@ -10,7 +10,7 @@ These lessons show, step by step, how the numbers in [the blog study report](../
 | [4. Measure live KV memory](04_live_kv_memory.md) | Turning the KV-usage gauge into bytes per request and per token |
 | [5. Read the vLLM source](05_reading_vllm_source.md) | A map of file and line references, and how the V4.1 prefill check was done |
 
-The lessons use the three target models as examples. Qwen3.8-Flash-Next (`qwen-38`) and GLM-5.3-Flash (`glm-53`) were measured the same way; only the model key changes, and GLM has no thinking-off switch.
+The lessons use the three target models as examples. Historical Qwen3.8-Flash-Next **FP8** (`qwen-38`) and GLM-5.3-Flash (`glm-53`) were measured with the same core setup; GLM has no thinking-off switch. **From 2026-10-08, future Qwen work must use the original BF16 checkpoint.** Do not invoke the old FP8 key or assume changing a dtype flag is enough; the [checkpoint policy](../docs/qwen-checkpoint-policy.md) records the BF16 pin and pending harness/measurement work.
 
 For a quick reference per model (download, launch, expected log lines, request, pitfalls) see [docs/model-setup.md](../docs/model-setup.md).
 

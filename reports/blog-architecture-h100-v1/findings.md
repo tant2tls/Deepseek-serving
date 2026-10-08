@@ -2,6 +2,8 @@
 
 Study `blog-architecture-h100-v1`, measured 2026-10-07 on one 8×H100 80GB node. Plan: [blog_target.md](../../blog_target.md). Status of every planned item: [handoff.md](handoff.md).
 
+**Qwen precision:** every Qwen result in this report is from **Qwen3.8-Flash-Next-FP8**, revision `236dfdf285828023ca3bcd3f37366c58a3469b13`. From 2026-10-08, [future Qwen work uses the original BF16 checkpoint only](../../docs/qwen-checkpoint-policy.md). BF16 has not been measured here; these FP8 values and rankings remain historical evidence.
+
 **Read this first**
 
 - **Build:** vLLM `0.31.1rc1.dev50+g554340f3d` (commit `554340f3d3259e321be4c07282be7a02a5aeef83`). The completed studies in [report.md](../../report.md) and [report_mimo.md](../../report_mimo.md) used an older build with different kernels and a different V4.1 prefill path. **Do not compare numbers across the two.**
@@ -219,7 +221,7 @@ Requested by Tan during the session and declared in [plan_addendum_glm_qwen.json
 
 *Measured.* Mean ± sample SD over three blocks. The same text tokenizes to about 5% more tokens for Qwen (17,199 against 16,351 at "16K"), so Qwen does slightly more work per request than the others.
 
-| Output tok/s | 0731 | V4.1 | MiMo | Qwen | GLM |
+| Output tok/s | 0731 | V4.1 | MiMo | Qwen FP8 | GLM |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | 1K, c1 | 118.1 ± 0.2 | 106.0 ± 0.1 | **160.6 ± 0.4** | 145.0 ± 0.1 | 137.3 ± 1.8 |
 | 1K, c8 | 598.7 ± 40.5 | 562.9 ± 12.6 | 687.7 ± 2.7 | **897.5 ± 3.0** | 705.8 ± 1.7 |
@@ -228,7 +230,7 @@ Requested by Tan during the session and declared in [plan_addendum_glm_qwen.json
 | 64K, c1 | 48.5 ± 0.4 | 55.9 ± 0.4 | 55.4 ± 0.1 | **77.0 ± 0.2** | 66.4 ± 2.1 |
 | 64K, c8 | 71.5 ± 1.1 | 100.5 ± 1.1 | 78.5 ± 1.0 | **145.1 ± 0.3** | 115.7 ± 0.2 |
 
-| p50 | 0731 | V4.1 | MiMo | Qwen | GLM |
+| p50 | 0731 | V4.1 | MiMo | Qwen FP8 | GLM |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | TTFT ms, 1K c1 | 208 | 121 | **114** | 153 | 166 |
 | TTFT ms, 16K c1 | 759 | 559 | 762 | 529 | **527** |

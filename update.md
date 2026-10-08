@@ -1,5 +1,7 @@
 # Three-model serving study: evidence review and experiment design
 
+**Later decision, 2026-10-08:** Tan requires the original **BF16** `Qwen/Qwen3.8-Flash-Next` for all future Qwen work, with no new FP8 checkpoint runs, conversion or fallback. The source pin and preparation boundary are recorded in [docs/qwen-checkpoint-policy.md](docs/qwen-checkpoint-policy.md). Existing Qwen measurements remain explicitly FP8; BF16 execution and performance are pending. This does not expand the separate three-model speculative study reviewed below.
+
 Reviewed 2026-09-30 against the local reports, curated per-run JSON, launch scripts and analysis code. This is a plan for future measurements, not a new GPU result. [target.md](target.md) defines the active objective; [the GPU-session plan](docs/three-model-h100-plan.md) defines readiness gates, run counts and execution order.
 
 ## 1. Scope and binding decision

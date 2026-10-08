@@ -1,6 +1,8 @@
 # Three-model serving measurements on 8×H100
 
-**Latest (2026-10-07/08):** the architecture blog study measured DeepSeek V4 Flash 0731, V4.1 Flash, MiMo-V2.6-Flash-MOPD, Qwen3.8-Flash-Next and GLM-5.3-Flash on one 8×H100 node with the then-latest vLLM (`554340f3…`): 90/90 valid timing runs, 30 traces, 30 live-KV snapshots. Start at [findings.md](reports/blog-architecture-h100-v1/findings.md). Those numbers come from a different vLLM build than the studies below and must not be mixed with them.
+**Qwen policy (2026-10-08):** all future Qwen work uses the original **BF16** checkpoint `Qwen/Qwen3.8-Flash-Next`; no new FP8 runs. The verified source pin, historical boundary and pending BF16 preparation are in [docs/qwen-checkpoint-policy.md](docs/qwen-checkpoint-policy.md). BF16 performance has not been measured here.
+
+**Latest measurements (2026-10-07/08):** the architecture blog study measured DeepSeek V4 Flash 0731, V4.1 Flash, MiMo-V2.6-Flash-MOPD, Qwen3.8-Flash-Next **FP8** and GLM-5.3-Flash on one 8×H100 node with the then-latest vLLM (`554340f3…`): 90/90 valid timing runs, 30 traces, 30 live-KV snapshots. Start at [findings.md](reports/blog-architecture-h100-v1/findings.md) or [the blog](index.html). Those numbers remain FP8 evidence for Qwen, come from a different vLLM build than the studies below, and must not be mixed with them.
 
 The completed studies compare **DeepSeek V4 Flash 0731 (official release), V4.1 Flash and MiMo-V2.6-Flash-MOPD** on one 8×H100 node. The next phase will test their strengths and weaknesses with fresh real-text AR/speculative baselines, long generation and component profiles. See [target.md](target.md), the [checked evidence review](update.md) and the [next GPU-session plan](docs/three-model-h100-plan.md). This new phase is planned, not measured; harness preparation comes before GPU rental.
 

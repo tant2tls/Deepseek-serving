@@ -1,5 +1,7 @@
 # Blog target: how three new-generation models spend time and memory on H100
 
+**Checkpoint policy update, 2026-10-08:** future Qwen3.8-Flash-Next work uses only the original **BF16** checkpoint `Qwen/Qwen3.8-Flash-Next` at `de4b8e4d43b917e7706784d8bb445c9af86a3540`. The completed five-model study and section 10 used Qwen **FP8** and remain unchanged historical evidence. BF16 requires a distinct model key, new study/controls and verified runtime support; it is not measured or launch-ready here. No new FP8 runs. Follow [the checkpoint policy](docs/qwen-checkpoint-policy.md).
+
 Updated 2026-10-07. **Status: plan executed on 2026-10-07; see the results.** This file is the plan for the architecture blog and its study `blog-architecture-h100-v1`. The measurements, their status and what is still open are in [reports/blog-architecture-h100-v1/](reports/blog-architecture-h100-v1/): start with [findings.md](reports/blog-architecture-h100-v1/findings.md) and [handoff.md](reports/blog-architecture-h100-v1/handoff.md). Numbers quoted in *this* file from earlier studies are historical, were taken on an older vLLM build, and are used only to choose hypotheses.
 
 ## The brief
@@ -364,6 +366,8 @@ Select additional work only after the initial comparison leaves a specific quest
 **Publication.** Curate small public artifacts with hashes and documented sanitization. Exclude weights, private prompts and host details, credentials and large traces. Validate the evidence bundle with `python tools/audit_references.py` on a clean clone before publishing. Commit and push only when requested.
 
 ## 10. Addendum (2026-10-07): Qwen3.8-Flash-Next and GLM-5.3-Flash
+
+**Historical FP8 record.** This completed addendum does not select the checkpoint for future Qwen runs. The 2026-10-08 BF16-only policy above supersedes its Qwen launch choice, while preserving its model pin and all results.
 
 During the first GPU session Tan asked for two more models, measured **with the same setup, after the first three finish**. This widens the blog study only; it does not reopen the historical GLM/Qwen studies in [references/](references/README.md), whose numbers came from other builds and settings and are not controls here.
 

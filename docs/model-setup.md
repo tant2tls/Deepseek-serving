@@ -1,6 +1,8 @@
 # Per-model setup guide (8×H100, vLLM)
 
-One section per model: what to download, how to launch, what the server should print, how to send a correct request, and what went wrong on 2026-10-07. Everything here was run on vLLM `0.31.1rc1.dev50+g554340f3d` (commit `554340f3d3259e321be4c07282be7a02a5aeef83`) in `/root/vllm-latest`. On another build, re-check the "expect in the log" lines: backends and even the executed layers can change.
+One section per model: checkpoint selection, launch configuration, observed logs, requests and lessons from 2026-10-07. The historical observations used vLLM `0.31.1rc1.dev50+g554340f3d` (commit `554340f3d3259e321be4c07282be7a02a5aeef83`) in `/root/vllm-latest`. On another build, re-check the log lines: backends and even the executed layers can change.
+
+**Qwen update, 2026-10-08:** future work uses only the original **BF16** `Qwen/Qwen3.8-Flash-Next`, revision `de4b8e4d43b917e7706784d8bb445c9af86a3540`. Follow the [checkpoint policy](qwen-checkpoint-policy.md). The existing `qwen-38` key selects FP8 and is retained only as history; do not use it for new launches. BF16 harness wiring and runtime validation are pending. Historical FP8 timings, memory and kernel observations below are not BF16 results.
 
 Related: [fresh-node quick setup](reproduce.md) section 0, the [serving skill](../.claude/skills/serving/SKILL.md), the [lessons](../teach_me/README.md), and the measured [architecture table](../reports/blog-architecture-h100-v1/architecture.md).
 
@@ -20,7 +22,7 @@ export VLLM_VENV=/root/vllm-latest HF_HOME=/workspace/hf HF_XET_HIGH_PERFORMANCE
 | Modality | text only | `--language-model-only` |
 | Requests | temperature 0, thinking off where possible | `chat_template_kwargs`, see each model |
 
-Launch, check, stop: the same three commands for every model.
+Launch, check, stop: the commands below apply to supported keys, **excluding the archived Qwen FP8 key**. They do not yet provide a BF16 Qwen launch.
 
 ```bash
 # launch (KEY is the model key below; use off-profidle + PROFILE_DIR for traces)
@@ -54,10 +56,11 @@ bash bench/blog_launch.sh my-run diag:$KEY timing:$KEY:1
 | `v4-0731` | `deepseek-ai/DeepSeek-V4-Flash-0731` | `7872f01b1d1fe23eabc4c98b48bffcef5a386062` | 156 GB | 11 min | 2 min | `{"thinking": false}` | 4 tokens |
 | `v41` | `deepseek-ai/DeepSeek-V4.1-Flash` | `dba1be0a40aa45a94ad051997016db3960a90277` | 476 GB | 6 min | 2.5 min | `{"thinking": false}` | 4 tokens |
 | `mimo-v26` | `XiaomiMiMo/MiMo-V2.6-Flash-MOPD` | `2479e2d0029eca9a34cc7e7f55a121925f81908e` | 166 GB | 7.5 min | 2 min | `{"enable_thinking": false}` | 9 tokens |
-| `qwen-38` | `Qwen/Qwen3.8-Flash-Next-FP8` | `236dfdf285828023ca3bcd3f37366c58a3469b13` | 173 GB | 19 min | 4 min | `{"enable_thinking": false}` | 12 tokens |
+| `qwen-38` (historical only) | `Qwen/Qwen3.8-Flash-Next-FP8` | `236dfdf285828023ca3bcd3f37366c58a3469b13` | 173 GB | 19 min | 4 min | `{"enable_thinking": false}` | 12 tokens |
+| `qwen-38-bf16` (proposed; not wired) | `Qwen/Qwen3.8-Flash-Next` (original BF16) | `de4b8e4d43b917e7706784d8bb445c9af86a3540` | Not measured | Not measured | Not measured | Verify `{"enable_thinking": false}` | Pending |
 | `glm-53` | `zai-org/GLM-5.3-Flash` | `eb9eb208eb0d988989d07a6a12d0fdeb5f52574a` | 306 GB | 8.5 min | 3.5 min | **not available**: `{"reasoning_effort": "low"}` | 12 tokens |
 
-"Template adds" is the server-counted prompt tokens minus the tokens of the user text, measured on one 1K request. All five repositories are public; no token was needed.
+"Template adds" is the server-counted prompt tokens minus the tokens of the user text, measured on one 1K request. The five measured repositories were public; no token was needed. The BF16 Qwen row records a future target, not a sixth measured deployment.
 
 ---
 
@@ -166,19 +169,19 @@ curl -s localhost:8000/v1/chat/completions -H 'Content-Type: application/json' -
 - Its tokenizer gives 1–2% more tokens than DeepSeek's for the same text.
 - The model card recommends TP 4 at 0.95 utilization; we use the common TP 8 at 0.90 so the five models are comparable.
 
-## Qwen3.8-Flash-Next (`qwen-38`)
+## Qwen3.8-Flash-Next: original BF16 for future work
 
-Blog study only. Not part of the later speculative study.
+Use `Qwen/Qwen3.8-Flash-Next`, revision `de4b8e4d43b917e7706784d8bb445c9af86a3540`, for all new Qwen work. Pin its tokenizer and any remote code to that revision. Do not use the `-FP8` repository or quantize the original weights to FP8. `--dtype bfloat16` on an FP8 checkpoint does not select original BF16 weights.
 
-**Download**
+Before an authorized GPU session, prepare a distinct BF16 key and study manifest as described in the [checkpoint policy](qwen-checkpoint-policy.md). The current `qwen-38` key and blog chain remain tied to the completed FP8 study. BF16 support, fit, loaded kernels, KV/state formats, template behavior and performance must be validated separately. This decision does not add Qwen to the later speculative study.
 
-```bash
-hf download Qwen/Qwen3.8-Flash-Next-FP8 --revision 236dfdf285828023ca3bcd3f37366c58a3469b13 --max-workers 32
-```
+### Archived FP8 setup (`qwen-38`): observed, not for new launches
 
-**What `serve.sh` adds:** `--tokenizer-mode auto --reasoning-parser qwen3 --tool-call-parser qwen3_xml`.
+The completed blog study loaded `Qwen/Qwen3.8-Flash-Next-FP8` at `236dfdf285828023ca3bcd3f37366c58a3469b13`. The following records describe that FP8 deployment only.
 
-**Expect in the log**
+**What `serve.sh` added:** `--tokenizer-mode auto --reasoning-parser qwen3 --tool-call-parser qwen3_xml`.
+
+**Observed FP8 log**
 
 | Line | Meaning |
 | --- | --- |
@@ -189,7 +192,7 @@ hf download Qwen/Qwen3.8-Flash-Next-FP8 --revision 236dfdf285828023ca3bcd3f37366
 | `kv cache group sizes [262144, 262144, 262144, 262144, 4, 400]` | Recurrent state groups plus one attention group |
 | `Model loading took 17.36 GiB`, `Available KV cache memory: 51.44 GiB`, `GPU KV cache size: 4,194,304 tokens` | Smallest weights, largest pool |
 
-**Request:** `"model": "Qwen/Qwen3.8-Flash-Next-FP8"` with `{"enable_thinking": false}`.
+**Historical request:** `"model": "Qwen/Qwen3.8-Flash-Next-FP8"` with `{"enable_thinking": false}`.
 
 **Notes**
 
@@ -252,7 +255,7 @@ grep -m1 "GPU KV cache size" $L                                      # compare w
 curl -s localhost:8000/metrics | grep -E "^vllm:(num_requests_running|kv_cache_usage_perc)"   # expect 0 and 0 when idle
 ```
 
-Then run the functional check the study used (rendered request, three natural-EOS prompts, one forced 256-token request):
+The completed study used the following functional check (rendered request, three natural-EOS prompts, one forced 256-token request). Do not reuse it with `qwen-38` for a new Qwen run: it selects FP8 and writes to the historical study. BF16 needs its own prepared key and study path.
 
 ```bash
 bash bench/blog_launch.sh check-$KEY diag:$KEY --diag-parts functional   # drop the flag to also run pilot, KV snapshots and traces

@@ -8,6 +8,8 @@ Read [update.md](update.md) for the checked evidence and experiment rationale, [
 
 ## Scope and immutable identities
 
+**Qwen checkpoint decision, 2026-10-08:** whenever future Qwen work is in scope, use only original BF16 `Qwen/Qwen3.8-Flash-Next` at `de4b8e4d43b917e7706784d8bb445c9af86a3540`; see [the policy](docs/qwen-checkpoint-policy.md). The October blog's `qwen-38` key/revision remains historical FP8, never a BF16 baseline. The policy does not add Qwen to the three-model speculative matrix below or authorize a rental. BF16 harness and measurements remain pending.
+
 | Key | Checkpoint | Revision | Initial arms |
 | --- | --- | --- | --- |
 | `v4-0731` | `deepseek-ai/DeepSeek-V4-Flash-0731` | `7872f01b1d1fe23eabc4c98b48bffcef5a386062` | AR off; fixed DSpark k5 |

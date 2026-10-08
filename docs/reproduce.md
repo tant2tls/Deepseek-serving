@@ -1,10 +1,12 @@
 # Reproducing a serving study on one 8×H100 node
 
+**Current Qwen rule (2026-10-08):** use only original BF16 `Qwen/Qwen3.8-Flash-Next` for future Qwen work; see [the pinned policy](qwen-checkpoint-policy.md). The Qwen download sizes, startup timings and `qwen-38` commands in the completed October workflow describe **FP8 history**, not a BF16 procedure. Do not run the old Qwen entry. BF16 requires separate harness wiring, a new study ID and fresh matched controls before an authorized session; no new FP8 runs.
+
 **Active-phase routing, 2026-09-30:** follow [target.md](../target.md) and [the three-model GPU plan](three-model-h100-plan.md) for `spec-realtext-h100-v1`. Extend the harness locally first; use fresh AR controls, variable 256/2048 output lengths, pinned real text and a new no-prefix chain. All new prefix tests, including reuse checks and prewarming, are deferred. H200 and new models are outside the next session. Do not run the historical launch matrix or `chain_mimo.sh` as the active workflow.
 
 ## 0. Fresh-node quick setup (verified 2026-10-07, blog study)
 
-Use this when a rented 8×H100 node starts empty. It took about 15 minutes from login to the first server launch; nothing here needs a GPU, so do it first and in parallel.
+This records the completed October setup. Its general inventory/environment preparation applies to a fresh node; model choice and launch authorization follow current policy. In particular, the old Qwen FP8 procedure is superseded. It took about 15 minutes from login to the first server launch; local preparation belongs before rental.
 
 | Step | Command | Time on the 2026-10-07 node | Notes |
 | --- | --- | --- | --- |
