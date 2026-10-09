@@ -1,4 +1,6 @@
-# Blog target: how three new-generation models spend time and memory on H100
+# Blog target: how five deployments spend time and memory on H100
+
+**Editorial decision, 2026-10-09:** use the latest completed results in the blog: DeepSeek V4 Flash 0731, V4.1 Flash, MiMo-V2.6-Flash-MOPD and GLM-5.3-Flash from the first node, plus **Qwen3.8-Flash-Next in original BF16** from the second node. Qwen FP8 is **reference only**, excluded from the main figures, rankings and takeaways. [Section 11](#11-current-blog-evidence-selection-2026-10-09) defines the sources, counts and comparison limits. This is an editorial update using existing evidence; no new GPU work is authorized.
 
 **Checkpoint policy update, 2026-10-08:** future Qwen3.8-Flash-Next work uses only the original **BF16** checkpoint `Qwen/Qwen3.8-Flash-Next` at `de4b8e4d43b917e7706784d8bb445c9af86a3540`. The completed five-model study and section 10 used Qwen **FP8** and remain unchanged historical evidence. BF16 has its own key (`qwen-38-bf16`) and study: it was measured on 2026-10-08 with this plan's protocol in `qwen-bf16-h100-v1` on a second rented node, with a MiMo node control ([findings](reports/qwen-bf16-h100-v1/findings.md)). No new FP8 runs. Follow [the checkpoint policy](docs/qwen-checkpoint-policy.md).
 
@@ -10,9 +12,9 @@ Kan (SyFI lab) asked:
 
 > We want to teach people architecture of new generation of models. Specifically we want to compare the attention and FFN side. Which model's attention take minimal runtime loading/HBM or runs fastest? For prefix caching, which model is less space consuming? FFN side what are there sparsity differences? Feel free to add more!
 
-**Our task.** Measure these questions carefully on one 8×H100 node, with the same CPU and the same setup for every model. Then explain the numbers using each model's architecture report and its actual inference path, so that the measurements and the explanation agree and a reader new to these models can follow them.
+**Our task now.** Explain the completed measurements using each model's architecture report and its actual inference path, so that the measurements and the explanation agree and a reader new to these models can follow them. The original protocol below called for one 8×H100 node; the current article combines four deployments from that node with Qwen BF16 from a second node, using the limits in section 11.
 
-- **Models, in this order of priority:** DeepSeek V4 Flash 0731, DeepSeek V4.1 Flash, MiMo-V2.6-Flash-MOPD.
+- **Main article models:** DeepSeek V4 Flash 0731, DeepSeek V4.1 Flash, MiMo-V2.6-Flash-MOPD, Qwen3.8-Flash-Next, GLM-5.3-Flash. The unqualified Qwen name denotes the original BF16 checkpoint. Sections 1–9 preserve the original three-model measurement plan; section 10 preserves the first-node addendum.
 - **Presentation reference:** the [TraceLab post](https://syfi.cs.washington.edu/blog/2026-06-25-tracelab/). It is an example of style, not evidence about these checkpoints.
 
 ## The plan on one page
@@ -342,6 +344,10 @@ Select additional work only after the initial comparison leaves a specific quest
 
 **Structure of each blog section:** question → measurement → explanation → limitation.
 
+**Audience and editing direction, 2026-10-09:** make the article accessible to university readers with basic computing knowledge. Introduce token, prefill/decode, throughput/latency, live KV state and expert routing where needed. Keep the main narrative focused on what the figures establish and why it matters. Use one concrete example to explain a metric; remove repeated rankings, run-by-run history and configuration lists. Preserve source data and material caveats, with detailed tables/settings in expandable notes or linked reports. The article need not reproduce every finding in the evidence bundle.
+
+For the current article, apply section 11's source selection to every figure below. A five-model throughput chart includes Qwen BF16; a latency ranking spans only the four first-node deployments, with BF16 latency reported separately on its own node. Historical Qwen FP8 figures belong only in a labelled reference appendix.
+
 **Figures and tables to prepare:**
 
 | Output | Content | Guard against misreading |
@@ -385,3 +391,28 @@ During the first GPU session Tan asked for two more models, measured **with the 
 - **Thinking on GLM.** Its chat template always opens the assistant turn with `<think>` and offers only `reasoning_effort` low/high/max, so the common "thinking off" setting cannot be met. It runs at the lowest effort. With 256 forced output tokens the number of decode steps is the same, but the tokens are reasoning text; this is a declared deviation, and GLM's natural-EOS check is expected to show reasoning content.
 - **Flags.** Only the common deployment is used. A model-specific flag is added only if the common launch fails, and is then recorded as a deviation; the historical launches used such flags on older builds.
 - **Architecture facts.** Both models must go through the same B0 check (config, server log, trace) before any explanation is written. The historical notes describe GLM as recurrent KDA plus sparse-attention layers and Qwen as 36 linear-attention plus 12 full-attention layers with 512 experts and ten active; treat these as claims to verify on this build.
+
+## 11. Current blog evidence selection (2026-10-09)
+
+**Presentation:** use **Qwen3.8-Flash-Next** in the model list, headings and full chart labels; **Qwen** is the compact label. BF16 is the checkpoint's precision, not a suffix required in the display name. Keep **Qwen FP8** explicit in the historical reference appendix. State consistently that all five models were measured with the **same core serving setup**: vLLM build, 8×H100 configuration, serving limits, request lists/counts and output length. Keep physical-node provenance, the MiMo control, native precision/backend differences and GLM's thinking exception in captions or measurement notes; shared setup does not mean a single physical node.
+
+The current article is [index.html](index.html). All main results use vLLM `0.31.1rc1.dev50+g554340f3d`, commit `554340f3d3259e321be4c07282be7a02a5aeef83`. “Latest” means these completed October measurements, not a moving runtime or a new experiment.
+
+| Article role | Study and model keys | Node | Evidence |
+| --- | --- | --- | --- |
+| Main comparison: DeepSeek 0731, V4.1, MiMo, GLM | `blog-architecture-h100-v1`: `v4-0731`, `v41`, `mimo-v26`, `glm-53` | First node, 2026-10-07/08 | [findings](reports/blog-architecture-h100-v1/findings.md), [serving](reports/blog-architecture-h100-v1/serving.csv), [components](reports/blog-architecture-h100-v1/components.csv), [memory](reports/blog-architecture-h100-v1/memory.csv) |
+| Main Qwen deployment: original BF16 | `qwen-bf16-h100-v1`: `qwen-38-bf16` | Second node, 2026-10-08 | [findings](reports/qwen-bf16-h100-v1/findings.md), [serving](reports/qwen-bf16-h100-v1/serving.csv), [components](reports/qwen-bf16-h100-v1/components.csv), [memory](reports/qwen-bf16-h100-v1/memory.csv) |
+| Node control, shown separately | `qwen-bf16-h100-v1`: `mimo-v26` | Second node | [control and comparison](reports/qwen-bf16-h100-v1/comparison.md); one timing block, plus diagnostic traces and snapshots |
+| Historical reference appendix only | `blog-architecture-h100-v1`: `qwen-38` (**FP8**) | First node | [historical findings, section 8](reports/blog-architecture-h100-v1/findings.md#8-added-models-qwen38-flash-next-and-glm-53-flash) |
+
+**Counts:** the main article selects 72 first-node timing runs plus 18 BF16 runs = **90 timing runs**, 24 + 6 = **30 trace captures**, and 24 + 6 = **30 live-KV snapshots**. The second-node MiMo control adds 6 timing runs, 6 traces and 6 snapshots, reported separately. Historical Qwen FP8 adds 18 timing runs, 6 traces and 6 snapshots, also separately. The first study's frozen totals remain 90/30/30 and the BF16 study's totals including its control remain 24/12/12; selecting article rows does not rewrite either ledger.
+
+**How to compare and explain:**
+
+- Carry the build and node provenance into captions and source links. Cross-node serving comparisons use **throughput only**, accompanied by the MiMo control (second/first-node throughput 0.983–0.995 on this build). Do not normalize Qwen by the control or attribute differences under about 2% to the model.
+- Do not rank BF16 TTFT or eight-client TPOT against first-node values. Keep the main latency explorer on the first node and report BF16 latency in its own table. A standalone BF16 decode observation must say which node it comes from.
+- Use BF16 traces, snapshots and startup logs for Qwen's main component/memory figures: **unquantized TRITON** experts, **31.42 GiB** loaded weights and **37.37 GiB** reserved KV per GPU on the second node, vLLM `554340f3…`. Never relabel FP8 measurements or backends as BF16. BF16 all-reduce kernel time includes profiler-induced waiting; trace spans are not unprofiled latency or isolated communication cost.
+- Keep the FP8 comparison in a visibly labelled historical reference section. It compares deployments on different nodes, not an isolated precision effect. GLM's measured native FP8 weights and DeepSeek's native KV formats remain part of their deployments; “FP8 reference only” refers to the superseded **Qwen checkpoint**, not every use of FP8.
+- Keep GLM's low-reasoning deviation, unrotated order across all five, short windows and slow first blocks visible. Timing, diagnostic kernel sums and approximate live allocation answer different questions. HBM counters, routing statistics, quality, saturation and reusable-prefix capacity remain unmeasured.
+
+Preserve all frozen plans, raw runs, CSVs and curation ledgers. Refresh the article, README and handoff guidance from these selected sources; do not rerun completed points. The later speculative study remains pending and separate.
