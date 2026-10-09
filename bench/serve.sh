@@ -23,18 +23,11 @@ case "$MODEL_KEY" in
     PARSER=mimo; TOKMODE=auto
     set -- --trust-remote-code --code-revision "$REVISION" "$@" ;;
   # Added 2026-10-07 at Tan's request for the blog study (same common deployment).
-  # Reasoning/tool parsers follow the historical launches in references/.
+  # Reasoning/tool parsers match the saved October launch logs.
   glm-53)
     MODEL=zai-org/GLM-5.3-Flash
     REVISION=eb9eb208eb0d988989d07a6a12d0fdeb5f52574a
     PARSER=glm45; TOOL_PARSER=glm47; TOKMODE=auto ;;
-  # Historical FP8 key of blog-architecture-h100-v1. No new FP8 runs (docs/qwen-checkpoint-policy.md):
-  # the mapping stays as a record and launches only with an explicit override.
-  qwen-38)
-    [ "${ALLOW_HISTORICAL_QWEN_FP8:-0}" = 1 ] || { echo "qwen-38 is the retired FP8 key; use qwen-38-bf16" >&2; exit 2; }
-    MODEL=Qwen/Qwen3.8-Flash-Next-FP8
-    REVISION=236dfdf285828023ca3bcd3f37366c58a3469b13
-    PARSER=qwen3; TOOL_PARSER=qwen3_xml; TOKMODE=auto ;;
   # Original BF16 checkpoint, required for all Qwen work from 2026-10-08. Native precision:
   # no --dtype and no quantization flag; the loaded dtype is verified from the server log.
   qwen-38-bf16)

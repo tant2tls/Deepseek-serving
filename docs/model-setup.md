@@ -2,9 +2,7 @@
 
 One section per model: checkpoint selection, launch configuration, observed logs, requests and lessons from 2026-10-07. The historical observations used vLLM `0.31.1rc1.dev50+g554340f3d` (commit `554340f3d3259e321be4c07282be7a02a5aeef83`) in `/root/vllm-latest`. On another build, re-check the log lines: backends and even the executed layers can change.
 
-**Qwen, from 2026-10-08:** all Qwen work uses the original **BF16** `Qwen/Qwen3.8-Flash-Next`, revision `de4b8e4d43b917e7706784d8bb445c9af86a3540`, through the key `qwen-38-bf16` and the study `qwen-bf16-h100-v1` (measured 2026-10-08 on a second rented 8×H100 node; [findings](../reports/qwen-bf16-h100-v1/findings.md)). Follow the [checkpoint policy](qwen-checkpoint-policy.md). The old `qwen-38` key selects FP8, is kept only as history and is refused by the launcher. FP8 timings, memory and kernel observations are not BF16 results.
-
-Related: [fresh-node quick setup](reproduce.md) section 0, the [serving skill](../.claude/skills/serving/SKILL.md), the [lessons](../teach_me/README.md), and the measured [architecture table](../reports/blog-architecture-h100-v1/architecture.md).
+**Qwen3.8-Flash-Next** means the original BF16 checkpoint. Its results come from the second node, with a MiMo control. See [the reproduction guide](reproduce.md), [protocol](experiments.md) and [checkpoint policy](qwen-checkpoint-policy.md).
 
 ## Common to all five
 
@@ -22,29 +20,15 @@ export VLLM_VENV=/root/vllm-latest HF_HOME=/workspace/hf HF_XET_HIGH_PERFORMANCE
 | Modality | text only | `--language-model-only` |
 | Requests | temperature 0, thinking off where possible | `chat_template_kwargs`, see each model |
 
-Launch, check, stop: the commands below apply to every key in the summary table except the archived FP8 key `qwen-38`.
+Use the bounded chain after preparing inputs and freezing a plan as described in [reproduce.md](reproduce.md). Each chain step owns its server, waits for readiness, measures and stops the process group on success, error or timeout. Do not run diagnostic and timing chains concurrently.
 
 ```bash
-# launch (KEY is the model key below; use off-profidle + PROFILE_DIR for traces)
-PROFILE_DIR=$PWD/results/demo/$KEY/profiles \
-  bash bench/serve.sh $KEY off /tmp/serve-$KEY.log --max-num-batched-tokens 8192
-
-# ready when the model id is listed
-curl -s localhost:8000/v1/models | grep -o '"id":"[^"]*"' | head -1
-
-# stop and prove it
-PG=$(ps -o pgid= -p $(pgrep -f "bin/[v]llm serv[e]" | head -1) | tr -d ' ')
-kill -INT -- -$PG; sleep 20; kill -KILL -- -$PG 2>/dev/null
-pgrep -fc "bin/[v]llm serv[e]"; nvidia-smi --query-gpu=memory.used --format=csv,noheader
+export BLOG_STUDY=blog-architecture-h100-v1
+KEY=v4-0731  # or v41, mimo-v26, glm-53
+bash bench/blog_launch.sh diagnostic diag:$KEY
 ```
 
-For measurements use the chain instead; it does all three and cleans up on every exit path:
-
-```bash
-bash bench/blog_launch.sh my-run diag:$KEY timing:$KEY:1
-```
-
-The chain addresses one study, chosen with `BLOG_STUDY`. Without it, it is the completed `blog-architecture-h100-v1`; for Qwen BF16 set `export BLOG_STUDY=qwen-bf16-h100-v1`. Each study only launches the keys declared for it in `STUDIES` of `bench/blog_study.py`.
+For Qwen set `BLOG_STUDY=qwen-bf16-h100-v1` and `KEY=qwen-38-bf16`. These commands are recipes for a separately authorized GPU session; this branch was prepared without new GPU runs.
 
 **Two things that apply to every model's first launch on a fresh node**
 
@@ -58,7 +42,6 @@ The chain addresses one study, chosen with `BLOG_STUDY`. Without it, it is the c
 | `v4-0731` | `deepseek-ai/DeepSeek-V4-Flash-0731` | `7872f01b1d1fe23eabc4c98b48bffcef5a386062` | 156 GB | 11 min | 2 min | `{"thinking": false}` | 4 tokens |
 | `v41` | `deepseek-ai/DeepSeek-V4.1-Flash` | `dba1be0a40aa45a94ad051997016db3960a90277` | 476 GB | 6 min | 2.5 min | `{"thinking": false}` | 4 tokens |
 | `mimo-v26` | `XiaomiMiMo/MiMo-V2.6-Flash-MOPD` | `2479e2d0029eca9a34cc7e7f55a121925f81908e` | 166 GB | 7.5 min | 2 min | `{"enable_thinking": false}` | 9 tokens |
-| `qwen-38` (historical only) | `Qwen/Qwen3.8-Flash-Next-FP8` | `236dfdf285828023ca3bcd3f37366c58a3469b13` | 173 GB | 19 min | 4 min | `{"enable_thinking": false}` | 12 tokens |
 | `qwen-38-bf16` | `Qwen/Qwen3.8-Flash-Next` (original BF16) | `de4b8e4d43b917e7706784d8bb445c9af86a3540` | 336 GB | 9.7 min | 4.3 min | `{"enable_thinking": false}` | 12 tokens |
 | `glm-53` | `zai-org/GLM-5.3-Flash` | `eb9eb208eb0d988989d07a6a12d0fdeb5f52574a` | 306 GB | 8.5 min | 3.5 min | **not available**: `{"reasoning_effort": "low"}` | 12 tokens |
 
@@ -131,7 +114,7 @@ hf download deepseek-ai/DeepSeek-V4.1-Flash --revision dba1be0a40aa45a94ad051997
 
 - Needs the most host RAM (weights in page cache plus Engram tables). The node had 1.7 TB; check `free -g` on a smaller one.
 - The prefill skip does not apply to steps under 768 tokens or to requests asking for prompt logprobs. See the [prefill check](../reports/blog-architecture-h100-v1/v41_prefill_check.md).
-- Its decode step is split over several GPU streams. When reading traces, cut steps at the CPU-side annotation ([lesson 3](../teach_me/03_traces_and_components.md)).
+- Its decode step is split over several GPU streams. When reading traces, cut steps at the CPU-side annotation ([lesson 3](https://github.com/tant2tls/Deepseek-serving/blob/be9ee6abfc251d8145c44a375cd2de8907228513/teach_me/03_traces_and_components.md)).
 - The harmless warnings `Attempted to load weight image_newline …` come from the unused vision part.
 
 ## MiMo-V2.6-Flash-MOPD (`mimo-v26`)
@@ -173,7 +156,7 @@ curl -s localhost:8000/v1/chat/completions -H 'Content-Type: application/json' -
 
 ## Qwen3.8-Flash-Next, original BF16 (`qwen-38-bf16`)
 
-Use `Qwen/Qwen3.8-Flash-Next`, revision `de4b8e4d43b917e7706784d8bb445c9af86a3540`, for all Qwen work. Tokenizer and code are pinned to the same revision by `--revision`. Do not use the `-FP8` repository or quantize the original weights. `--dtype bfloat16` on an FP8 checkpoint does not select the original BF16 weights. Qwen is not part of the later speculative study.
+Use `Qwen/Qwen3.8-Flash-Next`, revision `de4b8e4d43b917e7706784d8bb445c9af86a3540`, for all Qwen work. Tokenizer and code are pinned to the same revision by `--revision`. Keep the original weights and native precision. Qwen is not part of the later speculative study.
 
 **Download** (336 GiB on disk, 360 GB by the hub's count, 131 shards)
 
@@ -201,11 +184,11 @@ tail -f results/$BLOG_STUDY/_logs/chain.log
 | --- | --- |
 | `Resolved architecture: Qwen4ExpForConditionalGeneration` | Right model class |
 | `model='Qwen/Qwen3.8-Flash-Next' … revision=de4b8e4d… … dtype=torch.bfloat16 … quantization=None` | Original repository, native precision, no weight quantization |
-| `Using TRITON Unquantized MoE backend out of potential backends: ['TRITON', 'BATCHED_TRITON', 'FlashInfer TRTLLM', 'FlashInfer CUTLASS']`, then `Using TritonExperts MoE backend` | Unquantized experts in Triton's `fused_moe_kernel`. The FP8 key logged `FLASHINFER_CUTLASS Fp8 MoE backend` instead |
+| `Using TRITON Unquantized MoE backend out of potential backends: ['TRITON', 'BATCHED_TRITON', 'FlashInfer TRTLLM', 'FlashInfer CUTLASS']`, then `Using TritonExperts MoE backend` | Unquantized experts in Triton's `fused_moe_kernel`. |
 | `Initialized PLE embedding … quantization_method=Qwen4ExpPLEUnquantizedEmbeddingMethod, weight_dtype=torch.bfloat16, weight_device=cpu, pinned=True` | The n-gram embedding is BF16 and lives in pinned host memory, not on the GPUs |
 | `Using FlashInfer GDN prefill kernel (requested=auto, head_k_dim=128)` | Recurrent layers; JIT-built on the first launch |
-| `Setting attention block size to 400 tokens …`, `kv cache group sizes [262144, 262144, 262144, 262144, 4, 400]` | Same cache layout as the FP8 key |
-| `Model loading took 31.42 GiB`, `Available KV cache memory: 37.37 GiB`, `GPU KV cache size: 3,046,184 tokens` | Weights are 14 GiB per GPU larger than FP8 (17.36), so the KV pool is 14 GiB smaller (51.44) |
+| `Setting attention block size to 400 tokens …`, `kv cache group sizes [262144, 262144, 262144, 262144, 4, 400]` | Recurrent state groups plus one attention group |
+| `Model loading took 31.42 GiB`, `Available KV cache memory: 37.37 GiB`, `GPU KV cache size: 3,046,184 tokens` | Weights and reserved KV pool per GPU |
 
 A quick check after any launch:
 
@@ -222,35 +205,8 @@ grep -c -i "fp8" $L                                                             
 
 - **First launch 9.7 minutes, relaunch 4.3 min.** The first launch reads 360 GB and JIT-builds the recurrent-layer kernel; `No available shared memory broadcast block found in 60 seconds` repeats meanwhile and is not an error.
 - **The MoE backend is the build's automatic choice.** `FlashInfer CUTLASS` and `TRTLLM` are listed as possible unquantized backends. Trying one is a separate single-change arm with its own controls, not part of this deployment.
-- **Same tokenizer as the FP8 repository:** identical token counts on all 543 study requests, about 5% more tokens than DeepSeek's tokenizer for the same text.
+- **Tokenizer:** about 5% more tokens than DeepSeek's tokenizer for the same text; use the saved actual counts.
 - **With forced length, text chunks undercount tokens.** In the 64K, B=1 diagnostic capture the client saw 48 text chunks while the engine ran 143 steps: past its natural end the model emits tokens that produce no text. Use usage counts and trace annotations.
-
-### Archived FP8 setup (`qwen-38`): observed, not for new launches
-
-The completed blog study loaded `Qwen/Qwen3.8-Flash-Next-FP8` at `236dfdf285828023ca3bcd3f37366c58a3469b13`. The following records describe that FP8 deployment only.
-
-**What `serve.sh` added:** `--tokenizer-mode auto --reasoning-parser qwen3 --tool-call-parser qwen3_xml`.
-
-**Observed FP8 log**
-
-| Line | Meaning |
-| --- | --- |
-| `Resolved architecture: Qwen4ExpForConditionalGeneration` | Right model class |
-| `Using FLASHINFER_CUTLASS Fp8 MoE backend` | FP8 experts (not the 4-bit path of the first three) |
-| `Initialized PLE embedding … ngram_embedding` | The n-gram embedding module loaded |
-| `Setting attention block size to 400 tokens to ensure that attention page size is >= mamba page size` | Recurrent-layer state and attention KV share one page size |
-| `kv cache group sizes [262144, 262144, 262144, 262144, 4, 400]` | Recurrent state groups plus one attention group |
-| `Model loading took 17.36 GiB`, `Available KV cache memory: 51.44 GiB`, `GPU KV cache size: 4,194,304 tokens` | Smallest weights, largest pool |
-
-**Historical request:** `"model": "Qwen/Qwen3.8-Flash-Next-FP8"` with `{"enable_thinking": false}`.
-
-**Notes**
-
-- **First launch took 19 minutes** (several kernel modules are JIT-built, including `fused_moe_90`). Do not treat a quiet log as a hang before the 30-minute readiness limit; `No available shared memory broadcast block found in 60 seconds` repeats while it compiles.
-- Its tokenizer gives about 5% more tokens than DeepSeek's for the same text (17,199 against 16,351 at "16K"). Say so when comparing throughput.
-- It is faster than the models the request counts were sized on, so some timing windows were under 60 seconds. Re-size counts from a pilot that includes it.
-- Old launches used `--moe-backend triton` and other workarounds on older builds; none was needed here.
-- It holds the most KV per live token (about 13 KiB per GPU at 64K). Watch `vllm:kv_cache_usage_perc` under many long requests.
 
 ## GLM-5.3-Flash (`glm-53`)
 
@@ -288,7 +244,7 @@ curl -s localhost:8000/v1/chat/completions -H 'Content-Type: application/json' -
 - **Thinking cannot be switched off.** The chat template always opens the assistant turn with `<think>`; the only control is `reasoning_effort` (`low`, `high`, default `max`). At `low`, one of three test prompts still returned reasoning text. The answer is in `content`, the reasoning in `reasoning_content`. Give it enough `max_tokens` for both.
 - For forced-length timing this changes what the 256 tokens contain, not how many decode steps run. State it as a deviation whenever GLM is compared with models that run with thinking off.
 - The first launch died once in the JIT build (same error as 0731); the relaunch worked.
-- Smallest KV pool with about 12 KiB per live token per GPU: eight 64K requests used a fifth of the pool. It will run out of KV first under many long requests.
+- Smallest KV pool with about 12 KiB per live token per GPU: eight 64K requests used a fifth of the pool. Maximum concurrency was not measured.
 - The first timing block at one client was slower (16K: 101 tok/s, then 113 twice). Keep it; report the median.
 - Old launches used `--block-size 128` and a CUDA-graph capture limit on older builds; neither was needed here.
 
@@ -305,7 +261,7 @@ grep -m1 "GPU KV cache size" $L                                      # compare w
 curl -s localhost:8000/metrics | grep -E "^vllm:(num_requests_running|kv_cache_usage_perc)"   # expect 0 and 0 when idle
 ```
 
-The studies use the following functional check (rendered request, three natural-EOS prompts, one forced 256-token request). For Qwen set `BLOG_STUDY=qwen-bf16-h100-v1` and `KEY=qwen-38-bf16`; the old `qwen-38` key is refused.
+The studies use the following functional check (rendered request, three natural-EOS prompts, one forced 256-token request). For Qwen set `BLOG_STUDY=qwen-bf16-h100-v1` and `KEY=qwen-38-bf16`.
 
 ```bash
 bash bench/blog_launch.sh check-$KEY diag:$KEY --diag-parts functional   # drop the flag to also run pilot, KV snapshots and traces

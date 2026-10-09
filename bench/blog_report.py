@@ -36,16 +36,7 @@ MODEL = None  # set per trace: MiMo has no attention indexer, so its top-k kerne
 # Model-specific kernels of the two added models, checked before everything else. Assigned from
 # kernel names and the checkpoint config (expert shapes); see architecture.md for the layer types.
 MODEL_RULES = {
-    "qwen-38": [
-        ("moe_expert_gemm", r"fp8_gemm_kernel(_swapAB)?<(1280u, 2560u|2560u, 640u)"),
-        ("gemm_input_prep", r"scale_1x128_kernel"),
-        ("moe_route_combine", r"topkGating|expandInputRowsKernel|finalizeMoeRouting|doActivationKernel"),
-        ("recurrent_attention", r"delta_rule|gated_delta|_causal_conv1d|_fused_post_conv|gdn"),
-        ("attention_core", r"_qsa_sparse_paged"),
-        ("indexer_topk", r"_qsa_mqa_paged|FilteredTopK|cooperative_topk|_expand_qsa_indices"),
-        ("mhc_residual_norm", r"_hc_|HcDownSilu|hyper_connection"),
-    ],
-    # Original BF16 checkpoint: same layer kernels as the FP8 key. The experts run in Triton's
+    # Original BF16 checkpoint. The experts run in Triton's
     # `fused_moe_kernel` (two calls per layer, log: "TRITON Unquantized MoE backend"); dense
     # projections are cuBLAS `nvjet_*` GEMMs, already classified by the shared rules.
     "qwen-38-bf16": [
@@ -90,11 +81,11 @@ BLOG = "blog-architecture-h100-v1"
 STUDY = os.environ.get("BLOG_STUDY", BLOG)
 SDIR = ROOT / "results" / STUDY
 RDIR = ROOT / "reports" / STUDY
-MODELS = {BLOG: ["v4-0731", "v41", "mimo-v26", "qwen-38", "glm-53"],
+MODELS = {BLOG: ["v4-0731", "v41", "mimo-v26", "glm-53"],
           "qwen-bf16-h100-v1": ["qwen-38-bf16", "mimo-v26"]}[STUDY]
 NAME = {"v4-0731": "V4 Flash 0731", "v41": "V4.1 Flash", "mimo-v26": "MiMo-V2.6-Flash",
-        "qwen-38": "Qwen3.8-Flash-Next", "glm-53": "GLM-5.3-Flash",
-        "qwen-38-bf16": "Qwen3.8-Flash-Next (BF16)"}
+        "glm-53": "GLM-5.3-Flash",
+        "qwen-38-bf16": "Qwen3.8-Flash-Next"}
 BUCKETS = ["1k", "16k", "64k"]
 CATN = [c for c, _ in CATS] + ["gemm_input_prep", "recurrent_attention", "other_elementwise"]
 
@@ -467,11 +458,7 @@ def publish():
 
 
 def compare():
-    """qwen-bf16-h100-v1 only: this study's serving.csv beside the completed blog study's.
-
-    1. Node control: MiMo's one block here against its three blocks of 2026-10-07 (same build,
-       request lists and counts). 2. BF16 Qwen against the historical FP8 Qwen: another checkpoint,
-       another node and day, so a deployment comparison, not a controlled precision test."""
+    """MiMo node control: one second-node block against three first-node blocks."""
     rd = lambda study: [r for r in csv.DictReader(open(ROOT / "reports" / study / "serving.csv")) if r["valid"] == "True"]
     new, old = rd(STUDY), rd(BLOG)
     metrics = (("output_tok_s", "Output tok/s", "{:.1f}"), ("ttft_p50_ms", "TTFT p50 ms", "{:.0f}"),
@@ -503,18 +490,6 @@ def compare():
     for k, lab, _ in metrics:
         if ratios[k]:
             out.append(f"\n{lab}: ratio range {min(ratios[k]):.3f}–{max(ratios[k]):.3f} over the six points.")
-    out += ["\n## 2. Qwen3.8-Flash-Next: original BF16 (this study) against FP8 (2026-10-07/08)\n",
-            "Mean over the valid blocks of each study, individual blocks in brackets. Ratio = BF16 / FP8. The FP8 "
-            "values are historical; no FP8 run was repeated here, so the node difference in section 1 is not removed.\n",
-            "| Input | c | Metric | BF16 | FP8 (historical) | BF16 / FP8 |", "| --- | ---: | --- | --- | --- | ---: |"]
-    for b in BUCKETS:
-        for c in (1, 8):
-            for k, lab, fmt in metrics:
-                n, o = vals(new, "qwen-38-bf16", b, c, k), vals(old, "qwen-38", b, c, k)
-                if not n or not o:
-                    out.append(f"| {b} | {c} | {lab} | pending | | |"); continue
-                cell = lambda v: f"{fmt.format(st.mean(v))} [{', '.join(fmt.format(x) for x in v)}]"
-                out.append(f"| {b} | {c} | {lab} | {cell(n)} | {cell(o)} | {st.mean(n) / st.mean(o):.3f} |")
     (RDIR / "comparison.md").write_text("\n".join(out) + "\n")
     print("wrote", (RDIR / "comparison.md").relative_to(ROOT))
 

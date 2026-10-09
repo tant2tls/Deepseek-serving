@@ -1,183 +1,175 @@
-"""Validate the portable reference export; no GPU or third-party packages needed.
-
-Optional: --source-root PATH also checks hashes against the original repository.
-This validates integrity and saved arithmetic, not experimental validity.
-"""
-
-import argparse
+"""Audit the selected publication: exact evidence bytes, arithmetic, scope and links."""
+import collections
 import csv
+import gzip
 import hashlib
 import json
 import math
 from pathlib import Path
 import re
+import subprocess
 import sys
 
-
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'tools'))
+from build_blog_results import FIRST, SECOND, MODELS, POINTS, generate
 
 
-def digest(path):
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+def digest(p):
+    return hashlib.sha256(p.read_bytes()).hexdigest()
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--source-root", type=Path)
-    args = parser.parse_args()
     errors = []
-
-    def check(ok, message):
+    def check(ok, msg):
         if not ok:
-            errors.append(message)
+            errors.append(msg)
+    ledger = json.loads((ROOT / 'provenance.json').read_text(encoding='utf-8'))
+    records = {r['path']: r for r in ledger['files']}
+    check(len(records) == len(ledger['files']), 'Duplicate provenance paths')
+    for rel, r in records.items():
+        p = ROOT / rel
+        check(p.is_file(), f'Missing evidence: {rel}')
+        if p.is_file():
+            check(digest(p) == r['export_sha256'], f'Evidence hash mismatch: {rel}')
+            if r['operation'] == 'copied byte-for-byte':
+                check(r['source_sha256'] == r['export_sha256'], f'Undocumented edit: {rel}')
+    for p in (ROOT / 'reports').rglob('*'):
+        if p.is_file() and p.relative_to(ROOT).as_posix() not in generate_paths:
+            check(p.relative_to(ROOT).as_posix() in records, f'Unregistered evidence: {p.relative_to(ROOT)}')
 
-    ledger = json.loads((ROOT / "references/provenance.json").read_text(encoding="utf-8"))
-    arms = json.loads((ROOT / "references/arms.json").read_text(encoding="utf-8"))["arms"]
-    records = {entry["path"]: entry for entry in ledger["files"]}
-    check(len(records) == len(ledger["files"]), "Duplicate provenance paths")
-    for relative, entry in records.items():
-        path = ROOT / relative
-        check(path.is_file(), f"Missing export: {relative}")
-        if not path.is_file():
-            continue
-        check(digest(path) == entry["export_sha256"], f"Export hash mismatch: {relative}")
-        check(path.stat().st_size == entry["export_bytes"], f"Export size mismatch: {relative}")
-        if not entry["transformations"]:
-            check(entry["source_sha256"] == entry["export_sha256"], f"Undocumented change: {relative}")
-        if path.suffix == ".json":
-            check(entry["source_sha256"] == entry["export_sha256"], f"JSON changed: {relative}")
-        if args.source_root:
-            original = args.source_root / entry["source"]
-            check(original.is_file(), f"Missing original: {entry['source']}")
-            if original.is_file():
-                check(digest(original) == entry["source_sha256"], f"Source hash mismatch: {entry['source']}")
-    if args.source_root:
-        for entry in ledger["source_documents"]:
-            original = args.source_root / entry["source"]
-            check(original.is_file() and digest(original) == entry["source_sha256"],
-                  f"Source document mismatch: {entry['source']}")
+    # Original per-model curation ledgers remain intact; their published hashes still apply.
+    for p in (ROOT / 'reports').glob('*/data/*/CURATION.json'):
+        doc = json.loads(p.read_text(encoding='utf-8'))
+        for r in doc['files']:
+            target = ROOT / r['published']
+            check(target.is_file(), f'Missing curated artifact: {r["published"]}')
+            if target.is_file():
+                check(digest(target) == r['published_sha256'], f'Curation hash mismatch: {r["published"]}')
 
-    points = {}
-    metadata = {}
-    for arm in arms:
-        if not arm["included"]:
-            check("exclusion" in arm, f"Missing exclusion reason: {arm['source']}")
-            continue
-        directory = ROOT / arm["path"]
-        check((directory / "manifest.txt").is_file(), f"Missing manifest: {arm['path']}")
-        files = sorted(directory.glob("*.json"))
-        check(len(files) == arm["points"], f"Point count mismatch: {arm['path']}")
-        for path in files:
-            relative = path.relative_to(ROOT).as_posix()
-            data = json.loads(path.read_text(encoding="utf-8"))
-            points[relative] = data
-            metadata[relative] = arm
-            check(relative in records, f"Unregistered point: {relative}")
-            check(path.with_suffix(".log").is_file(), f"Missing benchmark log: {relative}")
-            check(data["completed"] == data["num_prompts"] and data["failed"] == 0,
-                  f"Incomplete retained point: {relative}")
-            check(data["duration"] > 0 and data["total_output_tokens"] > 0,
-                  f"No useful work: {relative}")
-            check(math.isclose(data["output_throughput"],
-                               data["total_output_tokens"] / data["duration"], rel_tol=1e-6),
-                  f"Throughput arithmetic mismatch: {relative}")
-            if "peak_kv_cache_usage_perc" in data:
-                check(0 <= data["peak_kv_cache_usage_perc"] <= 1, f"Invalid cache fraction: {relative}")
-            if data.get("spec_decode_draft_tokens", 0) > 0:
-                expected = 100 * data["spec_decode_accepted_tokens"] / data["spec_decode_draft_tokens"]
-                check(math.isclose(data["spec_decode_acceptance_rate"], expected, rel_tol=1e-6),
-                      f"Acceptance arithmetic mismatch: {relative}")
+    # Separate September GLM export: preserve source hashes and verify its 42-point CSV.
+    refs = json.loads((ROOT / 'references/provenance.json').read_text(encoding='utf-8'))
+    for r in refs['files']:
+        p = ROOT / r['path']
+        check(p.is_file() and digest(p) == r['export_sha256'], f'Reference hash: {r["path"]}')
+        if p.suffix == '.json':
+            check(r['source_sha256'] == r['export_sha256'], f'Reference JSON changed: {r["path"]}')
+    with (ROOT / 'references/results.csv').open(encoding='utf-8', newline='') as f:
+        refrows = list(csv.DictReader(f))
+    check(len(refrows) == 42, 'Historical GLM point count')
+    for r in refrows:
+        raw = json.loads((ROOT / r['source_json']).read_text(encoding='utf-8'))
+        check(raw['completed'] == raw['num_prompts'] and raw['failed'] == 0, f'Incomplete reference: {r["source_json"]}')
+        check(math.isclose(raw['output_throughput'], raw['total_output_tokens'] / raw['duration'], rel_tol=1e-6), f'Reference throughput: {r["source_json"]}')
+        for key in raw.keys() & r.keys():
+            check(r[key] == str(raw[key]), f'Reference CSV mismatch: {r["source_json"]}: {key}')
 
-    for path in (ROOT / "references").rglob("*"):
-        if path.is_file() and path.suffix in (".log", ".txt", ".json"):
-            relative = path.relative_to(ROOT).as_posix()
-            if path.name not in ("arms.json", "provenance.json"):
-                check(relative in records, f"Unregistered evidence file: {relative}")
-
-    with (ROOT / "references/results.csv").open(newline="", encoding="utf-8") as handle:
-        rows = list(csv.DictReader(handle))
-    check(len(rows) == len(points), "CSV point count mismatch")
-    check({row["source_json"] for row in rows} == set(points), "CSV point coverage mismatch")
-    for row in rows:
-        relative = row["source_json"]
-        if relative not in points:
-            continue
-        data, arm = points[relative], metadata[relative]
-        expected = dict(data)
-        expected.update(model=data["model_id"], arm=Path(relative).parent.name,
-                        role=arm["role"], scope=arm["scope"], workload=Path(relative).stem,
-                        source_json=relative)
-        for key, value in row.items():
-            check(value == str(expected.get(key, "")), f"CSV mismatch: {relative}: {key}")
-
-    # Check the rendered per-arm table values as well as the machine-readable CSV.
-    for path in (ROOT / "references").glob("*/RESULTS.md"):
-        lines = path.read_text(encoding="utf-8").splitlines()
-        count = 0
-        for line in lines:
-            match = re.match(r"\| \[.*?\]\((results/[^)]+\.json)\) \| (.*?) \| (.*?) \| (.*?) \| (.*?) \|$", line)
-            if not match:
-                continue
-            relative = (path.parent / match[1]).relative_to(ROOT).as_posix()
-            if relative not in points:
-                check(False, f"Unknown table point: {relative}")
-                continue
-            data = points[relative]
-            for i, key in enumerate(("output_throughput", "median_ttft_ms", "median_tpot_ms"), 2):
-                check(match[i] == f"{data[key]:.1f}", f"Rendered table mismatch: {relative}: {key}")
-            check(match[5] == f"{data['completed']} / {data['num_prompts']}", f"Table completions: {relative}")
+    count = 0
+    expected = {FIRST: {'v4-0731': 18, 'v41': 18, 'mimo-v26': 18, 'glm-53': 18},
+                SECOND: {'qwen-38-bf16': 18, 'mimo-v26': 6}}
+    for study, models in expected.items():
+        with (ROOT / 'reports' / study / 'serving.csv').open(encoding='utf-8', newline='') as f:
+            rows = list(csv.DictReader(f))
+        check(dict(collections.Counter(r['model'] for r in rows)) == models, f'Selection counts: {study}')
+        seen = set()
+        for r in rows:
+            identity = (r['model'], r['bucket'], r['concurrency'], r['block'])
+            check(identity not in seen, f'Duplicate timing identity: {identity}')
+            seen.add(identity)
+            raw = ROOT / 'reports' / study / 'data' / r['model'] / Path(r['evidence']).relative_to(f'results/{study}/{r["model"]}')
+            summary = json.loads((raw / 'summary.json').read_text(encoding='utf-8'))
+            validation = json.loads((raw / 'blog_validation.json').read_text(encoding='utf-8'))
+            bench_path = raw / 'bench.json'
+            opener = open
+            if not bench_path.exists():
+                bench_path = raw / 'bench.json.gz'
+                opener = gzip.open
+            with opener(bench_path, 'rt', encoding='utf-8') as f:
+                bench = json.load(f)
+            n = int(r['n'])
+            check(r['valid'] == 'True' and summary['valid'] and validation['valid'], f'Invalid timing: {raw.relative_to(ROOT)}')
+            check(bench['completed'] == n and bench['failed'] == 0 and bench['num_prompts'] == n, f'Completions: {identity}')
+            check(bench['total_output_tokens'] == n * 256 and bench['output_lens'] == [256] * n, f'Output policy: {identity}')
+            check(not validation['prefix_caching'] and not validation['speculation'], f'Deployment flags: {identity}')
+            check(validation['runtime']['vllm'] == r['runtime'] == '0.31.1rc1.dev50+g554340f3d', f'Runtime: {identity}')
+            for col, key in [('output_tok_s', 'output_throughput'), ('ttft_p50_ms', 'median_ttft_ms'),
+                             ('tpot_p50_ms', 'median_tpot_ms'), ('ttft_mean_ms', 'mean_ttft_ms'),
+                             ('tpot_mean_ms', 'mean_tpot_ms'), ('e2el_mean_ms', 'mean_e2el_ms'),
+                             ('e2el_p50_ms', 'median_e2el_ms')]:
+                check(math.isclose(float(r[col]), summary[key], rel_tol=1e-12), f'Summary mismatch: {identity}: {col}')
+                check(math.isclose(float(r[col]), bench[key], rel_tol=1e-12), f'Raw mismatch: {identity}: {col}')
+            check(math.isclose(float(r['output_tok_s']), n * 256 / bench['duration'], rel_tol=1e-12), f'Throughput arithmetic: {identity}')
+            manifest = json.loads((ROOT / 'reports' / study / 'study/_inputs/manifest.json').read_text(encoding='utf-8'))
+            split = manifest['buckets'][r['bucket']]['splits']['timing']
+            check(validation['list_file_sha256'] == split['file_sha256'] and r['list_sha256'] == split['file_sha256'][:16], f'Input list: {identity}')
+            check(validation['request_sha256'] == [x['sha256'] for x in split['requests'][:n]], f'Request pairing: {identity}')
             count += 1
-        check(count == sum(p.startswith(path.parent.relative_to(ROOT).as_posix() + "/") for p in points),
-              f"Rendered table coverage mismatch: {path.name}")
+        for kind in ('memory', 'components'):
+            with (ROOT / 'reports' / study / (kind + '.csv')).open(encoding='utf-8', newline='') as f:
+                diagnostic = list(csv.DictReader(f))
+            check(set(r['model'] for r in diagnostic) == set(models), f'Diagnostic model scope: {study}/{kind}')
+            for mk in models:
+                rs = [r for r in diagnostic if r['model'] == mk]
+                if kind == 'memory':
+                    check(len(rs) == 6, f'Snapshot count: {study}/{mk}')
+                    for r in rs:
+                        check(math.isclose(float(r['live_gib_per_rank']), float(r['kv_usage_frac']) * float(r['pool_gib_per_rank']), rel_tol=1e-9), f'Memory arithmetic: {study}/{mk}')
+                else:
+                    check(len(set(r['capture'] for r in rs)) == 6, f'Trace count: {study}/{mk}')
+                    groups = collections.defaultdict(set)
+                    for r in rs:
+                        groups[r['capture'], r['group']].add(int(r['rank_index']))
+                    check(all(ranks == set(range(8)) for ranks in groups.values()), f'Rank coverage: {study}/{mk}')
 
-    link_count = 0
-    for path in ROOT.rglob("*.md"):
-        if ".git" in path.parts:
+    for rel, body in generate().items():
+        p = ROOT / rel
+        check(p.is_file() and p.read_text(encoding='utf-8') == body, f'Stale generated output: {rel}')
+
+    links = 0
+    forbidden = re.compile(r'Qwen/Qwen3\.8-Flash-Next-FP8|qwen3\.8-flash-next-fp8|qwen-38(?!-bf16)[/\s"\x27:,)]', re.I)
+    credential = re.compile(r'hf_[A-Za-z0-9]{20,}|gh[pousr]_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9_-]{20,}|-----BEGIN (?:RSA |OPENSSH |EC )?PRIVATE KEY-----')
+    private = re.compile(r'/prj/|/home/[A-Za-z0-9_.-]+/|/tmp/claude-[A-Za-z0-9]+|[A-Z]:\\')
+    total = 0
+    for p in ROOT.rglob('*'):
+        if not p.is_file() or any(x in p.relative_to(ROOT).parts for x in ('.git', '.audit', '.worktrees', '__pycache__')):
             continue
-        body = re.sub(r"```.*?```", "", path.read_text(encoding="utf-8"), flags=re.S)
-        for target in re.findall(r"\]\(([^)]+)\)", body):
-            if re.match(r"[a-zA-Z]+://", target) or target.startswith("#"):
-                continue
-            link_count += 1
-            check((path.parent / target.split("#")[0]).exists(),
-                  f"Broken local link in {path.relative_to(ROOT)}: {target}")
-
-    # Report paths only; never print a possible credential's value.
-    credential = re.compile(r"hf_[A-Za-z0-9]{20,}|gh[pousr]_[A-Za-z0-9]{20,}|"
-                            r"sk-[A-Za-z0-9_-]{20,}|-----BEGIN (?:RSA |OPENSSH |EC )?PRIVATE KEY-----")
-    private_path = re.compile(r"/prj/|/home/[A-Za-z0-9_.-]+/|/tmp/claude-[A-Za-z0-9]+|[A-Z]:\\")
-    total_bytes = 0
-    for path in ROOT.rglob("*"):
-        if not path.is_file() or any(part in (".git", "__pycache__", ".venv", ".codex", ".agents") for part in path.parts):
+        rel = p.relative_to(ROOT).as_posix()
+        total += p.stat().st_size
+        check(p.stat().st_size < 10 * 1024 * 1024, f'Large publication file: {rel}')
+        if p.name == 'provenance.json':
+            continue  # contains hashes/path-only exclusion inventory, never excluded measurements
+        try:
+            body = gzip.open(p, 'rt', encoding='utf-8').read() if p.suffix == '.gz' else p.read_text(encoding='utf-8')
+        except UnicodeError:
             continue
-        total_bytes += path.stat().st_size
-        check(path.stat().st_size < 10 * 1024 * 1024, f"Unexpected large publication file: {path.relative_to(ROOT)}")
-        if path.suffix in (".md", ".json", ".log", ".txt", ".csv", ".sh"):
-            body = path.read_text(encoding="utf-8")
-            check(not credential.search(body), f"Possible credential: {path.relative_to(ROOT)}")
-            # bench.json `generated_texts` is model output (forced 256-token continuations of
-            # random prompts), which can contain invented paths such as C:\Users\...; it carries
-            # no host metadata. Scan the rest of the file; credentials are still checked on all.
-            path_body = body
-            if path.name == "bench.json":
-                doc = json.loads(body)
-                doc.pop("generated_texts", None)
-                path_body = json.dumps(doc)
-            check(not private_path.search(path_body), f"Private absolute path: {path.relative_to(ROOT)}")
-            check(not re.search(r"^host:\s*(?!<HOST>\s*$)\S+", body, re.M),
-                  f"Unredacted host: {path.relative_to(ROOT)}")
-
+        if rel != 'tools/audit_references.py':
+            check(not forbidden.search(body), f'Out-of-scope deployment: {rel}')
+        check(not credential.search(body), f'Possible credential: {rel}')
+        path_body = body
+        if p.name in ('bench.json', 'bench.json.gz'):
+            doc = json.loads(body)
+            doc.pop('generated_texts', None)
+            path_body = json.dumps(doc)
+        if rel != 'tools/audit_references.py':
+            check(not private.search(path_body), f'Private path: {rel}')
+        check(not re.search(r'^host:\s*(?!<HOST>\s*$)\S+', body, re.M), f'Private host: {rel}')
+        if p.suffix in ('.md', '.html'):
+            body = re.sub(r'```.*?```', '', body, flags=re.S)
+            targets = re.findall(r'\]\(([^)]+)\)', body) if p.suffix == '.md' else re.findall(r'(?:href|src)="([^"]+)"', body)
+            for target in targets:
+                if re.match(r'[a-zA-Z]+:', target) or target.startswith('#'):
+                    continue
+                links += 1
+                check((p.parent / target.split('#')[0]).exists(), f'Broken local link: {rel}: {target}')
     if errors:
-        print("FAILED:")
-        for error in errors:
-            print(f"- {error}")
+        print('FAILED:\n' + '\n'.join('- ' + e for e in errors))
         return 1
-    print(f"PASS: {len(records)} imported files; {len(points)} result points; "
-          f"{link_count} local links; {total_bytes / 1024 / 1024:.2f} MiB publication files.")
-    print("Hashes, CSV/table values, saved arithmetic, exclusions, and targeted publication scan passed.")
-    print("This does not establish telemetry validity, causal control, quality parity, or GPU reproducibility.")
+    print(f'PASS: {len(records)} provenance files; {count} timing runs (90 main + 6 control); {links} local links; {total / 1024**2:.2f} MiB.')
+    print('Exact-byte evidence, curation ledgers, arithmetic, inputs, diagnostic counts, generated tables and publication scan passed.')
+    print('This validates the export, not causal control, answer quality or a fresh GPU reproduction.')
     return 0
 
 
-if __name__ == "__main__":
+generate_paths = set(generate())
+if __name__ == '__main__':
     sys.exit(main())

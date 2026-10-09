@@ -29,12 +29,12 @@ BLOG_RUNTIME = "0.31.1rc1.dev50+g554340f3d"
 # Per study: models that may launch, models with a diagnostic launch, timing blocks, where the
 # revisions are pinned, and the frozen inputs it must reproduce byte for byte.
 STUDIES = {
-    # First three models, then qwen-38 (FP8) and glm-53 by plan_addendum_glm_qwen.json (Tan, 2026-10-07).
-    BLOG: dict(allowed=("v4-0731", "v41", "mimo-v26", "qwen-38", "glm-53"),
-               diag=("v4-0731", "v41", "mimo-v26", "qwen-38", "glm-53"),
-               blocks={"1": ["v4-0731", "mimo-v26", "v41"], "2": ["mimo-v26", "v41", "v4-0731"],
-                       "3": ["v41", "v4-0731", "mimo-v26"]},
-               pins=("target.md",), inputs_reference=None),
+    # Selected first-node deployments; completed source order is documented in docs/experiments.md.
+    BLOG: dict(allowed=("v4-0731", "v41", "mimo-v26", "glm-53"),
+               diag=("v4-0731", "v41", "mimo-v26", "glm-53"),
+               blocks={"1": ["v4-0731", "mimo-v26", "v41", "glm-53"], "2": ["mimo-v26", "v41", "v4-0731", "glm-53"],
+                       "3": ["v41", "v4-0731", "mimo-v26", "glm-53"]},
+               pins=("target.md",), inputs_reference=f"reports/{BLOG}/study/_inputs/manifest.json"),
     # Original BF16 Qwen (docs/qwen-checkpoint-policy.md). MiMo runs one timing block as a node
     # control against its three blocks of 2026-10-07, and (plan_addendum_mimo_trace_control.json)
     # one diagnostic launch so trace components can be compared across the two nodes as well.
@@ -44,7 +44,7 @@ STUDIES = {
                               pins=("target.md", "docs/qwen-checkpoint-policy.md"),
                               inputs_reference=f"reports/{BLOG}/study/_inputs/manifest.json"),
 }
-RETIRED = ("qwen-38",)  # FP8: historical records only, never launched again
+RETIRED = ()
 STUDY = os.environ.get("BLOG_STUDY", BLOG)
 SPEC = STUDIES[STUDY]
 SDIR = ROOT / "results" / STUDY
@@ -476,7 +476,7 @@ def dry_run(steps):
     problems = []
     if hashlib.sha256((INP / "manifest.json").read_bytes()).hexdigest() != plan["inputs_manifest_sha256"]:
         problems.append("inputs manifest changed after the plan was frozen")
-    if STUDY != BLOG and runtime()["vllm"] != BLOG_RUNTIME:
+    if runtime()["vllm"] != BLOG_RUNTIME:
         problems.append(f"runtime {runtime()['vllm']} is not the blog build {BLOG_RUNTIME}")
     if SPEC["inputs_reference"]:  # same request lists as the completed blog study, byte for byte
         ref = json.loads((ROOT / SPEC["inputs_reference"]).read_text())

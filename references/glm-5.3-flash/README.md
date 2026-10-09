@@ -1,6 +1,6 @@
 # GLM-5.3-Flash historical reference
 
-**September archive; separate from the completed October comparison.** GLM-5.3-Flash was subsequently measured alongside DeepSeek V4 Flash 0731, V4.1 Flash, MiMo-V2.6-Flash-MOPD and Qwen FP8 on the same node/runtime/core settings. Its 18 valid timing runs, six trace captures and six live-KV snapshots are documented in the [October five-model findings](../../reports/blog-architecture-h100-v1/findings.md#8-added-models-qwen38-flash-next-and-glm-53-flash), with [GLM run evidence](../../reports/blog-architecture-h100-v1/data/glm-53/). The older results below use different builds/settings; do not merge them with the October measurements. They do not authorize new runs or expand the separate [later speculative study](../../target.md).
+**September archive; separate from the October comparison.** The [October GLM measurements](../../reports/blog-architecture-h100-v1/findings.md) use a different build and setup. Do not merge these observations with them.
 
 This bundle preserves 42 result JSONs, their 42 benchmark logs, six manifests, and seven selected startup logs from `LLMs_frontier_serving/GLM-5.3-Flash`. Numerical JSONs are unchanged. Text exports and original hashes are recorded in [provenance.json](../provenance.json). See [RESULTS.md](RESULTS.md) for every retained point and the [shared methodology and caveats](../README.md).
 
@@ -49,6 +49,4 @@ These are sanitized full log exports, not profiler traces. Timestamps support th
 
 Quarantined warmup/queueing arms, the supplemental `util085` sweep, and the failed original `fp8kv` route are listed in [arms.json](../arms.json), with the originals preserved outside this repo. Superseded narratives and historical launch wrappers are not imported.
 
-## If GLM is requested later
-
-Verify the current checkpoint/runtime, reproduce a fresh BF16 MTP-off baseline under the requested hardware, then add matched MTP or KV controls. Add KDA recurrent-state updates/checkpointing, sparse selection/core attention, MoE, and communication to the component map after inspecting the implementation. Inspect whether indexer sharing across MTP iterations exists in that revision before proposing a causal explanation. Keep GLM separate from the active DeepSeek study until that request arrives.
+Historical commands describe prior experiments, not an active run queue. New GPU, prefix or speculative experiments require explicit authorization.

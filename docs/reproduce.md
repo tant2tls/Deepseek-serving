@@ -1,166 +1,137 @@
-# Reproducing a serving study on one 8×H100 node
+# Reproduce the measurements
 
-**Qwen rule (2026-10-08):** use only original BF16 `Qwen/Qwen3.8-Flash-Next` through the key `qwen-38-bf16`; see [the pinned policy](qwen-checkpoint-policy.md). It was measured the same day in the separate study `qwen-bf16-h100-v1` on a second rented node; the exact procedure is [section 0.1](#01-a-second-node-qwen-bf16-in-its-own-study-verified-2026-10-08). The Qwen download sizes, startup timings and `qwen-38` commands of the first October session describe **FP8 history**; that key is refused by the launcher. No new FP8 runs.
+There are two tasks: regenerate published numbers locally, or collect a fresh GPU reproduction. The first needs only Python 3.10+ and this repository. The second needs a separately authorized Linux 8×H100 80GB SXM node. This branch was prepared without new GPU work.
 
-**Active-phase routing, 2026-09-30:** follow [target.md](../target.md) and [the three-model GPU plan](three-model-h100-plan.md) for `spec-realtext-h100-v1`. Extend the harness locally first; use fresh AR controls, variable 256/2048 output lengths, pinned real text and a new no-prefix chain. All new prefix tests, including reuse checks and prewarming, are deferred. H200 and new models are outside the next session. Do not run the historical launch matrix or `chain_mimo.sh` as the active workflow.
-
-## 0. Fresh-node quick setup (verified 2026-10-07, blog study)
-
-This records the completed October setup. Its general inventory/environment preparation applies to a fresh node; model choice and launch authorization follow current policy. In particular, the old Qwen FP8 procedure is superseded. It took about 15 minutes from login to the first server launch; local preparation belongs before rental.
-
-| Step | Command | Time on the 2026-10-07 node | Notes |
-| --- | --- | --- | --- |
-| 1. Inventory | `nvidia-smi`, `lscpu`, `df -h /workspace`, `ls /workspace/hf/hub` | seconds | Do not assume the previous node's weights, caches or venvs survived. `/workspace/hf` was empty |
-| 2. Runtime | `bash install.sh` (pinned venv `~/vllm` and blog venv `~/vllm-latest`) | about 2 min per venv | Pick the runtime with `export VLLM_VENV=/root/vllm-latest`; the default stays the pinned build |
-| 3. Weights | `export HF_HOME=/workspace/hf HF_XET_HIGH_PERFORMANCE=1`, then `hf download <model> --revision <sha> --max-workers 32` for the three revisions in [target.md](../target.md) | 0731 156 GB in 2 min, MiMo 166 GB in 5 min, V4.1 476 GB in 4 min | All repositories are public; no `HF_TOKEN` was needed. Download the smallest first so a launch can start early. The two models added to the blog study took 4 min (Qwen, 186 GB) and 3 min (GLM, 328 GB); their revisions are in [blog_target.md](../blog_target.md) section 10 |
-| 4. Public inputs | `python3 -m venv /tmp/blog-inputs-venv && /tmp/blog-inputs-venv/bin/pip install pyarrow`; `/tmp/blog-inputs-venv/bin/python bench/blog_corpus.py`; `$VLLM_VENV/bin/python bench/blog_inputs.py` | about 2 min | The vLLM venv has no `pyarrow`; keep it out of the measured environment. The math and chat datasets are pinned by revision in `bench/blog_corpus.py` |
-| 5. Record the node | `$VLLM_VENV/bin/python bench/blog_study.py env` | seconds | Writes `results/<study>/_env/` |
-| 6. Diagnostics and pilot | `bash bench/blog_launch.sh chain-diag diag:v4-0731 diag:mimo-v26 diag:v41` | 15–25 min per model, mostly the first launch | One idle-profiler launch per model: functional checks, disjoint pilot, live-KV snapshots, traces |
-| 7. Freeze and dry-run | `python bench/blog_report.py pilot`, then `blog_study.py plan --counts '<json>'` and `blog_study.py dry-run <steps>` | seconds | Timing starts only after the dry run prints `DRY RUN OK` |
-| 8. Timing blocks | `bash bench/blog_launch.sh chain-timing timing:<model>:<block> ...` in the declared block order | 14.5–16 min per model-block (six points); 54 runs took 2 h 18 min | Each step owns its server and stops it on every exit path |
-| 9. Tables and publishing | `python bench/blog_report.py serving`, `memory`, `components`, `tables`, `publish` | seconds; `components` reads every rank trace and takes about 15 min for five models | Standard library only |
-
-Traps met on this node:
-
-- **Detach long chains.** A chain started as a tool-managed background command can be killed by that tool's timeout. `bench/blog_launch.sh` starts it with `setsid nohup`; watch `results/<study>/_logs/chain.log`.
-- **Never `pkill -f` a pattern that also appears in your own command line.** It killed the calling shell and left a half-started chain. Stop a chain with `kill -TERM <pid>` from the launcher's output; the chain then stops its own server group.
-- **First load of a model reads the whole checkpoint from disk**; expect several minutes before graph capture. The engine prints `No available shared memory broadcast block found in 60 seconds` while ranks load; that message alone is not a failure.
-- **No Nsight Compute (`ncu`) on the image.** Hardware HBM byte counters are unavailable unless it is installed and validated beforehand.
-
-## 0.1 A second node: Qwen BF16 in its own study (verified 2026-10-08)
-
-Study `qwen-bf16-h100-v1` reused the blog protocol on a freshly rented 8×H100 node. Everything below ran with `export VLLM_VENV=/root/vllm-latest HF_HOME=/workspace/hf BLOG_STUDY=qwen-bf16-h100-v1`.
-
-| Step | Command | Time on the 2026-10-08 node | Notes |
-| --- | --- | --- | --- |
-| 1. Inventory | as in section 0 | seconds | `/workspace/hf` was empty again. **The node was not the same hardware**: Xeon 8592V with 4 NUMA nodes and driver 580.173.02, against Xeon 8480+ with 2 NUMA nodes and driver 580.105.08. Compare `results/<study>/_env/` with the published `_env/` of the earlier study before assuming "same environment" |
-| 2. Weights | `hf download Qwen/Qwen3.8-Flash-Next --revision de4b8e4d43b917e7706784d8bb445c9af86a3540 --max-workers 32`, then MiMo for the control | 360 GB in 23 min, MiMo 166 GB in 11 min | About 240 MiB/s, limited by the node's network; a token and a second downloader changed nothing. Verify every file size against the hub metadata before launching |
-| 3. Public inputs | `blog_corpus.py`, `blog_inputs.py`, `blog_inputs.py extra qwen-38-bf16` | about 4 min while the weights download | The rebuilt lists must equal the published lists of `blog-architecture-h100-v1`; the dry run checks every hash |
-| 4. Record the node | `blog_study.py env` | seconds | |
-| 5. Diagnostics | `bash bench/blog_launch.sh chain-diag diag:qwen-38-bf16` | 25 min: 9.7 min first launch, then functional checks, pilot, six KV snapshots, six traces | Check `dtype=torch.bfloat16`, `quantization=None` and `TRITON Unquantized MoE backend` in the server log |
-| 6. Freeze and dry-run | `blog_study.py plan --counts '<same counts as the blog study>' --note '<order, control, limits, cost>'`, then `blog_study.py dry-run <steps>` | seconds | Same counts, so every model sees the same first-n requests |
-| 7. Timing | `bash bench/blog_launch.sh chain-timing timing:qwen-38-bf16:1 timing:mimo-v26:1 timing:qwen-38-bf16:2 timing:qwen-38-bf16:3` | 96 min: about 22 min per Qwen block (4.3 min relaunch, warmup, six points), 30 min for MiMo's first launch and block | MiMo's block is the node control: throughput reproduced within 2%, TTFT and eight-client TPOT medians did not |
-| 7b. Trace control (declared addendum) | `bash bench/blog_launch.sh chain-mimo-diag diag:mimo-v26 --diag-parts functional,kv,trace` | 14 min | MiMo's trace components matched 2026-10-07 within 3%, so trace differences between BF16 and FP8 are not node effects |
-| 8. Tables and publishing | `blog_report.py serving`, `memory`, `components`, `tables`, `compare`, `publish` | about 5 min | `compare` writes the node control and the BF16-versus-FP8 table |
-
-Traps met on this node:
-
-- **A bracket pattern does not protect you if your own command line contains the literal text.** `pgrep -f "hf downloa[d] Qwen"` matched the shell that ran it, because the same command line also contained `hf download Qwen/…` further on, and the kill loop ended the shell. Kill by PID taken from `ps`, in a command that does not mention the target string.
-- **Do not wait by hand for a long download or a diagnostic chain.** A small detached script that waits for the previous stage, checks it (all shards present, pilot valid, server stopped) and starts the next one removed the idle minutes between stages. It refuses to launch if a check fails.
-- **This node's CPUs scale their frequency** (`schedutil`, 800–3,900 MHz; `cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`) and the governor cannot be changed from the container. Short-prompt TTFT then has a slow and a fast level inside one run. Record the governor with the node, and inspect per-request TTFT before using a median.
-- **Killed downloads leave `*.incomplete` blobs** that say nothing about the final state. Judge completeness by comparing each snapshot file's size with the hub metadata.
-
-The sections below preserve the procedure that produced [report.md](../report.md) (study `v41-vs-0731`) and [report_mimo.md](../report_mimo.md). Their run lists, fixed-256 validity rule and timing estimates are **historical reproduction instructions**, not defaults for the new phase. Environment fixes and curation remain applicable; the new plan's per-request validity, counting and scope take precedence. GPUs are rented by the hour: chain launches, measure promptly and stop servers as soon as measurement ends.
-
-## 1. Environment
-
-| Item | Value |
-| --- | --- |
-| venv | `source /root/vllm/bin/activate`; vLLM `0.30.1rc1.dev223+g44af287eb`, torch `2.13.0+cu132`. Keep it pinned within a study. `pandas` is required for `--dataset-name custom`. |
-| Credentials | `HF_TOKEN` from the environment only. Never write it into scripts. |
-| Weights | `HF_HOME=/workspace/hf` (shared xet/blob store). Use `du -shL` for the real size. Download with a pinned `--revision <sha>`. |
-| JIT caches | `/root` is a gocryptfs FUSE mount, where concurrent TP-rank JIT compiles race. `bench/serve.sh` sets `TRITON_CACHE_DIR=/tmp/triton_cache` and `FLASHINFER_WORKSPACE_BASE=/tmp/flashinfer_ws`. If a new model dies in warmup or graph capture with `FileNotFoundError` or `CUDA error: invalid argument`, move that model's JIT cache (for example `DG_JIT_CACHE_DIR`) to `/tmp` first. |
-| tmux | `ds-serve` (server), `ds-bench` (harness), `ds-chain` (chained arms), `ds-dl` (downloads) |
-| Stopping | `tmux send-keys -t ds-serve C-c`. Never run `pkill -f <pattern>` from a shell whose own command line contains that pattern; use bracket patterns such as `pgrep -f "[v]llm serve"`. |
-
-## 2. Adding a model
-
-Historical extension procedure; no fourth model is authorized by the current three-model plan.
-
-1. Check `config.json` `architectures` against `vllm.model_executor.models.registry.ModelRegistry.get_supported_archs()` in the pinned venv.
-2. Add one entry each to `MODELS` in `bench/run_matrix.py`, the `case` block in `bench/serve.sh`, and `bench/profile_trace.py`: model ID, pinned revision, tokenizer mode, and reasoning/tool parsers.
-3. Confirm that `chat_template_kwargs.thinking=false` (or the model's equivalent) produces non-thinking output, and record the encoded request.
-4. Check that the shared prefix prompt files (`results/<study>/_prompts/`) tokenize to the same counts. If they don't, record it and relax the 98% prompt-token check to the measured count.
-5. Write a plan JSON (`results/<study>/plan*.json`, copied to `reports/<study>/`) **before** collecting.
-
-## 3. Launch plan (each restart costs 3–10 min)
-
-Historical matrix only. The active phase disables prefix caching and uses its own manifest/chain; do not execute the prefix launch or old chained scripts below for it.
-
-| Launch | Config | Workloads | Approx. time |
-| --- | --- | --- | --- |
-| 1 | `off-profidle` (prefix caching off, idle profiler; `PROFILE_DIR` required) | `run_matrix.py --workloads concurrency,context,prefix,isolated --prefix-states cache-off`, then traces with `profile_trace.py` (16K and 64K prefill) | concurrency ~45 min, context ~30, prefix cache-off ~45, isolated ~25, traces ~3 each |
-| 2 | `off-prefix` | `run_matrix.py --config off --workloads prefix --prefix-states cold,prewarmed`, then `prefix_reuse_check.py` | ~30 min + 1 min |
-| 3+ | one per speculative arm (for example `dspark-fixed-k5`) | concurrency c1/4/16/64 | ~17–25 min per arm plus ~3.5 min launch |
-
-For new studies, write a chain script on top of `bench/chain_lib.sh` (`launch`, `trace`, `wait_sweep`, `stop_server`); `bench/chain_mimo.sh` is the template (traces → prefix launch → speculative arms → stop). `bench/chain_dspark.sh '<model> <config>' ...` is the older DSpark-only chain. It waits for any running sweep, stops the server, launches the next arm, polls `/v1/models` (aborting if the process dies or 30 min pass), runs the sweep, and stops the server at the end. Watch `results/<study>/_chain_dspark.log` with a Monitor filter on `CHAIN|valid=False|Traceback|Error`. **Do not hand-roll readiness loops:** a broken `until` condition once left a ready server idle for 1 h 50 min.
-
-The first launch of a new model takes about 8–10 min (JIT, DeepGEMM warmup, graph capture); later launches take about 3.5–5 min. Adding a speculative method changes graph-capture memory and KV capacity; record both from the server log.
-
-## 4. Harness rules
-
-- `run_matrix.py` writes immutable run directories under `results/<study>/<model>/<workload>/<config>/<point>/repeat-N`. Reruns become `repeat-N-rerunK`, and nothing is overwritten.
-- Historical fixed-256 runs are valid only with all requests completed, output = n × 256, and server prompt tokens ≥ 98% of the target. New real-text runs validate every request against its declared output budget and actual rendered prompt count; natural-EOS task checks use separate validity rules.
-- Speculative counters (`spec_num_drafts`, `spec_num_draft_tokens` = scheduled drafts, `spec_num_accepted_tokens`) are in `summary.json`. Per-position acceptance comes from `telemetry/metrics_{before,after}.prom`.
-- **Historical prewarm caveat (deferred in the active phase):** a model whose SWA prefix reuse needs a second touch (0731-style) requires **two** requests per prefix using distinct suffixes for a fully warm control. The old one-touch measurements remain unchanged; do not run a new prewarm/reuse experiment without an explicit request.
-- Some models are slower on the first repeat at new shapes (0731: 5–9%, and once 50% on a new DSpark shape). Keep those runs, and report medians next to means.
-- Traces: decode under full CUDA graphs is not attributable. After adding a model, check that no large kernel lands in `other_elementwise` in `trace_breakdown.py`.
-
-## 5. Analysis and publishing
+## 1. Rebuild tables without GPUs
 
 ```bash
-python bench/summarize.py <study> <model> --csv reports/<study>/<model>_off_summary.csv > reports/<study>/<model>_off_tables.md
-python bench/compare.py --csv reports/<study>/comparison.csv > reports/<study>/comparison_tables.md
-python bench/spec_compare.py --csv reports/<study>/dspark_comparison.csv > reports/<study>/dspark_tables.md
-python bench/compare_models.py --csv ... > ...          # cross-study ratios (edit MODELS/SUBJECT/REFS)
-python bench/spec_compare.py --preset mimo ...          # per-study speculative presets
-python bench/compare_outputs.py <model> <spec-config> <ar-config> --study <study>
-python bench/quality_smoke.py --model <key> --study <study>   # also verifies the thinking switch
-python bench/curate.py <study> <model>     # lossless gzip, IP/ANSI removed from server logs, prompts/full traces excluded, SHA-256 ledger
+python tools/build_blog_results.py
+python tools/audit_references.py
 ```
 
-`compare.py` and `spec_compare.py` contain per-model config maps (`CFG`, `AR`); extend them for a new model pair. CSV writers use `lineterminator="\n"`, and `.gitattributes` marks `reports/**/data/**` as `-text` so hashes survive checkout.
+The builder reads the selected `serving.csv`, `components.csv` and `memory.csv` under both October studies. It generates [five-model results](../reports/five-model/results.md), including individual blocks and the MiMo control. The audit checks hashes, raw timing arithmetic, selection counts, generated tables, links and publication hygiene. Retained JSON measurements are unchanged; [provenance](provenance.md) documents filtering of shared summaries.
 
-Audit on a clean clone, because `tools/audit_references.py` also scans the git-ignored `results/`:
+Full profiler traces and public input texts are not in Git. Published component CSVs can be reaggregated locally; generating them again from GPU kernels requires recapturing traces. Source texts can be rebuilt from pinned corpus sources and compared against the published input hashes.
+
+## 2. Prepare the Linux GPU node
+
+Complete local preparation before renting. Download sizes, exact model revisions and expected backend log lines are in [model-setup.md](model-setup.md). V4.1 also needs substantial host RAM for Engram tables (about 190 GB pinned across eight ranks); the measured node had about 1.7 TB RAM. Allow disk space for the selected checkpoints and avoid simultaneous downloads during timed measurement.
 
 ```bash
-git clone --branch <branch> . /tmp/audit && cd /tmp/audit && python tools/audit_references.py
+nvidia-smi
+nvidia-smi topo -m
+lscpu
+free -h
+df -h /workspace
 ```
 
-Commit on a feature branch, push, and merge into `main` only when the user asks.
-
-### GitHub HTTPS login troubleshooting (2026-10-09)
-
-The BF16 study push encountered two separate failures:
-
-- `fatal: could not read Username for 'https://github.com': No such device or address`: Git had no usable HTTPS credential helper in the noninteractive shell.
-- `remote: Permission to tant2tls/Deepseek-serving.git denied to tant2tls` with HTTP 403: the GitHub CLI account was logged in, but its configured credential could not push to this repository. Login status alone does not prove repository write access.
-
-Replacing the CLI credential with a token that could write to this repository and explicitly using the CLI credential helper succeeded:
+Install the exact October runtime into its own environment. These are the recorded installation settings; wheel availability and dependency resolution may change, so compare the resolved environment with the published node records.
 
 ```bash
-# Run interactively; enter the token only at the hidden prompt.
-# Do not paste tokens into chat, command arguments, remote URLs or repository files.
-read -r -s -p 'GitHub token: ' github_push_token
-printf '\n'
-printf '%s' "$github_push_token" | gh auth login --hostname github.com --git-protocol https --with-token
-unset github_push_token
-
-# Inspect the account locally; do not publish authentication output.
-gh auth status
-
-# Use the CLI credential for this push without changing global Git configuration.
-git -c credential.helper= -c 'credential.helper=!gh auth git-credential' push -u origin <branch>
+python3 -m venv /root/vllm-latest
+/root/vllm-latest/bin/python -m pip install --upgrade uv
+/root/vllm-latest/bin/uv pip install --python /root/vllm-latest/bin/python \
+  'vllm==0.31.1rc1.dev50+g554340f3d' pandas \
+  --torch-backend=auto --index-strategy unsafe-best-match --prerelease=allow \
+  --extra-index-url https://wheels.vllm.ai/554340f3d3259e321be4c07282be7a02a5aeef83
+export VLLM_VENV=/root/vllm-latest HF_HOME=/workspace/hf HF_XET_HIGH_PERFORMANCE=1
+export PATH="$VLLM_VENV/bin:$PATH"
+python -c 'import vllm, torch; print(vllm.__version__); print(torch.__version__)'
 ```
 
-Supply `--with-token` through standard input as above. In this session, invoking it without a token on standard input unexpectedly entered device login instead; cancel that flow before retrying with the intended credential. For a fine-grained token, select this repository and grant Contents write permission; the account must also have repository write access. Additional permissions may be needed for changes to workflow files.
+Expect vLLM `0.31.1rc1.dev50+g554340f3d` and the recorded torch `2.13.0+cu132`. Preserve a different resolution as a declared deviation or a separate runtime arm; do not label it the same environment. [install.sh](../install.sh) also records the older runtime used by the previous studies; it installs two environments, so it is not required for an October-only reproduction.
 
-The successful push created `qwen-bf16-h100-v1`; it did not merge into `main`. Keep credentials in the CLI's credential storage, outside the GitHub bundle. Revoke and replace any token exposed in chat or logs. Never record the token itself as troubleshooting evidence.
+Download each model with its exact `hf download ... --revision ...` command in [model setup](model-setup.md). The input builder needs tokenizers for the first three models even when reproducing only Qwen. If `hf` is unavailable, install the Hugging Face CLI in a separate downloader environment. Credentials, when needed, belong in environment/credential storage and never in Git.
 
-## 6. Reproducibility status (checked 2026-09-28)
+## 3. Rebuild public inputs
 
-**Reproducible from code:**
-- **Runtime:** `install.sh` pins vLLM commit `44af287ebe38d6dc4e102948025f5e3e175aefd6` (it previously installed the moving nightly). A fresh resolution matched the working environment's full lock (`reports/environment-lock.txt`, 205 packages) for 200/201 packages, and `filelock` is now pinned too.
-- **Models:** every checkpoint is pinned by revision in `bench/serve.sh` and `run_matrix.MODELS`, and the drafts are pinned too (DSpark `revision`, DFlash snapshot path).
-- **Requests:** today's `run_matrix.bench_cmd` regenerates byte-identical `vllm bench serve` commands for recorded V4.1, 0731, and MiMo runs (checked against `manifest.json`). Seeds are deterministic, and prompts regenerate from seeds and the pinned tokenizer.
-- **Analysis:** summaries, comparisons, trace breakdowns, and curation are scripted. Re-running them on the curated data reproduces the published tables; the DeepSeek tables were byte-identical after the later tool changes.
+The commands below use the completed study identities only as reproduction profiles **in a fresh checkout with no existing `results/`**. Do not overwrite or publish fresh measurements into the completed study directories. For a new question or combined five-model session, declare a new study entry in `STUDIES` and the report model map, then freeze its own plan and cost.
 
-**Small gaps (noted, not fixed):**
-- Timings are hardware-specific: 8× H100 80GB SXM, all-pairs NV18 NVLink, driver 580.105.08. `--torch-backend=auto` picks the CUDA build from the driver. Expect repeats to land within the reported SD, not bit-identical.
-- Greedy outputs are not verified deterministic across runs (no same-seed repeat), so the speculative output-match tables are not losslessness evidence.
-- The 0731 sequential prefix check came from an unsaved ad hoc script. `bench/prefix_reuse_check.py` reconstructs it (same prompts, endpoint, and 67,588-token queries) and was used for V4.1 and MiMo.
-- DeepSeek traces were filed into `profiles/<label>/` by hand, and the DeepSeek quality smoke was ad hoc. Both are now scripted (`chain_lib.sh trace`, `bench/quality_smoke.py` with the same 4 prompts).
-- Not published (git-ignored `results/`): prefix prompt JSONL (regenerable from seeds) and full 8-rank torch traces (~73 MB per model; must be re-captured).
-- `environment.txt` was captured only for the DeepSeek study; MiMo ran on the same node and venv the next day, which `reports/environment-lock.txt` covers.
-- Failed or crashed runs are kept as `repeat-N`, with valid reruns as `repeat-N-rerunK`. A reproduction without the failure gets plain `repeat-N` names.
-- Weights must still be downloadable from Hugging Face at the pinned revisions (needs `HF_TOKEN`), and the vLLM per-commit wheel index must stay online.
+The code corpus builder reads the local Python standard library. The measured source was CPython 3.12.3 under `/usr/lib/python3.12`; distro patches can change its files. Use a matching installation for the scratch corpus environment and verify corpus/request hashes against the published manifests. A version label alone is insufficient. Both reproduction profiles now check the published request hashes in `dry-run`.
+
+```bash
+export BLOG_STUDY=blog-architecture-h100-v1
+hf download EleutherAI/hendrycks_math --repo-type dataset --revision 21a5633873b6a120296cce3e2df9d5550074f4a3
+hf download OpenAssistant/oasst1 --repo-type dataset --revision fdf72ae0827c1cda404aff25b6603abec9e3399b
+python3 -m venv /tmp/blog-inputs-venv
+/tmp/blog-inputs-venv/bin/pip install pyarrow huggingface_hub
+/tmp/blog-inputs-venv/bin/python bench/blog_corpus.py
+$VLLM_VENV/bin/python bench/blog_inputs.py
+$VLLM_VENV/bin/python bench/blog_inputs.py extra glm-53
+$VLLM_VENV/bin/python bench/blog_study.py env
+```
+
+For the Qwen profile, repeat corpus/input generation with `BLOG_STUDY=qwen-bf16-h100-v1`, use `blog_inputs.py extra qwen-38-bf16`, and record the node again. Keep the first-node manifest in `reports/blog-architecture-h100-v1/study/_inputs/manifest.json`: the Qwen dry run compares every request-list and request hash against it.
+
+## 4. Diagnostics, plan and timing
+
+Run these stages sequentially. `blog_launch.sh` detaches the bounded chain and returns before it finishes. **Wait for its process to exit, inspect the log and verify shutdown before starting the next stage.** Every step owns its server process group and attempts cleanup on success, error and timeout. Never kill a process using a broad pattern that can match your shell.
+
+```bash
+export BLOG_STUDY=blog-architecture-h100-v1
+bash bench/blog_launch.sh first-diagnostics diag:v4-0731 diag:mimo-v26 diag:v41 diag:glm-53
+tail -f results/$BLOG_STUDY/_logs/chain.log
+# After the chain exits, verify functional/pilot/trace/KV outputs and shutdown:
+nvidia-smi --query-gpu=memory.used --format=csv,noheader
+python bench/blog_report.py pilot
+```
+
+Check model classes, precision, attention and MoE backends against [model setup](model-setup.md), not only checkpoint config names. GLM's natural-answer thinking-off check is expected to fail because the feature is unavailable; check its answers and forced-256 result. One retry after a first-load JIT failure was needed for 0731 and GLM on the original node.
+
+For a protocol reproduction, freeze the recorded counts. A new experiment must justify counts and cost from its own pilot.
+
+```bash
+$VLLM_VENV/bin/python bench/blog_study.py plan \
+  --counts '{"16k:c1":36,"16k:c8":75,"1k:c1":48,"1k:c8":204,"64k:c1":18,"64k:c8":33}' \
+  --note 'Fresh reproduction of selected deployments; all models use three blocks. Record node, order, deviations and estimated node-hours here.'
+
+steps=(timing:v4-0731:1 timing:mimo-v26:1 timing:v41:1
+       timing:mimo-v26:2 timing:v41:2 timing:v4-0731:2
+       timing:v41:3 timing:v4-0731:3 timing:mimo-v26:3
+       timing:glm-53:1 timing:glm-53:2 timing:glm-53:3)
+$VLLM_VENV/bin/python bench/blog_study.py dry-run "${steps[@]}"
+# Proceed only after DRY RUN OK:
+bash bench/blog_launch.sh first-timing "${steps[@]}"
+```
+
+The branch's profile includes GLM in each declared block. This is a reproduction selection; the original first three rotated, and GLM was added later. The original shared addendum is linked through [provenance](provenance.md), not rewritten as a new frozen plan.
+
+For Qwen on the second-node profile, with rebuilt inputs and inventory:
+
+```bash
+export BLOG_STUDY=qwen-bf16-h100-v1
+bash bench/blog_launch.sh qwen-diagnostics diag:qwen-38-bf16
+# Wait, inspect the pilot, then freeze the same counts using blog_study.py plan above.
+steps=(timing:qwen-38-bf16:1 timing:mimo-v26:1 timing:qwen-38-bf16:2 timing:qwen-38-bf16:3)
+$VLLM_VENV/bin/python bench/blog_study.py dry-run "${steps[@]}"
+bash bench/blog_launch.sh qwen-timing "${steps[@]}"
+# After timing has finished and the server has stopped:
+bash bench/blog_launch.sh mimo-trace-control diag:mimo-v26 --diag-parts functional,kv,trace
+```
+
+MiMo is a control, not a replacement fifth model. Do not drop its timing block or trace control when placing new-node evidence beside the first node. Record a fresh `_env/` and inspect differences before comparing metrics.
+
+## 5. Analyze a fresh run
+
+Only after each chain finishes:
+
+```bash
+python bench/blog_report.py serving
+python bench/blog_report.py memory
+python bench/blog_report.py components
+python bench/blog_report.py tables
+# Second-node profile only, after both serving CSVs exist:
+BLOG_STUDY=qwen-bf16-h100-v1 python bench/blog_report.py compare
+```
+
+These commands write the current checkout's report files. Use a separate reproduction checkout and preserve original evidence. `components` requires full local traces. `compare` reports only the MiMo node control in this branch. Curate any newly authorized study separately with `blog_report.py publish`; do not overwrite this branch's completed evidence or its provenance hashes.
+
+Record every failure and rerun, actual timing windows, trace overhead and shutdown. Preserve plain-launch timing separately from diagnostics. Do not infer HBM traffic from nominal parameter counts or treat token-pool capacity as measured request capacity.
+
+Before publishing edits, commit in an isolated branch and audit a clean clone:
+
+```bash
+git clone --no-local --branch blog/five-model-reproduction . /tmp/five-model-audit
+cd /tmp/five-model-audit
+python tools/audit_references.py
+```
