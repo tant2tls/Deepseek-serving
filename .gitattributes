@@ -4,12 +4,10 @@
 *.py text eol=lf
 
 # Evidence hashes cover exact bytes; never normalize imported artifacts.
-references/**/results/** -text
-references/**/logs/** -text
-references/**/config.json -text
 reports/**/data/** -text
 reports/**/*.csv -text
 
-# Preserve exact exported evidence bytes, including node/input manifests.
+# Preserve exact exported evidence bytes, including node/input manifests, the ledgers and the
+# September GLM archive (reports/glm-53-september/). Write new files under reports/ with LF endings.
 reports/** -text
 provenance.json -text

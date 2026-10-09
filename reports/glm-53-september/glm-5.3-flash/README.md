@@ -1,6 +1,6 @@
 # GLM-5.3-Flash historical reference
 
-**September archive; separate from the October comparison.** The [October GLM measurements](../../reports/blog-architecture-h100-v1/findings.md) use a different build and setup. Do not merge these observations with them.
+**September archive; separate from the October comparison.** The [October GLM measurements](../../blog-architecture-h100-v1/findings.md) use a different build and setup. Do not merge these observations with them.
 
 This bundle preserves 42 result JSONs, their 42 benchmark logs, six manifests, and seven selected startup logs from `LLMs_frontier_serving/GLM-5.3-Flash`. Numerical JSONs are unchanged. Text exports and original hashes are recorded in [provenance.json](../provenance.json). See [RESULTS.md](RESULTS.md) for every retained point and the [shared methodology and caveats](../README.md).
 

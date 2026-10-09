@@ -45,7 +45,7 @@ Study ID `mimo-v26`. Checkpoint `XiaomiMiMo/MiMo-V2.6-Flash-MOPD` @ `2479e2d0029
 | 3 | `mtp-k3` (native classic MTP, 3 tokens) | concurrency c1/4/16/64 ×3 | 5 + 25 min |
 | 4 | `dflash` (only if the smoke load passes) | concurrency c1/4/16/64 ×3 | 5 + 25 min |
 
-Total ≈ 4.5 h of GPU time if nothing fails. Launches 2–4 run through a chain script (no idle gaps). Validity, repeats, seeds, and publication rules are identical to [docs/reproduce.md](reproduce.md).
+Total ≈ 4.5 h of GPU time if nothing fails. Launches 2–4 run through a chain script (no idle gaps). Validity, repeats, seeds, and publication rules are identical to the reproduction guide of that time (now [reproduce/README.md](../reproduce/README.md), rewritten for the October protocol).
 
 ## Deliverables
 

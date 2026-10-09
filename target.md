@@ -23,7 +23,7 @@ The [article](index.html) explains the completed measurements using each model's
 
 | Kan's question | What was measured | State | Evidence |
 | --- | --- | --- | --- |
-| What is the architecture of each model? | Layer types, shapes, precision and the kernels the runtime really loads | **Answered** from config, server log and trace on the blog build | [Article](index.html); [model setup](docs/model-setup.md) |
+| What is the architecture of each model? | Layer types, shapes, precision and the kernels the runtime really loads | **Answered** from config, server log and trace on the blog build | [Article](index.html); [models](docs/models.md); [per-model guides](reproduce/README.md) |
 | Whose attention runs fastest? | Attention-path time in prefill (16K and 64K) and decode (1K and 64K, engine batch 1 and 8) | **Answered** at those points: diagnostic kernel sums, read beside unprofiled timing | [Trace components](reports/five-model/results.md#trace-components) |
 | Whose attention moves the least data through HBM? | Hardware read/write counters were planned | **Unanswered.** No counters were collected (no Nsight Compute on the image); byte-traffic statements are estimates | [Experiments and limits](docs/experiments.md) |
 | Which model's cached state takes less space? | Bytes held by live requests' KV/state, six snapshots per model | **Partly answered.** Live state is measured as an approximation (usage gauge × per-rank pool). Reusable-prefix capacity is **unanswered**: prefix caching was off | [Live state memory](reports/five-model/results.md#live-state-memory-at-64k-b1) |
@@ -44,7 +44,7 @@ Qwen3.8-Flash-Next denotes the original BF16 checkpoint throughout.
 | `qwen-38-bf16` | `Qwen/Qwen3.8-Flash-Next` | `de4b8e4d43b917e7706784d8bb445c9af86a3540` | Second |
 | `glm-53` | `zai-org/GLM-5.3-Flash` | `eb9eb208eb0d988989d07a6a12d0fdeb5f52574a` | First |
 
-Pin the tokenizer and remote code with the checkpoint. [Model setup](docs/model-setup.md) documents the actual runtime paths, including the BF16 Qwen expert backend and GLM's thinking exception.
+Pin the tokenizer and remote code with the checkpoint. [docs/models.md](docs/models.md) links each model's card and technical report and states what the runtime executed. The [per-model guides](reproduce/README.md) document the actual runtime paths, including the BF16 Qwen expert backend and GLM's thinking exception.
 
 ## Common setup and boundaries
 
@@ -55,7 +55,7 @@ Pin the tokenizer and remote code with the checkpoint. [Model setup](docs/model-
 - **Thinking:** GLM has no thinking-off switch and runs with `reasoning_effort=low`; the other four disable thinking.
 - **Scope of a result:** these compare deployments (checkpoint, precision, kernels and this build) on these workloads. They do not rank architectures in isolation and say nothing about answer quality.
 
-The [experiment protocol](docs/experiments.md) defines the measurements, counts and limits in full; [reproduce](docs/reproduce.md) gives the commands.
+The [experiment protocol](docs/experiments.md) defines the measurements, counts and limits in full; [reproduce](reproduce/README.md) gives the commands.
 
 ## Evidence labels and terms
 

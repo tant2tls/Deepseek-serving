@@ -28,7 +28,7 @@ hf download XiaomiMiMo/MiMo-V2.6-Flash-MOPD   --revision 2479e2d0029eca9a34cc7e7
 hf download deepseek-ai/DeepSeek-V4.1-Flash   --revision dba1be0a40aa45a94ad051997016db3960a90277 --max-workers 32
 ```
 
-Always pass `--revision`: a model ID alone can change under you. About 800 GB in total; it took 10 minutes on this node.
+Always pass `--revision`: a model ID alone can change under you. About 800 GB in total; it took 10 minutes on this node. The commands for GLM and Qwen, and the launch command, log lines and known problems of each of the five models, are on its page in [reproduce/](../reproduce/README.md).
 
 ## Step 4: launch
 

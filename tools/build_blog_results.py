@@ -123,7 +123,7 @@ def generate():
     for s, title in ((FIRST, 'First-node evidence: 0731, V4.1, MiMo and GLM'), (SECOND, 'Second-node evidence: Qwen and MiMo control')):
         output[f'reports/{s}/findings.md'] = (f'# {title}\n\n{intro}\n'
             'This branch uses a selected evidence view. Read the [five-model results](../five-model/results.md), '
-            '[experiment protocol](../../docs/experiments.md) and [model setup](../../docs/model-setup.md).\n\n'
+            '[experiment protocol](../../docs/experiments.md) and [per-model guides](../../reproduce/README.md).\n\n'
             'Per-run evidence: [data/](data/). Per-rank diagnostics: [components.csv](components.csv). '
             'Snapshots: [memory.csv](memory.csv). Timing: [serving.csv](serving.csv). '
             'Node inventory: [study/_env/](study/_env/). Input hashes: [manifest](study/_inputs/manifest.json).\n\n'

@@ -126,7 +126,7 @@ All-reduce / DP-attention arm (biggest lever); faithful 3-layer MTP (another run
 
 ## Reproduce
 
-[docs/reproduce.md](../../docs/reproduce.md). MiMo-specific commands:
+[reproduce/README.md](../../reproduce/README.md). MiMo-specific commands:
 
 ```bash
 PROFILE_DIR=$PWD/results/mimo-v26/mimo-v26/profiles bash bench/serve.sh mimo-v26 off-profidle <log>

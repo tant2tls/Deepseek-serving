@@ -35,13 +35,13 @@ STUDIES = {
                blocks={"1": ["v4-0731", "mimo-v26", "v41", "glm-53"], "2": ["mimo-v26", "v41", "v4-0731", "glm-53"],
                        "3": ["v41", "v4-0731", "mimo-v26", "glm-53"]},
                pins=("target.md",), inputs_reference=f"reports/{BLOG}/study/_inputs/manifest.json"),
-    # Original BF16 Qwen (docs/qwen-checkpoint-policy.md). MiMo runs one timing block as a node
+    # Original BF16 Qwen (reproduce/qwen-38-bf16.md). MiMo runs one timing block as a node
     # control against its three blocks of 2026-10-07, and (plan_addendum_mimo_trace_control.json)
     # one diagnostic launch so trace components can be compared across the two nodes as well.
     "qwen-bf16-h100-v1": dict(allowed=("qwen-38-bf16", "mimo-v26"), diag=("qwen-38-bf16", "mimo-v26"),
                               blocks={"1": ["qwen-38-bf16", "mimo-v26"], "2": ["qwen-38-bf16"],
                                       "3": ["qwen-38-bf16"]},
-                              pins=("target.md", "docs/qwen-checkpoint-policy.md"),
+                              pins=("target.md", "reproduce/qwen-38-bf16.md"),
                               inputs_reference=f"reports/{BLOG}/study/_inputs/manifest.json"),
 }
 RETIRED = ()
@@ -125,7 +125,7 @@ def chat_body(mk, prompt, **kw):
 class Server:
     def __init__(self, mk, cfg):
         assert mk in ALLOWED, f"model {mk} is outside the study"
-        assert mk not in RETIRED, f"{mk} is a retired key (docs/qwen-checkpoint-policy.md)"
+        assert mk not in RETIRED, f"{mk} is a retired key (reproduce/qwen-38-bf16.md)"
         assert cfg in CONFIGS, f"config {cfg} is not a no-prefix AR config"
         self.mk, self.cfg, self.proc = mk, cfg, None
         self.pdir = SDIR / mk / "profiles"

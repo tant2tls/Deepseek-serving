@@ -10,4 +10,4 @@ Output throughput includes prefill and scheduling. TTFT includes queueing; TPOT 
 
 [arms.json](arms.json) retains the included arms and excluded-arm reasons for GLM. [results.csv](results.csv) preserves the corresponding source values. [provenance.json](provenance.json) is a labelled selection of the original export ledger: numerical JSONs are unchanged, while logs/manifests retain the recorded masking of private paths/hosts and terminal formatting. The complete original ledger remains in parent history.
 
-No historical launcher, dependency overlay or version-check bypass is promoted as a new setup recommendation. Use [the current per-model setup](../docs/model-setup.md) and [reproduction guide](../docs/reproduce.md) for the October protocol.
+No historical launcher, dependency overlay or version-check bypass is promoted as a new setup recommendation. Use [the current per-model guides and reproduction procedure](../../reproduce/README.md) for the October protocol.

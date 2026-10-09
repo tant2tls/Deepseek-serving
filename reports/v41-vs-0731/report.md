@@ -250,7 +250,7 @@ Outputs typically diverge after about 60–140 characters. **This is not evidenc
 
 ## Reproduce
 
-See [docs/reproduce.md](../../docs/reproduce.md) for the full command sequence, environment fixes, and timings. In short:
+See [reproduce/README.md](../../reproduce/README.md) for the full command sequence, environment fixes, and timings. In short:
 
 ```bash
 source /root/vllm/bin/activate            # vLLM 0.30.1rc1.dev223+g44af287eb

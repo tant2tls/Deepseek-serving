@@ -1,4 +1,11 @@
-"""Audit the selected publication: exact evidence bytes, arithmetic, scope and links."""
+"""Audit the selected publication: exact evidence bytes, arithmetic, scope, layout and links.
+
+  python tools/audit_references.py     # run on a clean clone before publishing
+
+Standard library only, no GPU. It fails when evidence bytes change, a generated table or the
+article data is stale, a link or anchor is broken, a file lands outside the agreed layout, or a
+model is pinned differently in two places. tools/README.md lists every check.
+"""
 import collections
 import csv
 import gzip
@@ -13,10 +20,72 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
 from build_blog_results import FIRST, SECOND, MODELS, POINTS, generate
+from build_blog_page import check as page_check
+
+LEDGER = 'reports/provenance.json'
+ARCHIVE = 'reports/glm-53-september'  # September GLM export, hashed by its own ledger
+ARCHIVE_INDEX = {'README.md', 'arms.json', 'results.csv', 'provenance.json',
+                 'glm-5.3-flash/README.md', 'glm-5.3-flash/RESULTS.md'}
+# The agreed layout. A new top-level entry is a decision: add it here and to README.md together.
+FOLDERS = ('bench', 'docs', 'reports', 'reproduce', 'teach_me', 'tools')
+ROOT_FILES = ('.gitattributes', '.gitignore', 'AGENTS.md', 'README.md', 'target.md', 'index.html', 'install.sh')
 
 
 def digest(p):
     return hashlib.sha256(p.read_bytes()).hexdigest()
+
+
+def anchors(p, body):
+    """Link targets inside a page: element ids in HTML, GitHub-style heading slugs in Markdown."""
+    if p.suffix == '.html':
+        return set(re.findall(r'\bid="([^"]+)"', body))
+    seen, found = collections.Counter(), set()
+    for line in re.sub(r'```.*?```', '', body, flags=re.S).splitlines():
+        heading = re.match(r'#{1,6}\s+(.*?)\s*$', line)
+        if heading:
+            title = re.sub(r'\[([^\]]*)\]\([^)]*\)', r'\1', heading.group(1))
+            slug = re.sub(r'[^\w\- ]', '', title.lower()).replace(' ', '-')
+            found.add(f'{slug}-{seen[slug]}' if seen[slug] else slug)
+            seen[slug] += 1
+    return found
+
+
+def layout(check):
+    """Top-level entries, folder indexes and one consistent pin per model."""
+    listed = subprocess.run(['git', 'ls-files'], cwd=ROOT, capture_output=True, text=True)
+    if listed.returncode == 0 and listed.stdout:
+        top = {line.split('/')[0] for line in listed.stdout.splitlines()}
+    else:  # an exported tree without Git metadata
+        top = {p.name for p in ROOT.iterdir() if p.name not in ('.git', '.audit', '.worktrees')}
+    for name in sorted(top - set(FOLDERS) - set(ROOT_FILES)):
+        check(False, f'Outside the agreed layout: {name}')
+    for name in FOLDERS + ROOT_FILES:
+        check((ROOT / name).exists(), f'Missing from the layout: {name}')
+    for name in FOLDERS:
+        check((ROOT / name / 'README.md').is_file(), f'Folder without an index: {name}/README.md')
+    serve = (ROOT / 'bench/serve.sh').read_text(encoding='utf-8')
+    served = {k: (m, r) for k, m, r in re.findall(
+        r'^\s*([a-z0-9-]+)\)\s*\n\s*MODEL=(\S+)\s*\n\s*REVISION=([0-9a-f]{40})', serve, re.M)}
+    matrix = (ROOT / 'bench/run_matrix.py').read_text(encoding='utf-8')
+    measured = {k: (m, r) for k, m, r in re.findall(
+        r'"([a-z0-9-]+)": dict\(model="([^"]+)",\s*revision="([0-9a-f]{40})"', matrix)}
+    check(bool(served) and served == measured, 'bench/serve.sh and bench/run_matrix.py pin different models')
+    check({mk for mk, _, _ in MODELS} == set(served), 'Published models differ from the launchable keys')
+    target = (ROOT / 'target.md').read_text(encoding='utf-8')
+    index = (ROOT / 'reproduce/README.md').read_text(encoding='utf-8')
+    described = (ROOT / 'docs/models.md').read_text(encoding='utf-8')
+    for key, (model, revision) in served.items():
+        page = ROOT / 'reproduce' / f'{key}.md'
+        check(page.is_file(), f'Model without a reproduce page: reproduce/{key}.md')
+        if page.is_file():
+            body = page.read_text(encoding='utf-8')
+            check(model in body and revision in body, f'reproduce/{key}.md does not state the pinned checkpoint')
+        check(f'({key}.md)' in index, f'reproduce/README.md does not list {key}')
+        check(model in target and revision in target, f'target.md does not pin {key}')
+        check(f'`{key}`' in described and revision in described, f'docs/models.md does not cover {key}')
+    for page in (ROOT / 'reproduce').glob('*.md'):
+        check(page.stem in served or page.name == 'README.md', f'Reproduce page for an unknown key: {page.name}')
+    return len(served)
 
 
 def main():
@@ -24,7 +93,8 @@ def main():
     def check(ok, msg):
         if not ok:
             errors.append(msg)
-    ledger = json.loads((ROOT / 'provenance.json').read_text(encoding='utf-8'))
+    pinned = layout(check)
+    ledger = json.loads((ROOT / LEDGER).read_text(encoding='utf-8'))
     records = {r['path']: r for r in ledger['files']}
     check(len(records) == len(ledger['files']), 'Duplicate provenance paths')
     for rel, r in records.items():
@@ -34,9 +104,13 @@ def main():
             check(digest(p) == r['export_sha256'], f'Evidence hash mismatch: {rel}')
             if r['operation'] == 'copied byte-for-byte':
                 check(r['source_sha256'] == r['export_sha256'], f'Undocumented edit: {rel}')
+    refs = json.loads((ROOT / ARCHIVE / 'provenance.json').read_text(encoding='utf-8'))
+    archived = {r['path'] for r in refs['files']} | {f'{ARCHIVE}/{name}' for name in ARCHIVE_INDEX}
+    # Everything under reports/ is hashed evidence, a generated table, the archive or an index.
+    registered = set(records) | generate_paths | archived | {LEDGER, 'reports/README.md'}
     for p in (ROOT / 'reports').rglob('*'):
-        if p.is_file() and p.relative_to(ROOT).as_posix() not in generate_paths:
-            check(p.relative_to(ROOT).as_posix() in records, f'Unregistered evidence: {p.relative_to(ROOT)}')
+        if p.is_file():
+            check(p.relative_to(ROOT).as_posix() in registered, f'Unregistered evidence: {p.relative_to(ROOT)}')
 
     # Original per-model curation ledgers remain intact; their published hashes still apply.
     for p in (ROOT / 'reports').glob('*/data/*/CURATION.json'):
@@ -48,13 +122,12 @@ def main():
                 check(digest(target) == r['published_sha256'], f'Curation hash mismatch: {r["published"]}')
 
     # Separate September GLM export: preserve source hashes and verify its 42-point CSV.
-    refs = json.loads((ROOT / 'references/provenance.json').read_text(encoding='utf-8'))
     for r in refs['files']:
         p = ROOT / r['path']
         check(p.is_file() and digest(p) == r['export_sha256'], f'Reference hash: {r["path"]}')
         if p.suffix == '.json':
             check(r['source_sha256'] == r['export_sha256'], f'Reference JSON changed: {r["path"]}')
-    with (ROOT / 'references/results.csv').open(encoding='utf-8', newline='') as f:
+    with (ROOT / ARCHIVE / 'results.csv').open(encoding='utf-8', newline='') as f:
         refrows = list(csv.DictReader(f))
     check(len(refrows) == 42, 'Historical GLM point count')
     for r in refrows:
@@ -124,8 +197,9 @@ def main():
     for rel, body in generate().items():
         p = ROOT / rel
         check(p.is_file() and p.read_text(encoding='utf-8') == body, f'Stale generated output: {rel}')
+    errors.extend(page_check())  # numbers embedded in index.html against the same CSVs
 
-    links = 0
+    links, pages = 0, {}
     forbidden = re.compile(r'Qwen/Qwen3\.8-Flash-Next-FP8|qwen3\.8-flash-next-fp8|qwen-38(?!-bf16)[/\s"\x27:,)]', re.I)
     credential = re.compile(r'hf_[A-Za-z0-9]{20,}|gh[pousr]_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9_-]{20,}|-----BEGIN (?:RSA |OPENSSH |EC )?PRIVATE KEY-----')
     private = re.compile(r'/prj/|/home/[A-Za-z0-9_.-]+/|/tmp/claude-[A-Za-z0-9]+|[A-Z]:\\')
@@ -157,15 +231,23 @@ def main():
             body = re.sub(r'```.*?```', '', body, flags=re.S)
             targets = re.findall(r'\]\(([^)]+)\)', body) if p.suffix == '.md' else re.findall(r'(?:href|src)="([^"]+)"', body)
             for target in targets:
-                if re.match(r'[a-zA-Z]+:', target) or target.startswith('#'):
+                if re.match(r'[a-zA-Z]+:', target):
                     continue
                 links += 1
-                check((p.parent / target.split('#')[0]).exists(), f'Broken local link: {rel}: {target}')
+                path, _, fragment = target.partition('#')
+                dest = p.parent / path if path else p
+                check(dest.exists(), f'Broken local link: {rel}: {target}')
+                if fragment and dest.is_file() and dest.suffix in ('.md', '.html'):
+                    if dest not in pages:
+                        pages[dest] = anchors(dest, dest.read_text(encoding='utf-8'))
+                    check(fragment in pages[dest], f'Broken anchor: {rel}: {target}')
     if errors:
         print('FAILED:\n' + '\n'.join('- ' + e for e in errors))
         return 1
-    print(f'PASS: {len(records)} provenance files; {count} timing runs (90 main + 6 control); {links} local links; {total / 1024**2:.2f} MiB.')
-    print('Exact-byte evidence, curation ledgers, arithmetic, inputs, diagnostic counts, generated tables and publication scan passed.')
+    print(f'PASS: {len(records)} provenance files; {count} timing runs (90 main + 6 control); {pinned} pinned models; '
+          f'{links} local links and anchors; {total / 1024**2:.2f} MiB.')
+    print('Exact-byte evidence, curation ledgers, arithmetic, inputs, diagnostic counts, generated tables, '
+          'article data, layout, model pins and publication scan passed.')
     print('This validates the export, not causal control, answer quality or a fresh GPU reproduction.')
     return 0
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Launch one matched DeepSeek server for the 0731 vs V4.1 study.
+# Launch one model with the common 8xH100 deployment (reproduce/README.md). Started for the 0731 vs V4.1
+# study; the October five-model comparison uses configs `off` and `off-profidle` only.
 # Usage: bench/serve.sh <model-key: v41|v4-0731|mimo-v26|glm-53|qwen-38-bf16> <config-id: off|off-prefix|...> <log-path> [extra vllm args]
 # Credentials come from the environment (HF_TOKEN); never hardcode them here.
 set -euo pipefail
