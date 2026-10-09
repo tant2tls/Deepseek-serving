@@ -3,7 +3,7 @@ source ~/vllm/bin/activate
 # Install uv.
 python -m pip install --upgrade uv
 
-# Pinned runtime used by every study in this repository (report.md, report_mimo.md):
+# Pinned runtime used by every study in this repository (reports/v41-vs-0731/report.md, reports/mimo-v26/report.md):
 # vLLM commit 44af287ebe38d6dc4e102948025f5e3e175aefd6 = 0.30.1rc1.dev223+g44af287eb.
 # Several findings are build-specific (no V4.1 CED prefill path, MiMo MTP uses layer 0 only,
 # kernel selection), so reproduce with this exact wheel, not the moving nightly.

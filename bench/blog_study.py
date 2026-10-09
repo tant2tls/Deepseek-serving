@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Chain for the architecture-blog protocol (blog_target.md): AR only, prefix caching off.
+"""Chain for the architecture-blog protocol (target.md, docs/experiments.md): AR only, prefix caching off.
 
 The study is chosen with BLOG_STUDY (default: the completed blog-architecture-h100-v1).
 Study qwen-bf16-h100-v1 (2026-10-08) measures the original BF16 Qwen checkpoint with the same

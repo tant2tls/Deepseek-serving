@@ -131,7 +131,7 @@ Record every failure and rerun, actual timing windows, trace overhead and shutdo
 Before publishing edits, commit in an isolated branch and audit a clean clone:
 
 ```bash
-git clone --no-local --branch blog/five-model-reproduction . /tmp/five-model-audit
+git clone --no-local --branch main . /tmp/five-model-audit
 cd /tmp/five-model-audit
 python tools/audit_references.py
 ```

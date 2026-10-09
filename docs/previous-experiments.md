@@ -4,8 +4,8 @@ The September studies use **vLLM `44af287ebe38d6dc4e102948025f5e3e175aefd6`**, v
 
 | Study | Completed measurements | Evidence |
 | --- | --- | --- |
-| `v41-vs-0731` | 144 valid speculation-off runs per model; 48 valid fixed/adaptive DSpark k5 runs across both models; historical prefix checks and traces | [DeepSeek report](../report.md), [tables and raw data](../reports/v41-vs-0731/) |
-| `mimo-v26` | 90 valid speculation-off runs; 12 MTP k3 and 12 DFlash k7 runs; historical prefix checks and traces | [MiMo report](../report_mimo.md), [tables and raw data](../reports/mimo-v26/) |
+| `v41-vs-0731` | 144 valid speculation-off runs per model; 48 valid fixed/adaptive DSpark k5 runs across both models; historical prefix checks and traces | [DeepSeek report](../reports/v41-vs-0731/report.md), [tables and raw data](../reports/v41-vs-0731/) |
+| `mimo-v26` | 90 valid speculation-off runs; 12 MTP k3 and 12 DFlash k7 runs; historical prefix checks and traces | [MiMo report](../reports/mimo-v26/report.md), [tables and raw data](../reports/mimo-v26/) |
 
 GLM also has a [42-point September 2 archive](../references/glm-5.3-flash/RESULTS.md) on vLLM `0.1.dev20051+g487ecf187`: baseline, MTP n1/n5, and alternate-stack KV-format experiments. Its checkpoint revision was not recorded, settings differ from October, and most points are single observations. The [GLM guide](../references/glm-5.3-flash/README.md) preserves arm boundaries and telemetry caveats. It is historical context, not a control for the five-model results.
 
