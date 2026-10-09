@@ -21,12 +21,7 @@ grep -n -A4 "qwen-38-bf16)" bench/serve.sh          # model, pinned revision, pa
 grep -n -A4 '"qwen-38-bf16"' bench/run_matrix.py    # tokenizer mode and thinking switch
 ```
 
-The old key stays in both files as a record, but it no longer launches:
-
-```bash
-bash bench/serve.sh qwen-38 off /tmp/x.log
-# qwen-38 is the retired FP8 key; use qwen-38-bf16
-```
+This branch carries only the BF16 key. The retired FP8 key, and the launcher check that refuses it, are kept as a record in the full archive (the `all-data` branch).
 
 Note what the BF16 entry does **not** contain: no `--dtype`, no quantization flag. Native precision comes from the checkpoint, and you verify it from the log (step 4), not from the command line.
 
