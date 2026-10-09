@@ -6,6 +6,9 @@
 | Immutable revision | `2479e2d0029eca9a34cc7e7f55a121925f81908e` (weights, tokenizer and remote code) |
 | Measured | First node, study `blog-architecture-h100-v1`; node control on the second node, study `qwen-bf16-h100-v1` |
 | Size on disk | 166 GB |
+| GPU memory | Weights 20.1 GiB per GPU (161 GiB on eight); KV pool reserved 49.18 GiB per GPU; 73.7 GiB in use per GPU |
+| Host RAM | Page cache only; nothing pinned was recorded |
+| Time on the measured node | Diagnostics step 18.4 min; one timing block 14.4–14.7 min; three blocks 44 min. As the control on the second node: one block 30.2 min, trace launch 13.8 min ([budget](README.md#what-a-reproduction-needs-disk-memory-and-time)) |
 | First launch / relaunch | 7.5 min / 2 min |
 | Thinking off | `{"enable_thinking": false}` |
 | Template adds | 9 tokens |

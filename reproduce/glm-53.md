@@ -6,6 +6,9 @@
 | Immutable revision | `eb9eb208eb0d988989d07a6a12d0fdeb5f52574a` |
 | Measured | First node, study `blog-architecture-h100-v1`, after the first three models |
 | Size on disk | 306 GB |
+| GPU memory | Weights 38.8 GiB per GPU (310 GiB on eight); KV pool reserved 28.73 GiB per GPU; 74.1 GiB in use per GPU |
+| Host RAM | Page cache only; nothing pinned was recorded |
+| Time on the measured node | Diagnostics step 15.9 min; one timing block 14.8–15.1 min; three blocks 45 min ([budget](README.md#what-a-reproduction-needs-disk-memory-and-time)) |
 | First launch / relaunch | 8.5 min / 3.5 min |
 | Thinking off | **Not available.** Runs with `{"reasoning_effort": "low"}` |
 | Template adds | 12 tokens |

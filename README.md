@@ -10,6 +10,7 @@ This branch (`main`) accompanies the [architecture blog](index.html): **DeepSeek
 | Know which questions the work answers, and which are still open | [target.md](target.md) |
 | See the numbers | [reports/five-model/results.md](reports/five-model/results.md) |
 | Run one model, or repeat the measurements | [reproduce/](reproduce/README.md) |
+| Know the disk, GPU memory, host RAM and hours a reproduction needs | [reproduce/: what a reproduction needs](reproduce/README.md#what-a-reproduction-needs-disk-memory-and-time) |
 | Learn how such numbers are measured with vLLM, or set it up on another machine | [teach_me/](teach_me/README.md) |
 | Understand the five architectures and find their technical reports | [docs/models.md](docs/models.md) |
 | Know how far a comparison can be trusted | [docs/experiments.md](docs/experiments.md) |

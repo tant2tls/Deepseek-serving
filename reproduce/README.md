@@ -5,6 +5,7 @@ This folder shows how to run the five checkpoints on an 8×H100 80GB node the wa
 | You want to | Read |
 | --- | --- |
 | Rebuild the published tables on a laptop, no GPU | [Section 1](#1-rebuild-tables-without-gpus) |
+| Budget disk, GPU memory, host RAM and hours before renting | [What a reproduction needs](#what-a-reproduction-needs-disk-memory-and-time) |
 | Launch one model and send it a request | That model's page, below |
 | Repeat the whole measurement | Sections [2](#2-prepare-the-linux-gpu-node) to [5](#5-analyze-a-fresh-run), in order |
 | Know what can go wrong before renting | [Known problems on every model](#known-problems-on-every-model), then each page's own list |
@@ -25,6 +26,61 @@ Sections 2 to 5 are recipes for a **separately authorized** GPU session. This br
 The **key** is the name used by every command (`diag:v4-0731`), every result folder (`reports/<study>/data/<key>/`) and every page in this folder. Each page pins the immutable revision. "Template adds" is the server-counted prompt tokens minus the tokens of the user text, measured on one 1K request. All repositories are public; no token is needed. Qwen's row was measured on a different rented node than the others (another CPU and driver), so its launch times are not directly comparable with theirs.
 
 Architecture notes and links to each model's card and technical report are in [docs/models.md](../docs/models.md).
+
+## What a reproduction needs: disk, memory and time
+
+Everything in this section was read from the original October sessions on 8×H100 80GB: checkpoint sizes from the nodes' disks, memory from each server's startup log and `nvidia-smi`, and times from the saved server logs. `python tools/launch_times.py` prints the memory and time tables again from those logs. The values describe those two nodes and that build. Use them as a budget, not as a promise.
+
+### Disk and memory per model
+
+| Key | Checkpoint on disk | Weights, each GPU | Weights, eight GPUs | KV pool reserved, each GPU | GPU memory in use, each GPU | Host RAM besides the page cache |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| `v4-0731` | 156 GB | 19.79 GiB | 158 GiB | 47.43 GiB | 75.7 GiB | None recorded |
+| `v41` | 476 GB | 36.32 GiB | 291 GiB | 29.14 GiB | 76.4 GiB | About 190 GB pinned for Engram tables (11.80 GiB per rank, logged twice) |
+| `mimo-v26` | 166 GB | 20.1 GiB | 161 GiB | 49.18 GiB | 73.7 GiB | None recorded |
+| `qwen-38-bf16` | 336 GiB (360 GB by the hub's count) | 31.42 GiB | 251 GiB | 37.37 GiB | 74.4 GiB | The n-gram embedding sits in pinned host memory; its size was not recorded |
+| `glm-53` | 306 GB | 38.8 GiB | 310 GiB | 28.73 GiB | 74.1 GiB | None recorded |
+| **All five** | **about 1.44 TB** | | | | | |
+
+How to read the columns:
+
+- **Checkpoint on disk** is what you download. All five need about 1.44 TB, plus room for the two public datasets, the Python environments and the raw results of your own session.
+- **Weights** is the server's `Model loading took … GiB` line, per GPU. Under tensor parallel 8 each GPU holds a slice of every layer, so the model occupies eight times that.
+- **KV pool reserved** is the `Available KV cache memory` line. It is what remains of 0.90 × the GPU after weights and workspace, reserved at startup whether or not requests use it. It is not live state and not a measured request capacity.
+- **GPU memory in use** is `nvidia-smi` on GPU 0 while one 64K request was live, out of 79.6 GiB (81,559 MiB) per H100. It is nearly the same for all five, because the pool takes whatever the weights leave. A larger model does not use more of the GPU; it leaves a smaller pool (GLM 28.73 GiB against MiMo 49.18 GiB).
+- **Host RAM.** V4.1's checkpoint is 476 GB but only 291 GiB of it goes to the GPUs: its Engram tables stay in pinned host memory. Weights are also read through the page cache, which is why a relaunch is fast. Our nodes had 1,771 and 1,511 GiB of RAM, so every checkpoint stayed cached; a smaller host was not tested.
+
+### Time per model
+
+| Key | Download | First launch until ready | Relaunch until ready | Diagnostics step | One timing block | Three timing blocks |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| `v4-0731` | With MiMo and V4.1: about 800 GB in 10 min | 10.8 min | 2.0 min | 19.4 min | 15.6–15.9 min | 47 min |
+| `v41` | About 4 min | 5.9 min | 2.4 min | 13.2 min | 15.3–15.4 min | 46 min |
+| `mimo-v26` | See `v4-0731` | 7.5 min | 2.0 min | 18.4 min | 14.4–14.7 min | 44 min |
+| `glm-53` | Not recorded | 8.4 min | 3.5 min | 15.9 min | 14.8–15.1 min | 45 min |
+| `qwen-38-bf16` | 23 min at about 240 MiB/s | 9.7 min | 4.2–4.3 min | 24.9 min | 21.3–21.5 min | 64 min |
+
+- **Until ready** is the launch command to the server log's `Application startup complete`. It can differ by a few seconds from the rounded launch times in the table of the five models, which were noted when the server first answered.
+- **Diagnostics step** is one `diag:<key>` launch from the launch command to the server's last log line: first load, functional check, pilot, six live-KV snapshots, six traces and shutdown.
+- **One timing block** is one `timing:<key>:<block>` launch measured the same way: relaunch, warm-up at each input length, the six unprofiled points and shutdown. The benchmark windows themselves take 6.4 to 9.9 minutes of it.
+- The first four rows are from the first node and Qwen's from the second, so its row also carries that node's CPU. On the second node MiMo's first launch took 10.7 min and its control block 30.2 min.
+- **Failed first launches cost time too.** A 0731 diagnostics launch died in the JIT build after 8.3 min and a GLM one after 4.7 min; both models worked on the relaunch.
+
+### Total for all five
+
+| Stage | Time | Basis |
+| --- | ---: | --- |
+| Rebuild tables and audit on a laptop, no GPU | about 4 min | Measured on a Windows laptop: the builders take seconds, the audit 3.5 min |
+| Download 1.44 TB | 20 min to 1.7 h | Estimate from the two measured rates: about 800 GB in 10 min on the first node, 240 MiB/s on the second |
+| Install the runtime, record the node, build inputs, review the pilot and freeze the plan | allow 30 min | Estimate; not recorded |
+| Diagnostics, five models | 1.5 h | Sum of the recorded steps |
+| Timing, fifteen launches | 4.1 h | Sum of the recorded blocks |
+| Retries after a failed first launch | about 15 min | What 0731 and GLM cost us |
+| **Servers up, five models on one node** | **about 5.9 h** | Sum of the three rows above |
+| Pauses between stages | about 1 h | Gaps in the first-node session |
+| **Node time to plan for** | **8 to 10 h** | Estimate with margin for a slow download or one more retry |
+
+For comparison, the original work used two nodes: 5.6 h from the first launch to the last shutdown on the first node (servers up 4.4 h) and 2.3 h on the second (servers up 2.2 h). Running all five on one node needs no node control, because MiMo is already one of the five. Splitting across two nodes adds the MiMo control block and its trace launch, about 45 minutes, and a second setup and download.
 
 ## Common setup
 

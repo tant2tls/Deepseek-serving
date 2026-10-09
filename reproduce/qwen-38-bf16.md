@@ -6,6 +6,9 @@
 | Immutable revision | `de4b8e4d43b917e7706784d8bb445c9af86a3540` (weights, tokenizer and code) |
 | Measured | **Second node**, 2026-10-08, study `qwen-bf16-h100-v1`, with MiMo as node control |
 | Size on disk | 336 GiB (360 GB by the hub's count, 131 shards) |
+| GPU memory | Weights 31.42 GiB per GPU (251 GiB on eight); KV pool reserved 37.37 GiB per GPU; 74.4 GiB in use per GPU |
+| Host RAM | The n-gram embedding is in pinned host memory (size not recorded), besides the page cache |
+| Time on the measured node | Download 23 min; diagnostics step 24.9 min; one timing block 21.3–21.5 min; three blocks 64 min ([budget](README.md#what-a-reproduction-needs-disk-memory-and-time)) |
 | First launch / relaunch | 9.7 min / 4.3 min |
 | Thinking off | `{"enable_thinking": false}` |
 | Template adds | 12 tokens |
