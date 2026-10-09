@@ -119,6 +119,34 @@ git clone --branch <branch> . /tmp/audit && cd /tmp/audit && python tools/audit_
 
 Commit on a feature branch, push, and merge into `main` only when the user asks.
 
+### GitHub HTTPS login troubleshooting (2026-10-09)
+
+The BF16 study push encountered two separate failures:
+
+- `fatal: could not read Username for 'https://github.com': No such device or address`: Git had no usable HTTPS credential helper in the noninteractive shell.
+- `remote: Permission to tant2tls/Deepseek-serving.git denied to tant2tls` with HTTP 403: the GitHub CLI account was logged in, but its configured credential could not push to this repository. Login status alone does not prove repository write access.
+
+Replacing the CLI credential with a token that could write to this repository and explicitly using the CLI credential helper succeeded:
+
+```bash
+# Run interactively; enter the token only at the hidden prompt.
+# Do not paste tokens into chat, command arguments, remote URLs or repository files.
+read -r -s -p 'GitHub token: ' github_push_token
+printf '\n'
+printf '%s' "$github_push_token" | gh auth login --hostname github.com --git-protocol https --with-token
+unset github_push_token
+
+# Inspect the account locally; do not publish authentication output.
+gh auth status
+
+# Use the CLI credential for this push without changing global Git configuration.
+git -c credential.helper= -c 'credential.helper=!gh auth git-credential' push -u origin <branch>
+```
+
+Supply `--with-token` through standard input as above. In this session, invoking it without a token on standard input unexpectedly entered device login instead; cancel that flow before retrying with the intended credential. For a fine-grained token, select this repository and grant Contents write permission; the account must also have repository write access. Additional permissions may be needed for changes to workflow files.
+
+The successful push created `qwen-bf16-h100-v1`; it did not merge into `main`. Keep credentials in the CLI's credential storage, outside the GitHub bundle. Revoke and replace any token exposed in chat or logs. Never record the token itself as troubleshooting evidence.
+
 ## 6. Reproducibility status (checked 2026-09-28)
 
 **Reproducible from code:**
