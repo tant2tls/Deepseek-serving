@@ -1,6 +1,6 @@
 # Target: answer Kan's architecture questions on 8×H100, and publish a blog everyone can use
 
-Updated 2026-10-09. **This is the repository's single target file.** It merges the former `blog_target.md` (the architecture-blog plan) with the former three-model `target.md` (the later speculative study, now [section 12](#12-later-study-spec-realtext-h100-v1)). The merge changed no measurement, plan count or model pin, and it authorizes no new GPU work.
+Updated 2026-10-09. **This is the repository's single target file.** It merges the former `blog_target.md` (the architecture-blog plan) with the former three-model `target.md` (the later speculative study, now [section 12](#12-later-study-spec-realtext-h100-v1)). The merge changed no measurement, plan count or model pin, and it authorizes no new GPU work. This full version lives on the `all-data` branch; the `main` branch carries a shorter publication view of it for the five-model blog.
 
 **Two purposes, in this order:**
 

@@ -1,5 +1,7 @@
 # Five-model serving measurements on 8×H100
 
+**Branch roles (2026-10-10):** this is the `all-data` branch, the full archive with every study, plan, frozen ledger and historical reference (named `main` until that day). The repository's `main` branch is the shorter five-model publication view, formerly `blog/five-model-reproduction`. Start with [target.md](target.md) for what the measurements are for, and [reports/README.md](reports/README.md) for every study in one place.
+
 **Current blog selection (2026-10-09):** use the latest completed measurements of **DeepSeek V4 Flash 0731, DeepSeek V4.1 Flash, MiMo-V2.6-Flash-MOPD, Qwen3.8-Flash-Next, and GLM-5.3-Flash**. **Qwen FP8 is historical reference only**, excluded from the main figures and rankings. Start with [the blog](index.html), [the source-selection rules](target.md#11-current-blog-evidence-selection-2026-10-09), [BF16 findings](reports/qwen-bf16-h100-v1/findings.md), and [first-node findings](reports/blog-architecture-h100-v1/findings.md).
 
 In the article, **Qwen3.8-Flash-Next** means the original BF16 checkpoint; compact chart labels use **Qwen**. Precision and node details belong in the measurement notes, rather than the model name.
