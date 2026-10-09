@@ -1,6 +1,6 @@
 # How MiMo-V2.6-Flash runs in vLLM, and why it may differ from DeepSeek V4/V4.1
 
-This is a source- and config-level walkthrough of MiMo-V2.6-Flash-MOPD prefill and decode on the pinned runtime (vLLM `0.30.1rc1.dev223+g44af287eb`, TP 8 + EP, H100). It sits next to the DeepSeek paths measured in [report.md](../report.md). Every statement is labelled: **source** (vLLM or config code read on 2026-09-28), **log** (server startup log), **estimate** (arithmetic from weight shapes, not measured), or **measured** (study `mimo-v26`, filled in as runs complete). Measured sections are marked *pending* until the data exists.
+This is a source- and config-level walkthrough of MiMo-V2.6-Flash-MOPD prefill and decode on the pinned runtime (vLLM `0.30.1rc1.dev223+g44af287eb`, TP 8 + EP, H100). It sits next to the DeepSeek paths measured in [the DeepSeek report](../reports/v41-vs-0731/report.md). Every statement is labelled: **source** (vLLM or config code read on 2026-09-28), **log** (server startup log), **estimate** (arithmetic from weight shapes, not measured), or **measured** (study `mimo-v26`, filled in as runs complete). Measured sections are marked *pending* until the data exists.
 
 ## 1. One decoder layer
 
@@ -41,7 +41,7 @@ x (4 parallel residual streams, hc_mult=4) ─ mHC mixing (Sinkhorn-normalised) 
 
 ## 3. Prefill (8,192-token chunks, chunked prefill)
 
-1. **Linear layers** (QKV, o, router, experts): about 2 × 14.2B FLOPs per token (*estimate*). QKV and dense FFN use the same block-scaled FP8 DeepGEMM path that made 0731's dense GEMM 2.3× cheaper per layer than V4.1's Marlin FP8 ([report.md §3](../report.md)). `o_proj` stays BF16, which costs extra compute and bandwidth at 4096×8192 per layer.
+1. **Linear layers** (QKV, o, router, experts): about 2 × 14.2B FLOPs per token (*estimate*). QKV and dense FFN use the same block-scaled FP8 DeepGEMM path that made 0731's dense GEMM 2.3× cheaper per layer than V4.1's Marlin FP8 ([DeepSeek report §3](../reports/v41-vs-0731/report.md)). `o_proj` stays BF16, which costs extra compute and bandwidth at 4096×8192 per layer.
 2. **Sliding-window layers (39):** each query attends to at most 128 keys plus a sink. Cost is O(n · 128) and independent of context. KV outside the window is freed (hybrid KV manager).
 3. **Full-attention layers (9):** dense causal FlashAttention, O(n²). Estimated attention FLOPs per token per layer ≈ 2 × 64 heads × (192 + 128) × L_ctx ≈ 41K × L_ctx. Averaged over a prompt of length n, that is ≈ 9 × 41K × n/2 per token: ≈ 3 GFLOP/token at 16K (about 10% of the linear work), ≈ 24 GFLOP at 128K (comparable to the linear work), and ≈ 48 GFLOP at 260K (≈ 1.7× the linear work). **Prediction:** MiMo's prefill µs/token should be flat to 16–32K, then rise more steeply than DeepSeek's. DeepSeek's sparse top-512 attention kept core attention at ≈ 50 ms per chunk at any context; only its indexer grew.
 4. **Communication:** two TP all-reduces per layer, 96 per chunk, each `[8192, 4096]` BF16 = 67.1 MB. That is the message size 0731 sent through symm-mem multimem (79 ms per 87 all-reduces). V4.1's 84 MB messages fell to NCCL ring-LL (108 ms).
@@ -104,5 +104,5 @@ x (4 parallel residual streams, hc_mult=4) ─ mHC mixing (Sinkhorn-normalised) 
 
 ### 5d. Prefix reuse and speculation (launches 2–4)
 
-- **Prefix reuse needs a second touch**, as on 0731 (the hybrid SWA prefix checkpoint): requests 1–2 on a new 64K prefix miss, and request 3 hits in 0.35 s. See [report_mimo.md §1c](../report_mimo.md).
-- **Speculation:** DFlash-7 gives 1.68× and MTP (layer 0 reused ×3) 1.53× at c1; both are ≤ 1.06× at c ≥ 16 because this workload is prefill-bound. See [report_mimo.md §3](../report_mimo.md).
+- **Prefix reuse needs a second touch**, as on 0731 (the hybrid SWA prefix checkpoint): requests 1–2 on a new 64K prefix miss, and request 3 hits in 0.35 s. See [MiMo report §1c](../reports/mimo-v26/report.md).
+- **Speculation:** DFlash-7 gives 1.68× and MTP (layer 0 reused ×3) 1.53× at c1; both are ≤ 1.06× at c ≥ 16 because this workload is prefill-bound. See [MiMo report §3](../reports/mimo-v26/report.md).

@@ -1,6 +1,6 @@
 # DeepSeek V4.1 Flash vs V4 Flash 0731 — serving, prefill components, and DSpark
 
-Study `v41-vs-0731` ([target.md](target.md)). One reserved 8×H100 node, one pinned vLLM build, identical server settings, harness, prompts, and seeds for both checkpoints. Measured 2026-09-27/28.
+Study `v41-vs-0731` ([target.md](../../target.md)). One reserved 8×H100 node, one pinned vLLM build, identical server settings, harness, prompts, and seeds for both checkpoints. Measured 2026-09-27/28.
 
 | Checkpoint | Revision | Role |
 | --- | --- | --- |
@@ -29,16 +29,16 @@ Evidence labels: **measured** (endpoint numbers), **trace+source** (profiler ker
 | Item | Value |
 | --- | --- |
 | Hardware | 8× NVIDIA H100 80GB HBM3, all-pairs NV18 NVLink, 2 NUMA nodes, driver 580.105.08 |
-| Runtime | vLLM `0.30.1rc1.dev223+g44af287eb`, torch `2.13.0+cu132`, Triton `3.7.1` ([environment.txt](reports/v41-vs-0731/environment.txt)) |
+| Runtime | vLLM `0.30.1rc1.dev223+g44af287eb`, torch `2.13.0+cu132`, Triton `3.7.1` ([environment.txt](environment.txt)) |
 | Server | TP 8 + expert parallel, `--language-model-only`, GPU memory utilization 0.90, `max_model_len` 262,144, `max_num_seqs` 64, default `max_num_batched_tokens` 8,192 (chunked prefill), default KV dtype |
 | Tokenizer / parsers | `deepseek_v41` vs `deepseek_v4`. `chat_template_kwargs.thinking=false` maps to chat mode in both |
 | Requests | `vllm bench serve`, `openai-chat`, unlimited arrival rate with a client concurrency cap, `ignore_eos`, 256 output tokens, `temperature=0`, thinking off, random-token prompts (same token counts; prefix prompt files are shared text and tokenize to the same 67,584 tokens in both) |
 | KV capacity (speculation off) | V4.1 9,179,728 tokens; 0731 1,711,998 tokens |
 | Launches per model | `off` or `off-profidle` (prefix caching off; idle torch profiler, shown to have no effect: V4.1 c1 88.4 vs 88.7, c64 292.3 vs 292.2 tok/s) → concurrency, context, prefix cache-off, isolated, traces · `off-prefix` → prefix cold/prewarmed · one launch per DSpark arm |
 
-Plans were declared before collection: [plan.json](reports/v41-vs-0731/plan.json), [plan_0731_addendum.json](reports/v41-vs-0731/plan_0731_addendum.json), and [plan_dspark.json](reports/v41-vs-0731/plan_dspark.json). A run is valid only if every request completed, output equals n×256 tokens, and server-counted prompt tokens are at least 98% of the target. Warmups use disjoint seeds, and repeat order alternates. Per-run evidence (manifests, per-request `bench.json`, summaries, Prometheus scrapes, 1 Hz scheduler/KV/GPU polling, and server/harness logs) is in [reports/v41-vs-0731/data/](reports/v41-vs-0731/data/). Each model's `CURATION.json` records what was gzipped, sanitized, or excluded.
+Plans were declared before collection: [plan.json](plan.json), [plan_0731_addendum.json](plan_0731_addendum.json), and [plan_dspark.json](plan_dspark.json). A run is valid only if every request completed, output equals n×256 tokens, and server-counted prompt tokens are at least 98% of the target. Warmups use disjoint seeds, and repeat order alternates. Per-run evidence (manifests, per-request `bench.json`, summaries, Prometheus scrapes, 1 Hz scheduler/KV/GPU polling, and server/harness logs) is in [data/](data/). Each model's `CURATION.json` records what was gzipped, sanitized, or excluded.
 
-Full tables: [comparison_tables.md](reports/v41-vs-0731/comparison_tables.md) (every metric, V4.1 vs 0731) · [v41_off_tables.md](reports/v41-vs-0731/v41_off_tables.md) and [v4-0731_off_tables.md](reports/v41-vs-0731/v4-0731_off_tables.md) (per model, with telemetry) · [dspark_tables.md](reports/v41-vs-0731/dspark_tables.md) (DSpark vs own baseline, acceptance). CSV versions sit alongside them.
+Full tables: [comparison_tables.md](comparison_tables.md) (every metric, V4.1 vs 0731) · [v41_off_tables.md](v41_off_tables.md) and [v4-0731_off_tables.md](v4-0731_off_tables.md) (per model, with telemetry) · [dspark_tables.md](dspark_tables.md) (DSpark vs own baseline, acceptance). CSV versions sit alongside them.
 
 ## 1. Speculation off: V4.1 vs 0731
 
@@ -101,7 +101,7 @@ The gap narrows with context: V4.1's indexer is cheaper at long context (section
 
 Hit counts are per repeat (identical in every repeat). V4.1 misses exactly once per prefix when cold, and never when prewarmed. **0731 misses exactly twice per prefix when cold, and once per prefix even after prewarming**, so its prewarmed result degrades with prefix count (489 → 399 → 233 tok/s) while V4.1's stays flat (≈ 521 tok/s).
 
-**Sequential check** ([bench/prefix_reuse_check.py](bench/prefix_reuse_check.py); c1, chat completions, `max_tokens=1`, reset before each sequence; raw JSON in `data/<model>/_prefix_reuse_check/`):
+**Sequential check** ([bench/prefix_reuse_check.py](../../bench/prefix_reuse_check.py); c1, chat completions, `max_tokens=1`, reset before each sequence; raw JSON in `data/<model>/_prefix_reuse_check/`):
 
 | Request on a new 64K prefix | V4.1 hit / wall | 0731 hit / wall |
 | --- | --- | --- |
@@ -121,7 +121,7 @@ This holds for every prefix tested, and is not specific to the first prefix afte
 
 ## 3. Where prefill time goes (diagnostic traces, rank 0)
 
-One c1 request at 16K (2 chunks + a 4-token tail) and one at 64K (8 chunks + tail) per model, on the `off-profidle` launch. Unit: summed GPU kernel time (ms) inside each 8,192-token prefill step, split by [bench/trace_breakdown.py](bench/trace_breakdown.py) categories. Summaries and per-step CSVs are in `data/<model>/profiles/`; the full 8-rank traces are kept locally only.
+One c1 request at 16K (2 chunks + a 4-token tail) and one at 64K (8 chunks + tail) per model, on the `off-profidle` launch. Unit: summed GPU kernel time (ms) inside each 8,192-token prefill step, split by [bench/trace_breakdown.py](../../bench/trace_breakdown.py) categories. Summaries and per-step CSVs are in `data/<model>/profiles/`; the full 8-rank traces are kept locally only.
 
 | Component | V4.1 16K chunk 2 | 0731 16K chunk 2 | V4.1 − 0731 | V4.1 64K chunk 8 (57K ctx) | 0731 64K chunk 8 |
 |---|---:|---:|---:|---:|---:|
@@ -146,7 +146,7 @@ One c1 request at 16K (2 chunks + a 4-token tail) and one at 64K (8 chunks + tai
 
 ## 4. DSpark speculative decoding
 
-Setup per [docs/speculative-decoding.md](docs/speculative-decoding.md):
+Setup per [docs/speculative-decoding.md](../../docs/speculative-decoding.md):
 
 ```json
 {"method": "dspark", "num_speculative_tokens": 5, "revision": "<target sha>",
@@ -154,7 +154,7 @@ Setup per [docs/speculative-decoding.md](docs/speculative-decoding.md):
  "enable_adaptive_verification": false | true}
 ```
 
-The draft ships inside each target checkpoint, but vLLM resolves its revision separately (default `main`), so it is pinned to the target SHA. Resolved draft classes: `DSparkV41DraftModel` (V4.1) and `DSparkDraftModel` (0731). Prefix caching is off. Workload: the concurrency points at c1/4/16/64 with the same seeds, and each model is compared with its own speculation-off run. Launch order: V4.1 fixed → V4.1 adaptive → 0731 fixed → 0731 adaptive, chained without restarts in between ([bench/chain_dspark.sh](bench/chain_dspark.sh)). Tables: [dspark_tables.md](reports/v41-vs-0731/dspark_tables.md), generated by [bench/spec_compare.py](bench/spec_compare.py).
+The draft ships inside each target checkpoint, but vLLM resolves its revision separately (default `main`), so it is pinned to the target SHA. Resolved draft classes: `DSparkV41DraftModel` (V4.1) and `DSparkDraftModel` (0731). Prefix caching is off. Workload: the concurrency points at c1/4/16/64 with the same seeds, and each model is compared with its own speculation-off run. Launch order: V4.1 fixed → V4.1 adaptive → 0731 fixed → 0731 adaptive, chained without restarts in between ([bench/chain_dspark.sh](../../bench/chain_dspark.sh)). Tables: [dspark_tables.md](dspark_tables.md), generated by [bench/spec_compare.py](../../bench/spec_compare.py).
 
 ### 4a. Throughput vs each model's own speculation-off baseline
 
@@ -214,7 +214,7 @@ Adaptive verification captures an additional full-plus-piecewise CUDA-graph rout
 
 ### 4e. Output agreement with speculation off (greedy target)
 
-[dspark_output_match.md](reports/v41-vs-0731/dspark_output_match.md) ([bench/compare_outputs.py](bench/compare_outputs.py)) compares each prompt's text with the speculation-off run on the same prompt. Exact matches, summed over repeats:
+[dspark_output_match.md](dspark_output_match.md) ([bench/compare_outputs.py](../../bench/compare_outputs.py)) compares each prompt's text with the speculation-off run on the same prompt. Exact matches, summed over repeats:
 
 | Arm | c1 | c4 | c16 | c64 |
 | --- | --- | --- | --- | --- |
@@ -250,7 +250,7 @@ Outputs typically diverge after about 60–140 characters. **This is not evidenc
 
 ## Reproduce
 
-See [docs/reproduce.md](docs/reproduce.md) for the full command sequence, environment fixes, and timings. In short:
+See [docs/reproduce.md](../../docs/reproduce.md) for the full command sequence, environment fixes, and timings. In short:
 
 ```bash
 source /root/vllm/bin/activate            # vLLM 0.30.1rc1.dev223+g44af287eb

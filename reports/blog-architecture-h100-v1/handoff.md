@@ -1,10 +1,10 @@
 # Handoff: blog-architecture-h100-v1
 
-**Current article selection, 2026-10-09:** this study supplies DeepSeek 0731, V4.1, MiMo and GLM to the main blog. Its Qwen **FP8** measurements are reference only; the article's Qwen deployment is BF16 from the second-node study. Follow [the source-selection rules](../../blog_target.md#11-current-blog-evidence-selection-2026-10-09). The completed counts, plans and numerical artifacts below remain unchanged; no rerun is requested.
+**Current article selection, 2026-10-09:** this study supplies DeepSeek 0731, V4.1, MiMo and GLM to the main blog. Its Qwen **FP8** measurements are reference only; the article's Qwen deployment is BF16 from the second-node study. Follow [the source-selection rules](../../target.md#11-current-blog-evidence-selection-2026-10-09). The completed counts, plans and numerical artifacts below remain unchanged; no rerun is requested.
 
 **Qwen decision, 2026-10-08:** [use the original BF16 checkpoint for all future Qwen work](../../docs/qwen-checkpoint-policy.md). The completed Qwen results and `qwen-38` commands below are FP8 history. Do not rerun those Qwen entries or replace weights inside this frozen study. BF16 was measured on 2026-10-08 in the separate study [`qwen-bf16-h100-v1`](../qwen-bf16-h100-v1/handoff.md) on a second node; the completed counts below do not include those measurements.
 
-Session of 2026-10-07 on one rented 8×H100 80GB node. Results: [findings.md](findings.md). Plan: [blog_target.md](../../blog_target.md). Build: vLLM `0.31.1rc1.dev50+g554340f3d` (`554340f3d3259e321be4c07282be7a02a5aeef83`) in `/root/vllm-latest`.
+Session of 2026-10-07 on one rented 8×H100 80GB node. Results: [findings.md](findings.md). Plan: [target.md](../../target.md), sections 1–11. Build: vLLM `0.31.1rc1.dev50+g554340f3d` (`554340f3d3259e321be4c07282be7a02a5aeef83`) in `/root/vllm-latest`.
 
 ## 1. Status of every planned item
 

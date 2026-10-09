@@ -1,6 +1,6 @@
 # Handoff: qwen-bf16-h100-v1
 
-**Current article selection, 2026-10-09:** this study supplies the **main Qwen BF16 results**; Qwen FP8 is historical reference only. Combine BF16 throughput with the four first-node deployments using the MiMo control, and report BF16 latency separately. Main Qwen component/memory figures use this study's traces, snapshots and logs. [blog_target.md section 11](../../blog_target.md#11-current-blog-evidence-selection-2026-10-09) records sources and counts. The immediate work is editorial; the follow-ups below require a new authorized GPU session.
+**Current article selection, 2026-10-09:** this study supplies the **main Qwen BF16 results**; Qwen FP8 is historical reference only. Combine BF16 throughput with the four first-node deployments using the MiMo control, and report BF16 latency separately. Main Qwen component/memory figures use this study's traces, snapshots and logs. [target.md section 11](../../target.md#11-current-blog-evidence-selection-2026-10-09) records sources and counts. The immediate work is editorial; the follow-ups below require a new authorized GPU session.
 
 Session of 2026-10-08 on one rented 8×H100 80GB node, authorized by Tan that day ("run Qwen3.8-Flash-Next with the original BF16 checkpoint"). Results: [findings.md](findings.md). Checkpoint rule: [docs/qwen-checkpoint-policy.md](../../docs/qwen-checkpoint-policy.md). Build: vLLM `0.31.1rc1.dev50+g554340f3d` (`554340f3d3259e321be4c07282be7a02a5aeef83`) in `/root/vllm-latest`, the build of `blog-architecture-h100-v1`.
 

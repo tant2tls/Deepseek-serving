@@ -1,10 +1,10 @@
 # Three-model serving study: evidence review and experiment design
 
-**Current blog decision, 2026-10-09:** refine the article from the completed October results, using **Qwen BF16 as the main Qwen deployment** and Qwen FP8 only as a historical reference. The other four deployments retain their first-node results; BF16 comes from the second node with a MiMo control. [blog_target.md section 11](blog_target.md#11-current-blog-evidence-selection-2026-10-09) governs source selection, counts and the throughput-only cross-node comparison. The review below governs the separate, later speculative study and does not authorize a new GPU session.
+**Current blog decision, 2026-10-09:** refine the article from the completed October results, using **Qwen BF16 as the main Qwen deployment** and Qwen FP8 only as a historical reference. The other four deployments retain their first-node results; BF16 comes from the second node with a MiMo control. [target.md section 11](target.md#11-current-blog-evidence-selection-2026-10-09) governs source selection, counts and the throughput-only cross-node comparison. The review below governs the separate, later speculative study and does not authorize a new GPU session.
 
 **Later decision, 2026-10-08:** Tan requires the original **BF16** `Qwen/Qwen3.8-Flash-Next` for all future Qwen work, with no new FP8 checkpoint runs, conversion or fallback. The source pin and preparation boundary are recorded in [docs/qwen-checkpoint-policy.md](docs/qwen-checkpoint-policy.md). The October blog's Qwen measurements remain explicitly FP8. BF16 was loaded and measured later the same day in the separate study `qwen-bf16-h100-v1` ([findings](reports/qwen-bf16-h100-v1/findings.md)). This does not expand the separate three-model speculative study reviewed below.
 
-Reviewed 2026-09-30 against the local reports, curated per-run JSON, launch scripts and analysis code. This is a plan for future measurements, not a new GPU result. [target.md](target.md) defines the later speculative objective; [the GPU-session plan](docs/three-model-h100-plan.md) defines its readiness gates, run counts and execution order. The immediate editorial objective is in [blog_target.md](blog_target.md).
+Reviewed 2026-09-30 against the local reports, curated per-run JSON, launch scripts and analysis code. This is a plan for future measurements, not a new GPU result. [target.md section 12](target.md#12-later-study-spec-realtext-h100-v1) defines the later speculative objective; [the GPU-session plan](docs/three-model-h100-plan.md) defines its readiness gates, run counts and execution order. The immediate editorial objective is in [target.md](target.md), sections 1–11.
 
 ## 1. Scope and binding decision
 
@@ -45,7 +45,7 @@ Rounded SD `0.0` does not mean zero variability. Evidence: [DeepSeek raw runs](r
 | 0731 | Faster than V4.1 on the tested long uncached prompts; flatter c1 TPOT with context; largest fixed-k5 c1 relative speedup | Slower than MiMo in those uncached tests; smaller reported KV pool; some large first-repeat slowdowns | Whether stronger DSpark agreement persists on real tasks and repays verification at high load |
 | V4.1 | Lower short-prompt TTFT than 0731 (1K: 148 vs 185 ms, but MiMo is 93 ms); largest reported AR KV pool; historical one-touch prefix reuse advantage | Slowest long-prompt uncached deployment here; Marlin dense GEMM and collective costs; CED prompt skipping absent in the measured build | Real-text low-load behavior, graph-aware decode cost, and a supported single-change runtime ablation before claiming optimization gains |
 
-Historical prefix evidence remains useful but bounded: V4.1 beats MiMo with 16 prefixes warmed once (520.6 vs 303.0 tok/s), whereas MiMo's individual cached-hit check was faster. This is an advantage under the **tested warming procedure**, not a universal ranking of fully warm prefix serving. No new prefix experiments are in scope. See [report.md](report.md) and [report_mimo.md](report_mimo.md).
+Historical prefix evidence remains useful but bounded: V4.1 beats MiMo with 16 prefixes warmed once (520.6 vs 303.0 tok/s), whereas MiMo's individual cached-hit check was faster. This is an advantage under the **tested warming procedure**, not a universal ranking of fully warm prefix serving. No new prefix experiments are in scope. See the [DeepSeek report](reports/v41-vs-0731/report.md) and the [MiMo report](reports/mimo-v26/report.md).
 
 ### Corrections that govern the new interpretation
 
@@ -242,8 +242,8 @@ Chain launches, run measurements promptly after readiness, and stop servers when
 
 ## Sources
 
-- [R1: DeepSeek results and caveats](report.md)
-- [R2: MiMo results and runtime limitations](report_mimo.md)
+- [R1: DeepSeek results and caveats](reports/v41-vs-0731/report.md)
+- [R2: MiMo results and runtime limitations](reports/mimo-v26/report.md)
 - [R3: Active target and comparison rules](target.md)
 - [R4: Speculative support and metric definitions](docs/speculative-decoding.md)
 - [R5: Existing harness](bench/run_matrix.py)

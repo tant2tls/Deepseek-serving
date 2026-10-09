@@ -1,6 +1,6 @@
 # Next GPU session: three-model H100 study
 
-Prepared 2026-09-30. Study ID: `spec-realtext-h100-v1`. **Status: documentation ready; harness extensions, datasets and all new measurements pending.** No GPU was launched for this review. Scope: [target.md](../target.md); analysis and experiment definitions: [update.md](../update.md). Historical studies remain complete and unchanged.
+Prepared 2026-09-30. Study ID: `spec-realtext-h100-v1`. **Status: documentation ready; harness extensions, datasets and all new measurements pending.** No GPU was launched for this review. Scope: [target.md section 12](../target.md#12-later-study-spec-realtext-h100-v1); analysis and experiment definitions: [update.md](../update.md). Historical studies remain complete and unchanged.
 
 ## 1. Questions and evidence needed
 
@@ -124,4 +124,4 @@ reports/spec-realtext-h100-v1/handoff.md
 
 Keep weights, caches, credentials, private node/path details and full profiler traces out of Git. Curate small evidence with hashes and explicit sanitization; never change numerical results. Run `python tools/audit_references.py` on a clean clone including the intended published changes. Do not edit the earlier source repository. Commit/push/merge only as requested.
 
-The handoff must give the last completed point and next exact command, all pending/failed/unsupported cells, dataset and runtime pins, actual rental duration, server-stopped confirmation, provisional findings and unresolved questions. Core completeness follows [target.md](../target.md); optional/deferred work is not disguised as required unfinished work.
+The handoff must give the last completed point and next exact command, all pending/failed/unsupported cells, dataset and runtime pins, actual rental duration, server-stopped confirmation, provisional findings and unresolved questions. Core completeness follows [target.md section 12.4](../target.md#124-completion-and-handoff); optional/deferred work is not disguised as required unfinished work.

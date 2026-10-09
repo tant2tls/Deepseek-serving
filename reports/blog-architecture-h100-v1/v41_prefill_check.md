@@ -5,7 +5,7 @@ Checked 2026-10-07 on vLLM `0.31.1rc1.dev50+g554340f3d` (commit `554340f3d3259e3
 ## Short answer
 
 - **The timer is correct; what matters is which layers the build executes.** vLLM times wall clock around whatever it runs. It does not model the architecture.
-- **On the old pinned build (`44af287e…`) the answer was "no".** All 40 layers processed every prompt token, so the historical V4.1 prefill numbers in [report.md](../../report.md) (54.5 µs per token, 399 ms kernel sum per chunk) describe a path the report does not intend.
+- **On the old pinned build (`44af287e…`) the answer was "no".** All 40 layers processed every prompt token, so the historical V4.1 prefill numbers in [the DeepSeek report](../v41-vs-0731/report.md) (54.5 µs per token, 399 ms kernel sum per chunk) describe a path the report does not intend.
 - **On the new build the answer is "mostly yes".** During prefill, layers 0–20 process every prompt token and layers 21–39 process only each request's last 128 tokens. That is **21 full layers, not the report's 20**, and the skip applies only to prefill steps of at least 768 tokens.
 
 ## What the technical report says

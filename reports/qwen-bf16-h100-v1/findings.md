@@ -1,6 +1,6 @@
 # Findings: Qwen3.8-Flash-Next, original BF16 checkpoint, on 8×H100
 
-Study `qwen-bf16-h100-v1`, measured 2026-10-08 on one rented 8×H100 80GB node. Protocol: [blog_target.md](../../blog_target.md), unchanged. Checkpoint rule: [docs/qwen-checkpoint-policy.md](../../docs/qwen-checkpoint-policy.md). Status of every item, deviations and commands: [handoff.md](handoff.md).
+Study `qwen-bf16-h100-v1`, measured 2026-10-08 on one rented 8×H100 80GB node. Protocol: [target.md](../../target.md) sections 1–11, unchanged. Checkpoint rule: [docs/qwen-checkpoint-policy.md](../../docs/qwen-checkpoint-policy.md). Status of every item, deviations and commands: [handoff.md](handoff.md).
 
 **Read this first**
 

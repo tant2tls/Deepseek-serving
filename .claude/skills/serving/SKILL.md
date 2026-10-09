@@ -10,7 +10,7 @@ GPUs are billed by the hour. Do everything that needs no GPU first, never leave 
 ## 1. Read before acting
 
 - `AGENTS.md` for the current scope and standing rules. Prefix caching stays **off** unless Tan explicitly asks; speculation is off for the blog study.
-- `blog_target.md` for the blog study, `target.md` for model revisions and the later speculative study.
+- `target.md`, the single target file: the blog study (sections 1–11), model revisions, and the later speculative study (section 12).
 - `docs/reproduce.md` section 0 for the verified fresh-node procedure and timings.
 - `docs/model-setup.md` for the model you are about to launch: its flags, the log lines that prove the right path is running, its thinking switch and its known pitfalls.
 - [Qwen checkpoint policy](../../../docs/qwen-checkpoint-policy.md): all Qwen runs use original BF16 `Qwen/Qwen3.8-Flash-Next` through the key `qwen-38-bf16` in study `qwen-bf16-h100-v1` (`export BLOG_STUDY=qwen-bf16-h100-v1`). No FP8 runs, conversion or fallback: the old `qwen-38` key is refused by `serve.sh` and by the chain, and its results stay as FP8 history.
