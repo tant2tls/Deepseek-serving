@@ -15,7 +15,11 @@ Pin the tokenizer and any remote code to the same original-checkpoint revision. 
 
 ## Existing results stay FP8
 
-All Qwen values in `blog-architecture-h100-v1` came from the FP8 checkpoint. Keep the original plan, addendum, manifests, raw results, CSVs and provenance unchanged. Display the model as **Qwen3.8-Flash-Next (FP8)** or **Qwen FP8** in the existing blog and tables. Its throughput, memory, kernel selections and ranking must not be attributed to the unmeasured BF16 deployment.
+**Article naming:** the main model is displayed as **Qwen3.8-Flash-Next**, or **Qwen** in compact charts. That name refers to the original BF16 checkpoint; precision and physical-node details are documented in the measurement notes, not appended to the name. All five deployments share the core serving configuration and workload, with the recorded node and model-specific exceptions preserved.
+
+All Qwen values in `blog-architecture-h100-v1` came from the FP8 checkpoint. Keep the original plan, addendum, manifests, raw results, CSVs and provenance unchanged. Wherever those historical values appear, display the model as **Qwen3.8-Flash-Next (FP8)** or **Qwen FP8**. Its throughput, memory, kernel selections and ranking must not be attributed to BF16, which has its own measured evidence.
+
+**Blog selection, Tan's instruction of 2026-10-09:** the main article, charts and takeaways now use **Qwen BF16** from `qwen-bf16-h100-v1`; Qwen FP8 is **historical reference only**. The other four main deployments come from the first-node study. Follow [blog_target.md section 11](../blog_target.md#11-current-blog-evidence-selection-2026-10-09): label the second node, show the MiMo control, compare throughput across nodes, and keep BF16 latency separate from first-node rankings. This does not exclude GLM's native FP8 deployment or DeepSeek's native FP8 KV. It selects the original Qwen checkpoint for the article.
 
 Keep the older [FP8 reference bundle](../references/qwen3.8-flash-next-fp8/README.md) as historical evidence. Retaining records does not authorize new FP8 reproduction runs. BF16 results live in their own study; never append BF16 points to an FP8 curve or overwrite a completed study's identity.
 

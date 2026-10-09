@@ -1,8 +1,10 @@
 # Three-model serving study: evidence review and experiment design
 
+**Current blog decision, 2026-10-09:** refine the article from the completed October results, using **Qwen BF16 as the main Qwen deployment** and Qwen FP8 only as a historical reference. The other four deployments retain their first-node results; BF16 comes from the second node with a MiMo control. [blog_target.md section 11](blog_target.md#11-current-blog-evidence-selection-2026-10-09) governs source selection, counts and the throughput-only cross-node comparison. The review below governs the separate, later speculative study and does not authorize a new GPU session.
+
 **Later decision, 2026-10-08:** Tan requires the original **BF16** `Qwen/Qwen3.8-Flash-Next` for all future Qwen work, with no new FP8 checkpoint runs, conversion or fallback. The source pin and preparation boundary are recorded in [docs/qwen-checkpoint-policy.md](docs/qwen-checkpoint-policy.md). The October blog's Qwen measurements remain explicitly FP8. BF16 was loaded and measured later the same day in the separate study `qwen-bf16-h100-v1` ([findings](reports/qwen-bf16-h100-v1/findings.md)). This does not expand the separate three-model speculative study reviewed below.
 
-Reviewed 2026-09-30 against the local reports, curated per-run JSON, launch scripts and analysis code. This is a plan for future measurements, not a new GPU result. [target.md](target.md) defines the active objective; [the GPU-session plan](docs/three-model-h100-plan.md) defines readiness gates, run counts and execution order.
+Reviewed 2026-09-30 against the local reports, curated per-run JSON, launch scripts and analysis code. This is a plan for future measurements, not a new GPU result. [target.md](target.md) defines the later speculative objective; [the GPU-session plan](docs/three-model-h100-plan.md) defines its readiness gates, run counts and execution order. The immediate editorial objective is in [blog_target.md](blog_target.md).
 
 ## 1. Scope and binding decision
 

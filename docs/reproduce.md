@@ -2,7 +2,9 @@
 
 **Qwen rule (2026-10-08):** use only original BF16 `Qwen/Qwen3.8-Flash-Next` through the key `qwen-38-bf16`; see [the pinned policy](qwen-checkpoint-policy.md). It was measured the same day in the separate study `qwen-bf16-h100-v1` on a second rented node; the exact procedure is [section 0.1](#01-a-second-node-qwen-bf16-in-its-own-study-verified-2026-10-08). The Qwen download sizes, startup timings and `qwen-38` commands of the first October session describe **FP8 history**; that key is refused by the launcher. No new FP8 runs.
 
-**Active-phase routing, 2026-09-30:** follow [target.md](../target.md) and [the three-model GPU plan](three-model-h100-plan.md) for `spec-realtext-h100-v1`. Extend the harness locally first; use fresh AR controls, variable 256/2048 output lengths, pinned real text and a new no-prefix chain. All new prefix tests, including reuse checks and prewarming, are deferred. H200 and new models are outside the next session. Do not run the historical launch matrix or `chain_mimo.sh` as the active workflow.
+**Current routing, 2026-10-09:** refine the blog using the completed results selected in [blog_target.md section 11](../blog_target.md#11-current-blog-evidence-selection-2026-10-09): four first-node deployments plus original Qwen BF16 on the second node. Qwen FP8 is reference only. Show the MiMo control and compare throughput across nodes; keep BF16 latency separate from first-node rankings. Use each study's own CSVs, logs and traces. No new GPU session is authorized, and completed points should not be rerun.
+
+**Later speculative phase:** follow [target.md](../target.md) and [the three-model GPU plan](three-model-h100-plan.md) for `spec-realtext-h100-v1`. Extend the harness locally first; use fresh AR controls, variable 256/2048 output lengths, pinned real text and a new no-prefix chain. All new prefix tests, including reuse checks and prewarming, are deferred. H200 and new models are outside that study. Do not run the historical launch matrix or `chain_mimo.sh` as its workflow.
 
 ## 0. Fresh-node quick setup (verified 2026-10-07, blog study)
 
