@@ -279,6 +279,41 @@ def session_routing():
     wcsv(RDIR / "routing.csv", rows)
 
 
+SUPPORT = (("class", r"Resolved architecture: (\S+)"), ("engine", r"Initializing a V1 LLM engine \((v[^)]+)\)"),
+           ("weights_gib_per_gpu", r"Model loading took ([\d.]+) GiB"), ("kv_pool_gib_per_gpu", r"Available KV cache memory: ([\d.]+) GiB"),
+           ("kv_pool_tokens", r"GPU KV cache size: ([\d,]+) tokens"), ("max_concurrency_262k", r"Maximum concurrency for [\d,]+ tokens per request: ([\d.]+)x"),
+           ("kv_block", r"Setting kv cache block size to (\d+ for .*?) backend"), ("kv_layout", r"Using (\S+) KV cache layout"),
+           ("moe_backend", r"Using '?([A-Za-z0-9_ ]+?)'? (?:Mxfp4 |Fp8 |Unquantized |Nvfp4 )?MoE backend"),
+           ("moe_backend_line", r"((?:Using|Selected) [^\n]*MoE backend[^\n]*)"), ("experts_class", r"Using (\w*Experts\w*)"),
+           ("expert_dtype", r"expert_dtype resolved to '([^']+)'"), ("chunked_prefill", r"Chunked prefill is enabled with (max_num_batched_tokens=\d+)"),
+           ("prefix_caching", r"'enable_prefix_caching': (\w+)"), ("allreduce_tp", r"Using (\[[^\]]+\]) all-reduce backends \(in dispatch order\) for group 'tp:0'"),
+           ("allreduce_ep", r"Using (\[[^\]]+\]) all-reduce backends \(in dispatch order\) for group 'ep:0'"),
+           ("fusions", r"Enabled custom fusions: ([^\n]+)"), ("checkpoint_gib", r"Checkpoint size: ([\d.]+) GiB"),
+           ("cudagraph_gib", r"Graph capturing finished in \d+ secs, took ([\d.]+) GiB"),
+           ("memory_line", r"(Free memory on device[^\n]*?CUDAGraph memory)"), ("attention_warmup", r"(Warming up [^\n]*attention[^\n]*)"),
+           ("engram", r"([^\n]*[Ee]ngram[^\n]*)"), ("quantization", r"([^\n]*(?:quantiz|Quantiz|dtype resolved|kv_cache_dtype|Fp8|FP8)[^\n]*)"),
+           ("attention_backend", r"([^\n]*(?:attention backend|Attention backend|attn backend|AttentionBackend)[^\n]*)"))
+
+
+def session_support():
+    """Architecture and support check: what each server log says the build loaded (executed implementation)."""
+    rows = []
+    for mk in MODELS:
+        logs = sorted((SDIR / mk / "_server").glob("serve-off-profidle-*.log"))
+        if not logs:
+            continue
+        text = re.sub(r"\x1b\[[0-9;]*[A-Za-z]", "", logs[-1].read_text(errors="replace").replace("\r", "\n"))
+        text = re.sub(r"^\((?:\w+) pid=\d+\) ", "", text, flags=re.M)
+        ready = re.search(r"Application startup complete", text)
+        for key, pat in SUPPORT:
+            vals = list(dict.fromkeys(m if isinstance(m, str) else m[0] for m in re.findall(pat, text)))
+            for v in vals[:6]:
+                v = re.sub(r"^(?:INFO|WARNING) \d\d-\d\d \d\d:\d\d:\d\d \[[^\]]+\] ", "", v.strip())
+                rows.append(dict(study=STUDY, model=mk, fact=key, value=v[:400], reached_ready=bool(ready),
+                                 evidence=f"results/{STUDY}/{mk}/_server/{logs[-1].name}"))
+    wcsv(RDIR / "support.csv", rows)
+
+
 def session_memory():
     """Live state at the eight decode conditions: usage gauge x per-rank pool, tokens counted by the server."""
     pool = pools()
@@ -384,12 +419,12 @@ def breakdown(trace, until_next=False):
         if j > i and m:
             rows.append(dict(prefill_reqs=int(m[1]), prefill_tokens=int(m[2]), decode_reqs=int(m[3]),
                              decode_tokens=int(m[4]), span_ms=(t - s) / 1e3, kernel_ms=sum(by.values()) / 1e3,
-                             n_kernels=j - i, **{f"{c}_ms": by[c] / 1e3 for c in CATN}, _other=names))
+                             n_kernels=j - i, **{f"{c}_ms": by[c] / 1e3 for c in CATN}, _other=names, _t0=s, _t1=t))
         i = j
     return rows, kern
 
 
-CLASSIFIER = 1  # bump when the rules above change: the session's cached per-trace rows are then rebuilt
+CLASSIFIER = 2  # bump when the rules above change: the session's cached per-trace rows are then rebuilt
 
 
 def _trace_rows(job):
@@ -432,9 +467,18 @@ def _trace_rows(job):
             x[0] += 1; x[1] += e["dur"]
         inv = dict(capture=label, model=mk, classifier=CLASSIFIER, steps_in_trace=len(steps),
                    note="every GPU kernel of the rank-0 trace: calls and summed duration in microseconds, with the "
-                        "component it was assigned to",
+                        "component it was assigned to; step_timeline lists, for the last averaged step of each "
+                        "group, every kernel call in time order as [index into names, start in microseconds from "
+                        "the step start, duration in microseconds, stream id], so layers can be told apart later",
                    kernels=[dict(name=n, component=cat(n), calls=v[0], us=round(v[1], 1))
                             for n, v in sorted(c.items(), key=lambda kv: -kv[1][1])])
+        names, timeline = {}, {}
+        for g, ss in groups.items():
+            if ss:
+                t0, t1 = ss[-1]["_t0"], ss[-1]["_t1"]
+                timeline[g] = [[names.setdefault(e["name"][:200], len(names)), round(e["ts"] - t0, 1), round(e["dur"], 1), e.get("tid")]
+                               for e in kern if t0 <= e["ts"] < t1]
+        inv.update(names=list(names), step_timeline=timeline)
     return rows, other, inv
 
 
@@ -630,6 +674,7 @@ def publish(only=None):
     picks = [SDIR / "plan.json", *sorted(SDIR.glob("plan_addendum_*.json")), SDIR / "_inputs" / "manifest.json",
              SDIR / "_inputs" / "extra_tokens.json", SDIR / "_inputs" / "corpus" / "sources.json",
              SDIR / "_logs" / "chain.log", SDIR / "_logs" / "shutdown.jsonl", SDIR / "_logs" / "timeline.jsonl",
+             SDIR / "_logs" / "hbm_counter_attempt.txt",
              *sorted((SDIR / "_env").glob("*"))]
     for src in picks:
         if not src.is_file():
@@ -699,4 +744,4 @@ def compare():
 if __name__ == "__main__":
     {"compare": compare, "pilot": session_pilot if SESSION else pilot, "serving": serving, "memory": memory,
      "components": components, "tables": tables, "publish": publish, "intervals": session_intervals,
-     "natural": session_natural, "routing": session_routing}[sys.argv[1]]()
+     "natural": session_natural, "routing": session_routing, "support": session_support}[sys.argv[1]]()

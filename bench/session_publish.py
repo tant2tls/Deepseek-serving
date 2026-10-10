@@ -112,7 +112,7 @@ def main():
     with open(SDIR / "_logs" / "publish.lock", "w") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)  # one publisher at a time (a background analysis may also publish)
         tables = [br.serving, br.session_pilot, br.session_memory, br.session_intervals, br.session_natural,
-                  br.session_routing]
+                  br.session_routing, br.session_support]
         if kind in ("diag", "all", "components"):  # read the new traces (cached per capture afterwards)
             tables.append(br.session_components)
         for table in tables:
