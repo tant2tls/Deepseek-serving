@@ -25,6 +25,31 @@ Model-card and config links are pinned to the measured revision. **Technical-rep
 
 The first six rows are architecture facts from each checkpoint's config, as used in the [article](../index.html). The kernel row is executed implementation. Top-k expert counts describe nominal activation sparsity; they are not measured HBM traffic or speed. Measured times are in the [five-model results](../reports/five-model/results.md#trace-components).
 
+## On the rerun session's build (2026-10-10)
+
+The sections below describe what vLLM `554340f3` executed in October. The [15-hour session](../target.md#the-15-hour-session) ran all five on one node with vLLM `a98247ab4db686ee03c66d5feb3c761e52a2f8ab` (`0.31.1rc1.dev260+ga98247ab4`). The table is **executed implementation** on that build, read from each diagnostics server log ([support.csv](../reports/five-model-rerun-h100-v1/support.csv)) and from the traces. A newer build can change class names, kernels and even which layers run, so none of this is carried back to October.
+
+| | 0731 | V4.1 | MiMo | Qwen | GLM |
+| --- | --- | --- | --- | --- | --- |
+| Class the runtime resolved | `DeepseekV4ForCausalLM` | `DeepseekV41ForCausalLM` | `MiMoV2OmniForCausalLM` | `Qwen4ExpForConditionalGeneration` | `Glm5NextForConditionalGeneration` |
+| Expert backend in the log | `HUMMING` MXFP4 | `HUMMING` MXFP4 | `HUMMING` MXFP4 | Triton, unquantized | FlashInfer CUTLASS FP8 |
+| Expert kernel in the traces | `humming` | `humming` | `humming` | `fused_moe_kernel` | `deep_gemm::fp8_gemm_kernel` |
+| KV format line | `fp8_ds_mla`, FP8 indexer cache | `fp8_ds_mla`, FP8 indexer cache | none logged | none logged | none logged |
+| Cache groups, block sizes in tokens | 64, 64, 256, 4, 8 | seven of 32, then 64, 8 | six of 16 | four of 262,144, then 4, 400 | four of 262,144, then 640, 4 |
+| Weights per GPU | 19.79 GiB | 36.32 GiB | 20.10 GiB | 31.42 GiB | 38.80 GiB |
+| KV pool reserved per GPU | 47.43 GiB | 29.12 GiB | 49.18 GiB | 37.37 GiB | 28.98 GiB |
+| First launch until ready | 970 s | 290 s | 295 s | 130 s | 375 s, after one failed launch of 980 s |
+| Relaunch until ready | 90 s | 120 to 145 s | 90 to 110 s | 100 s | 130 s |
+
+What changed against the October notes, and what did not:
+
+- **V4.1 prefill.** In an 8,192-token prefill chunk, **20 of the 40 layers** run on the whole chunk and 20 on a trimmed batch ([count](../reports/five-model-rerun-h100-v1/results.md#how-many-layers-process-a-whole-prefill-chunk)). October's build ran 21 and 19. All 40 run in a decode step, as before.
+- **V4.1 host memory.** Engram tables are still offloaded to pinned host memory: the log reports 11.80 GiB per rank, two tables per rank.
+- **Qwen.** The original BF16 checkpoint now resolves to the class `Qwen4ExpForConditionalGeneration`; its experts still run on the Triton unquantized backend, and no quantization flag or dtype was passed.
+- **GLM.** Experts are selected as FlashInfer CUTLASS FP8 and appear in the traces as `deep_gemm::fp8_gemm_kernel`. Its first launch compiles that module for about 16 minutes and then fails once with `CUDA error: invalid argument`; the relaunch works.
+- **First launches.** This build adds a TileLang and a DeepGEMM kernel warm-up; 0731's first launch took 970 seconds. Relaunches reuse the caches.
+- **Not available on this build and deployment.** The routed-experts capture needs prefix caching and Model Runner V2 ([record](../reports/five-model-rerun-h100-v1/study/_logs/routing_attempt.txt)), so realized expert routing was not read.
+
 ## DeepSeek V4 Flash 0731 (`v4-0731`)
 
 | Source | Link |

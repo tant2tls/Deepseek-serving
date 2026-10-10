@@ -402,6 +402,7 @@ def session_support():
         ready = re.search(r"Application startup complete", text)
         for key, pat in SUPPORT:
             vals = list(dict.fromkeys(m if isinstance(m, str) else m[0] for m in re.findall(pat, text)))
+            vals = [v for v in vals if "%|" not in v and "shm_broadcast" not in v]  # progress bars, waiting notices
             for v in vals[:6]:
                 v = re.sub(r"^(?:INFO|WARNING) \d\d-\d\d \d\d:\d\d:\d\d \[[^\]]+\] ", "", v.strip())
                 rows.append(dict(study=STUDY, model=mk, fact=key, value=v[:400], reached_ready=bool(ready),
