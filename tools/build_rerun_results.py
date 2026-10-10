@@ -144,10 +144,12 @@ def generate():
     # ------------------------------------------------------------------ live state
     mem = rows('memory.csv')
     out += ['## Live state at the eight decode conditions', '',
-            'One snapshot per condition in the diagnostics launch, taken when the last of B requests has produced its '
-            'first token. KiB per token per GPU = usage gauge × reserved pool ÷ tokens the server counted (prompt plus '
-            'generated). Multiply by eight for the node, replicated copies included. This shows which model stores less '
-            'per token of a live request. It does not show what a prefix cache would keep or reuse: prefix caching was off.', '']
+            'One reading per condition in the diagnostics launch, with B requests decoding and nothing else in the '
+            'engine, taken a few steps after the last of them produced its first token. KiB per token per GPU = usage '
+            'gauge × reserved pool ÷ tokens the server counted (prompt plus generated). Multiply by eight for the node, '
+            'replicated copies included. This shows which model stores less per token of a live request. It does not show '
+            'what a prefix cache would keep or reuse: prefix caching was off. At 1K the fixed per-request part and block '
+            'rounding dominate, so compare models at 64K and 128K.', '']
     body = []
     for b in BUCKETS:
         for B in ('1', '8'):
@@ -159,7 +161,7 @@ def generate():
                 elif r.get('capacity_limit') == 'True':
                     line.append('capacity limit')
                 else:
-                    v, g = num(r, 'live_kib_per_token_per_rank'), num(r, 'live_gib_8_ranks')
+                    v, g = num(r, 'live_kib_per_token_per_rank_decoding'), num(r, 'live_gib_8_ranks_decoding')
                     line.append('n/a' if v is None else f'{v:.2f} KiB ({g:.2f} GiB on 8)')
             body.append(line)
     out += table(['Context', 'Live requests'] + [n for _, n in MODELS], body) + ['']
@@ -170,6 +172,14 @@ def generate():
                               [f'{num(r, "weights_gib_per_rank"):.2f} GiB' if num(r, 'weights_gib_per_rank') else 'n/a',
                                f'{num(r, "pool_gib_per_rank"):.2f} GiB' if num(r, 'pool_gib_per_rank') else 'n/a',
                                f'{int(num(r, "pool_tokens")):,}' if num(r, 'pool_tokens') else 'n/a']))
+    first = [r for r in mem if num(r, 'kv_usage_frac') and num(r, 'kv_usage_frac_decoding')
+             and num(r, 'kv_usage_frac') > 1.2 * num(r, 'kv_usage_frac_decoding')]
+    if first:
+        out += ['Right after prefill the gauge can be higher than while decoding, because window layers still hold the '
+                'whole prompt chunk until the first decode step. Readings at the first token that were more than 20% '
+                'above the decoding value: ' + '; '.join(
+                    f'{dict(MODELS)[r["model"]]} {LABEL[r["bucket"]]} B={r["live_sequences"]} '
+                    f'({num(r, "kv_usage_frac") / num(r, "kv_usage_frac_decoding"):.1f}×)' for r in first) + '.', '']
     out += ['Weights and reserved pool per GPU, from each server log:', ''] + \
         table(['Model', 'Weights loaded', 'KV pool reserved', 'Pool capacity in tokens (runtime accounting)'], body) + ['']
 

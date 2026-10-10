@@ -380,9 +380,18 @@ def session_memory():
             usage, idle, p = k.get("kv_usage_live"), k.get("kv_usage_idle"), pool.get(mk, {})
             tokens = (k.get("server_prompt_tokens_total") or 0) + (k.get("generated_tokens_total") or 0)
             live = usage * p["kv_cache_gib"] if usage is not None and p.get("kv_cache_gib") else None
+            # The same batch a few steps later (start of the unprofiled decode window). Window layers
+            # hold a whole prefill chunk until the first decode step frees what lies outside the window,
+            # so the reading at the first token can be higher than the state held while decoding.
+            man = load(SDIR / mk / "profiles" / f"decode{k['bucket']}_B{k['B']}.manifest.json") or {}
+            dec = (man.get("unprofiled_window") or {}).get("kv_usage_start")
+            live_dec = dec * p["kv_cache_gib"] if dec is not None and p.get("kv_cache_gib") else None
             rows.append(dict(
                 study=STUDY, model=mk, runtime=k["runtime"]["vllm"], bucket=k["bucket"], live_sequences=k["B"],
                 capacity_limit=k.get("capacity_limit"), live_tokens_server_prompt_plus_generated=tokens,
+                kv_usage_frac_decoding=dec, live_gib_per_rank_decoding=live_dec,
+                live_gib_8_ranks_decoding=live_dec * 8 if live_dec is not None else None,
+                live_kib_per_token_per_rank_decoding=(live_dec * 2**20 / tokens) if live_dec is not None and tokens else None,
                 client_content_tokens=sum(k["client_content_tokens"]), kv_usage_frac=usage, kv_usage_frac_idle=idle,
                 pool_gib_per_rank=p.get("kv_cache_gib"), pool_tokens=p.get("kv_cache_tokens"),
                 weights_gib_per_rank=p.get("model_weights_gib"), live_gib_per_rank=live,
