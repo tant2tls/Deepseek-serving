@@ -33,3 +33,15 @@ uv pip install --python ~/vllm-latest/bin/python "vllm==0.31.1rc1.dev50+g554340f
 # To move to the newest nightly instead (a new runtime arm; record the resolved commit):
 # uv pip install --python ~/vllm-latest/bin/python -U vllm pandas --torch-backend=auto \
 #     --index-strategy unsafe-best-match --prerelease=allow --extra-index-url https://wheels.vllm.ai/nightly
+
+# Latest nightly for the five-model rerun and the B200 session (docs/H200_B200_plan.md, target.md#five-model-rerun-plan).
+# Resolved on 2026-10-10 from wheels.vllm.ai/nightly: vLLM 0.31.1rc1.dev261+gc41b2639e, commit
+# c41b2639e29c3bc01add1d34bef3032a6d9d8aca (committed 2026-10-10 UTC). The only dev build on the index that day.
+# Not yet verified on B200 (sm_100): run a smoke test and record the wheel SHA256 and the resolved lock before any measurement.
+# The venv is separate from ~/vllm-latest so the completed blog study keeps its runtime.
+RERUN_VLLM_COMMIT=c41b2639e29c3bc01add1d34bef3032a6d9d8aca
+# CPython 3.12.3 (/usr/bin/python3.12) matches the recorded corpus and older environment; `python3` here is 3.14.
+/usr/bin/python3.12 -m venv ~/vllm-b200
+uv pip install --python ~/vllm-b200/bin/python "vllm==0.31.1rc1.dev261+gc41b2639e" pandas \
+    --torch-backend=auto --index-strategy unsafe-best-match --prerelease=allow \
+    --extra-index-url "https://wheels.vllm.ai/${RERUN_VLLM_COMMIT}"
