@@ -1,0 +1,51 @@
+{
+ "study": "five-model-rerun-h100-v1",
+ "model": "v4-0731",
+ "policy": "numbers unaltered; gzip is lossless; logs: private IPs and ANSI codes removed",
+ "excluded": {
+  "reason": {
+   "_prompts": "prefix prompt JSONL (~400 MB), regenerable with bench/run_matrix.py build_prefix_files and the recorded seeds",
+   "*.pt.trace.json.gz": "full per-rank torch profiler traces (~73 MB); kept locally per AGENTS.md",
+   "profiler_out_[1-7].txt": "per-rank duplicates of the rank-0 kernel summary"
+  },
+  "files": []
+ },
+ "files": [
+  {
+   "source": "results/five-model-rerun-h100-v1/v4-0731/_functional/functional.json",
+   "published": "reports/five-model-rerun-h100-v1/data/v4-0731/_functional/functional.json",
+   "source_sha256": "521db7bec982a26893b0dcc50c8e8622182942bedc6b09c5dead5f2b2481cabf",
+   "published_sha256": "521db7bec982a26893b0dcc50c8e8622182942bedc6b09c5dead5f2b2481cabf",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/five-model-rerun-h100-v1/v4-0731/_server/metrics_idle.prom",
+   "published": "reports/five-model-rerun-h100-v1/data/v4-0731/_server/metrics_idle.prom",
+   "source_sha256": "74096400bf3bb6b709cf8d52c1315f609e332bb991bbfa346c9eb33e7ef5a4c7",
+   "published_sha256": "74096400bf3bb6b709cf8d52c1315f609e332bb991bbfa346c9eb33e7ef5a4c7",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/five-model-rerun-h100-v1/v4-0731/_server/serve-off-profidle-20261010-104826.log",
+   "published": "reports/five-model-rerun-h100-v1/data/v4-0731/_server/serve-off-profidle-20261010-104826.log",
+   "source_sha256": "0149dfc3367085f783774aa37672ed0de67270c7697423bcf5009cce6d6b4caf",
+   "published_sha256": "cc3f59276761f30ba0c23d45ecb804a20db28554f1c0c1a2180aa66e2c1b25aa",
+   "operations": [
+    "private IPv4 -> <PRIVATE_IP>"
+   ]
+  },
+  {
+   "source": "results/five-model-rerun-h100-v1/v4-0731/_server/serve-off-profidle-20261010-110641.log",
+   "published": "reports/five-model-rerun-h100-v1/data/v4-0731/_server/serve-off-profidle-20261010-110641.log",
+   "source_sha256": "1b464fdda012b76bc231d191815ef87f7bf9df6249d1fb42afabde4d8fc1a68c",
+   "published_sha256": "11de7b96443c8703b45403780f4c1a395f3d165d57ce77c5837119c8456b40f4",
+   "operations": [
+    "private IPv4 -> <PRIVATE_IP>"
+   ]
+  }
+ ]
+}

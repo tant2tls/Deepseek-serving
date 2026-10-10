@@ -1,0 +1,119 @@
+{
+ "study": "five-model-rerun-h100-v1",
+ "frozen_utc": "2026-10-10T10:47:58Z",
+ "runtime": {
+  "venv": "/workspace/vllm-rerun",
+  "vllm": "0.31.1rc1.dev260+ga98247ab4",
+  "torch": "2.13.0+cu132"
+ },
+ "runtime_commit": "a98247ab4db686ee03c66d5feb3c761e52a2f8ab",
+ "runtime_source": "latest nightly wheel on 2026-10-10 (wheels.vllm.ai/nightly), frozen before the first launch",
+ "models": {
+  "v4-0731": {
+   "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
+   "revision": "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
+  },
+  "mimo-v26": {
+   "model": "XiaomiMiMo/MiMo-V2.6-Flash-MOPD",
+   "revision": "2479e2d0029eca9a34cc7e7f55a121925f81908e"
+  },
+  "v41": {
+   "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+   "revision": "dba1be0a40aa45a94ad051997016db3960a90277"
+  },
+  "glm-53": {
+   "model": "zai-org/GLM-5.3-Flash",
+   "revision": "eb9eb208eb0d988989d07a6a12d0fdeb5f52574a"
+  },
+  "qwen-38-bf16": {
+   "model": "Qwen/Qwen3.8-Flash-Next",
+   "revision": "de4b8e4d43b917e7706784d8bb445c9af86a3540"
+  }
+ },
+ "node": "one 8xH100 80GB node for every model; inventory in _env/",
+ "deployment": "TP8 + EP, utilization 0.90, max_model_len 262144, max_num_seqs 64, max_num_batched_tokens 8192 (explicit), native precision, text only, prefix caching off, speculation off",
+ "requests": "public code/math/chat text, one user message, server-side chat template, temperature 0, thinking off (GLM: reasoning_effort=low), ignore_eos with 2048 output tokens",
+ "inputs": "same corpus and construction as blog-architecture-h100-v1; 1K and 16K request texts identical to it, 64K timing split extended from 45 to 48, 128K auxiliary requests added for the context diagnostics",
+ "inputs_manifest_sha256": "2da14367de704dacad7afd9f8a09a06b3d7bd9f841df1587adfee1f1ae433f5a",
+ "output_tokens": 2048,
+ "loads": [
+  1,
+  16
+ ],
+ "counts": {
+  "1k:c1": 12,
+  "1k:c16": 48,
+  "16k:c1": 12,
+  "16k:c16": 48,
+  "64k:c1": 12,
+  "64k:c16": 48
+ },
+ "count_rule": "12 requests at one client and 48 at sixteen (4 and 16 per domain), the first n of the timing split for every model; below the max(24, 4c) starting rule so that three blocks fit the session",
+ "blocks": {
+  "1": [
+   "v4-0731",
+   "mimo-v26",
+   "v41",
+   "glm-53",
+   "qwen-38-bf16"
+  ],
+  "2": [
+   "v41",
+   "glm-53",
+   "qwen-38-bf16",
+   "v4-0731",
+   "mimo-v26"
+  ],
+  "3": [
+   "qwen-38-bf16",
+   "v4-0731",
+   "mimo-v26",
+   "v41",
+   "glm-53"
+  ]
+ },
+ "block_rule": "every published serving number has three launch-separated blocks; each block starts two models later in the same cyclic order",
+ "diagnostic_models": [
+  "v4-0731",
+  "mimo-v26",
+  "v41",
+  "glm-53",
+  "qwen-38-bf16"
+ ],
+ "point_order": "16k c1, 16k c16, 1k c1, 1k c16, 64k c1, 64k c16 in odd blocks; reversed in even blocks; then the decode intervals in fixed order",
+ "warmup": "auxiliary split (disjoint from timing) at every bucket after each launch, 128 output tokens",
+ "decode_intervals": {
+  "conditions": [
+   "1k:B8",
+   "16k:B8",
+   "64k:B8",
+   "128k:B8",
+   "128k:B1"
+  ],
+  "tokens_per_request": 512,
+  "rule": "B auxiliary requests admitted together, interval starts 16 tokens after the last first token, no admissions inside it; progress from server counters"
+ },
+ "run_timeout_s": 3000,
+ "ready_timeout_s": 1800,
+ "validity": "all requests complete, every request returns exactly 2048 output tokens, server prompt tokens at least 98% of the client content tokens, no failed requests",
+ "rerun_rule": "an invalid run is kept; one rerun in a new repeat-N-rerunK directory is paired by manifest identity; the fastest attempt is never selected",
+ "diagnostics": "per model, one idle-profiler launch: architecture and support check from the server log; 12 natural-ending prompts (2K cap) and one forced request; pilot of the six serving points with {'1k:c1': 3, '1k:c16': 16, '16k:c1': 3, '16k:c16': 16, '64k:c1': 3, '64k:c16': 9} auxiliary requests; state snapshot, unprofiled window and trace at 1k/16k/64k/128k x B=1/8; prefill traces at 1k/16k/64k/128k",
+ "capacity_rule": "a preempted or queued request in a diagnostic batch is recorded as a capacity limit and gets no trace or interval value",
+ "timing_runs": 90,
+ "decode_interval_runs": 75,
+ "trace_captures": 60,
+ "live_state_snapshots": 40,
+ "session": {
+  "hours": 15,
+  "order": [
+   "setup",
+   "diagnostics",
+   "expert-routing statistics (gated)",
+   "HBM counters (gated)",
+   "timing blocks 1-3"
+  ],
+  "checkpoint": "before block 1: if less than 7.5 h remain drop 16k:c16, then all c16; recorded in plan_addendum_matrix.json as dropped_points and kept for all three blocks",
+  "not_run": "speculative decoding; loads 4, 32, 64; held-out blocks; the 60-task set; drift reference runs; the five conditional extensions; prefix caching (never measured)"
+ },
+ "note": "Session started 2026-10-10 about 10:31 UTC on one rented 8xH100 node. Harness changes were made on the node during setup, not before the rental as the plan asked. Diagnostics order: v4-0731, mimo-v26, v41, glm-53, qwen-38-bf16."
+}

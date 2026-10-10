@@ -1,0 +1,155 @@
+{
+ "study": "five-model-rerun-h100-v1",
+ "policy": "numbers unaltered; gzip is lossless; private IPv4 addresses masked",
+ "excluded": {
+  "_inputs/<bucket>/*.jsonl and _inputs/corpus/*.jsonl": "public texts, regenerable with bench/blog_corpus.py and bench/blog_inputs.py from pinned sources; hashes are in manifest.json",
+  "profiles/**/*.pt.trace.json.gz": "full per-rank profiler traces, kept locally",
+  "_logs/download*.log, _logs/*.out": "download progress and duplicate chain output"
+ },
+ "files": [
+  {
+   "source": "results/five-model-rerun-h100-v1/plan.json",
+   "published": "reports/five-model-rerun-h100-v1/study/plan.json",
+   "source_sha256": "44405b30d78534ada25808310a4d9c84a7030a37e2535f192dfb9a3da4a6701a",
+   "published_sha256": "44405b30d78534ada25808310a4d9c84a7030a37e2535f192dfb9a3da4a6701a",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/five-model-rerun-h100-v1/_inputs/manifest.json",
+   "published": "reports/five-model-rerun-h100-v1/study/_inputs/manifest.json",
+   "source_sha256": "2da14367de704dacad7afd9f8a09a06b3d7bd9f841df1587adfee1f1ae433f5a",
+   "published_sha256": "2da14367de704dacad7afd9f8a09a06b3d7bd9f841df1587adfee1f1ae433f5a",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/five-model-rerun-h100-v1/_inputs/corpus/sources.json",
+   "published": "reports/five-model-rerun-h100-v1/study/_inputs/corpus/sources.json",
+   "source_sha256": "9a7944a78a53c4f4f03a148e0e89942ea2f957e00b458376d4a808edf8ace0f5",
+   "published_sha256": "9a7944a78a53c4f4f03a148e0e89942ea2f957e00b458376d4a808edf8ace0f5",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/five-model-rerun-h100-v1/_logs/chain.log",
+   "published": "reports/five-model-rerun-h100-v1/study/_logs/chain.log",
+   "source_sha256": "ef36504cfd76186c099a433217705026e521b96ee3ef465315b6217576d15ad5",
+   "published_sha256": "ef36504cfd76186c099a433217705026e521b96ee3ef465315b6217576d15ad5",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/five-model-rerun-h100-v1/_logs/shutdown.jsonl",
+   "published": "reports/five-model-rerun-h100-v1/study/_logs/shutdown.jsonl",
+   "source_sha256": "3394a41fe270e013aaee2c9b3182d3faffa2ebfbdf1f8c663d79b345629a3b39",
+   "published_sha256": "3394a41fe270e013aaee2c9b3182d3faffa2ebfbdf1f8c663d79b345629a3b39",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/five-model-rerun-h100-v1/_logs/timeline.jsonl",
+   "published": "reports/five-model-rerun-h100-v1/study/_logs/timeline.jsonl",
+   "source_sha256": "a5b690e5360f879d84e878281d8bbb4254e9b2eb474ccfb2fc6b9ee7724e4cf5",
+   "published_sha256": "a5b690e5360f879d84e878281d8bbb4254e9b2eb474ccfb2fc6b9ee7724e4cf5",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/five-model-rerun-h100-v1/_env/cpufreq.txt",
+   "published": "reports/five-model-rerun-h100-v1/study/_env/cpufreq.txt",
+   "source_sha256": "e9b7a75483a0f0c866b219d978b4caf5d48ee57fb329b62f14f5bacb462b3573",
+   "published_sha256": "e9b7a75483a0f0c866b219d978b4caf5d48ee57fb329b62f14f5bacb462b3573",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/five-model-rerun-h100-v1/_env/freeze.txt",
+   "published": "reports/five-model-rerun-h100-v1/study/_env/freeze.txt",
+   "source_sha256": "e6d73294ed2f8b4829299090e9a8967592321875e31e0637c70ec5253321d136",
+   "published_sha256": "e6d73294ed2f8b4829299090e9a8967592321875e31e0637c70ec5253321d136",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/five-model-rerun-h100-v1/_env/gpu_query.txt",
+   "published": "reports/five-model-rerun-h100-v1/study/_env/gpu_query.txt",
+   "source_sha256": "cfd89a38ec98ed6dfddc2f596b8df63ee74bea05ba5a42a70655fd47bc267879",
+   "published_sha256": "cfd89a38ec98ed6dfddc2f596b8df63ee74bea05ba5a42a70655fd47bc267879",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/five-model-rerun-h100-v1/_env/lscpu.txt",
+   "published": "reports/five-model-rerun-h100-v1/study/_env/lscpu.txt",
+   "source_sha256": "97f760054e122bacbec8f85281e071034c379d38af16e6ead66680d3c2bbb418",
+   "published_sha256": "97f760054e122bacbec8f85281e071034c379d38af16e6ead66680d3c2bbb418",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/five-model-rerun-h100-v1/_env/mem.txt",
+   "published": "reports/five-model-rerun-h100-v1/study/_env/mem.txt",
+   "source_sha256": "20066320340ce344584bcfbb4851577d11806fc716791170dea0a069337bd19d",
+   "published_sha256": "20066320340ce344584bcfbb4851577d11806fc716791170dea0a069337bd19d",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/five-model-rerun-h100-v1/_env/numa.txt",
+   "published": "reports/five-model-rerun-h100-v1/study/_env/numa.txt",
+   "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "published_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/five-model-rerun-h100-v1/_env/nvidia_smi.txt",
+   "published": "reports/five-model-rerun-h100-v1/study/_env/nvidia_smi.txt",
+   "source_sha256": "bb99ff03398fca3fda49ef38aef7221e457080eed292e88c3252c1461294967b",
+   "published_sha256": "bb99ff03398fca3fda49ef38aef7221e457080eed292e88c3252c1461294967b",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/five-model-rerun-h100-v1/_env/nvlink.txt",
+   "published": "reports/five-model-rerun-h100-v1/study/_env/nvlink.txt",
+   "source_sha256": "fe25edfabb6164e51585d4f04b48960e3c6f10364d3d667d2e80dd7f928eeb0a",
+   "published_sha256": "fe25edfabb6164e51585d4f04b48960e3c6f10364d3d667d2e80dd7f928eeb0a",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/five-model-rerun-h100-v1/_env/runtime.json",
+   "published": "reports/five-model-rerun-h100-v1/study/_env/runtime.json",
+   "source_sha256": "3bcec87421d04084754a0f2dbb6ac9e779bf0ea30c8b12b61a0b54d90f15a679",
+   "published_sha256": "3bcec87421d04084754a0f2dbb6ac9e779bf0ea30c8b12b61a0b54d90f15a679",
+   "operations": [
+    "copied"
+   ]
+  },
+  {
+   "source": "results/five-model-rerun-h100-v1/_env/topology.txt",
+   "published": "reports/five-model-rerun-h100-v1/study/_env/topology.txt",
+   "source_sha256": "2d40aa098e719ffbc34e1fc1b2a90233687c486ff35d978175e14bdc6f738e9b",
+   "published_sha256": "2d40aa098e719ffbc34e1fc1b2a90233687c486ff35d978175e14bdc6f738e9b",
+   "operations": [
+    "copied"
+   ]
+  }
+ ]
+}
