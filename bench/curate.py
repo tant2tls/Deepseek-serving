@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parent.parent
 GZIP_OVER = 256 * 1024          # gzip files larger than this (lossless)
 IP = re.compile(r"\b(?!127\.0\.0\.1\b)(?!0\.0\.0\.0\b)\d{1,3}(?:\.\d{1,3}){3}\b")
 ANSI = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
-EXCLUDE_DIRS = {"_prompts"}
+EXCLUDE_DIRS = {"_prompts", "_routing_raw"}  # _routing_raw: per-request expert IDs at batch 8 and 64 (tens of MB)
 EXCLUDE_SUFFIX = (".pt.trace.json.gz",)
 
 

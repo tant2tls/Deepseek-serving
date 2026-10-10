@@ -81,8 +81,13 @@ BLOG = "blog-architecture-h100-v1"
 STUDY = os.environ.get("BLOG_STUDY", BLOG)
 SDIR = ROOT / "results" / STUDY
 RDIR = ROOT / "reports" / STUDY
+RERUN = "five-model-rerun-h100-v1"  # the 15-hour session: 2,048 output tokens, 1 and 16 clients
+SESSION = STUDY == RERUN
 MODELS = {BLOG: ["v4-0731", "v41", "mimo-v26", "glm-53"],
-          "qwen-bf16-h100-v1": ["qwen-38-bf16", "mimo-v26"]}[STUDY]
+          "qwen-bf16-h100-v1": ["qwen-38-bf16", "mimo-v26"],
+          RERUN: ["v4-0731", "v41", "mimo-v26", "qwen-38-bf16", "glm-53"]}[STUDY]
+LOADS = (1, 16) if SESSION else (1, 8)
+OSL = 2048 if SESSION else 256
 NAME = {"v4-0731": "V4 Flash 0731", "v41": "V4.1 Flash", "mimo-v26": "MiMo-V2.6-Flash",
         "glm-53": "GLM-5.3-Flash",
         "qwen-38-bf16": "Qwen3.8-Flash-Next"}
@@ -153,7 +158,7 @@ def serving():
             pick[(r["model"], r["bucket"], r["concurrency"], r["block"])] = r
     global MODELS
     all_models, MODELS = MODELS, [m for m in MODELS if any(k[0] == m for k in pick)]
-    out = ["# Serving controls: AR, prefix caching off, 256 forced output tokens\n",
+    out = [f"# Serving controls: AR, prefix caching off, {OSL} forced output tokens\n",
            "Mean ± sample SD over the valid repeat blocks, then median and the individual block values. "
            "Three blocks screen effects; they are not confidence intervals.\n"]
     for metric, label, fmt in (("output_tok_s", "Output tok/s", "{:.1f}"), ("ttft_p50_ms", "TTFT p50 (ms)", "{:.0f}"),
@@ -162,7 +167,7 @@ def serving():
         out += [f"\n## {label}\n", "| Input | c | " + " | ".join(NAME[m] for m in MODELS) + " |",
                 "| --- | ---: | " + " | ".join("---" for _ in MODELS) + " |"]
         for b in BUCKETS:
-            for c in (1, 8):
+            for c in LOADS:
                 cells = []
                 for mk in MODELS:
                     vals = [r[metric] for (m2, b2, c2, _), r in sorted(pick.items())
@@ -178,7 +183,7 @@ def serving():
     out += ["\n## Actual input length (server-counted prompt tokens per request, mean)\n",
             "| Input | c | " + " | ".join(NAME[m] for m in MODELS) + " |", "| --- | ---: | " + " | ".join("---:" for _ in MODELS) + " |"]
     for b in BUCKETS:
-        for c in (1, 8):
+        for c in LOADS:
             cells = []
             for mk in MODELS:
                 vals = [r["server_prompt_tokens_per_request"] for (m2, b2, c2, _), r in pick.items()
@@ -188,6 +193,88 @@ def serving():
     (RDIR / "serving_tables.md").write_text("\n".join(out) + "\n")
     MODELS = all_models
     print("wrote", (RDIR / "serving_tables.md").relative_to(ROOT), "valid points:", len(pick))
+
+
+def session_pilot():
+    """Pilot of the session's serving points: validity and the run time each full point implies."""
+    plan = load(SDIR / "plan.json") or {}
+    rows = []
+    for mk, d, s, v, _ in runs("pilot", "off-profidle"):
+        full = (plan.get("counts") or {}).get(f"{v['bucket']}:c{v['concurrency']}")
+        dur = s.get("duration_s")
+        # One client: time scales with requests. Sixteen: with waves of 16 (the 64K pilot holds nine).
+        scale = (full / v["n"]) if full and v["concurrency"] == 1 else ((full / 16) if full else None)
+        rows.append(dict(study=STUDY, model=mk, runtime=v["runtime"]["vllm"], bucket=v["bucket"],
+                         concurrency=v["concurrency"], n=v["n"], valid=v["valid"], duration_s=dur,
+                         output_tok_s=s.get("output_throughput"), ttft_p50_ms=s.get("median_ttft_ms"),
+                         tpot_p50_ms=s.get("median_tpot_ms"), planned_n=full,
+                         estimated_full_run_s=(dur * scale) if dur and scale else None,
+                         peak_kv_usage_frac=s.get("peak_kv_cache_usage_frac"), preemptions=s.get("preemptions"),
+                         problems="; ".join(v["problems"]), evidence=str(d.relative_to(ROOT))))
+    wcsv(RDIR / "pilot.csv", rows)
+
+
+def session_intervals():
+    """Unprofiled decode intervals of the plain timing launches, one row per condition and block."""
+    rows = []
+    for mk in MODELS:
+        for f in sorted((SDIR / mk / "decode_interval" / "off").glob("ctx*/repeat-*/interval.json")):
+            k = load(f)
+            w = k.get("interval") or {}
+            ttft = [x for x in (k.get("progress", {}).get("client_ttft_s") or []) if x is not None]
+            rows.append(dict(study=STUDY, model=mk, runtime=(k.get("runtime") or {}).get("vllm"), bucket=k.get("bucket"),
+                             engine_B=k.get("B"), block=k.get("block"), attempt=f.parent.name, valid=k.get("valid"),
+                             server_prompt_tokens_total=k.get("server_prompt_tokens_total"),
+                             interval_tokens=w.get("tokens"), interval_s=w.get("window_s"),
+                             ms_per_step=w.get("ms_per_token_step"), engine_steps=w.get("engine_steps"),
+                             ms_per_engine_step=w.get("ms_per_engine_step"),
+                             tokens_per_engine_step=w.get("tokens_per_engine_step"),
+                             time_to_all_decoding_s=k.get("time_to_all_decoding_s"),
+                             client_ttft_first_s=min(ttft) if ttft else None,
+                             client_ttft_last_s=max(ttft) if ttft else None, kv_usage_frac=k.get("kv_usage_live"),
+                             preemptions=k.get("preemptions"), problems="; ".join(k.get("problems") or []),
+                             evidence=str(f.parent.relative_to(ROOT))))
+    wcsv(RDIR / "decode_intervals.csv", rows)
+
+
+def session_natural():
+    """The twelve natural-ending answers per model: did they stop, how long, how much was reasoning."""
+    rows = []
+    for mk in MODELS:
+        k = load(SDIR / mk / "_functional" / "functional.json")
+        for c in (k or {}).get("checks", []):
+            u = c.get("usage") or {}
+            rows.append(dict(study=STUDY, model=mk, runtime=k["runtime"]["vllm"], kind=c["kind"], domain=c.get("domain"),
+                             task=c.get("task"), finish_reason=c.get("finish_reason"),
+                             prompt_tokens=u.get("prompt_tokens"), completion_tokens=u.get("completion_tokens"),
+                             reasoning_tokens=(u.get("completion_tokens_details") or {}).get("reasoning_tokens"),
+                             answer_chars=len(c.get("text") or ""), reasoning_chars=len(c.get("reasoning") or ""),
+                             wall_s=c.get("wall_s"), error=c.get("error"),
+                             evidence=f"results/{STUDY}/{mk}/_functional/functional.json"))
+    wcsv(RDIR / "natural.csv", rows)
+
+
+def session_memory():
+    """Live state at the eight decode conditions: usage gauge x per-rank pool, tokens counted by the server."""
+    pool = pools()
+    rows = []
+    for mk in MODELS:
+        for f in sorted((SDIR / mk / "_kv").glob("live_*.json")):
+            k = load(f)
+            usage, idle, p = k.get("kv_usage_live"), k.get("kv_usage_idle"), pool.get(mk, {})
+            tokens = (k.get("server_prompt_tokens_total") or 0) + (k.get("generated_tokens_total") or 0)
+            live = usage * p["kv_cache_gib"] if usage is not None and p.get("kv_cache_gib") else None
+            rows.append(dict(
+                study=STUDY, model=mk, runtime=k["runtime"]["vllm"], bucket=k["bucket"], live_sequences=k["B"],
+                capacity_limit=k.get("capacity_limit"), live_tokens_server_prompt_plus_generated=tokens,
+                client_content_tokens=sum(k["client_content_tokens"]), kv_usage_frac=usage, kv_usage_frac_idle=idle,
+                pool_gib_per_rank=p.get("kv_cache_gib"), pool_tokens=p.get("kv_cache_tokens"),
+                weights_gib_per_rank=p.get("model_weights_gib"), live_gib_per_rank=live,
+                live_gib_8_ranks=live * 8 if live is not None else None,
+                live_kib_per_token_per_rank=(live * 2**20 / tokens) if live is not None and tokens else None,
+                gpu_mem_mib_rank0=k["gpu_mem_mib"][0], gpu_mem_mib_sum=sum(k["gpu_mem_mib"]),
+                time_to_all_decoding_s=k.get("time_to_all_decoding_s"), evidence=str(f.relative_to(ROOT))))
+    wcsv(RDIR / "memory.csv", rows)
 
 
 def pools():
@@ -210,6 +297,8 @@ def pools():
 
 
 def memory():
+    if SESSION:
+        return session_memory()
     pool = pools()
     rows = []
     for mk in MODELS:
@@ -411,13 +500,13 @@ def tables():
     print("wrote components_tables.md and memory_tables.md")
 
 
-def publish():
+def publish(only=None):
     """Curate small evidence into reports/<study>/ (results/ is git-ignored). Per-model runs go
     through bench/curate.py (lossless gzip, private IPs removed from server logs, traces excluded);
     study-level records are copied with a hash ledger. Public input texts are regenerable and are
     represented by their manifest (hashes, sources, licences, token counts) only."""
     import hashlib, shutil, subprocess
-    for mk in MODELS:
+    for mk in (only if only is not None else MODELS):
         if (SDIR / mk).exists():
             subprocess.run([sys.executable, str(ROOT / "bench" / "curate.py"), STUDY, mk], check=True)
     dst = RDIR / "study"
@@ -427,7 +516,7 @@ def publish():
     ip = re.compile(r"\b(?!127\.0\.0\.1\b)(?!0\.0\.0\.0\b)\d{1,3}(?:\.\d{1,3}){3}\b")
     picks = [SDIR / "plan.json", *sorted(SDIR.glob("plan_addendum_*.json")), SDIR / "_inputs" / "manifest.json",
              SDIR / "_inputs" / "extra_tokens.json", SDIR / "_inputs" / "corpus" / "sources.json",
-             SDIR / "_logs" / "chain.log", SDIR / "_logs" / "shutdown.jsonl",
+             SDIR / "_logs" / "chain.log", SDIR / "_logs" / "shutdown.jsonl", SDIR / "_logs" / "timeline.jsonl",
              *sorted((SDIR / "_env").glob("*"))]
     for src in picks:
         if not src.is_file():
@@ -495,4 +584,6 @@ def compare():
 
 
 if __name__ == "__main__":
-    {"compare": compare, "pilot": pilot, "serving": serving, "memory": memory, "components": components, "tables": tables, "publish": publish}[sys.argv[1]]()
+    {"compare": compare, "pilot": session_pilot if SESSION else pilot, "serving": serving, "memory": memory,
+     "components": components, "tables": tables, "publish": publish, "intervals": session_intervals,
+     "natural": session_natural}[sys.argv[1]]()

@@ -36,6 +36,8 @@ A block value is compared with a relative tolerance of 1e-9, so the check does n
 | September GLM archive | An archived file changed, or its 42-point CSV disagrees with the raw JSON |
 | Timing arithmetic | A `serving.csv` row disagrees with its raw run, its request count, the forced 256 tokens, the build, or the input hashes |
 | Diagnostics | A model lacks its six snapshots or six traces, or a trace lacks one of the eight ranks |
+| Rerun session | A file under `reports/five-model-rerun-h100-v1/` is missing from that study's own `provenance.json` or its SHA-256 changed; a valid `serving.csv` row there disagrees with its raw run, the forced 2,048 tokens, the session build or the input hashes |
+| Skills | A file under `.claude/` is not `skills/<name>/SKILL.md` |
 | Generated tables | A file written by `build_blog_results.py` is stale |
 | Article data | `build_blog_page.py --check` reports a difference |
 | Publication scan | A file exceeds 10 MiB, or contains a credential pattern, a private path or host, or an out-of-scope Qwen deployment |

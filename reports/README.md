@@ -7,11 +7,12 @@ Every number in the article comes from this folder. All studies ran on eight H10
 | [five-model/](five-model/results.md) | **Start here.** Tables generated from the two October studies: throughput, latency, node control, live memory, trace components, individual blocks | `554340f3` | Both |
 | [blog-architecture-h100-v1/](blog-architecture-h100-v1/findings.md) | First-node evidence for 0731, V4.1, MiMo and GLM: 72 timing runs, 24 traces, 24 snapshots | `554340f3` | First, 2026-10-07 and 10-08 |
 | [qwen-bf16-h100-v1/](qwen-bf16-h100-v1/findings.md) | Second-node evidence for Qwen (18 timing runs, 6 traces, 6 snapshots) and the MiMo node control (6, 6, 6) | `554340f3` | Second, 2026-10-08 |
+| [five-model-rerun-h100-v1/](five-model-rerun-h100-v1/timeline.md) | **Rerun session, in progress since 2026-10-10.** All five on one node: 2,048-token outputs at 1 and 16 clients, traces and state snapshots at 1K to 128K, decode intervals. Filled step by step; the timeline says what has finished | `a98247ab` | One node, 2026-10-10 |
 | [v41-vs-0731/](v41-vs-0731/report.md) | September DeepSeek study: speculation-off matrix, DSpark arms, historical prefix checks | `44af287e` | Earlier 8×H100 node, September |
 | [mimo-v26/](mimo-v26/report.md) | September MiMo study: speculation-off matrix, MTP and DFlash arms | `44af287e` | Earlier 8×H100 node, September |
 | [glm-53-september/](glm-53-september/README.md) | 42 GLM points from 2026-09-02 on a much older build, utilization 0.82, no recorded revision | `487ecf187` | 8×H100, 2026-09-02 |
 
-`554340f3` is vLLM `554340f3d3259e321be4c07282be7a02a5aeef83`; `44af287e` is `44af287ebe38d6dc4e102948025f5e3e175aefd6`. **Never use a number from one build as a control for another.** The September folders are history that selected hypotheses for October; read them with the corrections in [earlier experiments](../docs/previous-experiments.md).
+`554340f3` is vLLM `554340f3d3259e321be4c07282be7a02a5aeef83`; `44af287e` is `44af287ebe38d6dc4e102948025f5e3e175aefd6`; `a98247ab` is `a98247ab4db686ee03c66d5feb3c761e52a2f8ab`, the nightly frozen for the rerun session. **Never use a number from one build as a control for another.** The September folders are history that selected hypotheses for October; read them with the corrections in [earlier experiments](../docs/previous-experiments.md).
 
 Across the two October nodes, compare **throughput** only and keep Qwen's latency separate; the MiMo control in [five-model/](five-model/results.md#mimo-node-control) shows why.
 
@@ -35,6 +36,7 @@ Read each kind of number for what it is: `serving.csv` is unprofiled elapsed tim
 
 ## Ledgers
 
+- [five-model-rerun-h100-v1/provenance.json](five-model-rerun-h100-v1/provenance.json) is the rerun session's own ledger: the SHA-256 of every file in that folder, rewritten by `bench/session_publish.py` after each finished step. The frozen October ledger below is not touched by the session.
 - [provenance.json](provenance.json) lists every retained evidence file with its source and exported SHA-256. [docs/provenance.md](../docs/provenance.md) explains the selection.
 - `data/<key>/CURATION.json` is the original per-model curation ledger. It is never edited.
 - [glm-53-september/provenance.json](glm-53-september/provenance.json) is the separate ledger of the September GLM archive.

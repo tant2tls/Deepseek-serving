@@ -33,6 +33,7 @@ reports/      RESULTS  evidence of every study, its hash ledger, and the generat
 reproduce/    RUN      one guide per model, the full procedure, known setup problems
 teach_me/     LEARN    seven lessons: measuring with vLLM and setting it up on another system
 docs/         REFER    models and technical reports, protocol and limits, provenance, earlier studies
+.claude/      SKILLS   agent procedures; skills/serving/SKILL.md is the launch, check, measure and stop routine
 ```
 
 Every folder has a `README.md` that says what belongs there and how to add to it.

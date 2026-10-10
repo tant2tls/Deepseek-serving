@@ -31,6 +31,18 @@ results/<study>/ -> blog_report.py -> reports/<study>/*.csv -> curate.py -> repo
 reports/<study>/*.csv -> tools/build_blog_results.py -> reports/five-model/ and the article
 ```
 
+## The rerun session (`five-model-rerun-h100-v1`)
+
+The [15-hour session](../target.md#the-15-hour-session) uses the same chain with `BLOG_STUDY=five-model-rerun-h100-v1`: all five keys on one node and one frozen build, 2,048 forced output tokens, 1 and 16 clients. The study entry in `blog_study.py` switches on what the October protocol did not have:
+
+| Step | Launch config | What it adds |
+| --- | --- | --- |
+| `diag:<key>` | `off-profidle` | Twelve natural-ending prompts with a 2K cap; a pilot of the six serving points; a state snapshot, an unprofiled window and a trace at 1K, 16K, 64K and 128K with engine batch 1 and 8; prefill traces at the same four contexts |
+| `routing:<key>` | `off-routed` | The runtime's own capture of the router's selected expert IDs (`--enable-return-routed-experts`): statistics per layer for one token, 8, 64 and one 8,192-token chunk. No speed claim; the output is checked against the plain launch |
+| `timing:<key>:<block>` | `off` | The six serving points, then decode intervals of 512 tokens per request at engine batch 8 on four contexts and batch 1 at 128K |
+
+Progress inside a held batch is read from the server's counters (first tokens, generated tokens, engine steps), not from streamed text. [session_publish.py](session_publish.py) runs after every step when the chain is started with `--publish`: it rebuilds the study's CSVs, curates the step's model into `reports/<study>/data/<key>/`, writes `timeline.md` and the study's hash ledger, commits and pushes. The agent procedure for all of this is the [serving skill](../.claude/skills/serving/SKILL.md).
+
 ## The September studies (historical)
 
 These scripts produced the earlier DeepSeek and MiMo studies on the older build, with random-token prompts, prefix-cache checks and speculative arms. They are kept so the [earlier reports](../docs/previous-experiments.md) remain documented. **Do not run them as the October workflow**: they hardcode historical studies, a `tmux` session and the old runtime, and some include prefix-cache experiments that are not authorized.
@@ -43,7 +55,7 @@ These scripts produced the earlier DeepSeek and MiMo studies on the older build,
 | [quality_smoke.py](quality_smoke.py), [compare_outputs.py](compare_outputs.py) | Four-prompt sanity check; text match of a speculative arm against its autoregressive run |
 | [summarize.py](summarize.py), [compare.py](compare.py), [compare_models.py](compare_models.py), [spec_compare.py](spec_compare.py) | Tables for the September reports |
 
-`serve.sh` and `run_matrix.py` serve both periods. Their extra configs (`off-prefix`, `dspark-*`, `mtp-k3`, `dflash-k7`) and workloads belong to September; the October chain accepts only `off` and `off-profidle`.
+`serve.sh` and `run_matrix.py` serve both periods. Their extra configs (`off-prefix`, `dspark-*`, `mtp-k3`, `dflash-k7`) and workloads belong to September; the October chain accepts only `off` and `off-profidle`. The rerun session adds `off-routed`.
 
 ## Adding to this folder
 

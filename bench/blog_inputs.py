@@ -16,12 +16,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 STUDY = os.environ.get("BLOG_STUDY", "blog-architecture-h100-v1")
 INP = ROOT / "results" / STUDY / "_inputs"
-OSL = 256
+RERUN = "five-model-rerun-h100-v1"
+OSL = 2048 if STUDY == RERUN else 256
 REF = "v4-0731"
 DOMAINS = ["code", "math", "chat"]
 # The frozen manifest counts tokens for the first three models only; later models are added with
 # `extra` (extra_tokens.json), so a rebuild on a fresh node reproduces the same request lists.
-MANIFEST_MODELS = ("v41", "v4-0731", "mimo-v26")
+MANIFEST_MODELS = ("v41", "v4-0731", "mimo-v26", "glm-53", "qwen-38-bf16") if STUDY == RERUN else \
+    ("v41", "v4-0731", "mimo-v26")
 # Reference-tokenizer content budget per bucket, and requests per split (multiples of 3).
 # Splits are disjoint inside a bucket: timing is measured, aux serves pilots, warmups
 # and diagnostic captures, heldout is reserved for confirmation.
@@ -30,6 +32,15 @@ BUCKETS = {
     "16k": dict(target=16384, timing=150, aux=24, heldout=12),
     "64k": dict(target=65536, timing=45, aux=9, heldout=3),
 }
+if STUDY == RERUN:
+    # Same construction and the same 1K/16K lists as October (the files differ only in the requested
+    # output length). 64K needs 48 timing requests for 16 clients, so the three former held-out
+    # slots move into the timing split: its first 45 requests are October's. 128K serves the
+    # context diagnostics only (prefill capture, decode at engine batch 1 and 8).
+    BUCKETS["64k"] = dict(target=65536, timing=48, aux=9, heldout=0)
+    BUCKETS["128k"] = dict(target=131072, timing=0, aux=9, heldout=0)
+# Short-output copies of the aux requests, used only to warm shapes after a launch.
+WARM_OSL = 128
 INTRO = {
     "code": "Below are source files from the CPython standard library.\n\n",
     "math": "Below are worked mathematics problems with their solutions.\n\n",
@@ -110,7 +121,10 @@ def main():
             (INP / bname / f"{split}.jsonl").write_text(body)
             entry["splits"][split] = dict(file=f"{bname}/{split}.jsonl", n=len(rows),
                                           file_sha256=hashlib.sha256(body.encode()).hexdigest(), requests=meta)
-            mean = {mk: round(sum(m["content_tokens"][mk] for m in meta) / len(meta)) for mk in toks}
+            if STUDY == RERUN and split == "aux":
+                (INP / bname / "warm.jsonl").write_text("".join(
+                    json.dumps(dict(r, output_tokens=WARM_OSL), ensure_ascii=False) + "\n" for r in rows))
+            mean = {mk: round(sum(m["content_tokens"][mk] for m in meta) / max(1, len(meta))) for mk in toks}
             print(bname, split, len(rows), "mean content tokens", mean, flush=True)
         manifest["buckets"][bname] = entry
     (INP / "manifest.json").write_text(json.dumps(manifest, indent=1))

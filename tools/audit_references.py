@@ -26,9 +26,17 @@ LEDGER = 'reports/provenance.json'
 ARCHIVE = 'reports/glm-53-september'  # September GLM export, hashed by its own ledger
 ARCHIVE_INDEX = {'README.md', 'arms.json', 'results.csv', 'provenance.json',
                  'glm-5.3-flash/README.md', 'glm-5.3-flash/RESULTS.md'}
+# The rerun session (target.md#the-15-hour-session) keeps its own ledger: bench/session_publish.py
+# rewrites it after every finished step, so the frozen October ledger above is never touched.
+RERUN = 'five-model-rerun-h100-v1'
+RERUN_RUNTIME = '0.31.1rc1.dev260+ga98247ab4'
+RERUN_OUTPUT = 2048
 # The agreed layout. A new top-level entry is a decision: add it here and to README.md together.
 FOLDERS = ('bench', 'docs', 'reports', 'reproduce', 'teach_me', 'tools')
 ROOT_FILES = ('.gitattributes', '.gitignore', 'AGENTS.md', 'README.md', 'target.md', 'index.html', 'install.sh')
+# Agent skills (.claude/skills/<name>/SKILL.md): procedures, not evidence; no folder index is required.
+SKILLS = '.claude'
+
 
 
 def digest(p):
@@ -57,8 +65,12 @@ def layout(check):
         top = {line.split('/')[0] for line in listed.stdout.splitlines()}
     else:  # an exported tree without Git metadata
         top = {p.name for p in ROOT.iterdir() if p.name not in ('.git', '.audit', '.worktrees')}
-    for name in sorted(top - set(FOLDERS) - set(ROOT_FILES)):
+    for name in sorted(top - set(FOLDERS) - set(ROOT_FILES) - {SKILLS}):
         check(False, f'Outside the agreed layout: {name}')
+    for p in (ROOT / SKILLS).rglob('*'):
+        if p.is_file():
+            rel = p.relative_to(ROOT / SKILLS).parts
+            check(len(rel) == 3 and rel[0] == 'skills' and rel[2] == 'SKILL.md', f'Not a skill file: {p.relative_to(ROOT)}')
     for name in FOLDERS + ROOT_FILES:
         check((ROOT / name).exists(), f'Missing from the layout: {name}')
     for name in FOLDERS:
@@ -88,6 +100,52 @@ def layout(check):
     return len(served)
 
 
+def rerun(check):
+    """Session evidence: every file hashed in the study's ledger, valid serving rows equal to the raw runs."""
+    base = ROOT / 'reports' / RERUN
+    if not (base / 'provenance.json').is_file():
+        return set(), 0
+    paths = {f'reports/{RERUN}/provenance.json'}
+    for r in json.loads((base / 'provenance.json').read_text(encoding='utf-8'))['files']:
+        p = ROOT / r['path']
+        paths.add(r['path'])
+        check(p.is_file() and digest(p) == r['sha256'], f'Rerun evidence hash: {r["path"]}')
+    count, seen = 0, set()
+    if (base / 'serving.csv').is_file():
+        with (base / 'serving.csv').open(encoding='utf-8', newline='') as f:
+            rows = list(csv.DictReader(f))
+        manifest = json.loads((base / 'study/_inputs/manifest.json').read_text(encoding='utf-8'))
+        for r in rows:
+            identity = (r['model'], r['bucket'], r['concurrency'], r['block'], r['attempt'])
+            check(identity not in seen, f'Duplicate rerun timing identity: {identity}')
+            seen.add(identity)
+            raw = base / 'data' / r['model'] / Path(r['evidence']).relative_to(f'results/{RERUN}/{r["model"]}')
+            validation = json.loads((raw / 'blog_validation.json').read_text(encoding='utf-8'))
+            check(validation['runtime']['vllm'] == r['runtime'] == RERUN_RUNTIME, f'Rerun runtime: {identity}')
+            check(not validation['prefix_caching'] and not validation['speculation'], f'Rerun deployment flags: {identity}')
+            check(str(validation['valid']) == r['valid'], f'Rerun validity flag: {identity}')
+            if r['valid'] != 'True':
+                continue  # failed attempts stay in the evidence and are not published as numbers
+            summary = json.loads((raw / 'summary.json').read_text(encoding='utf-8'))
+            bench_path, opener = raw / 'bench.json', open
+            if not bench_path.exists():
+                bench_path, opener = raw / 'bench.json.gz', gzip.open
+            with opener(bench_path, 'rt', encoding='utf-8') as f:
+                bench = json.load(f)
+            n = int(r['n'])
+            check(bench['completed'] == n and bench['failed'] == 0 and bench['num_prompts'] == n, f'Rerun completions: {identity}')
+            check(bench['total_output_tokens'] == n * RERUN_OUTPUT and bench['output_lens'] == [RERUN_OUTPUT] * n, f'Rerun output policy: {identity}')
+            for col, key in [('output_tok_s', 'output_throughput'), ('ttft_p50_ms', 'median_ttft_ms'), ('tpot_p50_ms', 'median_tpot_ms')]:
+                check(math.isclose(float(r[col]), summary[key], rel_tol=1e-12), f'Rerun summary mismatch: {identity}: {col}')
+                check(math.isclose(float(r[col]), bench[key], rel_tol=1e-12), f'Rerun raw mismatch: {identity}: {col}')
+            check(math.isclose(float(r['output_tok_s']), n * RERUN_OUTPUT / bench['duration'], rel_tol=1e-12), f'Rerun throughput arithmetic: {identity}')
+            split = manifest['buckets'][r['bucket']]['splits']['timing']
+            check(validation['list_file_sha256'] == split['file_sha256'], f'Rerun input list: {identity}')
+            check(validation['request_sha256'] == [x['sha256'] for x in split['requests'][:n]], f'Rerun request pairing: {identity}')
+            count += 1
+    return paths, count
+
+
 def main():
     errors = []
     def check(ok, msg):
@@ -107,7 +165,8 @@ def main():
     refs = json.loads((ROOT / ARCHIVE / 'provenance.json').read_text(encoding='utf-8'))
     archived = {r['path'] for r in refs['files']} | {f'{ARCHIVE}/{name}' for name in ARCHIVE_INDEX}
     # Everything under reports/ is hashed evidence, a generated table, the archive or an index.
-    registered = set(records) | generate_paths | archived | {LEDGER, 'reports/README.md'}
+    session_paths, session_runs = rerun(check)
+    registered = set(records) | generate_paths | archived | {LEDGER, 'reports/README.md'} | session_paths
     for p in (ROOT / 'reports').rglob('*'):
         if p.is_file():
             check(p.relative_to(ROOT).as_posix() in registered, f'Unregistered evidence: {p.relative_to(ROOT)}')
@@ -224,6 +283,11 @@ def main():
             doc = json.loads(body)
             doc.pop('generated_texts', None)
             path_body = json.dumps(doc)
+        if p.name == 'functional.json' and f'reports/{RERUN}/' in rel:  # model-written answers, as above
+            doc = json.loads(body)
+            for answer in doc.get('checks', []):
+                answer.pop('text', None), answer.pop('reasoning', None)
+            path_body = json.dumps(doc)
         if rel != 'tools/audit_references.py':
             check(not private.search(path_body), f'Private path: {rel}')
         check(not re.search(r'^host:\s*(?!<HOST>\s*$)\S+', body, re.M), f'Private host: {rel}')
@@ -246,6 +310,8 @@ def main():
         return 1
     print(f'PASS: {len(records)} provenance files; {count} timing runs (90 main + 6 control); {pinned} pinned models; '
           f'{links} local links and anchors; {total / 1024**2:.2f} MiB.')
+    if session_paths:
+        print(f'Rerun session {RERUN}: {len(session_paths) - 1} hashed files; {session_runs} valid timing runs checked.')
     print('Exact-byte evidence, curation ledgers, arithmetic, inputs, diagnostic counts, generated tables, '
           'article data, layout, model pins and publication scan passed.')
     print('This validates the export, not causal control, answer quality or a fresh GPU reproduction.')

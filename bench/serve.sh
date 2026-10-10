@@ -49,6 +49,11 @@ case "$CONFIG_ID" in
     PROFILE_DIR=${PROFILE_DIR:?set PROFILE_DIR to an absolute trace directory}
     mkdir -p "$PROFILE_DIR"
     set -- --profiler-config "{\"profiler\":\"torch\",\"torch_profiler_dir\":\"$PROFILE_DIR\",\"torch_profiler_record_shapes\":true,\"torch_profiler_with_stack\":false,\"ignore_frontend\":true}" "$@" ;;
+  # Rerun session, expert-routing statistics: same as `off`, plus the runtime's own capture of the
+  # router's selected expert IDs, returned with each response. An instrumented launch: no timing.
+  off-routed)
+    PREFIX_FLAG=--no-enable-prefix-caching
+    set -- --enable-return-routed-experts "$@" ;;
   # DSpark arms (docs/speculative-decoding.md): prefix caching off to match the
   # `ar` concurrency baseline. The draft ships inside the target checkpoint but
   # its revision is resolved separately (default None = main), so pin it here.
@@ -76,9 +81,13 @@ export VLLM_ENGINE_READY_TIMEOUT_S=3600
 export TRITON_CACHE_DIR=/tmp/triton_cache
 # Same reason for FlashInfer's JIT modules (0731 JIT-builds fp8_blockscale_gemm_90).
 export FLASHINFER_WORKSPACE_BASE=/tmp/flashinfer_ws
+# This build also JIT-compiles TileLang kernels (232 compile keys on 0731's first launch) and keeps a
+# torch.compile cache; both default to the home directory, which is the same FUSE mount.
+export TILELANG_CACHE_DIR=${TILELANG_CACHE_DIR:-/tmp/tilelang_cache}
+export VLLM_CACHE_ROOT=${VLLM_CACHE_ROOT:-/tmp/vllm_cache}
 # Enables /reset_prefix_cache for cache-state control between runs.
 export VLLM_SERVER_DEV_MODE=1
-mkdir -p "$TRITON_CACHE_DIR" "$FLASHINFER_WORKSPACE_BASE" "$(dirname "$LOG")"
+mkdir -p "$TRITON_CACHE_DIR" "$FLASHINFER_WORKSPACE_BASE" "$TILELANG_CACHE_DIR" "$VLLM_CACHE_ROOT" "$(dirname "$LOG")"
 
 # VLLM_VENV selects the runtime; the default is the pinned build of the completed studies.
 source "${VLLM_VENV:-/root/vllm}/bin/activate"

@@ -128,8 +128,10 @@ class Poller:
 
     def __enter__(self):
         self.nvsmi = subprocess.Popen(
-            ["nvidia-smi", "--query-gpu=timestamp,index,memory.used,utilization.gpu,power.draw,clocks.sm",
-             "--format=csv", "-lms", "1000"],
+            # utilization.memory (share of time the memory controller was busy) is appended last so
+            # that the column positions of the completed studies stay valid.
+            ["nvidia-smi", "--query-gpu=timestamp,index,memory.used,utilization.gpu,power.draw,clocks.sm,"
+             "utilization.memory,temperature.gpu", "--format=csv", "-lms", "1000"],
             stdout=open(self.tdir / "nvsmi.csv", "w"), stderr=subprocess.DEVNULL)
         self.th = threading.Thread(target=self.run, daemon=True); self.th.start()
         return self
@@ -181,13 +183,14 @@ def bench_cmd(mk, out_dir, fname, *, c, n, seed, dataset_args, warm=False):
 
 
 def run_point(mk, study, workload, config, point, rep, *, c, n, seed, dataset_args,
-              expect_prompt_tokens=None, reset_cache=False, pre_cmds=(), timeout=None):
+              expect_prompt_tokens=None, reset_cache=False, pre_cmds=(), timeout=None, osl=OSL):
+    """`osl` is the forced output length the request list asks for (historical studies: 256)."""
     rdir = unique_dir(ROOT / "results" / study / mk / workload / config / point / f"repeat-{rep}")
     tdir = rdir / "telemetry"; tdir.mkdir(parents=True)
     cmd = bench_cmd(mk, rdir, "bench.json", c=c, n=n, seed=seed, dataset_args=dataset_args)
     manifest = dict(study=study, model_key=mk, **{k: v for k, v in MODELS[mk].items() if k != "extra_body"}, workload=workload, config=config,
                     point=point, repeat=rep, concurrency=c, num_prompts=n, seed=seed,
-                    output_len=OSL, temperature=TEMPERATURE, extra_body=extra_body(mk),
+                    output_len=osl, temperature=TEMPERATURE, extra_body=extra_body(mk),
                     reset_prefix_cache=reset_cache, pre_commands=[list(p) for p in pre_cmds],
                     command=cmd, started=datetime.datetime.now().isoformat())
     if reset_cache:
@@ -247,8 +250,8 @@ def run_point(mk, study, workload, config, point, rep, *, c, n, seed, dataset_ar
     if rc != 0: problems.append(f"bench rc={rc}")
     if summary["completed"] != n: problems.append(f"completed {summary['completed']}/{n}")
     if summary["failed"]: problems.append(f"failed={summary['failed']}")
-    if summary["total_output_tokens"] != n * OSL:
-        problems.append(f"output tokens {summary['total_output_tokens']} != {n * OSL}")
+    if summary["total_output_tokens"] != n * osl:
+        problems.append(f"output tokens {summary['total_output_tokens']} != {n * osl}")
     if expect_prompt_tokens and summary["server_prompt_tokens"] is not None:
         if summary["server_prompt_tokens"] < 0.98 * expect_prompt_tokens:
             problems.append(f"server prompt tokens {summary['server_prompt_tokens']} < expected {expect_prompt_tokens}")
