@@ -6,7 +6,7 @@ Read each table for what it is: serving and decode-interval values are elapsed t
 
 ## Status
 
-Diagnostics finished: 0731. All three timing blocks finished: none yet.
+Diagnostics finished: 0731, MiMo. All three timing blocks finished: none yet.
 
 ## Serving with 2,048 output tokens
 
@@ -45,6 +45,32 @@ Mean ± sample SD over launch-separated blocks; each block is one plain launch. 
 | 64K | 1 | pending | pending | pending | pending | pending |
 | 64K | 16 | pending | pending | pending | pending | pending |
 
+### Does generation slow down inside a response?
+
+Mean time between streamed chunks at one client, by generated position, in milliseconds (mean over blocks). Positions are counted in streamed chunks; a chunk can carry more than one token, so the counts differ from tokens by under 0.5%. Nothing beyond 2,048 generated tokens was measured.
+
+| Input | Generated position | 0731 | V4.1 | MiMo | Qwen | GLM |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1K | 2 to 256 | pending | pending | pending | pending | pending |
+| 1K | 257 to 1,024 | pending | pending | pending | pending | pending |
+| 1K | 1,025 to 2,048 | pending | pending | pending | pending | pending |
+| 16K | 2 to 256 | pending | pending | pending | pending | pending |
+| 16K | 257 to 1,024 | pending | pending | pending | pending | pending |
+| 16K | 1,025 to 2,048 | pending | pending | pending | pending | pending |
+| 64K | 2 to 256 | pending | pending | pending | pending | pending |
+| 64K | 257 to 1,024 | pending | pending | pending | pending | pending |
+| 64K | 1,025 to 2,048 | pending | pending | pending | pending | pending |
+
+### Full-run and steady-state throughput at sixteen clients
+
+A finite request list spends part of the run below its client cap. Steady state, declared before collection: from the moment the first 16 requests have all produced their first token until the first request finishes after the last one was sent. Output tokens per second, mean over blocks: full run / steady state (share of the run that is steady).
+
+| Input | 0731 | V4.1 | MiMo | Qwen | GLM |
+| --- | --- | --- | --- | --- | --- |
+| 1K | pending | pending | pending | pending | pending |
+| 16K | pending | pending | pending | pending | pending |
+| 64K | pending | pending | pending | pending | pending |
+
 ## Decode step time against context
 
 Unprofiled intervals of 512 tokens per request on the plain launches: B requests admitted together, the interval starts 16 tokens after the last first token, and nothing is admitted inside it. Milliseconds per engine step, mean ± sample SD over blocks. Batch 1 at 1K, 16K and 64K is the one-client TPOT above.
@@ -69,14 +95,14 @@ One snapshot per condition in the diagnostics launch, taken when the last of B r
 
 | Context | Live requests | 0731 | V4.1 | MiMo | Qwen | GLM |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1K | 1 | 28.79 KiB (0.22 GiB on 8) | pending | pending | pending | pending |
-| 1K | 8 | 29.29 KiB (1.82 GiB on 8) | pending | pending | pending | pending |
-| 16K | 1 | 5.40 KiB (0.67 GiB on 8) | pending | pending | pending | pending |
-| 16K | 8 | 5.41 KiB (5.39 GiB on 8) | pending | pending | pending | pending |
-| 64K | 1 | 4.22 KiB (2.10 GiB on 8) | pending | pending | pending | pending |
-| 64K | 8 | 4.22 KiB (16.88 GiB on 8) | pending | pending | pending | pending |
-| 128K | 1 | 4.02 KiB (4.02 GiB on 8) | pending | pending | pending | pending |
-| 128K | 8 | 4.02 KiB (32.19 GiB on 8) | pending | pending | pending | pending |
+| 1K | 1 | 28.79 KiB (0.22 GiB on 8) | pending | 34.04 KiB (0.25 GiB on 8) | pending | pending |
+| 1K | 8 | 29.29 KiB (1.82 GiB on 8) | pending | 9.59 KiB (0.61 GiB on 8) | pending | pending |
+| 16K | 1 | 5.40 KiB (0.67 GiB on 8) | pending | 5.89 KiB (0.69 GiB on 8) | pending | pending |
+| 16K | 8 | 5.41 KiB (5.39 GiB on 8) | pending | 5.87 KiB (5.90 GiB on 8) | pending | pending |
+| 64K | 1 | 4.22 KiB (2.10 GiB on 8) | pending | 5.69 KiB (2.68 GiB on 8) | pending | pending |
+| 64K | 8 | 4.22 KiB (16.88 GiB on 8) | pending | 5.69 KiB (22.82 GiB on 8) | pending | pending |
+| 128K | 1 | 4.02 KiB (4.02 GiB on 8) | pending | 5.66 KiB (5.27 GiB on 8) | pending | pending |
+| 128K | 8 | 4.02 KiB (32.19 GiB on 8) | pending | 5.66 KiB (45.62 GiB on 8) | pending | pending |
 
 Weights and reserved pool per GPU, from each server log:
 
@@ -84,115 +110,115 @@ Weights and reserved pool per GPU, from each server log:
 | --- | --- | --- | --- |
 | 0731 | 19.79 GiB | 47.43 GiB | 1,728,531 |
 | V4.1 | pending | pending | pending |
-| MiMo | pending | pending | pending |
+| MiMo | 20.10 GiB | 49.18 GiB | 6,969,972 |
 | Qwen | pending | pending | pending |
 | GLM | pending | pending | pending |
 
 ## Attention path and expert time in the traces
 
-GPU kernel milliseconds per engine step, mean over the eight ranks, from the idle-profiler launch. Attention path = core + search (indexer, top-k) + recurrent update + state preparation; projections are inside the mixed dense-GEMM column and are not included. Prefill rows are the last full 8,192-token chunk of one request (at 1K, its single step).
+GPU kernel milliseconds per engine step, mean over the eight ranks, from the idle-profiler launch. Attention path = core + search (indexer, top-k) + recurrent update + state preparation; projections are inside the mixed dense-GEMM column and are not included. Prefill rows are the last full 8,192-token chunk of one request (at 1K, its single step). At 1K and 16K that chunk is the first step after the profiler starts, where all-reduce kernels wait for the other ranks, so the last table leaves communication out.
 
 ### Attention path (ms, kernel sum)
 
 | Capture | 0731 | V4.1 | MiMo | Qwen | GLM |
 | --- | --- | --- | --- | --- | --- |
-| Prefill chunk, 1K | 7.48 | pending | pending | pending | pending |
-| Prefill chunk, 16K | 61.9 | pending | pending | pending | pending |
-| Prefill chunk, 64K | 110.8 | pending | pending | pending | pending |
-| Prefill chunk, 128K | 180.2 | pending | pending | pending | pending |
-| Decode step, 1K, B=1 | 1.59 | pending | pending | pending | pending |
-| Decode step, 16K, B=1 | 1.59 | pending | pending | pending | pending |
-| Decode step, 64K, B=1 | 1.64 | pending | pending | pending | pending |
-| Decode step, 128K, B=1 | 1.69 | pending | pending | pending | pending |
-| Decode step, 1K, B=8 | 1.79 | pending | pending | pending | pending |
-| Decode step, 16K, B=8 | 1.82 | pending | pending | pending | pending |
-| Decode step, 64K, B=8 | 2.04 | pending | pending | pending | pending |
-| Decode step, 128K, B=8 | 2.34 | pending | pending | pending | pending |
+| Prefill chunk, 1K | 7.48 | pending | 1.10 | pending | pending |
+| Prefill chunk, 16K | 61.9 | pending | 5.54 | pending | pending |
+| Prefill chunk, 64K | 110.8 | pending | 35.8 | pending | pending |
+| Prefill chunk, 128K | 180.2 | pending | 71.4 | pending | pending |
+| Decode step, 1K, B=1 | 1.59 | pending | 0.61 | pending | pending |
+| Decode step, 16K, B=1 | 1.59 | pending | 0.69 | pending | pending |
+| Decode step, 64K, B=1 | 1.64 | pending | 0.89 | pending | pending |
+| Decode step, 128K, B=1 | 1.69 | pending | 1.16 | pending | pending |
+| Decode step, 1K, B=8 | 1.79 | pending | 0.88 | pending | pending |
+| Decode step, 16K, B=8 | 1.82 | pending | 1.14 | pending | pending |
+| Decode step, 64K, B=8 | 2.04 | pending | 1.89 | pending | pending |
+| Decode step, 128K, B=8 | 2.34 | pending | 2.87 | pending | pending |
 
 ### Attention core only (ms, kernel sum)
 
 | Capture | 0731 | V4.1 | MiMo | Qwen | GLM |
 | --- | --- | --- | --- | --- | --- |
-| Prefill chunk, 1K | 4.39 | pending | pending | pending | pending |
-| Prefill chunk, 16K | 41.3 | pending | pending | pending | pending |
-| Prefill chunk, 64K | 55.3 | pending | pending | pending | pending |
-| Prefill chunk, 128K | 73.7 | pending | pending | pending | pending |
-| Decode step, 1K, B=1 | 0.96 | pending | pending | pending | pending |
-| Decode step, 16K, B=1 | 0.96 | pending | pending | pending | pending |
-| Decode step, 64K, B=1 | 0.99 | pending | pending | pending | pending |
-| Decode step, 128K, B=1 | 1.02 | pending | pending | pending | pending |
-| Decode step, 1K, B=8 | 1.00 | pending | pending | pending | pending |
-| Decode step, 16K, B=8 | 1.04 | pending | pending | pending | pending |
-| Decode step, 64K, B=8 | 1.11 | pending | pending | pending | pending |
-| Decode step, 128K, B=8 | 1.26 | pending | pending | pending | pending |
+| Prefill chunk, 1K | 4.39 | pending | 0.93 | pending | pending |
+| Prefill chunk, 16K | 41.3 | pending | 4.39 | pending | pending |
+| Prefill chunk, 64K | 55.3 | pending | 34.6 | pending | pending |
+| Prefill chunk, 128K | 73.7 | pending | 70.3 | pending | pending |
+| Decode step, 1K, B=1 | 0.96 | pending | 0.54 | pending | pending |
+| Decode step, 16K, B=1 | 0.96 | pending | 0.62 | pending | pending |
+| Decode step, 64K, B=1 | 0.99 | pending | 0.82 | pending | pending |
+| Decode step, 128K, B=1 | 1.02 | pending | 1.09 | pending | pending |
+| Decode step, 1K, B=8 | 1.00 | pending | 0.80 | pending | pending |
+| Decode step, 16K, B=8 | 1.04 | pending | 1.07 | pending | pending |
+| Decode step, 64K, B=8 | 1.11 | pending | 1.81 | pending | pending |
+| Decode step, 128K, B=8 | 1.26 | pending | 2.79 | pending | pending |
 
 ### Search (indexer, top-k) only (ms, kernel sum)
 
 | Capture | 0731 | V4.1 | MiMo | Qwen | GLM |
 | --- | --- | --- | --- | --- | --- |
-| Prefill chunk, 1K | 1.22 | pending | pending | pending | pending |
-| Prefill chunk, 16K | 6.40 | pending | pending | pending | pending |
-| Prefill chunk, 64K | 41.2 | pending | pending | pending | pending |
-| Prefill chunk, 128K | 92.2 | pending | pending | pending | pending |
-| Decode step, 1K, B=1 | 0.41 | pending | pending | pending | pending |
-| Decode step, 16K, B=1 | 0.41 | pending | pending | pending | pending |
-| Decode step, 64K, B=1 | 0.42 | pending | pending | pending | pending |
-| Decode step, 128K, B=1 | 0.43 | pending | pending | pending | pending |
-| Decode step, 1K, B=8 | 0.55 | pending | pending | pending | pending |
-| Decode step, 16K, B=8 | 0.53 | pending | pending | pending | pending |
-| Decode step, 64K, B=8 | 0.68 | pending | pending | pending | pending |
-| Decode step, 128K, B=8 | 0.82 | pending | pending | pending | pending |
+| Prefill chunk, 1K | 1.22 | pending | 0.00 | pending | pending |
+| Prefill chunk, 16K | 6.40 | pending | 0.00 | pending | pending |
+| Prefill chunk, 64K | 41.2 | pending | 0.00 | pending | pending |
+| Prefill chunk, 128K | 92.2 | pending | 0.00 | pending | pending |
+| Decode step, 1K, B=1 | 0.41 | pending | 0.00 | pending | pending |
+| Decode step, 16K, B=1 | 0.41 | pending | 0.00 | pending | pending |
+| Decode step, 64K, B=1 | 0.42 | pending | 0.00 | pending | pending |
+| Decode step, 128K, B=1 | 0.43 | pending | 0.00 | pending | pending |
+| Decode step, 1K, B=8 | 0.55 | pending | 0.00 | pending | pending |
+| Decode step, 16K, B=8 | 0.53 | pending | 0.00 | pending | pending |
+| Decode step, 64K, B=8 | 0.68 | pending | 0.00 | pending | pending |
+| Decode step, 128K, B=8 | 0.82 | pending | 0.00 | pending | pending |
 
 ### Recurrent update only (ms, kernel sum)
 
 | Capture | 0731 | V4.1 | MiMo | Qwen | GLM |
 | --- | --- | --- | --- | --- | --- |
-| Prefill chunk, 1K | 0.00 | pending | pending | pending | pending |
-| Prefill chunk, 16K | 0.00 | pending | pending | pending | pending |
-| Prefill chunk, 64K | 0.00 | pending | pending | pending | pending |
-| Prefill chunk, 128K | 0.00 | pending | pending | pending | pending |
-| Decode step, 1K, B=1 | 0.00 | pending | pending | pending | pending |
-| Decode step, 16K, B=1 | 0.00 | pending | pending | pending | pending |
-| Decode step, 64K, B=1 | 0.00 | pending | pending | pending | pending |
-| Decode step, 128K, B=1 | 0.00 | pending | pending | pending | pending |
-| Decode step, 1K, B=8 | 0.00 | pending | pending | pending | pending |
-| Decode step, 16K, B=8 | 0.00 | pending | pending | pending | pending |
-| Decode step, 64K, B=8 | 0.00 | pending | pending | pending | pending |
-| Decode step, 128K, B=8 | 0.00 | pending | pending | pending | pending |
+| Prefill chunk, 1K | 0.00 | pending | 0.00 | pending | pending |
+| Prefill chunk, 16K | 0.00 | pending | 0.00 | pending | pending |
+| Prefill chunk, 64K | 0.00 | pending | 0.00 | pending | pending |
+| Prefill chunk, 128K | 0.00 | pending | 0.00 | pending | pending |
+| Decode step, 1K, B=1 | 0.00 | pending | 0.00 | pending | pending |
+| Decode step, 16K, B=1 | 0.00 | pending | 0.00 | pending | pending |
+| Decode step, 64K, B=1 | 0.00 | pending | 0.00 | pending | pending |
+| Decode step, 128K, B=1 | 0.00 | pending | 0.00 | pending | pending |
+| Decode step, 1K, B=8 | 0.00 | pending | 0.00 | pending | pending |
+| Decode step, 16K, B=8 | 0.00 | pending | 0.00 | pending | pending |
+| Decode step, 64K, B=8 | 0.00 | pending | 0.00 | pending | pending |
+| Decode step, 128K, B=8 | 0.00 | pending | 0.00 | pending | pending |
 
 ### Experts and routing (ms, kernel sum)
 
 | Capture | 0731 | V4.1 | MiMo | Qwen | GLM |
 | --- | --- | --- | --- | --- | --- |
-| Prefill chunk, 1K | 51.7 | pending | pending | pending | pending |
-| Prefill chunk, 16K | 159.7 | pending | pending | pending | pending |
-| Prefill chunk, 64K | 162.4 | pending | pending | pending | pending |
-| Prefill chunk, 128K | 164.9 | pending | pending | pending | pending |
-| Decode step, 1K, B=1 | 2.17 | pending | pending | pending | pending |
-| Decode step, 16K, B=1 | 2.27 | pending | pending | pending | pending |
-| Decode step, 64K, B=1 | 2.36 | pending | pending | pending | pending |
-| Decode step, 128K, B=1 | 2.37 | pending | pending | pending | pending |
-| Decode step, 1K, B=8 | 4.48 | pending | pending | pending | pending |
-| Decode step, 16K, B=8 | 4.63 | pending | pending | pending | pending |
-| Decode step, 64K, B=8 | 4.74 | pending | pending | pending | pending |
-| Decode step, 128K, B=8 | 4.74 | pending | pending | pending | pending |
+| Prefill chunk, 1K | 51.7 | pending | 62.3 | pending | pending |
+| Prefill chunk, 16K | 159.7 | pending | 238.4 | pending | pending |
+| Prefill chunk, 64K | 162.4 | pending | 242.1 | pending | pending |
+| Prefill chunk, 128K | 164.9 | pending | 246.1 | pending | pending |
+| Decode step, 1K, B=1 | 2.17 | pending | 2.39 | pending | pending |
+| Decode step, 16K, B=1 | 2.27 | pending | 2.36 | pending | pending |
+| Decode step, 64K, B=1 | 2.36 | pending | 2.37 | pending | pending |
+| Decode step, 128K, B=1 | 2.37 | pending | 2.36 | pending | pending |
+| Decode step, 1K, B=8 | 4.48 | pending | 5.58 | pending | pending |
+| Decode step, 16K, B=8 | 4.63 | pending | 5.57 | pending | pending |
+| Decode step, 64K, B=8 | 4.74 | pending | 5.59 | pending | pending |
+| Decode step, 128K, B=8 | 4.74 | pending | 5.60 | pending | pending |
 
-### All classified kernels (ms, kernel sum)
+### All kernels except communication (ms, kernel sum)
 
 | Capture | 0731 | V4.1 | MiMo | Qwen | GLM |
 | --- | --- | --- | --- | --- | --- |
-| Prefill chunk, 1K | 198.8 | pending | pending | pending | pending |
-| Prefill chunk, 16K | 649.1 | pending | pending | pending | pending |
-| Prefill chunk, 64K | 399.3 | pending | pending | pending | pending |
-| Prefill chunk, 128K | 485.3 | pending | pending | pending | pending |
-| Decode step, 1K, B=1 | 10.31 | pending | pending | pending | pending |
-| Decode step, 16K, B=1 | 10.41 | pending | pending | pending | pending |
-| Decode step, 64K, B=1 | 10.52 | pending | pending | pending | pending |
-| Decode step, 128K, B=1 | 10.65 | pending | pending | pending | pending |
-| Decode step, 1K, B=8 | 14.53 | pending | pending | pending | pending |
-| Decode step, 16K, B=8 | 14.60 | pending | pending | pending | pending |
-| Decode step, 64K, B=8 | 15.04 | pending | pending | pending | pending |
-| Decode step, 128K, B=8 | 15.37 | pending | pending | pending | pending |
+| Prefill chunk, 1K | 76.0 | pending | 68.1 | pending | pending |
+| Prefill chunk, 16K | 310.8 | pending | 274.3 | pending | pending |
+| Prefill chunk, 64K | 363.2 | pending | 308.6 | pending | pending |
+| Prefill chunk, 128K | 436.1 | pending | 348.4 | pending | pending |
+| Decode step, 1K, B=1 | 9.53 | pending | 4.41 | pending | pending |
+| Decode step, 16K, B=1 | 9.62 | pending | 4.47 | pending | pending |
+| Decode step, 64K, B=1 | 9.74 | pending | 4.67 | pending | pending |
+| Decode step, 128K, B=1 | 9.84 | pending | 4.92 | pending | pending |
+| Decode step, 1K, B=8 | 13.12 | pending | 7.94 | pending | pending |
+| Decode step, 16K, B=8 | 13.20 | pending | 8.19 | pending | pending |
+| Decode step, 64K, B=8 | 13.63 | pending | 8.95 | pending | pending |
+| Decode step, 128K, B=8 | 13.96 | pending | 9.95 | pending | pending |
 
 ## Expert sparsity: nominal against realized
 
@@ -204,13 +230,15 @@ Pending: stage 3 of the session.
 
 A check that each deployment answers and stops by itself, not a quality ranking. GLM has no thinking-off switch and runs with `reasoning_effort=low`.
 
-| Model | Stopped by itself | Output tokens, median | Hit the 2K cap | Answers with reasoning text |
-| --- | --- | --- | --- | --- |
-| 0731 | 12 of 12 | 180 (max 569) | 0 | 0 |
-| V4.1 | pending |  |  |  |
-| MiMo | pending |  |  |  |
-| Qwen | pending |  |  |  |
-| GLM | pending |  |  |  |
+| Model | Stopped by itself | Output tokens, median | Hit the 2K cap | Answers with reasoning text | Passed its fixed check |
+| --- | --- | --- | --- | --- | --- |
+| 0731 | 12 of 12 | 180 (max 569) | 0 | 0 | code 4/4; math 4/4; chat 4/4 |
+| V4.1 | pending |  |  |  |  |
+| MiMo | 12 of 12 | 230 (max 699) | 0 | 0 | not scored yet |
+| Qwen | pending |  |  |  |  |
+| GLM | pending |  |  |  |  |
+
+The fixed checks are in `tools/check_natural_answers.py`: unit tests for the four code tasks, the expected number for the four math tasks, and a structural rule from the prompt for the four chat tasks. Per-task outcomes are in [natural_outcomes.csv](natural_outcomes.csv).
 
 ## Pilot of the serving points (diagnostics launch)
 
@@ -228,3 +256,9 @@ Auxiliary requests on the idle-profiler launch, to check that every session poin
 | 0731 | 1K | 16 | 16 | True | 35 | 104 |  |
 | 0731 | 64K | 1 | 3 | True | 58 | 233 |  |
 | 0731 | 64K | 16 | 9 | True | 58 | 174 |  |
+| MiMo | 16K | 1 | 3 | True | 38 | 153 |  |
+| MiMo | 16K | 16 | 16 | True | 39 | 118 |  |
+| MiMo | 1K | 1 | 3 | True | 36 | 144 |  |
+| MiMo | 1K | 16 | 16 | True | 29 | 88 |  |
+| MiMo | 64K | 1 | 3 | True | 46 | 186 |  |
+| MiMo | 64K | 16 | 9 | True | 58 | 175 |  |

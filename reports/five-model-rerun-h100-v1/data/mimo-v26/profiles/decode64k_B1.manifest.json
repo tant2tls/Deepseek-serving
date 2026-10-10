@@ -1,0 +1,199 @@
+{
+ "kind": "decode",
+ "model_key": "mimo-v26",
+ "runtime": {
+  "venv": "/workspace/vllm-rerun",
+  "vllm": "0.31.1rc1.dev260+ga98247ab4",
+  "torch": "2.13.0+cu132"
+ },
+ "bucket": "64k",
+ "B": 1,
+ "request_ids": [
+  "64k-aux-000"
+ ],
+ "request_sha256": [
+  "c1428c4fdf560daf8b550b295a62d54a5f804b78ed160ce6a1d31d16168ff060"
+ ],
+ "client_content_tokens": [
+  61626
+ ],
+ "unprofiled_window": {
+  "window_s": 0.8842129707336426,
+  "tokens": 145.0,
+  "engine_steps": 145.0,
+  "step_tokens": 145.0,
+  "ms_per_token_step": 6.098020487818225,
+  "ms_per_engine_step": 6.098020487818225,
+  "tokens_per_engine_step": 1.0,
+  "preemptions": 0.0,
+  "running_min": 1.0,
+  "waiting_max": 0,
+  "kv_usage_start": 0.006871442758630275,
+  "kv_usage_end": 0.006887150908192807,
+  "samples": [
+   [
+    0.0,
+    0.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.1112,
+    18.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.2218,
+    36.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.3325,
+    55.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.4429,
+    73.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.553,
+    91.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.6633,
+    109.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.7739,
+    127.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.8842,
+    145.0,
+    1.0,
+    0.0
+   ]
+  ]
+ },
+ "profiled_window": {
+  "window_s": 0.36405134201049805,
+  "tokens": 57.0,
+  "engine_steps": 57.0,
+  "step_tokens": 57.0,
+  "ms_per_token_step": 6.3868656493069835,
+  "ms_per_engine_step": 6.3868656493069835,
+  "tokens_per_engine_step": 1.0,
+  "preemptions": 0.0,
+  "running_min": 1.0,
+  "waiting_max": 0,
+  "kv_usage_start": 0.006887150908192807,
+  "kv_usage_end": 0.006894132307998402,
+  "samples": [
+   [
+    0.0,
+    0.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.0605,
+    8.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.1213,
+    18.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.182,
+    28.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.2425,
+    37.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.3034,
+    47.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.3641,
+    57.0,
+    1.0,
+    0.0
+   ]
+  ]
+ },
+ "window_s": 0.36405134201049805,
+ "tokens_in_window": [
+  57.0
+ ],
+ "server_prompt_tokens_total": 61635.0,
+ "kv_usage": 0.006803374110526006,
+ "progress": {
+  "usage": [
+   {
+    "prompt_tokens": 61635,
+    "total_tokens": 63069,
+    "completion_tokens": 1434,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   }
+  ],
+  "chunks": [
+   1431
+  ],
+  "client_ttft_s": [
+   2.930388927459717
+  ],
+  "finished": [
+   false
+  ],
+  "errors": [
+   null
+  ]
+ },
+ "label": "decode64k_B1",
+ "files": [
+  "dp0_pp0_tp0_dcp0_ep0_rank0.1791632481314663509.pt.trace.json.gz",
+  "dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+  "dp0_pp0_tp1_dcp0_ep1_rank1.1791632481284039769.pt.trace.json.gz",
+  "dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+  "dp0_pp0_tp2_dcp0_ep2_rank2.1791632481297910143.pt.trace.json.gz",
+  "dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+  "dp0_pp0_tp3_dcp0_ep3_rank3.1791632481320428892.pt.trace.json.gz",
+  "dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+  "dp0_pp0_tp4_dcp0_ep4_rank4.1791632481354532598.pt.trace.json.gz",
+  "dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+  "dp0_pp0_tp5_dcp0_ep5_rank5.1791632481342413972.pt.trace.json.gz",
+  "dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+  "dp0_pp0_tp6_dcp0_ep6_rank6.1791632481333684226.pt.trace.json.gz",
+  "dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+  "dp0_pp0_tp7_dcp0_ep7_rank7.1791632481352961796.pt.trace.json.gz",
+  "dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt"
+ ],
+ "n_rank_files": 16,
+ "note": "diagnostic profiled capture; not a timing result"
+}

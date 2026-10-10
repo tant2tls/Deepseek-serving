@@ -48,3 +48,36 @@
 [11:27:27] CHAIN trace v4-0731 prefill128k files=16 {'request_wall_s': 7.188759088516235}
 [11:27:30] CHAIN stopped v4-0731 off-profidle up=957s gpu_mem_max=0MiB leftover=0
 [11:27:30] CHAIN step diag:v4-0731 done
+[11:27:39] CHAIN publish diag:v4-0731 rc=0 ['published diag:v4-0731: 185 files, commit 6367320, push ok']
+[11:27:39] CHAIN step diag:mimo-v26 start
+[11:27:39] CHAIN launched mimo-v26 off-profidle pgid=59904 log=results/five-model-rerun-h100-v1/mimo-v26/_server/serve-off-profidle-20261010-112739.log
+[11:32:34] CHAIN ready mimo-v26 off-profidle after 295s
+[11:33:09] CHAIN functional mimo-v26 ok=True forced=True natural_stopped=12/12 with_reasoning=0 rendered={'server_prompt_tokens': 951, 'client_content_tokens': 942, 'template_overhead': 9}
+[11:34:03] CHAIN pilot mimo-v26 ctx16k_osl2048_c1 block=1 n=3 valid=True dur=38.14394009206444 out_tps=161.07407848195035 ttft_p50=716.7856049491093 tpot_p50=5.860050270173737 
+[11:34:57] CHAIN pilot mimo-v26 ctx16k_osl2048_c16 block=1 n=16 valid=True dur=39.484129176009446 out_tps=829.9030695074778 ttft_p50=5706.709256977774 tpot_p50=16.43476361334556 
+[11:35:48] CHAIN pilot mimo-v26 ctx1k_osl2048_c1 block=1 n=3 valid=True dur=35.90160947991535 out_tps=171.1343889314259 ttft_p50=111.32443102542311 tpot_p50=5.7895155637204265 
+[11:36:33] CHAIN pilot mimo-v26 ctx1k_osl2048_c16 block=1 n=16 valid=True dur=29.184891015058383 out_tps=1122.772738232699 ttft_p50=611.034971952904 tpot_p50=13.939022682712954 
+[11:37:34] CHAIN pilot mimo-v26 ctx64k_osl2048_c1 block=1 n=3 valid=True dur=46.46447457396425 out_tps=132.23005438745903 ttft_p50=3164.208936970681 tpot_p50=6.073059502165104 
+[11:38:48] CHAIN pilot mimo-v26 ctx64k_osl2048_c16 block=1 n=9 valid=True dur=58.23857789195608 out_tps=316.49124458696355 ttft_p50=15824.754848028533 tpot_p50=20.599968264320285 
+[11:38:52] CHAIN kv mimo-v26 1k B=1 usage=0.0006283259825011767 running=1.0 waiting=0.0 prompt_tokens=951.0 all_decoding_after=0.1s capacity_limit=False
+[11:39:09] CHAIN trace mimo-v26 decode1k_B1 files=16 {'B': 1, 'window_s': 0.347470760345459, 'tokens_in_window': [56.0]}
+[11:39:13] CHAIN kv mimo-v26 1k B=8 usage=0.0015393986571277107 running=8.0 waiting=0.0 prompt_tokens=8248.0 all_decoding_after=0.5s capacity_limit=False
+[11:40:00] CHAIN trace mimo-v26 decode1k_B8 files=16 {'B': 8, 'window_s': 0.5468020439147949, 'tokens_in_window': [53.0, 53.0, 53.0, 53.0, 53.0, 53.0, 53.0, 53.0]}
+[11:40:05] CHAIN kv mimo-v26 16k B=1 usage=0.0017523313511975669 running=1.0 waiting=0.0 prompt_tokens=15325.0 all_decoding_after=0.8s capacity_limit=False
+[11:40:22] CHAIN trace mimo-v26 decode16k_B1 files=16 {'B': 1, 'window_s': 0.34482622146606445, 'tokens_in_window': [56.0]}
+[11:40:31] CHAIN kv mimo-v26 16k B=8 usage=0.014983829332700371 running=8.0 waiting=0.0 prompt_tokens=131448.0 all_decoding_after=5.8s capacity_limit=False
+[11:41:12] CHAIN trace mimo-v26 decode16k_B8 files=16 {'B': 8, 'window_s': 0.5305027961730957, 'tokens_in_window': [50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0]}
+[11:41:19] CHAIN kv mimo-v26 64k B=1 usage=0.006803374110526006 running=1.0 waiting=0.0 prompt_tokens=61635.0 all_decoding_after=3.0s capacity_limit=False
+[11:41:36] CHAIN trace mimo-v26 decode64k_B1 files=16 {'B': 1, 'window_s': 0.36405134201049805, 'tokens_in_window': [57.0]}
+[11:42:05] CHAIN kv mimo-v26 64k B=8 usage=0.05799274283490208 running=8.0 waiting=0.0 prompt_tokens=525551.0 all_decoding_after=25.1s capacity_limit=False
+[11:42:55] CHAIN trace mimo-v26 decode64k_B8 files=16 {'B': 8, 'window_s': 0.5859918594360352, 'tokens_in_window': [51.0, 51.0, 51.0, 51.0, 51.0, 51.0, 51.0, 51.0]}
+[11:43:05] CHAIN kv mimo-v26 128k B=1 usage=0.013399051576836407 running=1.0 waiting=0.0 prompt_tokens=122084.0 all_decoding_after=6.3s capacity_limit=False
+[11:43:22] CHAIN trace mimo-v26 decode128k_B1 files=16 {'B': 1, 'window_s': 0.3494303226470947, 'tokens_in_window': [53.0]}
+[11:44:20] CHAIN kv mimo-v26 128k B=8 usage=0.11594010657106801 running=8.0 waiting=0.0 prompt_tokens=1056490.0 all_decoding_after=54.4s capacity_limit=False
+[11:45:14] CHAIN trace mimo-v26 decode128k_B8 files=16 {'B': 8, 'window_s': 0.6051948070526123, 'tokens_in_window': [49.0, 49.0, 49.0, 49.0, 49.0, 49.0, 49.0, 49.0]}
+[11:45:25] CHAIN trace mimo-v26 prefill1k files=16 {'request_wall_s': 0.19610238075256348}
+[11:45:37] CHAIN trace mimo-v26 prefill16k files=16 {'request_wall_s': 0.7252202033996582}
+[11:46:00] CHAIN trace mimo-v26 prefill64k files=16 {'request_wall_s': 2.95005202293396}
+[11:46:37] CHAIN trace mimo-v26 prefill128k files=16 {'request_wall_s': 6.1488752365112305}
+[11:46:40] CHAIN stopped mimo-v26 off-profidle up=1141s gpu_mem_max=0MiB leftover=0
+[11:46:40] CHAIN step diag:mimo-v26 done

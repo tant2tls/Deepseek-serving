@@ -179,3 +179,183 @@
 - `_prepare_prefill_inputs_kernel`: 239.97499999999997
 - `void at::native::vectorized_elementwise_kernel<4, at::native::(anonymous namespace)::launc`: 116.554
 - `void at::native::vectorized_elementwise_kernel<2, at::native::FillFunctor<long>, std::arra`: 49.604
+
+## mimo-v26 decode128k_B1
+
+- `triton_poi_fused_0`: 29954.599999999995
+- `memcpy32_post`: 19814.220999999998
+- `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 3301.0189999999993
+- `_gumbel_sample_kernel`: 2636.9819999999995
+- `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1853.562
+- `_post_update_kernel`: 1579.761
+- `triton_poi_fused_1`: 1495.8959999999997
+- `_combine_sampled_and_draft_tokens_kernel`: 1198.5320000000002
+- `_get_num_sampled_and_rejected_kernel`: 1152.341
+- `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 850.8000000000001
+- `void at::native::_scatter_gather_elementwise_kernel<128, 8, at::native::_cuda_scatter_gath`: 787.912
+- `_prepare_pos_seq_lens_kernel`: 595.2620000000001
+
+## mimo-v26 decode128k_B8
+
+- `triton_poi_fused_0`: 31955.9
+- `memcpy32_post`: 18714.652
+- `_gumbel_sample_kernel`: 2919.0470000000005
+- `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 2007.3119999999997
+- `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 1886.297
+- `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 1725.798
+- `triton_poi_fused_1`: 1524.698
+- `_post_update_kernel`: 1427.661
+- `_combine_sampled_and_draft_tokens_kernel`: 1284.6079999999997
+- `_get_num_sampled_and_rejected_kernel`: 1211.8029999999999
+- `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 805.8679999999999
+- `void at::native::_scatter_gather_elementwise_kernel<128, 8, at::native::_cuda_scatter_gath`: 720.6270000000002
+
+## mimo-v26 decode16k_B1
+
+- `triton_poi_fused_0`: 32025.915000000005
+- `memcpy32_post`: 21021.796999999995
+- `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 3492.622
+- `_gumbel_sample_kernel`: 2790.41
+- `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1965.5539999999999
+- `_post_update_kernel`: 1686.2710000000002
+- `triton_poi_fused_1`: 1631.207
+- `_combine_sampled_and_draft_tokens_kernel`: 1255.8159999999998
+- `_get_num_sampled_and_rejected_kernel`: 1214.6159999999998
+- `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 901.0469999999997
+- `void at::native::_scatter_gather_elementwise_kernel<128, 8, at::native::_cuda_scatter_gath`: 835.267
+- `_prepare_pos_seq_lens_kernel`: 630.442
+
+## mimo-v26 decode16k_B8
+
+- `triton_poi_fused_0`: 31893.497
+- `memcpy32_post`: 19135.930999999997
+- `_gumbel_sample_kernel`: 2875.913
+- `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 2049.254
+- `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 1917.112
+- `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 1722.1580000000004
+- `triton_poi_fused_1`: 1542.6370000000002
+- `_post_update_kernel`: 1459.7410000000002
+- `_combine_sampled_and_draft_tokens_kernel`: 1322.7259999999999
+- `_get_num_sampled_and_rejected_kernel`: 1230.2229999999997
+- `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 820.645
+- `void at::native::_scatter_gather_elementwise_kernel<128, 8, at::native::_cuda_scatter_gath`: 733.1789999999999
+
+## mimo-v26 decode1k_B1
+
+- `triton_poi_fused_0`: 32603.449999999993
+- `memcpy32_post`: 21564.167999999998
+- `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 3582.5239999999994
+- `_gumbel_sample_kernel`: 2973.461
+- `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 2009.9030000000002
+- `_post_update_kernel`: 1695.1740000000002
+- `triton_poi_fused_1`: 1616.1830000000002
+- `_combine_sampled_and_draft_tokens_kernel`: 1290.3159999999998
+- `_get_num_sampled_and_rejected_kernel`: 1238.6119999999999
+- `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 924.2299999999996
+- `void at::native::_scatter_gather_elementwise_kernel<128, 8, at::native::_cuda_scatter_gath`: 857.1379999999998
+- `_prepare_pos_seq_lens_kernel`: 644.7750000000001
+
+## mimo-v26 decode1k_B8
+
+- `triton_poi_fused_0`: 33786.986000000004
+- `memcpy32_post`: 20285.190999999995
+- `_gumbel_sample_kernel`: 3164.9439999999995
+- `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 2168.6859999999997
+- `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 2027.1439999999998
+- `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 1823.576
+- `triton_poi_fused_1`: 1657.719
+- `_post_update_kernel`: 1565.2640000000001
+- `_combine_sampled_and_draft_tokens_kernel`: 1396.1329999999998
+- `_get_num_sampled_and_rejected_kernel`: 1302.506
+- `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 870.117
+- `void at::native::_scatter_gather_elementwise_kernel<128, 8, at::native::_cuda_scatter_gath`: 775.9300000000003
+
+## mimo-v26 decode64k_B1
+
+- `triton_poi_fused_0`: 32797.464
+- `memcpy32_post`: 21767.987999999998
+- `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 3621.9469999999997
+- `_gumbel_sample_kernel`: 2870.218
+- `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 2028.018
+- `_post_update_kernel`: 1747.3529999999998
+- `triton_poi_fused_1`: 1624.2479999999998
+- `_combine_sampled_and_draft_tokens_kernel`: 1310.3210000000001
+- `_get_num_sampled_and_rejected_kernel`: 1256.443
+- `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 932.3479999999997
+- `void at::native::_scatter_gather_elementwise_kernel<128, 8, at::native::_cuda_scatter_gath`: 864.421
+- `_prepare_pos_seq_lens_kernel`: 650.775
+
+## mimo-v26 decode64k_B8
+
+- `triton_poi_fused_0`: 32676.391000000007
+- `memcpy32_post`: 19475.572
+- `_gumbel_sample_kernel`: 2897.6430000000005
+- `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 2082.74
+- `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 1956.499
+- `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 1754.43
+- `triton_poi_fused_1`: 1585.9410000000003
+- `_post_update_kernel`: 1487.864
+- `_combine_sampled_and_draft_tokens_kernel`: 1352.131
+- `_get_num_sampled_and_rejected_kernel`: 1252.56
+- `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 837.5280000000001
+- `_apply_write_kernel`: 785.849
+
+## mimo-v26 prefill128k
+
+- `triton_poi_fused_2`: 16658.027
+- `_apply_write_kernel`: 1616.5939999999998
+- `triton_poi_fused_mul_silu_slice_1`: 504.442
+- `void vllm::vocab_embedding::vocab_parallel_embedding_kernel<int, uint4>(uint4*, int const*`: 400.216
+- `triton_poi_fused_3`: 362.836
+- `triton_poi_fused_1`: 358.4189999999999
+- `_prepare_prefill_inputs_kernel`: 233.707
+- `_combine_sampled_and_draft_tokens_kernel`: 39.748000000000005
+- `_prepare_pos_seq_lens_kernel`: 38.115
+- `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 16.64
+- `void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<bool>, std::arra`: 16.258
+- `void (anonymous namespace)::elementwise_kernel_with_index<int, at::native::arange_cuda_out`: 15.904
+
+## mimo-v26 prefill16k
+
+- `triton_poi_fused_2`: 16563.420000000002
+- `_apply_write_kernel`: 619.4179999999999
+- `triton_poi_fused_mul_silu_slice_1`: 506.37
+- `void vllm::vocab_embedding::vocab_parallel_embedding_kernel<int, uint4>(uint4*, int const*`: 407.586
+- `triton_poi_fused_1`: 357.33600000000007
+- `triton_poi_fused_3`: 357.336
+- `_prepare_prefill_inputs_kernel`: 216.75400000000002
+- `_combine_sampled_and_draft_tokens_kernel`: 39.498
+- `_prepare_pos_seq_lens_kernel`: 36.172
+- `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 15.94
+- `void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<bool>, std::arra`: 15.748000000000001
+- `void (anonymous namespace)::elementwise_kernel_with_index<int, at::native::arange_cuda_out`: 15.552
+
+## mimo-v26 prefill1k
+
+- `triton_poi_fused_2`: 2234.9199999999996
+- `void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:`: 1627.9560000000001
+- `_apply_write_kernel`: 280.35200000000003
+- `void vllm::vocab_embedding::vocab_parallel_embedding_kernel<int, uint4>(uint4*, int const*`: 66.96
+- `_prepare_prefill_inputs_kernel`: 64.78800000000001
+- `triton_poi_fused_mul_silu_slice_1`: 55.634
+- `triton_poi_fused_3`: 50.002
+- `triton_poi_fused_1`: 47.698
+- `_combine_sampled_and_draft_tokens_kernel`: 39.308
+- `_prepare_pos_seq_lens_kernel`: 21.514000000000003
+- `void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<bool>, std::arra`: 19.398
+- `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 16.07
+
+## mimo-v26 prefill64k
+
+- `triton_poi_fused_2`: 16614.466
+- `_apply_write_kernel`: 897.4050000000001
+- `triton_poi_fused_mul_silu_slice_1`: 502.701
+- `void vllm::vocab_embedding::vocab_parallel_embedding_kernel<int, uint4>(uint4*, int const*`: 394.892
+- `triton_poi_fused_3`: 362.85900000000004
+- `triton_poi_fused_1`: 357.804
+- `_prepare_prefill_inputs_kernel`: 234.406
+- `_combine_sampled_and_draft_tokens_kernel`: 39.81
+- `_prepare_pos_seq_lens_kernel`: 37.857
+- `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 16.48
+- `void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<bool>, std::arra`: 16.193
+- `void (anonymous namespace)::elementwise_kernel_with_index<int, at::native::arange_cuda_out`: 15.744
