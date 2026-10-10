@@ -1,0 +1,72 @@
+{
+ "kind": "live_kv",
+ "model_key": "qwen-38-bf16",
+ "runtime": {
+  "venv": "/workspace/vllm-rerun",
+  "vllm": "0.31.1rc1.dev260+ga98247ab4",
+  "torch": "2.13.0+cu132"
+ },
+ "bucket": "1k",
+ "B": 1,
+ "request_ids": [
+  "1k-aux-000"
+ ],
+ "request_sha256": [
+  "05a8da184e4d19f83c785e73aae1c6ffa6d37a1f717ae5d594191adc55e8c4fa"
+ ],
+ "client_content_tokens": [
+  1009
+ ],
+ "idle_gauges": {
+  "vllm:kv_cache_usage_perc": 0.0
+ },
+ "live_gauges": {
+  "vllm:kv_cache_usage_perc": 0.0010418023180102098,
+  "vllm:num_requests_running": 1.0,
+  "vllm:num_requests_waiting": 0.0
+ },
+ "kv_usage_idle": 0.0,
+ "kv_usage_live": 0.0010418023180102098,
+ "server_prompt_tokens_total": 1021.0,
+ "generated_tokens_total": 11.0,
+ "preemptions": 0.0,
+ "running": 1.0,
+ "waiting": 0.0,
+ "gpu_mem_mib": [
+  75799,
+  75809,
+  75809,
+  75809,
+  75809,
+  75809,
+  75809,
+  75809
+ ],
+ "time_to_all_decoding_s": 0.22844958305358887,
+ "progress": {
+  "usage": [
+   {
+    "prompt_tokens": 1021,
+    "total_tokens": 1670,
+    "completion_tokens": 649,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   }
+  ],
+  "chunks": [
+   650
+  ],
+  "client_ttft_s": [
+   0.15500855445861816
+  ],
+  "finished": [
+   false
+  ],
+  "errors": [
+   null
+  ]
+ },
+ "recorded_utc": "2026-10-10T12:48:14Z",
+ "capacity_limit": false
+}

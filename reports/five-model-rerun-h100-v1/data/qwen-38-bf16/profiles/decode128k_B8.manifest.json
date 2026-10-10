@@ -1,0 +1,341 @@
+{
+ "kind": "decode",
+ "model_key": "qwen-38-bf16",
+ "runtime": {
+  "venv": "/workspace/vllm-rerun",
+  "vllm": "0.31.1rc1.dev260+ga98247ab4",
+  "torch": "2.13.0+cu132"
+ },
+ "bucket": "128k",
+ "B": 8,
+ "request_ids": [
+  "128k-aux-000",
+  "128k-aux-001",
+  "128k-aux-002",
+  "128k-aux-003",
+  "128k-aux-004",
+  "128k-aux-005",
+  "128k-aux-006",
+  "128k-aux-007"
+ ],
+ "request_sha256": [
+  "040a18c0ea0ae5d8968eb9bc0ea5ef42f717bd149dcf364f008120d583572014",
+  "e0f1604eb77ecd7f1556e765dafc97fdf2683d8a47a1a19c20af9d72be71d6a7",
+  "608e6c7bfb2b140c2d7df7dedffb8b47fa4e700fe4d03b8627deaef0fc169f9f",
+  "40071e4072ae4277a7eaf6b29ff058472cea54a6de1aa7a71f7630b58f0e78b4",
+  "f6067f42ddd806e01ab9a0e3041eb584dfaa6365f9a22de1d79e4c5cdf2c9fc9",
+  "aeb30f15b2dc890bb15e1c69b35a2ef158aed3b9c37467237cff26a1cdb98961",
+  "53439be154d6979dfaf1276a997097e85f35d14f64095a97475c2c116394f08d",
+  "55161f881ba20e95934afc6e2a086d9cce4f74f4b568b0684e2d8b7bda87302c"
+ ],
+ "client_content_tokens": [
+  130943,
+  145203,
+  136233,
+  130954,
+  144851,
+  135959,
+  132408,
+  145017
+ ],
+ "unprofiled_window": {
+  "window_s": 1.1993186473846436,
+  "tokens": 1072.0,
+  "engine_steps": 134.0,
+  "step_tokens": 1072.0,
+  "ms_per_token_step": 8.950139159586891,
+  "ms_per_engine_step": 8.950139159586891,
+  "tokens_per_engine_step": 8.0,
+  "preemptions": 0.0,
+  "running_min": 8.0,
+  "waiting_max": 0,
+  "kv_usage_start": 0.36567261362156533,
+  "kv_usage_end": 0.36593306420106786,
+  "samples": [
+   [
+    0.0,
+    0.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.1117,
+    96.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.2202,
+    192.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.3283,
+    288.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.4381,
+    392.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.5479,
+    488.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.656,
+    584.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.7641,
+    680.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.8725,
+    776.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.9813,
+    872.0,
+    8.0,
+    0.0
+   ],
+   [
+    1.0895,
+    968.0,
+    8.0,
+    0.0
+   ],
+   [
+    1.1993,
+    1072.0,
+    8.0,
+    0.0
+   ]
+  ]
+ },
+ "profiled_window": {
+  "window_s": 0.4834575653076172,
+  "tokens": 424.0,
+  "engine_steps": 53.0,
+  "step_tokens": 424.0,
+  "ms_per_token_step": 9.121840854860702,
+  "ms_per_engine_step": 9.121840854860702,
+  "tokens_per_engine_step": 8.0,
+  "preemptions": 0.0,
+  "running_min": 8.0,
+  "waiting_max": 0,
+  "kv_usage_start": 0.36593306420106786,
+  "kv_usage_end": 0.3661935147805704,
+  "samples": [
+   [
+    0.0,
+    0.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.0612,
+    48.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.1206,
+    96.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.18,
+    152.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.2409,
+    208.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.3027,
+    264.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.363,
+    312.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.4222,
+    368.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.4835,
+    424.0,
+    8.0,
+    0.0
+   ]
+  ]
+ },
+ "window_s": 0.4834575653076172,
+ "tokens_in_window": [
+  53.0,
+  53.0,
+  53.0,
+  53.0,
+  53.0,
+  53.0,
+  53.0,
+  53.0
+ ],
+ "server_prompt_tokens_total": 1101664.0,
+ "kv_usage": 0.3646308113035551,
+ "progress": {
+  "usage": [
+   {
+    "prompt_tokens": 130955,
+    "total_tokens": 132049,
+    "completion_tokens": 1094,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   {
+    "prompt_tokens": 145215,
+    "total_tokens": 146341,
+    "completion_tokens": 1126,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   {
+    "prompt_tokens": 136245,
+    "total_tokens": 137389,
+    "completion_tokens": 1144,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   {
+    "prompt_tokens": 130966,
+    "total_tokens": 132076,
+    "completion_tokens": 1110,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   {
+    "prompt_tokens": 144863,
+    "total_tokens": 145922,
+    "completion_tokens": 1059,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   {
+    "prompt_tokens": 135971,
+    "total_tokens": 137049,
+    "completion_tokens": 1078,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   {
+    "prompt_tokens": 132420,
+    "total_tokens": 133463,
+    "completion_tokens": 1043,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   {
+    "prompt_tokens": 145029,
+    "total_tokens": 146054,
+    "completion_tokens": 1025,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   }
+  ],
+  "chunks": [
+   1089,
+   1114,
+   1139,
+   1105,
+   645,
+   1073,
+   1038,
+   924
+  ],
+  "client_ttft_s": [
+   12.445903539657593,
+   6.702136754989624,
+   3.4514286518096924,
+   9.578222513198853,
+   18.601730585098267,
+   15.331971406936646,
+   21.48421549797058,
+   24.725055694580078
+  ],
+  "finished": [
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false
+  ],
+  "errors": [
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ]
+ },
+ "label": "decode128k_B8",
+ "files": [
+  "dp0_pp0_tp0_dcp0_ep0_rank0.1791636752854435600.pt.trace.json.gz",
+  "dp0_pp0_tp0_dcp0_ep0_rank0.profiler_out.txt",
+  "dp0_pp0_tp1_dcp0_ep1_rank1.1791636752834550748.pt.trace.json.gz",
+  "dp0_pp0_tp1_dcp0_ep1_rank1.profiler_out.txt",
+  "dp0_pp0_tp2_dcp0_ep2_rank2.1791636752964390836.pt.trace.json.gz",
+  "dp0_pp0_tp2_dcp0_ep2_rank2.profiler_out.txt",
+  "dp0_pp0_tp3_dcp0_ep3_rank3.1791636752835664027.pt.trace.json.gz",
+  "dp0_pp0_tp3_dcp0_ep3_rank3.profiler_out.txt",
+  "dp0_pp0_tp4_dcp0_ep4_rank4.1791636752850551036.pt.trace.json.gz",
+  "dp0_pp0_tp4_dcp0_ep4_rank4.profiler_out.txt",
+  "dp0_pp0_tp5_dcp0_ep5_rank5.1791636752916071840.pt.trace.json.gz",
+  "dp0_pp0_tp5_dcp0_ep5_rank5.profiler_out.txt",
+  "dp0_pp0_tp6_dcp0_ep6_rank6.1791636752932437720.pt.trace.json.gz",
+  "dp0_pp0_tp6_dcp0_ep6_rank6.profiler_out.txt",
+  "dp0_pp0_tp7_dcp0_ep7_rank7.1791636752912100652.pt.trace.json.gz",
+  "dp0_pp0_tp7_dcp0_ep7_rank7.profiler_out.txt"
+ ],
+ "n_rank_files": 16,
+ "note": "diagnostic profiled capture; not a timing result"
+}

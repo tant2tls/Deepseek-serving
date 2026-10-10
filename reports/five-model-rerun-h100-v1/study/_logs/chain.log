@@ -152,3 +152,36 @@
 [12:40:22] CHAIN trace glm-53 prefill128k files=16 {'request_wall_s': 3.9191291332244873}
 [12:40:25] CHAIN stopped glm-53 off-profidle up=1104s gpu_mem_max=0MiB leftover=0
 [12:40:25] CHAIN step diag:glm-53 done
+[12:40:43] CHAIN publish diag:glm-53 rc=0 ['published diag:glm-53: 530 files, commit 8673933, push ok']
+[12:40:43] CHAIN step diag:qwen-38-bf16 start
+[12:40:43] CHAIN launched qwen-38-bf16 off-profidle pgid=120359 log=results/five-model-rerun-h100-v1/qwen-38-bf16/_server/serve-off-profidle-20261010-124043.log
+[12:42:53] CHAIN ready qwen-38-bf16 off-profidle after 130s
+[12:43:35] CHAIN functional qwen-38-bf16 ok=True forced=True natural_stopped=12/12 with_reasoning=0 rendered={'server_prompt_tokens': 1021, 'client_content_tokens': 1009, 'template_overhead': 12}
+[12:44:27] CHAIN pilot qwen-38-bf16 ctx16k_osl2048_c1 block=1 n=3 valid=True dur=39.02310305496212 out_tps=157.44519320635467 ttft_p50=1124.3755320319906 tpot_p50=5.870419694656715 
+[12:45:07] CHAIN pilot qwen-38-bf16 ctx16k_osl2048_c16 block=1 n=16 valid=True dur=26.553334607975557 out_tps=1234.0446306942483 ttft_p50=4093.1407699827105 tpot_p50=10.910432639505176 
+[12:45:56] CHAIN pilot qwen-38-bf16 ctx1k_osl2048_c1 block=1 n=3 valid=True dur=36.24929387390148 out_tps=169.49295678345655 ttft_p50=161.08592797536403 tpot_p50=5.820089505628683 
+[12:46:28] CHAIN pilot qwen-38-bf16 ctx1k_osl2048_c16 block=1 n=16 valid=True dur=19.899599611060694 out_tps=1646.6662968327628 ttft_p50=387.9174384637736 tpot_p50=9.51273907938245 
+[12:47:24] CHAIN pilot qwen-38-bf16 ctx64k_osl2048_c1 block=1 n=3 valid=True dur=42.07462411199231 out_tps=146.02626000047397 ttft_p50=1689.4735370296985 tpot_p50=5.929539005889029 
+[12:48:10] CHAIN pilot qwen-38-bf16 ctx64k_osl2048_c16 block=1 n=9 valid=True dur=31.362308106035925 out_tps=587.7118462608502 ttft_p50=7671.683634980582 tpot_p50=11.461817846600736 
+[12:48:14] CHAIN kv qwen-38-bf16 1k B=1 usage=0.0010418023180102098 running=1.0 waiting=0.0 prompt_tokens=1021.0 all_decoding_after=0.2s capacity_limit=False
+[12:48:35] CHAIN trace qwen-38-bf16 decode1k_B1 files=16 {'B': 1, 'window_s': 0.3535585403442383, 'tokens_in_window': [56.0]}
+[12:48:39] CHAIN kv qwen-38-bf16 1k B=8 usage=0.008334418544081235 running=8.0 waiting=0.0 prompt_tokens=8581.0 all_decoding_after=0.4s capacity_limit=False
+[12:49:14] CHAIN trace qwen-38-bf16 decode1k_B8 files=16 {'B': 8, 'window_s': 0.42280006408691406, 'tokens_in_window': [48.0, 48.0, 48.0, 48.0, 48.0, 48.0, 48.0, 48.0]}
+[12:49:18] CHAIN kv qwen-38-bf16 16k B=1 usage=0.006120588618309664 running=1.0 waiting=0.0 prompt_tokens=16465.0 all_decoding_after=0.4s capacity_limit=False
+[12:49:41] CHAIN trace qwen-38-bf16 decode16k_B1 files=16 {'B': 1, 'window_s': 0.351104736328125, 'tokens_in_window': [56.0]}
+[12:49:48] CHAIN kv qwen-38-bf16 16k B=8 usage=0.05065763771324394 running=8.0 waiting=0.0 prompt_tokens=137484.0 all_decoding_after=2.9s capacity_limit=False
+[12:50:10] CHAIN trace qwen-38-bf16 decode16k_B8 files=16 {'B': 8, 'window_s': 0.4259064197540283, 'tokens_in_window': [48.0, 48.0, 48.0, 48.0, 48.0, 48.0, 48.0, 48.0]}
+[12:50:16] CHAIN kv qwen-38-bf16 64k B=1 usage=0.022268524547467083 running=1.0 waiting=0.0 prompt_tokens=66232.0 all_decoding_after=1.6s capacity_limit=False
+[12:50:39] CHAIN trace qwen-38-bf16 decode64k_B1 files=16 {'B': 1, 'window_s': 0.3484516143798828, 'tokens_in_window': [55.0]}
+[12:50:55] CHAIN kv qwen-38-bf16 64k B=8 usage=0.18531058731605676 running=8.0 waiting=0.0 prompt_tokens=551293.0 all_decoding_after=12.0s capacity_limit=False
+[12:51:31] CHAIN trace qwen-38-bf16 decode64k_B8 files=16 {'B': 8, 'window_s': 0.4308333396911621, 'tokens_in_window': [48.0, 48.0, 48.0, 48.0, 48.0, 48.0, 48.0, 48.0]}
+[12:51:38] CHAIN kv qwen-38-bf16 128k B=1 usage=0.043365021487172806 running=1.0 waiting=0.0 prompt_tokens=130955.0 all_decoding_after=3.2s capacity_limit=False
+[12:52:01] CHAIN trace qwen-38-bf16 decode128k_B1 files=16 {'B': 1, 'window_s': 0.3480861186981201, 'tokens_in_window': [55.0]}
+[12:52:30] CHAIN kv qwen-38-bf16 128k B=8 usage=0.3646308113035551 running=8.0 waiting=0.0 prompt_tokens=1101664.0 all_decoding_after=24.8s capacity_limit=False
+[12:52:54] CHAIN trace qwen-38-bf16 decode128k_B8 files=16 {'B': 8, 'window_s': 0.4834575653076172, 'tokens_in_window': [53.0, 53.0, 53.0, 53.0, 53.0, 53.0, 53.0, 53.0]}
+[12:53:07] CHAIN trace qwen-38-bf16 prefill1k files=16 {'request_wall_s': 0.2520790100097656}
+[12:53:22] CHAIN trace qwen-38-bf16 prefill16k files=16 {'request_wall_s': 0.476085901260376}
+[12:53:54] CHAIN trace qwen-38-bf16 prefill64k files=16 {'request_wall_s': 1.6834399700164795}
+[12:54:45] CHAIN trace qwen-38-bf16 prefill128k files=16 {'request_wall_s': 3.174447536468506}
+[12:54:55] CHAIN stopped qwen-38-bf16 off-profidle up=853s gpu_mem_max=0MiB leftover=0
+[12:54:55] CHAIN step diag:qwen-38-bf16 done

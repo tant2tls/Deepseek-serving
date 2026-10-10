@@ -1,0 +1,267 @@
+{
+ "model_key": "qwen-38-bf16",
+ "runtime": {
+  "venv": "/workspace/vllm-rerun",
+  "vllm": "0.31.1rc1.dev260+ga98247ab4",
+  "torch": "2.13.0+cu132"
+ },
+ "output_tokens": 2048,
+ "natural_cap": 2048,
+ "checks": [
+  {
+   "kind": "natural_eos",
+   "domain": "code",
+   "task": "merge_intervals",
+   "prompt": "Write a Python function `merge_intervals(intervals)` that merges overlapping closed intervals given as a list of [start, end] pairs and returns the merged list sorted by start. Include a docstring. Reply with the code only.",
+   "text": "```python\ndef merge_intervals(intervals):\n    \"\"\"\n    Merge overlapping closed intervals.\n    \n    Args:\n        intervals: A list of [start, end] pairs representing closed intervals.\n        \n    Returns:\n        A list of merged [start, end] pairs sorted by start.\n    \"\"\"\n    if not intervals:\n        return []\n    \n    # Sort intervals by start time\n    sorted_intervals = sorted(intervals, key=lambda x: x[0])\n    \n    merged = [sorted_intervals[0]]\n    \n    for current in sorted_intervals[1:]:\n        last = merged[-1]\n        # If current interval overlaps with the last merged interval\n        if current[0] <= last[1]:\n            # Merge them by updating the end of the last interval\n            last[1] = max(last[1], current[1])\n        else:\n            # No overlap, add the current interval\n            merged.append(current)\n    \n    return merged\n```",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 58,
+    "total_tokens": 271,
+    "completion_tokens": 213,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "wall_s": 1.2889988422393799
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "code",
+   "task": "lru_cache",
+   "prompt": "Write a Python class `LRUCache` whose constructor takes a capacity and which has `get(key)` and `put(key, value)` methods; `get` returns -1 for a missing key and both count as a use. Reply with the code only.",
+   "text": "```python\nclass LRUCache:\n    def __init__(self, capacity: int):\n        self.capacity = capacity\n        self.cache = {}\n        self.order = []  # list of keys in order of usage, most recent at end\n\n    def get(self, key: int) -> int:\n        if key not in self.cache:\n            return -1\n        # Move key to end (most recently used)\n        self.order.remove(key)\n        self.order.append(key)\n        return self.cache[key]\n\n    def put(self, key: int, value: int) -> None:\n        if key in self.cache:\n            # Update value and move to end\n            self.cache[key] = value\n            self.order.remove(key)\n            self.order.append(key)\n        else:\n            # If at capacity, remove least recently used\n            if len(self.cache) >= self.capacity:\n                lru_key = self.order.pop(0)\n                del self.cache[lru_key]\n            self.cache[key] = value\n            self.order.append(key)\n```",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 65,
+    "total_tokens": 298,
+    "completion_tokens": 233,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "wall_s": 1.396921157836914
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "code",
+   "task": "to_roman",
+   "prompt": "Write a Python function `to_roman(n)` that converts an integer from 1 to 3999 to a Roman numeral string. Reply with the code only.",
+   "text": "```python\ndef to_roman(n):\n    val = [\n        1000, 900, 500, 400,\n        100, 90, 50, 40,\n        10, 9, 5, 4,\n        1\n    ]\n    syms = [\n        \"M\", \"CM\", \"D\", \"CD\",\n        \"C\", \"XC\", \"L\", \"XL\",\n        \"X\", \"IX\", \"V\", \"IV\",\n        \"I\"\n    ]\n    roman_num = ''\n    i = 0\n    while n > 0:\n        while n >= val[i]:\n            roman_num += syms[i]\n            n -= val[i]\n        i += 1\n    return roman_num\n```",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 47,
+    "total_tokens": 239,
+    "completion_tokens": 192,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "wall_s": 1.1526966094970703
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "code",
+   "task": "top_k_words",
+   "prompt": "Write a Python function `top_k_words(text, k)` that returns the k most frequent lowercase words in `text` as a list of (word, count) tuples, most frequent first, ties broken alphabetically. Words are maximal runs of ASCII letters. Reply with the code only.",
+   "text": "```python\nimport re\nfrom collections import Counter\n\ndef top_k_words(text, k):\n    # Extract all maximal runs of ASCII letters\n    words = re.findall(r'[a-zA-Z]+', text)\n    # Convert to lowercase\n    words = [w.lower() for w in words]\n    # Count frequencies\n    counts = Counter(words)\n    # Sort by count descending, then alphabetically ascending\n    sorted_words = sorted(counts.items(), key=lambda x: (-x[1], x[0]))\n    # Return top k\n    return sorted_words[:k]\n```",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 70,
+    "total_tokens": 197,
+    "completion_tokens": 127,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "wall_s": 0.7671496868133545
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "math",
+   "task": "average_speed",
+   "prompt": "A train travels 180 km at 60 km/h and then 120 km at 40 km/h. What is its average speed for the whole trip in km/h? Explain step by step, then give the final number on the last line in the form `Answer: <number>`.",
+   "text": "To find the average speed for the whole trip, we must use the definition of average speed:\n\n$$ \\text{Average Speed} = \\frac{\\text{Total Distance}}{\\text{Total Time}} $$\n\nIt is important to note that average speed is **not** simply the arithmetic mean of the two speeds. We must calculate the total distance traveled and the total time taken.\n\n**Step 1: Calculate the time taken for the first part of the trip.**\n*   Distance ($d_1$) = 180 km\n*   Speed ($v_1$) = 60 km/h\n*   Time ($t_1$) = $\\frac{d_1}{v_1} = \\frac{180}{60} = 3$ hours\n\n**Step 2: Calculate the time taken for the second part of the trip.**\n*   Distance ($d_2$) = 120 km\n*   Speed ($v_2$) = 40 km/h\n*   Time ($t_2$) = $\\frac{d_2}{v_2} = \\frac{120}{40} = 3$ hours\n\n**Step 3: Calculate the total distance.**\n*   Total Distance = $d_1 + d_2 = 180 + 120 = 300$ km\n\n**Step 4: Calculate the total time.**\n*   Total Time = $t_1 + t_2 = 3 + 3 = 6$ hours\n\n**Step 5: Calculate the average speed.**\n*   Average Speed = $\\frac{\\text{Total Distance}}{\\text{Total Time}} = \\frac{300 \\text{ km}}{6 \\text{ h}}$\n*   Average Speed = 50 km/h\n\nAnswer: 50",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 77,
+    "total_tokens": 478,
+    "completion_tokens": 401,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "wall_s": 2.36281418800354
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "math",
+   "task": "divisors_360",
+   "prompt": "How many positive divisors does 360 have? Explain step by step, then give the final number on the last line in the form `Answer: <number>`.",
+   "text": "To find the number of positive divisors of 360, we will follow these steps:\n\n1.  **Find the prime factorization of 360.**\n2.  **Apply the divisor counting formula.**\n\n### Step 1: Prime Factorization of 360\n\nWe break down 360 into its prime factors:\n\n*   360 is even, so divide by 2:\n    $$360 \\div 2 = 180$$\n*   180 is even, so divide by 2:\n    $$180 \\div 2 = 90$$\n*   90 is even, so divide by 2:\n    $$90 \\div 2 = 45$$\n*   45 is not divisible by 2, but it is divisible by 3:\n    $$45 \\div 3 = 15$$\n*   15 is divisible by 3:\n    $$15 \\div 3 = 5$$\n*   5 is a prime number.\n\nSo, the prime factors are $2, 2, 2, 3, 3, 5$.\n\nWriting this in exponential form:\n$$360 = 2^3 \\times 3^2 \\times 5^1$$\n\n### Step 2: Apply the Divisor Counting Formula\n\nIf the prime factorization of a number $n$ is given by:\n$$n = p_1^{e_1} \\times p_2^{e_2} \\times \\dots \\times p_k^{e_k}$$\n\nThen the total number of positive divisors $d(n)$ is calculated by multiplying the exponents increased by one:\n$$d(n) = (e_1 + 1)(e_2 + 1)\\dots(e_k + 1)$$\n\nFor $360 = 2^3 \\times 3^2 \\times 5^1$:\n*   The exponent of 2 is $3$.\n*   The exponent of 3 is $2$.\n*   The exponent of 5 is $1$.\n\nNow, we add 1 to each exponent and multiply the results:\n$$d(360) = (3 + 1)(2 + 1)(1 + 1)$$\n$$d(360) = 4 \\times 3 \\times 2$$\n$$d(360) = 12 \\times 2$$\n$$d(360) = 24$$\n\nAnswer: 24",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 48,
+    "total_tokens": 614,
+    "completion_tokens": 566,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "wall_s": 3.3137924671173096
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "math",
+   "task": "linear_equation",
+   "prompt": "Solve for x: 3x + 7 = 2(x - 4) + 30. Explain step by step, then give the final number on the last line in the form `Answer: <number>`.",
+   "text": "To solve the equation for $x$, we will follow these steps:\n\n**Step 1: Simplify the right side of the equation.**\nFirst, distribute the $2$ into the parentheses on the right side:\n$$ 3x + 7 = 2(x) - 2(4) + 30 $$\n$$ 3x + 7 = 2x - 8 + 30 $$\n\nNext, combine the constant terms ($-8$ and $30$) on the right side:\n$$ 3x + 7 = 2x + 22 $$\n\n**Step 2: Move the variable terms to one side.**\nSubtract $2x$ from both sides of the equation to get all $x$ terms on the left side:\n$$ 3x - 2x + 7 = 22 $$\n$$ x + 7 = 22 $$\n\n**Step 3: Isolate the variable.**\nSubtract $7$ from both sides to solve for $x$:\n$$ x = 22 - 7 $$\n$$ x = 15 $$\n\n**Step 4: Verify the solution.**\nSubstitute $x = 15$ back into the original equation:\nLeft Side: $3(15) + 7 = 45 + 7 = 52$\nRight Side: $2(15 - 4) + 30 = 2(11) + 30 = 22 + 30 = 52$\n\nSince both sides equal $52$, the solution is correct.\n\nAnswer: 15",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 60,
+    "total_tokens": 413,
+    "completion_tokens": 353,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "wall_s": 2.0792524814605713
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "math",
+   "task": "sum_multiples",
+   "prompt": "What is the sum of all integers from 1 to 200 that are divisible by 3 or by 5? Explain step by step, then give the final number on the last line in the form `Answer: <number>`.",
+   "text": "To find the sum of all integers from 1 to 200 that are divisible by 3 or by 5, we can use the Principle of Inclusion-Exclusion.\n\nLet $S$ be the set of integers from 1 to 200.\nLet $A$ be the subset of $S$ containing integers divisible by 3.\nLet $B$ be the subset of $S$ containing integers divisible by 5.\n\nWe want to calculate the sum of elements in $A \\cup B$. According to the Principle of Inclusion-Exclusion for sums:\n$$ \\text{Sum}(A \\cup B) = \\text{Sum}(A) + \\text{Sum}(B) - \\text{Sum}(A \\cap B) $$\n\nHere, $A \\cap B$ is the set of integers divisible by both 3 and 5, which means they are divisible by $\\text{lcm}(3, 5) = 15$.\n\n### Step 1: Calculate the sum of integers divisible by 3 ($\\text{Sum}(A)$)\n\nThe integers divisible by 3 in the range $[1, 200]$ form an arithmetic progression: $3, 6, 9, \\dots, k$.\nFirst, find the number of terms, $n_3$.\n$$ n_3 = \\left\\lfloor \\frac{200}{3} \\right\\rfloor = 66 $$\nThe last term is $3 \\times 66 = 198$.\n\nThe sum of an arithmetic progression is given by $S_n = \\frac{n}{2}(\\text{first term} + \\text{last term})$.\n$$ \\text{Sum}(A) = \\frac{66}{2} (3 + 198) = 33 \\times 201 $$\n$$ \\text{Sum}(A) = 6633 $$\n\n### Step 2: Calculate the sum of integers divisible by 5 ($\\text{Sum}(B)$)\n\nThe integers divisible by 5 in the range $[1, 200]$ form an arithmetic progression: $5, 10, 15, \\dots, m$.\nFirst, find the number of terms, $n_5$.\n$$ n_5 = \\left\\lfloor \\frac{200}{5} \\right\\rfloor = 40 $$\nThe last term is $5 \\times 40 = 200$.\n\n$$ \\text{Sum}(B) = \\frac{40}{2} (5 + 200) = 20 \\times 205 $$\n$$ \\text{Sum}(B) = 4100 $$\n\n### Step 3: Calculate the sum of integers divisible by 15 ($\\text{Sum}(A \\cap B)$)\n\nThe integers divisible by 15 in the range $[1, 200]$ form an arithmetic progression: $15, 30, 45, \\dots, p$.\nFirst, find the number of terms, $n_{15}$.\n$$ n_{15} = \\left\\lfloor \\frac{200}{15} \\right\\rfloor $$\n$$ 200 \\div 15 = 13.33\\dots \\implies n_{15} = 13 $$\nThe last term is $15 \\times 13 = 195$.\n\n$$ \\text{Sum}(A \\cap B) = \\frac{13}{2} (15 + 195) = \\frac{13}{2} (210) = 13 \\times 105 $$\n$$ \\text{Sum}(A \\cap B) = 1365 $$\n\n### Step 4: Apply the Principle of Inclusion-Exclusion\n\n$$ \\text{Sum}(A \\cup B) = \\text{Sum}(A) + \\text{Sum}(B) - \\text{Sum}(A \\cap B) $$\n$$ \\text{Sum}(A \\cup B) = 6633 + 4100 - 1365 $$\n\nCalculate the sum:\n$$ 6633 + 4100 = 10733 $$\n$$ 10733 - 1365 = 9368 $$\n\nAnswer: 9368",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 62,
+    "total_tokens": 1043,
+    "completion_tokens": 981,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "wall_s": 5.720187425613403
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "chat",
+   "task": "hash_table",
+   "prompt": "Explain how a hash table works to a first-year computer science student in about 300 words. End your reply with the single word DONE on its own line.",
+   "text": "Imagine you have a massive library with millions of books, but instead of organizing them alphabetically or by subject, you want to find any specific book instantly. A hash table is the data structure that makes this possible. It works by converting a unique identifier, called a \"key,\" into a specific location in an array, known as an \"index.\"\n\nThe magic lies in a mathematical function called a \"hash function.\" When you want to store data, you pass the key (like a student’s ID number) into this function. The function processes the key and outputs a number that corresponds to a slot in your array. For example, if your array has 100 slots, the hash function might take the ID \"12345\" and return \"45.\" You then place your data in slot 45.\n\nRetrieving the data is just as fast. You take the same key, run it through the same hash function, and it points you directly to slot 45. You don’t need to search through the entire array; you go straight to the spot. This gives hash tables an average time complexity of O(1), meaning the time it takes to find data doesn’t grow significantly as the amount of data increases.\n\nHowever, there is a catch called a \"collision.\" What if two different keys, like \"12345\" and \"67890,\" both hash to slot 45? Since you can’t put two items in the same box, you need a strategy to handle this. The most common method is \"chaining,\" where each slot in the array actually points to a linked list. If a collision occurs, you simply add the new item to the list at that slot. Another method is \"open addressing,\" where you look for the next available empty slot nearby.\n\nWhile collisions can slow things down slightly, a well-designed hash function distributes keys evenly, keeping the lists short. This makes hash tables incredibly efficient for tasks like database indexing, caching, and implementing dictionaries in programming languages. They are one of the most powerful tools in a computer scientist’s toolkit because they trade a bit of memory for massive speed gains.\n\nDONE",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 47,
+    "total_tokens": 494,
+    "completion_tokens": 447,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "wall_s": 2.6240241527557373
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "chat",
+   "task": "interview_steps",
+   "prompt": "Write a guide with exactly five numbered steps for preparing for a job interview. Each step should be two or three sentences.",
+   "text": "1. Research the company thoroughly by reviewing their website, recent news articles, and social media presence to understand their mission and values. This knowledge demonstrates genuine interest and helps you tailor your responses to align with their specific goals.\n\n2. Analyze the job description carefully to identify key skills and qualifications required for the role. Prepare specific examples from your past experiences that directly address these requirements using the STAR method.\n\n3. Practice answering common interview questions out loud to improve your confidence and clarity. Consider conducting mock interviews with a friend or recording yourself to identify areas for improvement in your delivery.\n\n4. Plan your logistics in advance by confirming the interview time, location, and format. Prepare your outfit, resume copies, and any necessary documents the night before to avoid last-minute stress.\n\n5. Prepare thoughtful questions to ask the interviewer about the team culture or company challenges. This engagement shows your proactive attitude and helps you determine if the role is the right fit for your career aspirations.",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 36,
+    "total_tokens": 233,
+    "completion_tokens": 197,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "wall_s": 1.1881580352783203
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "chat",
+   "task": "cars_essay",
+   "prompt": "Compare electric cars and petrol cars in a short essay of four paragraphs: cost, range, maintenance and environmental impact, in that order.",
+   "text": "When considering the financial aspects of vehicle ownership, electric cars and petrol cars present distinct cost structures. Electric vehicles (EVs) typically have a higher upfront purchase price due to the expensive battery technology, although this gap is narrowing as production scales up. However, EVs are significantly cheaper to operate on a day-to-day basis, as electricity is generally less expensive than gasoline and offers more stable pricing. In contrast, petrol cars have a lower initial sticker price but incur higher long-term fuel costs, which can fluctuate wildly based on global oil markets, making budgeting for running costs less predictable for the consumer.\n\nRange anxiety remains a significant differentiator between the two technologies, though the landscape is evolving rapidly. Petrol cars hold a clear advantage in terms of range and refueling convenience, with most models capable of traveling 400 to 600 miles on a single tank and refueling in just a few minutes at any gas station. Electric cars, while improving, generally offer shorter ranges, typically between 200 and 350 miles, and require considerably more time to recharge. While home charging mitigates this issue for daily commutes, long-distance travel in an EV requires careful planning around charging infrastructure, which is still less ubiquitous than petrol stations in many regions.\n\nMaintenance requirements also vary greatly, favoring electric vehicles in terms of simplicity and long-term savings. Petrol engines are complex mechanical systems with hundreds of moving parts, requiring regular oil changes, filter replacements, and frequent servicing of components like spark plugs, timing belts, and exhaust systems. Electric cars, by comparison, have far fewer moving parts, eliminating the need for oil changes and reducing wear on brakes due to regenerative braking systems. This mechanical simplicity translates to lower maintenance costs and fewer unexpected repairs over the lifespan of the vehicle, although tire wear can be slightly higher in EVs due to their heavier weight and instant torque.\n\nFinally, the environmental impact is the most critical factor driving the shift toward electric mobility. Petrol cars emit greenhouse gases and pollutants directly from the tailpipe, contributing significantly to air pollution and climate change. Electric cars produce zero tailpipe emissions, offering immediate local air quality benefits. However, the overall environmental footprint of an EV depends heavily on the source of the electricity used to charge it; if the grid relies on coal, the indirect emissions can be substantial. Despite this, studies consistently show that over their entire lifecycle, electric cars have a lower carbon footprint than their petrol counterparts, especially as energy grids become increasingly renewable.",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 39,
+    "total_tokens": 548,
+    "completion_tokens": 509,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "wall_s": 2.981870174407959
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "chat",
+   "task": "ww1_bullets",
+   "prompt": "Summarise the causes of the First World War in exactly three bullet points, each starting with '- '.",
+   "text": "- The assassination of Archduke Franz Ferdinand of Austria-Hungary in Sarajevo served as the immediate catalyst, triggering a diplomatic crisis that escalated into armed conflict.\n- A rigid system of interlocking alliances divided Europe into two opposing camps, the Triple Entente and the Triple Alliance, which transformed a regional dispute into a continent-wide war.\n- Long-term underlying tensions, including intense militarism, imperialist competition for global dominance, and fervent nationalism, created a volatile environment where conflict was increasingly inevitable.",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 33,
+    "total_tokens": 138,
+    "completion_tokens": 105,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "wall_s": 0.6417965888977051
+  },
+  {
+   "kind": "forced_2048",
+   "request_id": "1k-aux-000",
+   "usage": {
+    "prompt_tokens": 1021,
+    "total_tokens": 3069,
+    "completion_tokens": 2048,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "finish_reason": "length",
+   "text": "# Analysis of `encodings/utf_16.py`\n\n## Overview\n\nThis file implements the **UTF-16 codec** for Python, providing both one-shot and incremental encoding/decoding APIs. UTF-16 is a variable-length character encoding that uses 16-bit code units, with surrogate pairs for characters outside the Basic Multilingual Plane (BMP). It supports a **Byte Order Mark (BOM)** to indicate endianness.\n\n---\n\n## File-by-File Breakdown\n\n### Module-Level Setup\n\n```python\nimport codecs, sys\n```\n\n- `codecs` provides the low-level C-implemented UTF-16 encode/decode functions.\n- `sys` is used to determine the platform's native byte order (`sys.byteorder`), which influences default behavior.\n\n### One-Shot APIs\n\n```python\nencode = codecs.utf_16_encode\n\ndef decode(input, errors='strict'):\n    return codecs.utf_16_decode(input, errors, True)\n```\n\n- **`encode`**: Directly aliases `codecs.utf_16_encode`. This function encodes a Unicode string to UTF-16 bytes, **prepending a BOM** that matches the platform's native byte order.\n- **`decode`**: Wraps `codecs.utf_16_decode` with `byteorder=0` (auto-detect from BOM) and `final=True`. The `True` argument indicates this is a complete, non-incremental decode.\n\n> **Subtle behavior**: The one-shot `decode` always expects a BOM. If the input lacks a BOM, `codecs.utf_16_decode` with `byteorder=0` will raise a `UnicodeError`. This differs from some other codecs that might default to a specific endianness.\n\n---\n\n### `IncrementalEncoder`\n\nThis class allows encoding a Unicode string in chunks, producing UTF-16 bytes incrementally.\n\n#### `__init__`\n```python\ndef __init__(self, errors='strict'):\n    codecs.IncrementalEncoder.__init__(self, errors)\n    self.encoder = None\n```\n- `self.encoder` is `None` initially, meaning the BOM has not yet been emitted and the endianness has not been fixed.\n\n#### `encode`\n```python\ndef encode(self, input, final=False):\n    if self.encoder is None:\n        result = codecs.utf_16_encode(input, self.errors)[0]\n        if sys.byteorder == 'little':\n            self.encoder = codecs.utf_16_le_encode\n        else:\n            self.encoder = codecs.utf_16_be_encode\n        return result\n    return self.encoder(input, self.errors)[0]\n```\n\n**Key behavior:**\n1. **First call**: Uses `codecs.utf_16_encode`, which **emits a BOM** based on the platform's native byte order. After this, `self.encoder` is set to the platform-specific LE or BE encoder, so subsequent calls do **not** emit another BOM.\n2. **Subsequent calls**: Uses the fixed-endian encoder (`utf_16_le_encode` or `utf_16_be_encode`), which does **not** emit a BOM.\n\n> **Subtle behavior for maintainers:**\n> - The BOM is emitted **only on the first `encode()` call**, regardless of whether `final=True` or `final=False`. This means if you call `encode(\"\")` first, a BOM is still emitted. This is correct per the UTF-16 spec (the BOM marks the start of the stream), but it can surprise users who expect no output for empty input.\n> - The endianness is **locked to the platform's native byte order** on the first call. There is no way to override this via the public API. If you need to force a specific endianness, you must use `utf_16_le` or `utf_16_be` codecs directly.\n> - The `final` parameter is **ignored** in this implementation. UTF-16 encoding does not have incomplete sequences that span chunk boundaries in the same way UTF-8 does (surrogate pairs are handled atomically by the C encoder), so buffering is not needed.\n\n#### `reset`\n```python\ndef reset(self):\n    codecs.IncrementalEncoder.reset(self)\n    self.encoder = None\n```\n- Resets to the initial state, so the next `encode()` call will emit a new BOM.\n\n#### `getstate` / `setstate`\n```python\ndef getstate(self):\n    return (2 if self.encoder is None else 0)\n\ndef setstate(self, state):\n    if state:\n        self.encoder = None\n    else:\n        if sys.byteorder == 'little':\n            self.encoder = codecs.utf_16_le_encode\n        else:\n            self.encoder = codecs.utf_16_be_encode\n```\n\n**State encoding:**\n- `0`: BOM already emitted, endianness fixed to platform native.\n- `2`: BOM not yet emitted, endianness undetermined.\n\n> **Subtle behavior:**\n> - The state is a **single integer**, not a tuple. This is simpler than the decoder's state but means the state carries less information.\n> - `setstate(0)` assumes the platform's native byte order. If the state was saved on a little-endian machine and restored on a big-endian machine, the encoder will use the **new** platform's byte order, which may be inconsistent with the previously emitted BOM. This is a **portability hazard** for serialized state.\n> - There is no state value for \"unnatural order\" (i.e., BOM opposite to platform native), because the encoder **never** writes in unnatural order. This is by design but limits flexibility.\n\n---\n\n### `IncrementalDecoder`\n\nThis class decodes UTF-16 bytes incrementally, handling BOM detection and endianness.\n\n#### `__init__`\n```python\ndef __init__(self, errors='strict'):\n    codecs.BufferedIncrementalDecoder.__init__(self, errors)\n    self.decoder = None\n```\n- Inherits from `BufferedIncrementalDecoder`, which buffers incomplete multi-byte sequences.\n- `self.decoder` is `None` until the BOM is seen and endianness is determined.\n\n#### `_buffer_decode`\n```python\ndef _buffer_decode(self, input, errors, final):\n    if self.decoder is None:\n        (output, consumed, byteorder) = \\\n            codecs.utf_16_ex_decode(input, errors, 0, final)\n        if byteorder == -1:\n            self.decoder = codecs.utf_16_le_decode\n        elif byteorder == 1:\n            self.decoder = codecs.utf_16_be_decode\n        elif consumed >= 2:\n            raise UnicodeError(\"UTF-16 stream does not start with BOM\")\n        return (output, consumed)\n    return self.decoder(input, self.errors, final)\n```\n\n**Key behavior:**\n1. **First call** (`self.decoder is None`): Uses `codecs.utf_16_ex_decode` with `byteorder=0` (auto-detect). This function:\n   - Looks for a BOM in the first 2 bytes.\n   - Returns `byteorder = -1` for LE, `1` for BE, or `0` if no BOM was found.\n   - If no BOM is found and at least 2 bytes were consumed, it raises `UnicodeError`.\n2. **Subsequent calls**: Uses the fixed-endian decoder determined from the BOM.\n\n> **Subtle behavior for maintainers:**\n> - **BOM is required.** Unlike some implementations that default to a specific endianness when no BOM is present, this decoder **raises an error** if the stream doesn't start with a BOM. This is strict but correct per the UTF-16 specification for streams.\n> - The check `consumed >= 2` is important: if fewer than 2 bytes have been consumed (e.g., only 1 byte buffered so far), it does **not** raise an error yet, because the BOM might not be fully available. This allows incremental feeding of small chunks.\n> - `byteorder == 0` from `utf_16_ex_decode` means \"no BOM detected.\" The code treats this as an error only if enough bytes have been consumed to rule out a partial BOM.\n> - The `final` parameter is passed through to `utf_16_ex_decode`. If `final=True` and no BOM is found, the C function may raise an error even with fewer than 2 bytes, depending on the implementation.\n\n#### `reset`\n```python\ndef reset(self):\n    codecs.BufferedIncrementalDecoder.reset(self)\n    self.decoder = None\n```\n- Clears the buffered data and resets endianness detection.\n\n#### `getstate` / `setstate`\n```python\ndef getstate(self):\n    state = codecs.BufferedIncrementalDecoder.getstate(self)[0]\n    if self.decoder is None:\n        return (state, 2)\n    addstate = int((sys.byteorder == \"big\") !=\n                   (self.decoder is codecs.utf_16_be_decode))\n    return (state, addstate)\n\ndef setstate(self, state):\n    codecs.BufferedIncrementalDecoder.setstate(self, state)\n    state =",
+   "reasoning": null,
+   "text_sha256": "a2aa74459359fea902f9e25c38a559e888d39a4563ee820a3d39e24053fa2bbd"
+  }
+ ],
+ "recorded_utc": "2026-10-10T12:42:56Z",
+ "rendered": {
+  "server_prompt_tokens": 1021,
+  "client_content_tokens": 1009,
+  "template_overhead": 12
+ },
+ "natural_stopped": 12,
+ "natural_with_reasoning": 0,
+ "forced_ok": true,
+ "ok": true
+}
