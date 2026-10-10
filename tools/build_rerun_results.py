@@ -153,7 +153,8 @@ def generate():
             'GPU kernel milliseconds per engine step, mean over the eight ranks, from the idle-profiler launch. '
             'Attention path = core + search (indexer, top-k) + recurrent update + state preparation; projections are '
             'inside the mixed dense-GEMM column and are not included. Prefill rows are the last full 8,192-token chunk '
-            'of one request (at 1K, its single step).', '']
+            'of one request (at 1K, its single step). At 1K and 16K that chunk is the first step after the profiler '
+            'starts, where all-reduce kernels wait for the other ranks, so the last table leaves communication out.', '']
     if not comp:
         out += ['Pending: the traces are classified after each diagnostics launch.', '']
     else:
@@ -166,11 +167,17 @@ def generate():
         ffn = ['moe_expert_gemm_ms', 'moe_route_combine_ms']
         fmt = lambda v: 'pending' if v is None else (f'{v:.1f}' if v >= 20 else f'{v:.2f}')
         for title, keys in (('Attention path', att), ('Attention core only', att[:1]), ('Search (indexer, top-k) only', att[1:2]),
-                            ('Recurrent update only', att[2:3]), ('Experts and routing', ffn), ('All classified kernels', None)):
+                            ('Recurrent update only', att[2:3]), ('Experts and routing', ffn),
+                            ('All kernels except communication', None)):
             body = []
             for cap, group, lab in [(f'prefill{b}', 'last_full_chunk', f'Prefill chunk, {LABEL[b]}') for b in BUCKETS] + \
                     [(f'decode{b}_B{B}', 'decode_steps', f'Decode step, {LABEL[b]}, B={B}') for B in (1, 8) for b in BUCKETS]:
-                body.append([lab] + [fmt(mean(mk, cap, group, keys or ['kernel_sum_ms'])) for mk, _ in MODELS])
+                if keys is None:  # all-reduce durations include waiting for other ranks, most of all right after profiler start
+                    vals = [(mean(mk, cap, group, ['kernel_sum_ms']), mean(mk, cap, group, ['allreduce_ms', 'allgather_other_comm_ms']))
+                            for mk, _ in MODELS]
+                    body.append([lab] + [fmt(None if a is None else a - b) for a, b in vals])
+                    continue
+                body.append([lab] + [fmt(mean(mk, cap, group, keys)) for mk, _ in MODELS])
             out += [f'### {title} (ms, kernel sum)', ''] + table(['Capture'] + [n for _, n in MODELS], body) + ['']
 
     # ------------------------------------------------------------------ expert routing
