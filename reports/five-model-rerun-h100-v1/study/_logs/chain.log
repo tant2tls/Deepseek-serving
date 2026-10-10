@@ -185,3 +185,13 @@
 [12:54:45] CHAIN trace qwen-38-bf16 prefill128k files=16 {'request_wall_s': 3.174447536468506}
 [12:54:55] CHAIN stopped qwen-38-bf16 off-profidle up=853s gpu_mem_max=0MiB leftover=0
 [12:54:55] CHAIN step diag:qwen-38-bf16 done
+[12:55:16] CHAIN publish diag:qwen-38-bf16 rc=0 ['published diag:qwen-38-bf16: 644 files, commit 6cc7c8f, push ok']
+[12:55:16] CHAIN chain finished; no server left running
+[12:55:24] CHAIN step routing:v4-0731 start
+[12:55:24] CHAIN launched v4-0731 off-routed pgid=130583 log=results/five-model-rerun-h100-v1/v4-0731/_server/serve-off-routed-20261010-125524.log
+[12:55:39] CHAIN stopped v4-0731 off-routed up=15s gpu_mem_max=0MiB leftover=0
+[12:55:39] CHAIN step routing:v4-0731 FAILED: RuntimeError('server exited rc=1 before readiness')
+[12:55:39] CHAIN step routing:v4-0731 start (retry after a failed launch)
+[12:55:40] CHAIN launched v4-0731 off-routed pgid=131180 log=results/five-model-rerun-h100-v1/v4-0731/_server/serve-off-routed-20261010-125539.log
+[12:55:55] CHAIN stopped v4-0731 off-routed up=15s gpu_mem_max=0MiB leftover=0
+[12:55:55] CHAIN step routing:v4-0731 FAILED: RuntimeError('server exited rc=1 before readiness')
