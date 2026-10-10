@@ -133,6 +133,10 @@ def main():
         git("commit", "-q", "-m", f"Rerun session: {title}", "-m", body, "--", f"reports/{STUDY}")
         if push:
             r = subprocess.run(["git", "push", "-q", "origin", "HEAD:main"], cwd=ROOT, capture_output=True, text=True)
+            if r.returncode:  # someone else pushed meanwhile: replay this commit on top, then push again
+                subprocess.run(["git", "pull", "-q", "--rebase", "--autostash", "origin", "main"], cwd=ROOT,
+                               capture_output=True, text=True)
+                r = subprocess.run(["git", "push", "-q", "origin", "HEAD:main"], cwd=ROOT, capture_output=True, text=True)
             print(f"published {step}: {n} files, commit {git('rev-parse', '--short', 'HEAD')}, "
                   f"push {'ok' if r.returncode == 0 else 'FAILED ' + r.stderr.strip()[-200:]}")
         else:
