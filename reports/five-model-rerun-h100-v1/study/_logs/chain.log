@@ -9,3 +9,42 @@
 [11:05:29] CHAIN chain finished; no server left running
 [11:06:41] CHAIN step diag:v4-0731 start
 [11:06:41] CHAIN launched v4-0731 off-profidle pgid=42764 log=results/five-model-rerun-h100-v1/v4-0731/_server/serve-off-profidle-20261010-110641.log
+[11:08:11] CHAIN ready v4-0731 off-profidle after 90s
+[11:08:55] CHAIN functional v4-0731 ok=True forced=True natural_stopped=12/12 with_reasoning=0 rendered={'server_prompt_tokens': 1007, 'client_content_tokens': 1003, 'template_overhead': 4}
+[11:09:17] CHAIN pilot v4-0731 ctx16k_osl2048_c1 block=1 n=3 valid=False dur=8.172171480953693 out_tps=93.97746997721765 ttft_p50=751.175096957013 tpot_p50=7.732584745184902 ['output tokens 768 != 6144', 'per-request output length is not 2048 for every request']
+[11:09:46] CHAIN pilot v4-0731 ctx16k_osl2048_c16 block=1 n=16 valid=False dur=14.97284324397333 out_tps=273.56193698539306 ttft_p50=6084.368039504625 tpot_p50=34.26554650593294 ['output tokens 4096 != 32768', 'per-request output length is not 2048 for every request']
+[11:10:05] CHAIN pilot v4-0731 ctx1k_osl2048_c1 block=1 n=3 valid=False dur=6.347408483037725 out_tps=120.99426120949013 ttft_p50=168.41423499863595 tpot_p50=7.623628216028652 ['output tokens 768 != 6144', 'per-request output length is not 2048 for every request']
+[11:10:23] CHAIN pilot v4-0731 ctx1k_osl2048_c16 block=1 n=16 valid=False dur=4.281500454992056 out_tps=956.6739611633651 ttft_p50=525.0679309829138 tpot_p50=14.66781987452551 ['output tokens 4096 != 32768', 'per-request output length is not 2048 for every request']
+[11:10:27] CHAIN stopped v4-0731 off-profidle up=226s gpu_mem_max=0MiB leftover=0
+[11:11:33] CHAIN step diag:v4-0731 start
+[11:11:33] CHAIN launched v4-0731 off-profidle pgid=49524 log=results/five-model-rerun-h100-v1/v4-0731/_server/serve-off-profidle-20261010-111133.log
+[11:13:03] CHAIN ready v4-0731 off-profidle after 90s
+[11:13:47] CHAIN functional v4-0731 ok=True forced=True natural_stopped=12/12 with_reasoning=0 rendered={'server_prompt_tokens': 1007, 'client_content_tokens': 1003, 'template_overhead': 4}
+[11:14:50] CHAIN pilot v4-0731 ctx16k_osl2048_c1 block=1 n=3 valid=True dur=49.99162059905939 out_tps=122.90059666750635 ttft_p50=753.9320839568973 tpot_p50=7.77003644309523 
+[11:15:43] CHAIN pilot v4-0731 ctx16k_osl2048_c16 block=1 n=16 valid=True dur=40.30722735694144 out_tps=812.9559423629498 ttft_p50=6104.03280594619 tpot_p50=16.634539979969304 
+[11:16:44] CHAIN pilot v4-0731 ctx1k_osl2048_c1 block=1 n=3 valid=True dur=47.72429925808683 out_tps=128.73944920121392 ttft_p50=179.8658020561561 tpot_p50=7.67953948268615 
+[11:17:32] CHAIN pilot v4-0731 ctx1k_osl2048_c16 block=1 n=16 valid=True dur=34.56323606800288 out_tps=948.0593754453209 ttft_p50=689.5155779784545 tpot_p50=16.526895156568106 
+[11:18:44] CHAIN pilot v4-0731 ctx64k_osl2048_c1 block=1 n=3 valid=True dur=58.18303596798796 out_tps=105.59778976436363 ttft_p50=3270.2352419728413 tpot_p50=7.872350510522819 
+[11:19:55] CHAIN pilot v4-0731 ctx64k_osl2048_c16 block=1 n=9 valid=True dur=58.12866116594523 out_tps=317.08970463607403 ttft_p50=16051.039007026702 tpot_p50=20.414866629212685 
+[11:19:59] CHAIN kv v4-0731 1k B=1 usage=0.000590423333530099 running=1.0 waiting=0.0 prompt_tokens=1007.0 all_decoding_after=0.3s capacity_limit=False
+[11:20:21] CHAIN trace v4-0731 decode1k_B1 files=16 {'B': 1, 'window_s': 0.4100949764251709, 'tokens_in_window': [49.0]}
+[11:20:26] CHAIN kv v4-0731 1k B=8 usage=0.0048021097793784495 running=8.0 waiting=0.0 prompt_tokens=8103.0 all_decoding_after=0.6s capacity_limit=False
+[11:20:49] CHAIN trace v4-0731 decode1k_B8 files=16 {'B': 8, 'window_s': 0.5443441867828369, 'tokens_in_window': [48.0, 48.0, 48.0, 48.0, 48.0, 48.0, 48.0, 48.0]}
+[11:20:53] CHAIN kv v4-0731 16k B=1 usage=0.001771270000590408 running=1.0 waiting=0.0 prompt_tokens=16309.0 all_decoding_after=0.8s capacity_limit=False
+[11:21:16] CHAIN trace v4-0731 decode16k_B1 files=16 {'B': 1, 'window_s': 0.40956568717956543, 'tokens_in_window': [50.0]}
+[11:21:26] CHAIN kv v4-0731 16k B=8 usage=0.014209521560292093 running=8.0 waiting=0.0 prompt_tokens=130555.0 all_decoding_after=5.9s capacity_limit=False
+[11:21:51] CHAIN trace v4-0731 decode16k_B8 files=16 {'B': 8, 'window_s': 0.5919253826141357, 'tokens_in_window': [51.0, 51.0, 51.0, 51.0, 51.0, 51.0, 51.0, 51.0]}
+[11:21:58] CHAIN kv v4-0731 64k B=1 usage=0.005530298557398949 running=1.0 waiting=0.0 prompt_tokens=65244.0 all_decoding_after=3.3s capacity_limit=False
+[11:22:21] CHAIN trace v4-0731 decode64k_B1 files=16 {'B': 1, 'window_s': 0.40796828269958496, 'tokens_in_window': [49.0]}
+[11:22:51] CHAIN kv v4-0731 64k B=8 usage=0.04447855779260401 running=8.0 waiting=0.0 prompt_tokens=523698.0 all_decoding_after=25.8s capacity_limit=False
+[11:23:15] CHAIN trace v4-0731 decode64k_B8 files=16 {'B': 8, 'window_s': 0.5828351974487305, 'tokens_in_window': [49.0, 49.0, 49.0, 49.0, 49.0, 49.0, 49.0, 49.0]}
+[11:23:26] CHAIN kv v4-0731 128k B=1 usage=0.010588258447973842 running=1.0 waiting=0.0 prompt_tokens=130972.0 all_decoding_after=7.3s capacity_limit=False
+[11:23:49] CHAIN trace v4-0731 decode128k_B1 files=16 {'B': 1, 'window_s': 0.4069864749908447, 'tokens_in_window': [49.0]}
+[11:24:54] CHAIN kv v4-0731 128k B=8 usage=0.08482415225049689 running=8.0 waiting=0.0 prompt_tokens=1048290.0 all_decoding_after=61.0s capacity_limit=False
+[11:25:18] CHAIN trace v4-0731 decode128k_B8 files=16 {'B': 8, 'window_s': 0.5981769561767578, 'tokens_in_window': [49.0, 49.0, 49.0, 49.0, 49.0, 49.0, 49.0, 49.0]}
+[11:25:32] CHAIN trace v4-0731 prefill1k files=16 {'request_wall_s': 0.29845309257507324}
+[11:25:49] CHAIN trace v4-0731 prefill16k files=16 {'request_wall_s': 1.155592679977417}
+[11:26:23] CHAIN trace v4-0731 prefill64k files=16 {'request_wall_s': 3.267643451690674}
+[11:27:27] CHAIN trace v4-0731 prefill128k files=16 {'request_wall_s': 7.188759088516235}
+[11:27:30] CHAIN stopped v4-0731 off-profidle up=957s gpu_mem_max=0MiB leftover=0
+[11:27:30] CHAIN step diag:v4-0731 done

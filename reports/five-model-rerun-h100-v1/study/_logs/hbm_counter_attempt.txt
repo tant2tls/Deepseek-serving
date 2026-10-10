@@ -1,0 +1,16 @@
+# HBM hardware-counter attempt (session stage 4), recorded 2026-10-10T11:23:54Z
+
+Tool: Version 2025.3.1.0 (build 36398880) (public-release), installed from the node's CUDA apt repository (cuda-nsight-compute-13-0).
+
+$ ncu --query-metrics
+Device NVIDIA H100 80GB HBM3 (GH100)
+==ERROR== ERR_NVGPUCTRPERM - The user does not have permission to access NVIDIA GPU Performance Counters on the target device 0. For instructions on enabling permissions and to get more information see https://developer.nvidia.com/ERR_NVGPUCTRPERM
+
+
+$ grep RmProfilingAdminOnly /proc/driver/nvidia/params
+RmProfilingAdminOnly: 1
+
+$ cat /proc/self/uid_map   (root in the container is an unprivileged user on the host)
+         0     165536      65536
+
+Reading: the driver restricts GPU performance counters to host administrators (RmProfilingAdminOnly: 1) and the rented container runs in a user namespace, so Nsight Compute cannot read dram__bytes_read / dram__bytes_write for any kernel. The setting can only be changed on the host. No counter was collected; measured HBM traffic stays unanswered and the shape-based estimate is the labelled fallback (target.md, answer map).

@@ -13,19 +13,19 @@
    "domain": "code",
    "task": "merge_intervals",
    "prompt": "Write a Python function `merge_intervals(intervals)` that merges overlapping closed intervals given as a list of [start, end] pairs and returns the merged list sorted by start. Include a docstring. Reply with the code only.",
-   "text": "```python\ndef merge_intervals(intervals):\n    \"\"\"\n    Merge overlapping closed intervals.\n\n    Args:\n        intervals: List of [start, end] pairs.\n\n    Returns:\n        List of merged intervals sorted by start.\n    \"\"\"\n    if not intervals:\n        return []\n    \n    # Sort intervals by start time\n    intervals.sort(key=lambda x: x[0])\n    merged = [intervals[0]]\n    \n    for current in intervals[1:]:\n        last = merged[-1]\n        # If current overlaps with last, merge them\n        if current[0] <= last[1]:\n            last[1] = max(last[1], current[1])\n        else:\n            merged.append(current)\n    \n    return merged\n```",
+   "text": "```python\ndef merge_intervals(intervals):\n    \"\"\"\n    Merge overlapping closed intervals.\n\n    Args:\n        intervals: List of [start, end] pairs.\n\n    Returns:\n        List of merged intervals sorted by start.\n    \"\"\"\n    if not intervals:\n        return []\n    \n    # Sort intervals by start time\n    intervals.sort(key=lambda x: x[0])\n    merged = [intervals[0]]\n    \n    for current in intervals[1:]:\n        last = merged[-1]\n        if current[0] <= last[1]:\n            # Overlapping intervals, merge them\n            last[1] = max(last[1], current[1])\n        else:\n            # No overlap, add current interval\n            merged.append(current)\n    \n    return merged\n```",
    "reasoning": null,
    "finish_reason": "stop",
    "usage": {
     "prompt_tokens": 53,
-    "total_tokens": 207,
-    "completion_tokens": 154,
+    "total_tokens": 214,
+    "completion_tokens": 161,
     "prompt_tokens_details": null,
     "completion_tokens_details": {
      "reasoning_tokens": 0
     }
    },
-   "wall_s": 2.842987537384033
+   "wall_s": 1.268357515335083
   },
   {
    "kind": "natural_eos",
@@ -44,7 +44,7 @@
      "reasoning_tokens": 0
     }
    },
-   "wall_s": 1.2258224487304688
+   "wall_s": 1.226487636566162
   },
   {
    "kind": "natural_eos",
@@ -63,52 +63,52 @@
      "reasoning_tokens": 0
     }
    },
-   "wall_s": 1.1987030506134033
+   "wall_s": 1.1987006664276123
   },
   {
    "kind": "natural_eos",
    "domain": "code",
    "task": "top_k_words",
    "prompt": "Write a Python function `top_k_words(text, k)` that returns the k most frequent lowercase words in `text` as a list of (word, count) tuples, most frequent first, ties broken alphabetically. Words are maximal runs of ASCII letters. Reply with the code only.",
-   "text": "```python\ndef top_k_words(text, k):\n    import re\n    from collections import Counter\n    \n    words = re.findall(r'[a-zA-Z]+', text.lower())\n    counts = Counter(words)\n    return sorted(counts.items(), key=lambda x: (-x[1], x[0]))[:k]\n```",
+   "text": "```python\ndef top_k_words(text, k):\n    import re\n    from collections import Counter\n    \n    words = re.findall(r'[a-zA-Z]+', text.lower())\n    counter = Counter(words)\n    \n    return sorted(counter.items(), key=lambda x: (-x[1], x[0]))[:k]\n```",
    "reasoning": null,
    "finish_reason": "stop",
    "usage": {
     "prompt_tokens": 62,
-    "total_tokens": 131,
-    "completion_tokens": 69,
+    "total_tokens": 132,
+    "completion_tokens": 70,
     "prompt_tokens_details": null,
     "completion_tokens_details": {
      "reasoning_tokens": 0
     }
    },
-   "wall_s": 0.5428173542022705
+   "wall_s": 0.5503666400909424
   },
   {
    "kind": "natural_eos",
    "domain": "math",
    "task": "average_speed",
    "prompt": "A train travels 180 km at 60 km/h and then 120 km at 40 km/h. What is its average speed for the whole trip in km/h? Explain step by step, then give the final number on the last line in the form `Answer: <number>`.",
-   "text": "We need to find the average speed for the whole trip.  \nAverage speed is total distance divided by total time.\n\n**Step 1: Find the time for the first part**  \nDistance = 180 km, Speed = 60 km/h  \nTime = Distance ÷ Speed = 180 ÷ 60 = 3 hours\n\n**Step 2: Find the time for the second part**  \nDistance = 120 km, Speed = 40 km/h  \nTime = 120 ÷ 40 = 3 hours\n\n**Step 3: Total distance**  \n180 + 120 = 300 km\n\n**Step 4: Total time**  \n3 + 3 = 6 hours\n\n**Step 5: Average speed**  \nAverage speed = Total distance ÷ Total time = 300 ÷ 6 = 50 km/h\n\nAnswer: 50",
+   "text": "We need to find the average speed for the whole trip.  \nAverage speed is total distance divided by total time.\n\n**Step 1: Find the time for the first part**  \nDistance = 180 km, Speed = 60 km/h  \nTime = Distance ÷ Speed = 180 ÷ 60 = 3 hours\n\n**Step 2: Find the time for the second part**  \nDistance = 120 km, Speed = 40 km/h  \nTime = 120 ÷ 40 = 3 hours\n\n**Step 3: Find total distance**  \nTotal distance = 180 + 120 = 300 km\n\n**Step 4: Find total time**  \nTotal time = 3 + 3 = 6 hours\n\n**Step 5: Calculate average speed**  \nAverage speed = Total distance ÷ Total time = 300 ÷ 6 = 50 km/h\n\nAnswer: 50",
    "reasoning": null,
    "finish_reason": "stop",
    "usage": {
     "prompt_tokens": 63,
-    "total_tokens": 238,
-    "completion_tokens": 175,
+    "total_tokens": 249,
+    "completion_tokens": 186,
     "prompt_tokens_details": null,
     "completion_tokens_details": {
      "reasoning_tokens": 0
     }
    },
-   "wall_s": 1.348259687423706
+   "wall_s": 1.433171272277832
   },
   {
    "kind": "natural_eos",
    "domain": "math",
    "task": "divisors_360",
    "prompt": "How many positive divisors does 360 have? Explain step by step, then give the final number on the last line in the form `Answer: <number>`.",
-   "text": "We can find the number of positive divisors of 360 by using its prime factorization.\n\n**Step 1: Prime factorize 360**  \n360 = 36 × 10  \n36 = 6 × 6 = 2 × 3 × 2 × 3 = 2² × 3²  \n10 = 2 × 5  \n\nSo,  \n360 = 2² × 3² × 2 × 5  \n= 2³ × 3² × 5¹  \n\n**Step 2: Use the divisor formula**  \nIf a number is written as \\( p^a \\times q^b \\times r^c \\), the number of divisors is \\((a+1)(b+1)(c+1)\\).  \n\nHere:  \n- For 2: exponent = 3 → (3+1) = 4  \n- For 3: exponent = 2 → (2+1) = 3  \n- For 5: exponent = 1 → (1+1) = 2  \n\n**Step 3: Multiply**  \nNumber of divisors = 4 × 3 × 2 = 24  \n\nAnswer: 24",
+   "text": "We can find the number of positive divisors of 360 by using its prime factorization.\n\n**Step 1: Prime factorization of 360**  \n360 = 36 × 10  \n36 = 6 × 6 = 2 × 3 × 2 × 3 = 2² × 3²  \n10 = 2 × 5  \n\nSo,  \n360 = 2² × 3² × 2 × 5  \n= 2³ × 3² × 5¹  \n\n**Step 2: Use the divisor formula**  \nIf a number is written as \\( p^a \\times q^b \\times r^c \\), the number of divisors is \\((a+1)(b+1)(c+1)\\).  \n\nHere:  \n- For 2: exponent = 3 → (3+1) = 4  \n- For 3: exponent = 2 → (2+1) = 3  \n- For 5: exponent = 1 → (1+1) = 2  \n\n**Step 3: Multiply**  \nNumber of divisors = 4 × 3 × 2 = 24  \n\nAnswer: 24",
    "reasoning": null,
    "finish_reason": "stop",
    "usage": {
@@ -120,121 +120,121 @@
      "reasoning_tokens": 0
     }
    },
-   "wall_s": 1.8771085739135742
+   "wall_s": 1.8774068355560303
   },
   {
    "kind": "natural_eos",
    "domain": "math",
    "task": "linear_equation",
    "prompt": "Solve for x: 3x + 7 = 2(x - 4) + 30. Explain step by step, then give the final number on the last line in the form `Answer: <number>`.",
-   "text": "We start with the equation:\n\n3x + 7 = 2(x - 4) + 30\n\n**Step 1:** Distribute on the right side.  \n2(x - 4) = 2x - 8  \nSo the equation becomes:  \n3x + 7 = 2x - 8 + 30\n\n**Step 2:** Simplify the right side.  \n-8 + 30 = 22  \nSo:  \n3x + 7 = 2x + 22\n\n**Step 3:** Subtract 2x from both sides.  \n3x - 2x + 7 = 22  \nx + 7 = 22\n\n**Step 4:** Subtract 7 from both sides.  \nx = 15\n\nAnswer: 15",
+   "text": "We start with the equation:\n\n3x + 7 = 2(x - 4) + 30\n\n**Step 1:** Distribute on the right side.  \n2(x - 4) = 2x - 8  \nSo the equation becomes:  \n3x + 7 = 2x - 8 + 30\n\n**Step 2:** Simplify the right side.  \n-8 + 30 = 22  \nSo:  \n3x + 7 = 2x + 22\n\n**Step 3:** Subtract 2x from both sides.  \n3x - 2x + 7 = 22  \nx + 7 = 22\n\n**Step 4:** Subtract 7 from both sides.  \nx = 22 - 7  \nx = 15\n\nAnswer: 15",
    "reasoning": null,
    "finish_reason": "stop",
    "usage": {
     "prompt_tokens": 50,
-    "total_tokens": 216,
-    "completion_tokens": 166,
+    "total_tokens": 224,
+    "completion_tokens": 174,
     "prompt_tokens_details": null,
     "completion_tokens_details": {
      "reasoning_tokens": 0
     }
    },
-   "wall_s": 1.2746052742004395
+   "wall_s": 1.3361968994140625
   },
   {
    "kind": "natural_eos",
    "domain": "math",
    "task": "sum_multiples",
    "prompt": "What is the sum of all integers from 1 to 200 that are divisible by 3 or by 5? Explain step by step, then give the final number on the last line in the form `Answer: <number>`.",
-   "text": "We need the sum of all integers from 1 to 200 that are divisible by 3 or by 5.\n\n**Step 1: Sum of numbers divisible by 3**  \nNumbers divisible by 3 from 1 to 200:  \n3, 6, 9, ..., 198  \nThis is an arithmetic sequence with first term \\(a = 3\\), last term \\(l = 198\\), common difference \\(d = 3\\).  \nNumber of terms:  \n\\[\nn = \\frac{198 - 3}{3} + 1 = \\frac{195}{3} + 1 = 65 + 1 = 66\n\\]  \nSum:\n\\[\nS_3 = \\frac{n(a + l)}{2} = \\frac{66(3 + 198)}{2} = 33 \\times 201 = 6633\n\\]\n\n**Step 2: Sum of numbers divisible by 5**  \nNumbers divisible by 5 from 1 to 200:  \n5, 10, 15, ..., 200  \nFirst term \\(a = 5\\), last term \\(l = 200\\), common difference \\(d = 5\\).  \nNumber of terms:\n\\[\nn = \\frac{200 - 5}{5} + 1 = \\frac{195}{5} + 1 = 39 + 1 = 40\n\\]  \nSum:\n\\[\nS_5 = \\frac{40(5 + 200)}{2} = 20 \\times 205 = 4100\n\\]\n\n**Step 3: Sum of numbers divisible by both 3 and 5 (i.e., by 15)**  \nNumbers divisible by 15 from 1 to 200:  \n15, 30, 45, ..., 195  \nFirst term \\(a = 15\\), last term \\(l = 195\\), common difference \\(d = 15\\).  \nNumber of terms:\n\\[\nn = \\frac{195 - 15}{15} + 1 = \\frac{180}{15} + 1 = 12 + 1 = 13\n\\]  \nSum:\n\\[\nS_{15} = \\frac{13(15 + 195)}{2} = \\frac{13 \\times 210}{2} = 13 \\times 105 = 1365\n\\]\n\n**Step 4: Apply inclusion-exclusion**  \nSum divisible by 3 or 5 = \\(S_3 + S_5 - S_{15}\\)  \n\\[\n= 6633 + 4100 - 1365 = 10733 - 1365 = 9368\n\\]\n\n**Final answer:**  \nAnswer: 9368",
+   "text": "We need the sum of all integers from 1 to 200 that are divisible by 3 or by 5.\n\n**Step 1: Sum of numbers divisible by 3**  \nNumbers divisible by 3 from 1 to 200:  \n3, 6, 9, ..., 198.  \nThis is an arithmetic sequence with first term \\(a = 3\\), last term \\(l = 198\\), common difference \\(d = 3\\).  \nNumber of terms:  \n\\[\nn = \\frac{198 - 3}{3} + 1 = \\frac{195}{3} + 1 = 65 + 1 = 66\n\\]  \nSum:  \n\\[\nS_3 = \\frac{n(a + l)}{2} = \\frac{66(3 + 198)}{2} = 33 \\times 201 = 6633\n\\]\n\n**Step 2: Sum of numbers divisible by 5**  \nNumbers divisible by 5 from 1 to 200:  \n5, 10, 15, ..., 200.  \nFirst term \\(a = 5\\), last term \\(l = 200\\), common difference \\(d = 5\\).  \nNumber of terms:  \n\\[\nn = \\frac{200 - 5}{5} + 1 = \\frac{195}{5} + 1 = 39 + 1 = 40\n\\]  \nSum:  \n\\[\nS_5 = \\frac{40(5 + 200)}{2} = 20 \\times 205 = 4100\n\\]\n\n**Step 3: Sum of numbers divisible by both 3 and 5 (i.e., by 15)**  \nNumbers divisible by 15 from 1 to 200:  \n15, 30, 45, ..., 195.  \nFirst term \\(a = 15\\), last term \\(l = 195\\), common difference \\(d = 15\\).  \nNumber of terms:  \n\\[\nn = \\frac{195 - 15}{15} + 1 = \\frac{180}{15} + 1 = 12 + 1 = 13\n\\]  \nSum:  \n\\[\nS_{15} = \\frac{13(15 + 195)}{2} = \\frac{13 \\times 210}{2} = 13 \\times 105 = 1365\n\\]\n\n**Step 4: Apply inclusion-exclusion**  \nSum divisible by 3 or 5 = \\(S_3 + S_5 - S_{15}\\)  \n\\[\n= 6633 + 4100 - 1365 = 10733 - 1365 = 9368\n\\]\n\n**Final answer:**  \nAnswer: 9368",
    "reasoning": null,
    "finish_reason": "stop",
    "usage": {
     "prompt_tokens": 52,
-    "total_tokens": 613,
-    "completion_tokens": 561,
+    "total_tokens": 621,
+    "completion_tokens": 569,
     "prompt_tokens_details": null,
     "completion_tokens_details": {
      "reasoning_tokens": 0
     }
    },
-   "wall_s": 4.285279750823975
+   "wall_s": 4.345555067062378
   },
   {
    "kind": "natural_eos",
    "domain": "chat",
    "task": "hash_table",
    "prompt": "Explain how a hash table works to a first-year computer science student in about 300 words. End your reply with the single word DONE on its own line.",
-   "text": "A hash table is like a super-fast filing cabinet for data. Instead of searching through every drawer (like a list), you use a clever trick to jump straight to the right drawer.\n\n**The core idea:** You have an array (a row of boxes) of size N. To store a key (like a name) with a value (like a phone number), you run the key through a **hash function**. This function takes any input (string, number, etc.) and returns an integer between 0 and N-1. That integer is the index where you place the value.\n\n**Example:** Hash function `h(\"Alice\") = 3`. You store Alice’s number in box 3. To retrieve it, you run `h(\"Alice\")` again, get 3, and go directly to box 3. No searching needed—O(1) average time.\n\n**The problem:** Two different keys can hash to the same index. This is a **collision**. For example, `h(\"Bob\")` might also be 3. Now box 3 has two entries.\n\n**Solutions:**\n1. **Chaining:** Each box holds a linked list. If a collision happens, you just add the new key-value pair to the end of that list. Lookup still fast if lists are short.\n2. **Open addressing:** If a box is full, you probe for the next empty box (e.g., linear probing: try index+1, then +2, etc.). Retrieval follows the same probe sequence until it finds the key or an empty slot.\n\n**Why it’s fast:** The hash function spreads keys evenly across the array. If the array is large enough (load factor < 0.7), collisions are rare, and each operation is near-constant time. If the table gets too full, you **resize** (double the array size) and rehash all existing keys.\n\n**Trade-offs:** Hash tables don’t preserve order, and they’re not great for range queries. But for lookups, insertions, and deletions by key, they beat sorted arrays (O(log n)) and linked lists (O(n)).\n\n**In short:** Hash function → index → store/retrieve. Handle collisions with chaining or probing. Keep load factor low. That’s it. You’ll use them everywhere—dictionaries, caches, database indexes.\n\nDONE",
+   "text": "A hash table is like a super-fast filing cabinet for data. Instead of searching through every drawer (like a list), you use a clever trick to jump straight to the right drawer.\n\n**The core idea:** You have an array (a row of boxes) of size N. To store a key (like a name) with a value (like a phone number), you run the key through a **hash function**. This function takes any input (string, number, etc.) and returns an integer between 0 and N-1. That integer is the index where you place the value.\n\n**Example:** Hash function `h(\"Alice\") = 3`. You store Alice’s number in box 3. To retrieve it, you run `h(\"Alice\")` again, get 3, and go directly to box 3. No searching needed—O(1) average time.\n\n**The problem:** Two different keys can hash to the same index. This is a **collision**. For example, `h(\"Bob\")` might also be 3. Now box 3 has two entries.\n\n**Solutions to collisions:**\n1. **Chaining:** Each box holds a linked list. If two keys collide, you just add the new pair to the end of that list. Retrieval means going to the box, then scanning the short list. If the list stays short, it’s still fast.\n2. **Open addressing:** If a box is full, you probe for the next empty box (e.g., linear probing: try index+1, then +2, etc.). Retrieval follows the same probe sequence until it finds the key or an empty slot.\n\n**Why it’s fast:** The hash function spreads keys evenly across the array. If the array is large enough (load factor < 0.7), collisions are rare, and each list is tiny. So average lookup is constant time—much faster than a list’s O(n).\n\n**In practice:** You’ve used hash tables in dictionaries (Python), objects (JavaScript), and maps (Java). They trade memory for speed.\n\n**Key takeaway:** Hash tables convert a key to an index via a hash function, handle collisions with chaining or probing, and give you near-instant access to your data.\n\nDONE",
    "reasoning": null,
    "finish_reason": "stop",
    "usage": {
     "prompt_tokens": 37,
-    "total_tokens": 534,
-    "completion_tokens": 497,
+    "total_tokens": 508,
+    "completion_tokens": 471,
     "prompt_tokens_details": null,
     "completion_tokens_details": {
      "reasoning_tokens": 0
     }
    },
-   "wall_s": 3.7898809909820557
+   "wall_s": 3.5933303833007812
   },
   {
    "kind": "natural_eos",
    "domain": "chat",
    "task": "interview_steps",
    "prompt": "Write a guide with exactly five numbered steps for preparing for a job interview. Each step should be two or three sentences.",
-   "text": "1. **Research the company and role thoroughly.** Go beyond the job description to understand their mission, recent news, products, and culture. Identify the specific skills and experiences they value most, and prepare to connect your background directly to those points.\n2. **Analyze the job description and match your qualifications.** Create a list of the top five required skills, then write a concrete example from your past work for each one. Use the STAR method (Situation, Task, Action, Result) to structure these stories so they are concise and impactful.\n3. **Prepare thoughtful questions to ask the interviewer.** Avoid generic questions about benefits; instead, ask about team dynamics, project priorities, or the biggest challenge facing the role in the first six months. This demonstrates genuine interest and helps you evaluate if the position is the right fit.\n4. **Practice your delivery out loud, not just in your head.** Conduct a mock interview with a friend or use a recording app to review your answers for clarity and pacing. Focus on eliminating filler words like “um” and ensuring your tone is confident but conversational.\n5. **Plan the logistics and your pre-interview routine.** Choose your outfit the night before, map out the commute (or test your video link), and set two alarms. On the day, arrive 10–15 minutes early, take a few deep breaths, and review your key talking points one final time without cramming new information.",
+   "text": "1. **Research the company and role thoroughly.** Go beyond the job description to understand their mission, recent news, products, and company culture. Identify how your specific skills and experiences directly solve their stated problems or contribute to their goals.\n2. **Analyze the job description and prepare targeted stories.** List the top five required competencies and craft a concrete STAR (Situation, Task, Action, Result) story for each. Practice these aloud until they feel natural, but avoid memorizing them word-for-word.\n3. **Prepare thoughtful questions to ask the interviewer.** Develop three to five questions that demonstrate your strategic thinking, such as asking about team dynamics, success metrics for the first 90 days, or upcoming challenges. Avoid questions about salary or benefits at this stage.\n4. **Conduct a mock interview and rehearse your logistics.** Have a friend or mentor run a practice session with common behavioral questions, and record yourself to check your tone and body language. Confirm the interview location or test your video link, and plan your route or setup to arrive five minutes early.\n5. **Prepare your outfit, documents, and mental game the night before.** Lay out professional attire that fits the company culture, and pack printed copies of your resume, references, and a notepad with key talking points. Get a full night’s sleep and plan a calming morning routine, such as light exercise or meditation, to reduce anxiety.",
    "reasoning": null,
    "finish_reason": "stop",
    "usage": {
     "prompt_tokens": 28,
-    "total_tokens": 318,
-    "completion_tokens": 290,
+    "total_tokens": 314,
+    "completion_tokens": 286,
     "prompt_tokens_details": null,
     "completion_tokens_details": {
      "reasoning_tokens": 0
     }
    },
-   "wall_s": 2.2136759757995605
+   "wall_s": 2.183840274810791
   },
   {
    "kind": "natural_eos",
    "domain": "chat",
    "task": "cars_essay",
    "prompt": "Compare electric cars and petrol cars in a short essay of four paragraphs: cost, range, maintenance and environmental impact, in that order.",
-   "text": "**Cost**  \nThe upfront price of electric cars remains higher than comparable petrol models, largely due to battery production costs. However, this gap is narrowing, and government incentives or tax credits often offset the initial premium. Over a vehicle’s lifetime, electricity is significantly cheaper than petrol per mile, especially with home charging at off-peak rates. Petrol cars win on purchase price but lose on fuel expenses, meaning total cost of ownership often favors EVs for high-mileage drivers, while occasional drivers may find petrol more economical.\n\n**Range**  \nPetrol cars have a clear advantage in range and refueling speed, typically covering 400–600 miles on a full tank and refilling in under five minutes. Most affordable EVs offer 150–300 miles per charge, with fast charging taking 20–40 minutes to reach 80%. While newer premium EVs can match petrol ranges, charging infrastructure in rural areas remains patchy. For long-distance travel, petrol is more convenient; for daily commuting, EV range is usually sufficient, but “range anxiety” still affects many buyers.\n\n**Maintenance**  \nElectric cars are far simpler mechanically, with no oil changes, spark plugs, or exhaust systems. Regenerative braking reduces wear on brake pads, and the drivetrain has fewer moving parts, leading to lower routine service costs. However, batteries can degrade over time, and replacement is extremely expensive, though most warranties cover 8–10 years. Petrol cars have higher regular maintenance costs but cheaper repairs for common issues, and their engines are well-understood by every mechanic. Overall, EVs are cheaper to maintain in the first decade, but petrol cars offer more predictable long-term repair expenses.\n\n**Environmental Impact**  \nOver their full lifecycle, electric cars produce significantly fewer greenhouse gas emissions, even when charged from fossil-fuel-heavy grids, because they are more efficient and can use renewable energy. Battery manufacturing is resource-intensive, but this impact is offset within 2–3 years of driving. Petrol cars emit CO₂ directly from the tailpipe, contributing to air pollution in cities, and their production is less energy-intensive. However, petrol’s extraction, refining, and transport add hidden emissions. As grids green, EVs become cleaner, while petrol cars remain static polluters. Thus, EVs are the clear environmental winner, though not zero-impact.",
+   "text": "**Cost**  \nThe upfront price of electric cars remains higher than comparable petrol models, though the gap is narrowing as battery technology improves and production scales. However, the total cost of ownership tells a different story. Electricity is significantly cheaper per mile than petrol in most regions, and many governments offer tax credits, rebates, or reduced registration fees for EVs. Over a five-year period, an electric car often saves its owner thousands of pounds or dollars in fuel alone, even before factoring in lower maintenance. Petrol cars win on initial purchase price, but electric cars typically win on long-term financial efficiency.\n\n**Range**  \nPetrol cars have a clear advantage in range and refueling speed. A typical petrol car can travel 400–500 miles on a full tank and refill in under five minutes, making long journeys effortless. Electric cars, meanwhile, offer ranges of 150–300 miles on a single charge, with fast charging taking 20–40 minutes to reach 80%. While newer EVs are closing the gap, “range anxiety” remains a real concern for drivers in rural areas or on long motorway trips. However, for daily commuting and urban driving, most EV owners find that charging overnight at home easily covers their needs, making the range difference less relevant in practice.\n\n**Maintenance**  \nElectric cars are dramatically simpler machines. They have no engine oil, spark plugs, timing belts, exhaust systems, or catalytic converters, and their regenerative braking systems extend brake pad life significantly. Routine maintenance is limited to tyre rotations, cabin air filters, and battery health checks, meaning far fewer trips to the garage and lower annual service costs. Petrol cars, by contrast, require regular oil changes, coolant flushes, and belt replacements, and their complex internal combustion engines are prone to wear and tear. Over a decade, an EV owner might spend less than half on maintenance compared to a petrol car owner, though battery replacement—if ever needed—remains a costly exception.\n\n**Environmental Impact**  \nOver their full lifecycle, electric cars produce significantly fewer greenhouse gas emissions than petrol cars, even when charged from fossil-fuel-heavy grids. This is because EVs are more energy-efficient and their emissions can be reduced further as renewable energy expands. Petrol cars emit carbon dioxide, nitrogen oxides, and particulate matter directly from their tailpipes, contributing to local air pollution and climate change. However, EV manufacturing—especially battery production—has a higher initial carbon footprint and involves mining of lithium, cobalt, and nickel, which raises ethical and ecological concerns. Despite this, studies consistently show that after roughly 30,000–50,000 miles, an electric car overtakes a petrol car in total emissions, and it continues to improve thereafter.",
    "reasoning": null,
    "finish_reason": "stop",
    "usage": {
     "prompt_tokens": 31,
-    "total_tokens": 504,
-    "completion_tokens": 473,
+    "total_tokens": 582,
+    "completion_tokens": 551,
     "prompt_tokens_details": null,
     "completion_tokens_details": {
      "reasoning_tokens": 0
     }
    },
-   "wall_s": 3.604140520095825
+   "wall_s": 4.198781728744507
   },
   {
    "kind": "natural_eos",
    "domain": "chat",
    "task": "ww1_bullets",
    "prompt": "Summarise the causes of the First World War in exactly three bullet points, each starting with '- '.",
-   "text": "- Militarism and the arms race: Major European powers, especially Germany and Britain, engaged in a costly naval and army buildup, creating a climate of suspicion and a belief that war was inevitable.  \n- Alliance systems: The complex web of treaties (Triple Entente vs. Triple Alliance) meant that a local conflict could quickly escalate, as each nation was bound to defend its allies.  \n- Nationalism and imperial rivalries: Intense patriotic fervor, ethnic tensions in the Balkans, and competition for colonies and global influence fueled long-standing grievances, particularly between Austria-Hungary and Serbia, and between Germany and Britain/France.",
+   "text": "- Militarism and the arms race: Major European powers, especially Germany and Britain, engaged in a naval and land arms buildup, creating a climate of suspicion and a war-ready mindset.\n- Alliance systems: The complex web of treaties (Triple Entente vs. Triple Alliance) meant that a localized conflict could rapidly escalate, as each power was bound to defend its allies.\n- Nationalism and imperial rivalries: Intense nationalist fervor, particularly in the Balkans, combined with competition for colonies and economic dominance, created flashpoints like the assassination of Archduke Franz Ferdinand.",
    "reasoning": null,
    "finish_reason": "stop",
    "usage": {
     "prompt_tokens": 24,
-    "total_tokens": 154,
-    "completion_tokens": 130,
+    "total_tokens": 142,
+    "completion_tokens": 118,
     "prompt_tokens_details": null,
     "completion_tokens_details": {
      "reasoning_tokens": 0
     }
    },
-   "wall_s": 0.9982211589813232
+   "wall_s": 0.9053618907928467
   },
   {
    "kind": "forced_2048",
@@ -248,10 +248,13 @@
      "reasoning_tokens": 0
     }
    },
-   "finish_reason": "length"
+   "finish_reason": "length",
+   "text": "This is the UTF-16 codec implementation from CPython's standard library. Let me break it down:\n\n## Overview\nThis file implements the UTF-16 codec, which handles encoding/decoding of Unicode text in UTF-16 format, including BOM (Byte Order Mark) handling and byte order detection.\n\n## Key Components\n\n### Module-level functions\n- `encode = codecs.utf_16_encode`: Directly uses the C implementation for encoding\n- `decode(input, errors='strict')`: Wraps `codecs.utf_16_decode` with `final=True` to handle BOM detection\n\n### IncrementalEncoder\nHandles streaming encoding with BOM management:\n- **State tracking**: Uses `self.encoder` to track whether BOM has been written\n  - `None` means BOM hasn't been written yet\n  - After first encode call, sets the encoder based on system byte order\n- **BOM behavior**: The first call to `encode()` writes the BOM and returns it along with the encoded data\n- **State management**: \n  - `getstate()` returns `2` if BOM hasn't been written (endianness undetermined), `0` otherwise\n  - `setstate()` restores the encoder state based on the state value\n\n### IncrementalDecoder\nHandles streaming decoding with BOM detection:\n- **BOM detection**: Uses `utf_16_ex_decode` to detect byte order from BOM\n- **State tracking**: \n  - `self.decoder` is `None` until BOM is detected\n  - After BOM detection, sets the appropriate decoder (LE or BE)\n- **Error handling**: Raises `UnicodeError` if no BOM is found in the first 2 bytes\n- **State management**: \n  - `getstate()` returns additional state info: `0` (natural order), `1` (unnatural order), or `2` (undetermined)\n  - `setstate()` restores the decoder based on the state value\n\n### StreamWriter\nSimpler streaming writer:\n- **BOM handling**: Similar to IncrementalEncoder, writes BOM on first encode call\n- **No state management**: Doesn't implement `getstate()`/`setstate()` (inherits from base class)\n\n## Subtle Behaviors to Note\n\n1. **BOM handling in IncrementalEncoder**: The first call to `encode()` returns both the BOM and the encoded data. This means the BOM is written as part of the first chunk, not as a separate write.\n\n2. **Platform-dependent behavior**: The encoder defaults to the system's native byte order when no BOM is specified. This means UTF-16 files created on little-endian systems will have different byte order than those on big-endian systems.\n\n3. **Decoder BOM requirement**: The decoder requires a BOM to determine byte order. If the first 2 bytes don't form a valid BOM, it raises `UnicodeError`. This is different from UTF-8 which doesn't require a BOM.\n\n4. **State encoding in IncrementalDecoder**: The `getstate()` method returns a tuple where the second element encodes byte order information:\n   - `0`: Natural order (matches system byte order)\n   - `1`: Unnatural order (opposite of system byte order)\n   - `2`: Undetermined (no BOM seen yet)\n\n5. **BufferedIncrementalDecoder interaction**: The decoder inherits from `BufferedIncrementalDecoder` which handles partial character buffering. The `_buffer_decode` method is called with the buffered input, and the state from the base class must be `None` for the additional state to work correctly.\n\n6. **Error in `_buffer_decode`**: The check `elif consumed >= 2` means that if we've consumed at least 2 bytes but still haven't determined byte order, it's an error. This handles the case where the first 2 bytes don't form a valid BOM.\n\n7. **StreamWriter simplicity**: Unlike the IncrementalEncoder, StreamWriter doesn't implement state management methods. This means it can't be pickled or have its state saved/restored, which might be a limitation in some use cases.\n\n8. **BOM writing**: The encoder writes a BOM (U+FEFF) at the start of the stream. This is the standard UTF-16 BOM which is `0xFF 0xFE` for little-endian and `0xFE 0xFF` for big-endian.\n\nThis implementation is designed to handle the complexity of byte order detection and BOM management that's inherent to UTF-16 encoding, while providing both incremental and stream-based interfaces for different use cases.\",\"The code implements the UTF-16 codec for Python's standard library. It provides encoding and decoding functionality with proper BOM (Byte Order Mark) handling and byte order detection. The implementation includes both incremental and stream-based interfaces to handle data in chunks, which is important for large files or network streams. The key complexity comes from managing byte order - UTF-16 can be encoded in either little-endian or big-endian format, and the codec must detect or specify this correctly. The incremental encoder writes a BOM on the first call to establish byte order, while the decoder reads the BOM to determine the byte order of the incoming data. The state management methods allow the codec's state to be saved and restored, which is useful for checkpointing or resuming operations.\",\"The code implements the UTF-16 codec for Python's standard library. It provides encoding and decoding functionality with proper BOM (Byte Order Mark) handling and byte order detection. The implementation includes both incremental and stream-based interfaces to handle data in chunks, which is important for large files or network streams. The key complexity comes from managing byte order - UTF-16 can be encoded in either little-endian or big-endian format, and the codec must detect or specify this correctly. The incremental encoder writes a BOM on the first call to establish byte order, while the decoder reads the BOM to determine the byte order of the incoming data. The state management methods allow the codec's state to be saved and restored, which is useful for checkpointing or resuming operations.\",\"The code implements the UTF-16 codec for Python's standard library. It provides encoding and decoding functionality with proper BOM (Byte Order Mark) handling and byte order detection. The implementation includes both incremental and stream-based interfaces to handle data in chunks, which is important for large files or network streams. The key complexity comes from managing byte order - UTF-16 can be encoded in either little-endian or big-endian format, and the codec must detect or specify this correctly. The incremental encoder writes a BOM on the first call to establish byte order, while the decoder reads the BOM to determine the byte order of the incoming data. The state management methods allow the codec's state to be saved and restored, which is useful for checkpointing or resuming operations.\",\"The code implements the UTF-16 codec for Python's standard library. It provides encoding and decoding functionality with proper BOM (Byte Order Mark) handling and byte order detection. The implementation includes both incremental and stream-based interfaces to handle data in chunks, which is important for large files or network streams. The key complexity comes from managing byte order - UTF-16 can be encoded in either little-endian or big-endian format, and the codec must detect or specify this correctly. The incremental encoder writes a BOM on the first call to establish byte order, while the decoder reads the BOM to determine the byte order of the incoming data. The state management methods allow the codec's state to be saved and restored, which is useful for checkpointing or resuming operations.\",\"The code implements the UTF-16 codec for Python's standard library. It provides encoding and decoding functionality with proper BOM (Byte Order Mark) handling and byte order detection. The implementation includes both incremental and stream-based interfaces to handle data in chunks, which is important for large files or network streams. The key complexity comes from managing byte order - UTF-16 can be encoded in either little-endian or big-endian format, and the codec must detect or specify this correctly. The incremental encoder writes a BOM on the first call to establish byte order, while the decoder reads the BOM to determine the byte order of the incoming data. The state management methods allow the codec's state to be saved and restored, which is useful for checkpointing or resuming operations.\",\"The code implements the UTF-16 codec for Python's standard library. It provides encoding and decoding functionality with proper BOM (Byte Order Mark) handling and byte order detection. The implementation includes both incremental and stream-based interfaces to handle data in chunks, which is important for large files or network streams. The key complexity comes from managing byte order - UTF-16 can be encoded in either little-endian or big-endian format, and the codec must detect or specify this correctly. The incremental encoder writes a BOM on the first call to establish byte order, while the decoder reads the BOM to determine the byte order of the incoming data. The state management methods allow the codec's state to be saved and restored, which is useful for checkpointing or resuming operations.\",\"The code implements the UTF-16 codec for Python's standard library. It provides encoding and decoding functionality with proper BOM (Byte Order Mark) handling and byte order detection. The implementation includes both incremental and stream-based interfaces to handle data in chunks, which is important for large files or network streams. The key complexity comes from managing byte order - UTF-16 can be encoded in either little-endian or big-endian format, and the codec must detect or specify this correctly. The incremental encoder writes",
+   "reasoning": null,
+   "text_sha256": "ed495475e3319ddd8213f6a0e04ff27fccfb502659891b234fd22e286f8c2de8"
   }
  ],
- "recorded_utc": "2026-10-10T11:04:40Z",
+ "recorded_utc": "2026-10-10T11:13:07Z",
  "rendered": {
   "server_prompt_tokens": 1007,
   "client_content_tokens": 1003,
