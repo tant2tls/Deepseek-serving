@@ -58,10 +58,14 @@ def timeline():
            "| Model | Diagnostics | Routing statistics | HBM counters | Timing 1 | Timing 2 | Timing 3 | Measurements complete |",
            "| --- | --- | --- | --- | --- | --- | --- | --- |"]
 
+    # A stage that could not run is not pending: its record under _logs/ says why.
+    blocked = {"routing": "not run (gate)" if (SDIR / "_logs" / "routing_attempt.txt").exists() else None,
+               "hbm": "not available" if (SDIR / "_logs" / "hbm_counter_attempt.txt").exists() else None}
+
     def cell(st):
         s = steps.get(st)
         if not s:
-            return "pending"
+            return blocked.get(st.split(":")[0]) or "pending"
         if not s["end"]:
             return f"running since {s['start'][11:16]}"
         return s["end"][11:16] if s["outcome"] == "done" else f"{s['outcome']} {s['end'][11:16]}"
@@ -72,8 +76,9 @@ def timeline():
         out.append(f"| {br.NAME[mk]} | {cell(f'diag:{mk}')} | {cell(f'routing:{mk}')} | {cell(f'hbm:{mk}')} | "
                    + " | ".join(cell(f"timing:{mk}:{b}") for b in (1, 2, 3)) + f" | {done} |")
     out += ["\nTimes are `HH:MM` on the day the step ended; the table below has the full timestamps. `pending` means "
-            "the step has not run. Gated stages that stopped at their gate are reported in the study's results, not "
-            "as a completed step here.\n",
+            "the step has not run yet. Expert-routing statistics stopped at their gate on the first model "
+            "([record](study/_logs/routing_attempt.txt)) and GPU performance counters are not available to the rented "
+            "container ([record](study/_logs/hbm_counter_attempt.txt)), so those two columns will not fill.\n",
             "## Every step\n", "| Step | Model | Started | Finished | Minutes | Outcome | Launch attempts |",
             "| --- | --- | --- | --- | ---: | --- | ---: |"]
     for st, s in steps.items():
