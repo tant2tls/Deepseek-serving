@@ -16,34 +16,34 @@ Mean ± sample SD over launch-separated blocks; each block is one plain launch. 
 
 | Input | Clients | 0731 | V4.1 | MiMo | Qwen | GLM |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1K | 1 | 126.6 (1 block) | 111.0 (1 block) | 172.0 (1 block) | 169.7 (1 block) | 150.8 (1 block) |
-| 1K | 16 | 1130.5 (1 block) | 980.6 (1 block) | 1133.7 (1 block) | 1641.8 (1 block) | 1276.0 (1 block) |
-| 16K | 1 | 123.0 (1 block) | 107.8 (1 block) | 161.2 (1 block) | 163.5 (1 block) | 141.4 (1 block) |
-| 16K | 16 | 811.2 (1 block) | 799.3 (1 block) | 813.9 (1 block) | 1280.9 (1 block) | 1012.6 (1 block) |
-| 64K | 1 | 105.6 (1 block) | 99.2 (1 block) | 131.3 (1 block) | 148.0 (1 block) | 128.4 (1 block) |
-| 64K | 16 | 392.0 (1 block) | 489.7 (1 block) | 393.3 (1 block) | 754.2 (1 block) | 592.2 (1 block) |
+| 1K | 1 | 126.6 (1 block) | 111.1 ± 0.1 (2 blocks) | 172.0 (1 block) | 169.7 (1 block) | 150.8 (1 block) |
+| 1K | 16 | 1130.5 (1 block) | 979.7 ± 1.3 (2 blocks) | 1133.7 (1 block) | 1641.8 (1 block) | 1276.0 (1 block) |
+| 16K | 1 | 123.0 (1 block) | 107.8 ± 0.0 (2 blocks) | 161.2 (1 block) | 163.5 (1 block) | 141.4 (1 block) |
+| 16K | 16 | 811.2 (1 block) | 800.1 ± 1.1 (2 blocks) | 813.9 (1 block) | 1280.9 (1 block) | 1012.6 (1 block) |
+| 64K | 1 | 105.6 (1 block) | 99.2 ± 0.0 (2 blocks) | 131.3 (1 block) | 148.0 (1 block) | 128.4 (1 block) |
+| 64K | 16 | 392.0 (1 block) | 491.1 ± 2.1 (2 blocks) | 393.3 (1 block) | 754.2 (1 block) | 592.2 (1 block) |
 
 ### Time to first token, median per block (ms)
 
 | Input | Clients | 0731 | V4.1 | MiMo | Qwen | GLM |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1K | 1 | 170 (1 block) | 108 (1 block) | 101 (1 block) | 137 (1 block) | 140 (1 block) |
-| 1K | 16 | 530 (1 block) | 414 (1 block) | 542 (1 block) | 357 (1 block) | 331 (1 block) |
-| 16K | 1 | 758 (1 block) | 539 (1 block) | 730 (1 block) | 509 (1 block) | 508 (1 block) |
-| 16K | 16 | 2981 (1 block) | 1870 (1 block) | 3080 (1 block) | 1679 (1 block) | 1795 (1 block) |
-| 64K | 1 | 3266 (1 block) | 2131 (1 block) | 3247 (1 block) | 1715 (1 block) | 2096 (1 block) |
-| 64K | 16 | 9494 (1 block) | 5495 (1 block) | 8464 (1 block) | 4405 (1 block) | 5328 (1 block) |
+| 1K | 1 | 170 (1 block) | 108 ± 1 (2 blocks) | 101 (1 block) | 137 (1 block) | 140 (1 block) |
+| 1K | 16 | 530 (1 block) | 442 ± 40 (2 blocks) | 542 (1 block) | 357 (1 block) | 331 (1 block) |
+| 16K | 1 | 758 (1 block) | 536 ± 5 (2 blocks) | 730 (1 block) | 509 (1 block) | 508 (1 block) |
+| 16K | 16 | 2981 (1 block) | 1840 ± 43 (2 blocks) | 3080 (1 block) | 1679 (1 block) | 1795 (1 block) |
+| 64K | 1 | 3266 (1 block) | 2130 ± 1 (2 blocks) | 3247 (1 block) | 1715 (1 block) | 2096 (1 block) |
+| 64K | 16 | 9494 (1 block) | 5334 ± 228 (2 blocks) | 8464 (1 block) | 4405 (1 block) | 5328 (1 block) |
 
 ### Time per output token, median per block (ms)
 
 | Input | Clients | 0731 | V4.1 | MiMo | Qwen | GLM |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1K | 1 | 7.68 (1 block) | 8.96 (1 block) | 5.76 (1 block) | 5.82 (1 block) | 6.57 (1 block) |
-| 1K | 16 | 13.89 (1 block) | 16.09 (1 block) | 13.84 (1 block) | 9.58 (1 block) | 12.38 (1 block) |
-| 16K | 1 | 7.76 (1 block) | 9.02 (1 block) | 5.84 (1 block) | 5.88 (1 block) | 6.61 (1 block) |
-| 16K | 16 | 18.15 (1 block) | 19.00 (1 block) | 18.33 (1 block) | 11.63 (1 block) | 14.89 (1 block) |
-| 64K | 1 | 7.88 (1 block) | 9.04 (1 block) | 6.06 (1 block) | 5.93 (1 block) | 6.66 (1 block) |
-| 64K | 16 | 35.45 (1 block) | 29.94 (1 block) | 36.52 (1 block) | 18.84 (1 block) | 24.30 (1 block) |
+| 1K | 1 | 7.68 (1 block) | 8.95 ± 0.01 (2 blocks) | 5.76 (1 block) | 5.82 (1 block) | 6.57 (1 block) |
+| 1K | 16 | 13.89 (1 block) | 16.11 ± 0.03 (2 blocks) | 13.84 (1 block) | 9.58 (1 block) | 12.38 (1 block) |
+| 16K | 1 | 7.76 (1 block) | 9.02 ± 0.00 (2 blocks) | 5.84 (1 block) | 5.88 (1 block) | 6.61 (1 block) |
+| 16K | 16 | 18.15 (1 block) | 19.05 ± 0.06 (2 blocks) | 18.33 (1 block) | 11.63 (1 block) | 14.89 (1 block) |
+| 64K | 1 | 7.88 (1 block) | 9.04 ± 0.00 (2 blocks) | 6.06 (1 block) | 5.93 (1 block) | 6.66 (1 block) |
+| 64K | 16 | 35.45 (1 block) | 29.89 ± 0.07 (2 blocks) | 36.52 (1 block) | 18.84 (1 block) | 24.30 (1 block) |
 
 ### Does generation slow down inside a response?
 
@@ -51,15 +51,15 @@ Mean time between streamed chunks at one client, by generated position, in milli
 
 | Input | Generated position | 0731 | V4.1 | MiMo | Qwen | GLM |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1K | 2 to 256 | 7.62 (1 block) | 8.96 (1 block) | 5.73 (1 block) | 5.78 (1 block) | 6.55 (1 block) |
-| 1K | 257 to 1,024 | 7.71 (1 block) | 9.02 (1 block) | 15.51 (1 block) | 8.33 (1 block) | 6.57 (1 block) |
-| 1K | 1,025 to 2,048 | 7.79 (1 block) | 9.05 (1 block) | 225.44 (1 block) | 6.97 (1 block) | 6.63 (1 block) |
-| 16K | 2 to 256 | 7.81 (1 block) | 8.99 (1 block) | 5.81 (1 block) | 5.84 (1 block) | 6.60 (1 block) |
-| 16K | 257 to 1,024 | 7.87 (1 block) | 9.24 (1 block) | 76.46 (1 block) | 7.01 (1 block) | 6.63 (1 block) |
-| 16K | 1,025 to 2,048 | 7.88 (1 block) | 9.29 (1 block) | 11.01 (1 block) | 6.73 (1 block) | 6.77 (1 block) |
-| 64K | 2 to 256 | 7.90 (1 block) | 8.99 (1 block) | 6.04 (1 block) | 7.32 (1 block) | 6.67 (1 block) |
-| 64K | 257 to 1,024 | 9.11 (1 block) | 9.17 (1 block) | 22.42 (1 block) | 8.20 (1 block) | 6.73 (1 block) |
-| 64K | 1,025 to 2,048 | 9.23 (1 block) | 9.21 (1 block) | 6.09 (1 block) | 8.13 (1 block) | 6.70 (1 block) |
+| 1K | 2 to 256 | 7.62 (1 block) | 8.96 (2 blocks) | 5.73 (1 block) | 5.78 (1 block) | 6.55 (1 block) |
+| 1K | 257 to 1,024 | 7.71 (1 block) | 9.03 (2 blocks) | 15.51 (1 block) | 8.33 (1 block) | 6.57 (1 block) |
+| 1K | 1,025 to 2,048 | 7.79 (1 block) | 9.03 (2 blocks) | 225.44 (1 block) | 6.97 (1 block) | 6.63 (1 block) |
+| 16K | 2 to 256 | 7.81 (1 block) | 8.99 (2 blocks) | 5.81 (1 block) | 5.84 (1 block) | 6.60 (1 block) |
+| 16K | 257 to 1,024 | 7.87 (1 block) | 9.15 (2 blocks) | 76.46 (1 block) | 7.01 (1 block) | 6.63 (1 block) |
+| 16K | 1,025 to 2,048 | 7.88 (1 block) | 9.18 (2 blocks) | 11.01 (1 block) | 6.73 (1 block) | 6.77 (1 block) |
+| 64K | 2 to 256 | 7.90 (1 block) | 9.00 (2 blocks) | 6.04 (1 block) | 7.32 (1 block) | 6.67 (1 block) |
+| 64K | 257 to 1,024 | 9.11 (1 block) | 9.15 (2 blocks) | 22.42 (1 block) | 8.20 (1 block) | 6.73 (1 block) |
+| 64K | 1,025 to 2,048 | 9.23 (1 block) | 9.16 (2 blocks) | 6.09 (1 block) | 8.13 (1 block) | 6.70 (1 block) |
 
 ### Full-run and steady-state throughput at sixteen clients
 
@@ -67,9 +67,9 @@ A finite request list spends part of the run below its client cap. Steady state,
 
 | Input | 0731 | V4.1 | MiMo | Qwen | GLM |
 | --- | --- | --- | --- | --- | --- |
-| 1K | 1130 / 1116 (99%) | 981 / 974 (99%) | 1134 / 812 (99%) | 1642 / 1268 (99%) | 1276 / 1274 (99%) |
-| 16K | 811 / 880 (90%) | 799 / 849 (93%) | 814 / 594 (91%) | 1281 / 1200 (92%) | 1013 / 1087 (92%) |
-| 64K | 392 / 471 (79%) | 490 / 579 (82%) | 393 / 394 (79%) | 754 / 757 (81%) | 592 / 710 (81%) |
+| 1K | 1130 / 1116 (99%) | 980 / 976 (99%) | 1134 / 812 (99%) | 1642 / 1268 (99%) | 1276 / 1274 (99%) |
+| 16K | 811 / 880 (90%) | 800 / 847 (93%) | 814 / 594 (91%) | 1281 / 1200 (92%) | 1013 / 1087 (92%) |
+| 64K | 392 / 471 (79%) | 491 / 581 (82%) | 393 / 394 (79%) | 754 / 757 (81%) | 592 / 710 (81%) |
 
 ## Decode step time against context
 
@@ -77,17 +77,17 @@ Unprofiled intervals of 512 tokens per request on the plain launches: B requests
 
 | Context | Engine batch | 0731 | V4.1 | MiMo | Qwen | GLM |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1K | 8 | 10.85 (1 block) | 12.34 (1 block) | 10.04 (1 block) | 8.55 (1 block) | 9.91 (1 block) |
-| 16K | 8 | 11.05 (1 block) | 12.39 (1 block) | 10.28 (1 block) | 8.63 (1 block) | 10.00 (1 block) |
-| 64K | 8 | 11.41 (1 block) | 12.52 (1 block) | 10.98 (1 block) | 8.79 (1 block) | 10.09 (1 block) |
-| 128K | 8 | 11.66 (1 block) | 12.74 (1 block) | 12.00 (1 block) | 8.95 (1 block) | 10.20 (1 block) |
-| 128K | 1 | 7.95 (1 block) | 9.10 (1 block) | 6.31 (1 block) | 5.96 (1 block) | 6.68 (1 block) |
+| 1K | 8 | 10.85 (1 block) | 12.34 ± 0.00 (2 blocks) | 10.04 (1 block) | 8.55 (1 block) | 9.91 (1 block) |
+| 16K | 8 | 11.05 (1 block) | 12.39 ± 0.01 (2 blocks) | 10.28 (1 block) | 8.63 (1 block) | 10.00 (1 block) |
+| 64K | 8 | 11.41 (1 block) | 12.54 ± 0.02 (2 blocks) | 10.98 (1 block) | 8.79 (1 block) | 10.09 (1 block) |
+| 128K | 8 | 11.66 (1 block) | 12.75 ± 0.01 (2 blocks) | 12.00 (1 block) | 8.95 (1 block) | 10.20 (1 block) |
+| 128K | 1 | 7.95 (1 block) | 9.10 ± 0.00 (2 blocks) | 6.31 (1 block) | 5.96 (1 block) | 6.68 (1 block) |
 
 Time to first token of the single 128K request in the same launches, seconds (prompt processing with nothing else in the engine):
 
 | Context | 0731 | V4.1 | MiMo | Qwen | GLM |
 | --- | --- | --- | --- | --- | --- |
-| 128K | 7.60 (1 block) | 4.69 (1 block) | 6.42 (1 block) | 3.17 (1 block) | 3.92 (1 block) |
+| 128K | 7.60 (1 block) | 4.61 ± 0.12 (2 blocks) | 6.42 (1 block) | 3.17 (1 block) | 3.92 (1 block) |
 
 ## Live state at the eight decode conditions
 
@@ -270,10 +270,10 @@ A check that each deployment answers and stops by itself, not a quality ranking.
 | Model | Stopped by itself | Output tokens, median | Hit the 2K cap | Answers with reasoning text | Passed its fixed check |
 | --- | --- | --- | --- | --- | --- |
 | 0731 | 12 of 12 | 180 (max 569) | 0 | 0 | code 4/4; math 4/4; chat 4/4 |
-| V4.1 | 12 of 12 | 252 (max 590) | 0 | 0 | not scored yet |
-| MiMo | 12 of 12 | 230 (max 699) | 0 | 0 | not scored yet |
-| Qwen | 12 of 12 | 293 (max 981) | 0 | 0 | not scored yet |
-| GLM | 12 of 12 | 160 (max 534) | 0 | 4 | not scored yet |
+| V4.1 | 12 of 12 | 252 (max 590) | 0 | 0 | code 4/4; math 4/4; chat 4/4 |
+| MiMo | 12 of 12 | 230 (max 699) | 0 | 0 | code 4/4; math 4/4; chat 4/4 |
+| Qwen | 12 of 12 | 293 (max 981) | 0 | 0 | code 4/4; math 4/4; chat 4/4 |
+| GLM | 12 of 12 | 160 (max 534) | 0 | 4 | code 4/4; math 4/4; chat 4/4 |
 
 The fixed checks are in `tools/check_natural_answers.py`: unit tests for the four code tasks, the expected number for the four math tasks, and a structural rule from the prompt for the four chat tasks. Per-task outcomes are in [natural_outcomes.csv](natural_outcomes.csv).
 
