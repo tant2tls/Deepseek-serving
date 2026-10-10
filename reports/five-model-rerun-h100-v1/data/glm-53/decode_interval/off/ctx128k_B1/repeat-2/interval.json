@@ -1,0 +1,316 @@
+{
+ "kind": "decode_interval",
+ "study": "five-model-rerun-h100-v1",
+ "block": 2,
+ "steps_requested": 512,
+ "valid": true,
+ "problems": [],
+ "started_utc": "2026-10-10T15:31:59Z",
+ "model_key": "glm-53",
+ "runtime": {
+  "venv": "/workspace/vllm-rerun",
+  "vllm": "0.31.1rc1.dev260+ga98247ab4",
+  "torch": "2.13.0+cu132"
+ },
+ "bucket": "128k",
+ "B": 1,
+ "request_ids": [
+  "128k-aux-000"
+ ],
+ "request_sha256": [
+  "040a18c0ea0ae5d8968eb9bc0ea5ef42f717bd149dcf364f008120d583572014"
+ ],
+ "client_content_tokens": [
+  120496
+ ],
+ "idle_gauges": {
+  "vllm:kv_cache_usage_perc": 0.0
+ },
+ "live_gauges": {
+  "vllm:kv_cache_usage_perc": 0.04657863145258101,
+  "vllm:num_requests_running": 1.0,
+  "vllm:num_requests_waiting": 0.0
+ },
+ "kv_usage_idle": 0.0,
+ "kv_usage_live": 0.04657863145258101,
+ "server_prompt_tokens_total": 120508.0,
+ "generated_tokens_total": 9.0,
+ "preemptions": 0.0,
+ "running": 1.0,
+ "waiting": 0.0,
+ "gpu_mem_mib": [
+  76047,
+  76047,
+  76047,
+  76047,
+  76047,
+  76047,
+  76047,
+  76047
+ ],
+ "time_to_all_decoding_s": 3.950571060180664,
+ "progress": {
+  "usage": [
+   {
+    "prompt_tokens": 120508,
+    "total_tokens": 120535,
+    "completion_tokens": 27,
+    "completion_tokens_details": {
+     "reasoning_tokens": 27
+    }
+   }
+  ],
+  "chunks": [
+   1
+  ],
+  "client_ttft_s": [
+   3.940152168273926
+  ],
+  "finished": [
+   false
+  ],
+  "errors": [
+   null
+  ]
+ },
+ "recorded_utc": "2026-10-10T15:32:03Z",
+ "interval": {
+  "window_s": 3.445678234100342,
+  "tokens": 516.0,
+  "engine_steps": 516.0,
+  "step_tokens": 516.0,
+  "ms_per_token_step": 6.677670996318492,
+  "ms_per_engine_step": 6.677670996318492,
+  "tokens_per_engine_step": 1.0,
+  "preemptions": 0.0,
+  "running_min": 1.0,
+  "waiting_max": 0,
+  "kv_usage_start": 0.04657863145258101,
+  "kv_usage_end": 0.04681872749099636,
+  "samples": [
+   [
+    0.0,
+    0.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.1076,
+    16.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.2155,
+    32.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.3232,
+    48.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.4309,
+    64.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.5389,
+    81.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.647,
+    97.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.7547,
+    113.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.8625,
+    129.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.9703,
+    145.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.0783,
+    161.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.1861,
+    178.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.2939,
+    194.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.4017,
+    210.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.5096,
+    226.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.6173,
+    242.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.7249,
+    258.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.8327,
+    274.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.9406,
+    290.0,
+    1.0,
+    0.0
+   ],
+   [
+    2.0482,
+    307.0,
+    1.0,
+    0.0
+   ],
+   [
+    2.1561,
+    323.0,
+    1.0,
+    0.0
+   ],
+   [
+    2.2638,
+    339.0,
+    1.0,
+    0.0
+   ],
+   [
+    2.3715,
+    355.0,
+    1.0,
+    0.0
+   ],
+   [
+    2.4791,
+    371.0,
+    1.0,
+    0.0
+   ],
+   [
+    2.5868,
+    387.0,
+    1.0,
+    0.0
+   ],
+   [
+    2.6944,
+    403.0,
+    1.0,
+    0.0
+   ],
+   [
+    2.8019,
+    420.0,
+    1.0,
+    0.0
+   ],
+   [
+    2.9093,
+    436.0,
+    1.0,
+    0.0
+   ],
+   [
+    3.0164,
+    452.0,
+    1.0,
+    0.0
+   ],
+   [
+    3.1236,
+    468.0,
+    1.0,
+    0.0
+   ],
+   [
+    3.2308,
+    484.0,
+    1.0,
+    0.0
+   ],
+   [
+    3.3381,
+    500.0,
+    1.0,
+    0.0
+   ],
+   [
+    3.4457,
+    516.0,
+    1.0,
+    0.0
+   ]
+  ]
+ },
+ "progress_end": {
+  "usage": [
+   {
+    "prompt_tokens": 120508,
+    "total_tokens": 121068,
+    "completion_tokens": 560,
+    "completion_tokens_details": {
+     "reasoning_tokens": 28
+    }
+   }
+  ],
+  "chunks": [
+   532
+  ],
+  "client_ttft_s": [
+   3.940152168273926
+  ],
+  "finished": [
+   false
+  ],
+  "errors": [
+   null
+  ]
+ },
+ "finished_utc": "2026-10-10T15:32:07Z"
+}
