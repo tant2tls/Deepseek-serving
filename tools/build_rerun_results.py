@@ -94,6 +94,32 @@ def generate():
                                              for mk, _ in MODELS])
         out += [f'### {title}', ''] + table(['Input', 'Clients'] + [n for _, n in MODELS], body) + ['']
 
+    win = rows('serving_windows.csv')
+    out += ['### Does generation slow down inside a response?', '',
+            'Mean time between streamed chunks at one client, by generated position, in milliseconds (mean over blocks). '
+            'Positions are counted in streamed chunks; a chunk can carry more than one token, so the counts differ from '
+            'tokens by under 0.5%. Nothing beyond 2,048 generated tokens was measured.', '']
+    body = []
+    for b in BUCKETS[:3]:
+        for key, lab in (('itl_ms_pos_2_256', '2 to 256'), ('itl_ms_pos_257_1024', '257 to 1,024'), ('itl_ms_pos_1025_2048', '1,025 to 2,048')):
+            body.append([LABEL[b], lab] + [cell([num(r, key) for r in win if (r['model'], r['bucket'], r['concurrency']) == (mk, b, '1')],
+                                                '{:.2f}', sd=False) for mk, _ in MODELS])
+    out += table(['Input', 'Generated position'] + [n for _, n in MODELS], body) + ['']
+    out += ['### Full-run and steady-state throughput at sixteen clients', '',
+            'A finite request list spends part of the run below its client cap. Steady state, declared before collection: '
+            'from the moment the first 16 requests have all produced their first token until the first request finishes '
+            'after the last one was sent. Output tokens per second, mean over blocks: full run / steady state (share of '
+            'the run that is steady).', '']
+    body = []
+    for b in BUCKETS[:3]:
+        line = [LABEL[b]]
+        for mk, _ in MODELS:
+            rs = [r for r in win if (r['model'], r['bucket'], r['concurrency']) == (mk, b, '16')]
+            full, steady, share = ([num(r, k) for r in rs if num(r, k) is not None] for k in ('full_output_tok_s', 'steady_output_tok_s', 'steady_share_of_run'))
+            line.append('pending' if not full or not steady else f'{st.mean(full):.0f} / {st.mean(steady):.0f} ({100 * st.mean(share):.0f}%)')
+        body.append(line)
+    out += table(['Input'] + [n for _, n in MODELS], body) + ['']
+
     # ------------------------------------------------------------------ decode intervals
     iv = [r for r in rows('decode_intervals.csv') if r['valid'] == 'True']
     out += ['## Decode step time against context', '',

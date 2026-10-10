@@ -254,6 +254,58 @@ def session_natural():
     wcsv(RDIR / "natural.csv", rows)
 
 
+def run_windows(bench, c):
+    """Position windows and the steady-state interval of one run, from the client's per-token times.
+
+    Position windows: mean inter-token time over generated positions 2-256, 257-1,024 and 1,025-2,048
+    (position 1 is the first token). Steady state, declared before collection: from the moment the
+    first c requests have all produced their first token until the first request finishes after the
+    last request was sent; both denominators are kept."""
+    itls, ttfts, starts, lat = bench["itls"], bench["ttfts"], bench["start_times"], bench["latencies"]
+    flat = lambda xs: [float(sum(x)) if isinstance(x, list) else float(x) for x in xs]  # a chunk can carry several tokens
+    per = [flat(x) for x in itls]
+    win = {}
+    for name, a, b in (("pos_2_256", 0, 255), ("pos_257_1024", 255, 1023), ("pos_1025_2048", 1023, 2047)):
+        vals = [sum(x[a:b]) / len(x[a:b]) for x in per if len(x[a:b]) > 0]
+        win[f"itl_ms_{name}"] = 1e3 * sum(vals) / len(vals) if vals else None
+    t0 = min(starts)
+    first = [s - t0 + t for s, t in zip(starts, ttfts)]
+    end = [s - t0 + l for s, l in zip(starts, lat)]
+    order = sorted(range(len(starts)), key=lambda i: starts[i])
+    ramp_end = max(first[i] for i in order[:c])
+    last_start = max(starts) - t0
+    after = [e for e in end if e >= last_start]
+    drain = min(after) if after else max(end)
+    tokens = 0
+    for i, x in enumerate(per):
+        t = first[i]
+        tokens += ramp_end <= t <= drain
+        for d in x:
+            t += d
+            tokens += ramp_end <= t <= drain
+    span = drain - ramp_end
+    return dict(**win, steady_start_s=ramp_end, steady_end_s=drain, steady_tokens=tokens,
+                steady_output_tok_s=(tokens / span) if span > 0 else None, full_run_s=bench["duration"],
+                full_output_tok_s=bench["output_throughput"], steady_share_of_run=(span / bench["duration"]) if span > 0 else None)
+
+
+def session_windows():
+    """Per valid serving run: generated-position windows and steady-state throughput (see run_windows)."""
+    rows = []
+    for mk, d, s, v, m in runs("serving", "off"):
+        if not v["valid"]:
+            continue
+        try:
+            bench = json.loads((d / "bench.json").read_text())
+            w = run_windows(bench, v["concurrency"])
+        except Exception as e:
+            print("windows failed", d, repr(e)); continue
+        rows.append(dict(study=STUDY, model=mk, runtime=v["runtime"]["vllm"], bucket=v["bucket"],
+                         concurrency=v["concurrency"], block=v["block"], attempt=d.name, n=v["n"], **w,
+                         evidence=str(d.relative_to(ROOT))))
+    wcsv(RDIR / "serving_windows.csv", rows)
+
+
 def session_routing():
     """Expert-routing statistics per model and condition (the per-expert counts stay in routing.json)."""
     rows = []
@@ -748,4 +800,5 @@ def compare():
 if __name__ == "__main__":
     {"compare": compare, "pilot": session_pilot if SESSION else pilot, "serving": serving, "memory": memory,
      "components": components, "tables": tables, "publish": publish, "intervals": session_intervals,
-     "natural": session_natural, "routing": session_routing, "support": session_support}[sys.argv[1]]()
+     "natural": session_natural, "routing": session_routing, "support": session_support,
+     "windows": session_windows}[sys.argv[1]]()
