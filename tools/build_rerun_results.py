@@ -256,6 +256,20 @@ def generate():
                 body.append([lab] + [fmt(mean(mk, cap, group, keys)) for mk, _ in MODELS])
             out += [f'### {title} (ms, kernel sum)', ''] + table(['Capture'] + [n for _, n in MODELS], body) + ['']
 
+    lay = rows('prefill_layers.csv')
+    out += ['### How many layers process a whole prefill chunk', '',
+            'Calls of each model\'s main expert kernel inside the last full 8,192-token chunk of the 64K capture, rank 0. '
+            'A long call ran on every token of the chunk; a short one ran on a trimmed batch. Qwen\'s kernel is called '
+            'twice per layer. This is how the V4.1 split is read on this build: October\'s build ran 21 layers on the '
+            'whole chunk.', '']
+    body = []
+    for mk, name in MODELS:
+        r = next((x for x in lay if (x['model'], x['capture']) == (mk, 'prefill64k')), None)
+        body.append([name] + (['pending'] * 4 if r is None else
+                              [r['kernel'], r['calls'], f'{r["long_calls"]} (median {num(r, "long_median_ms"):.2f} ms)',
+                               f'{r["short_calls"]}' + (f' (median {num(r, "short_median_ms"):.2f} ms)' if r['short_median_ms'] else '')]))
+    out += table(['Model', 'Expert kernel', 'Calls in the chunk', 'Long calls', 'Short calls'], body) + ['']
+
     # ------------------------------------------------------------------ expert routing
     routing = rows('routing.csv')
     out += ['## Expert sparsity: nominal against realized', '',

@@ -312,6 +312,39 @@ def session_windows():
     wcsv(RDIR / "serving_windows.csv", rows)
 
 
+def session_layers():
+    """How many layers process a whole prefill chunk? From the rank-0 step timeline of each prefill
+    capture: calls of the model's main expert GEMM kernel in the last full chunk, split into long
+    calls (the layer ran on every token of the chunk) and short ones (it ran on a trimmed batch)."""
+    import statistics
+    rows = []
+    for mk in MODELS:
+        for f in sorted((SDIR / mk / "profiles").glob("prefill*.kernels_rank0.json")):
+            inv = load(f)
+            tl = (inv.get("step_timeline") or {}).get("last_full_chunk") or []
+            comp = {k["name"]: k["component"] for k in inv["kernels"]}
+            by = collections.defaultdict(list)
+            for i, t, d, tid in tl:
+                n = inv["names"][i]
+                if comp.get(n) == "moe_expert_gemm":
+                    # One kernel per weight shape: its other template arguments change with the batch.
+                    m = re.match(r"void (humming)<\w+, Shape<0u, (\d+)u, (\d+)u>", n) or \
+                        re.match(r"void deep_gemm::(fp8_gemm_kernel)<(\d+)u, (\d+)u", n)
+                    by[f"{m[1]} {m[2]}x{m[3]}" if m else n].append(d)
+            if not by:
+                continue
+            name = max(by, key=lambda n: sum(by[n]))
+            ds = by[name]
+            big = [d for d in ds if d >= 0.25 * max(ds)]
+            small = [d for d in ds if d < 0.25 * max(ds)]
+            rows.append(dict(study=STUDY, model=mk, capture=inv["capture"], kernel=name[:120], calls=len(ds),
+                             long_calls=len(big), long_median_ms=statistics.median(big) / 1e3,
+                             short_calls=len(small), short_median_ms=(statistics.median(small) / 1e3) if small else None,
+                             rule="long = at least a quarter of the longest call of this kernel in the chunk",
+                             evidence=str(f.relative_to(ROOT))))
+    wcsv(RDIR / "prefill_layers.csv", rows)
+
+
 def session_routing():
     """Expert-routing statistics per model and condition (the per-expert counts stay in routing.json)."""
     rows = []
@@ -816,4 +849,4 @@ if __name__ == "__main__":
     {"compare": compare, "pilot": session_pilot if SESSION else pilot, "serving": serving, "memory": memory,
      "components": components, "tables": tables, "publish": publish, "intervals": session_intervals,
      "natural": session_natural, "routing": session_routing, "support": session_support,
-     "windows": session_windows}[sys.argv[1]]()
+     "windows": session_windows, "layers": session_layers}[sys.argv[1]]()

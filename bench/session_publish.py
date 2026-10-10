@@ -112,7 +112,7 @@ def main():
     with open(SDIR / "_logs" / "publish.lock", "w") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)  # one publisher at a time (a background analysis may also publish)
         tables = [br.serving, br.session_pilot, br.session_memory, br.session_intervals, br.session_natural,
-                  br.session_routing, br.session_support, br.session_windows]
+                  br.session_routing, br.session_support, br.session_windows, br.session_layers]
         # Trace classification reads the new traces (cached per capture afterwards). A classifier change is
         # applied at the next step boundary by touching _logs/recompute_components: the server is stopped
         # then, so the minute of parsing never runs beside a timing run.
