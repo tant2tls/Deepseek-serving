@@ -16,34 +16,34 @@ Mean ± sample SD over launch-separated blocks; each block is one plain launch. 
 
 | Input | Clients | 0731 | V4.1 | MiMo | Qwen | GLM |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1K | 1 | 126.6 (1 block) | 111.0 (1 block) | 172.0 (1 block) | pending | 150.8 (1 block) |
-| 1K | 16 | 1130.5 (1 block) | 980.6 (1 block) | 1133.7 (1 block) | pending | 1276.0 (1 block) |
-| 16K | 1 | 123.0 (1 block) | 107.8 (1 block) | 161.2 (1 block) | pending | 141.4 (1 block) |
-| 16K | 16 | 811.2 (1 block) | 799.3 (1 block) | 813.9 (1 block) | pending | 1012.6 (1 block) |
-| 64K | 1 | 105.6 (1 block) | 99.2 (1 block) | 131.3 (1 block) | pending | 128.4 (1 block) |
-| 64K | 16 | 392.0 (1 block) | 489.7 (1 block) | 393.3 (1 block) | pending | 592.2 (1 block) |
+| 1K | 1 | 126.6 (1 block) | 111.0 (1 block) | 172.0 (1 block) | 169.7 (1 block) | 150.8 (1 block) |
+| 1K | 16 | 1130.5 (1 block) | 980.6 (1 block) | 1133.7 (1 block) | 1641.8 (1 block) | 1276.0 (1 block) |
+| 16K | 1 | 123.0 (1 block) | 107.8 (1 block) | 161.2 (1 block) | 163.5 (1 block) | 141.4 (1 block) |
+| 16K | 16 | 811.2 (1 block) | 799.3 (1 block) | 813.9 (1 block) | 1280.9 (1 block) | 1012.6 (1 block) |
+| 64K | 1 | 105.6 (1 block) | 99.2 (1 block) | 131.3 (1 block) | 148.0 (1 block) | 128.4 (1 block) |
+| 64K | 16 | 392.0 (1 block) | 489.7 (1 block) | 393.3 (1 block) | 754.2 (1 block) | 592.2 (1 block) |
 
 ### Time to first token, median per block (ms)
 
 | Input | Clients | 0731 | V4.1 | MiMo | Qwen | GLM |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1K | 1 | 170 (1 block) | 108 (1 block) | 101 (1 block) | pending | 140 (1 block) |
-| 1K | 16 | 530 (1 block) | 414 (1 block) | 542 (1 block) | pending | 331 (1 block) |
-| 16K | 1 | 758 (1 block) | 539 (1 block) | 730 (1 block) | pending | 508 (1 block) |
-| 16K | 16 | 2981 (1 block) | 1870 (1 block) | 3080 (1 block) | pending | 1795 (1 block) |
-| 64K | 1 | 3266 (1 block) | 2131 (1 block) | 3247 (1 block) | pending | 2096 (1 block) |
-| 64K | 16 | 9494 (1 block) | 5495 (1 block) | 8464 (1 block) | pending | 5328 (1 block) |
+| 1K | 1 | 170 (1 block) | 108 (1 block) | 101 (1 block) | 137 (1 block) | 140 (1 block) |
+| 1K | 16 | 530 (1 block) | 414 (1 block) | 542 (1 block) | 357 (1 block) | 331 (1 block) |
+| 16K | 1 | 758 (1 block) | 539 (1 block) | 730 (1 block) | 509 (1 block) | 508 (1 block) |
+| 16K | 16 | 2981 (1 block) | 1870 (1 block) | 3080 (1 block) | 1679 (1 block) | 1795 (1 block) |
+| 64K | 1 | 3266 (1 block) | 2131 (1 block) | 3247 (1 block) | 1715 (1 block) | 2096 (1 block) |
+| 64K | 16 | 9494 (1 block) | 5495 (1 block) | 8464 (1 block) | 4405 (1 block) | 5328 (1 block) |
 
 ### Time per output token, median per block (ms)
 
 | Input | Clients | 0731 | V4.1 | MiMo | Qwen | GLM |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1K | 1 | 7.68 (1 block) | 8.96 (1 block) | 5.76 (1 block) | pending | 6.57 (1 block) |
-| 1K | 16 | 13.89 (1 block) | 16.09 (1 block) | 13.84 (1 block) | pending | 12.38 (1 block) |
-| 16K | 1 | 7.76 (1 block) | 9.02 (1 block) | 5.84 (1 block) | pending | 6.61 (1 block) |
-| 16K | 16 | 18.15 (1 block) | 19.00 (1 block) | 18.33 (1 block) | pending | 14.89 (1 block) |
-| 64K | 1 | 7.88 (1 block) | 9.04 (1 block) | 6.06 (1 block) | pending | 6.66 (1 block) |
-| 64K | 16 | 35.45 (1 block) | 29.94 (1 block) | 36.52 (1 block) | pending | 24.30 (1 block) |
+| 1K | 1 | 7.68 (1 block) | 8.96 (1 block) | 5.76 (1 block) | 5.82 (1 block) | 6.57 (1 block) |
+| 1K | 16 | 13.89 (1 block) | 16.09 (1 block) | 13.84 (1 block) | 9.58 (1 block) | 12.38 (1 block) |
+| 16K | 1 | 7.76 (1 block) | 9.02 (1 block) | 5.84 (1 block) | 5.88 (1 block) | 6.61 (1 block) |
+| 16K | 16 | 18.15 (1 block) | 19.00 (1 block) | 18.33 (1 block) | 11.63 (1 block) | 14.89 (1 block) |
+| 64K | 1 | 7.88 (1 block) | 9.04 (1 block) | 6.06 (1 block) | 5.93 (1 block) | 6.66 (1 block) |
+| 64K | 16 | 35.45 (1 block) | 29.94 (1 block) | 36.52 (1 block) | 18.84 (1 block) | 24.30 (1 block) |
 
 ### Does generation slow down inside a response?
 
@@ -51,15 +51,15 @@ Mean time between streamed chunks at one client, by generated position, in milli
 
 | Input | Generated position | 0731 | V4.1 | MiMo | Qwen | GLM |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1K | 2 to 256 | 7.62 (1 block) | 8.96 (1 block) | 5.73 (1 block) | pending | 6.55 (1 block) |
-| 1K | 257 to 1,024 | 7.71 (1 block) | 9.02 (1 block) | 15.51 (1 block) | pending | 6.57 (1 block) |
-| 1K | 1,025 to 2,048 | 7.79 (1 block) | 9.05 (1 block) | 225.44 (1 block) | pending | 6.63 (1 block) |
-| 16K | 2 to 256 | 7.81 (1 block) | 8.99 (1 block) | 5.81 (1 block) | pending | 6.60 (1 block) |
-| 16K | 257 to 1,024 | 7.87 (1 block) | 9.24 (1 block) | 76.46 (1 block) | pending | 6.63 (1 block) |
-| 16K | 1,025 to 2,048 | 7.88 (1 block) | 9.29 (1 block) | 11.01 (1 block) | pending | 6.77 (1 block) |
-| 64K | 2 to 256 | 7.90 (1 block) | 8.99 (1 block) | 6.04 (1 block) | pending | 6.67 (1 block) |
-| 64K | 257 to 1,024 | 9.11 (1 block) | 9.17 (1 block) | 22.42 (1 block) | pending | 6.73 (1 block) |
-| 64K | 1,025 to 2,048 | 9.23 (1 block) | 9.21 (1 block) | 6.09 (1 block) | pending | 6.70 (1 block) |
+| 1K | 2 to 256 | 7.62 (1 block) | 8.96 (1 block) | 5.73 (1 block) | 5.78 (1 block) | 6.55 (1 block) |
+| 1K | 257 to 1,024 | 7.71 (1 block) | 9.02 (1 block) | 15.51 (1 block) | 8.33 (1 block) | 6.57 (1 block) |
+| 1K | 1,025 to 2,048 | 7.79 (1 block) | 9.05 (1 block) | 225.44 (1 block) | 6.97 (1 block) | 6.63 (1 block) |
+| 16K | 2 to 256 | 7.81 (1 block) | 8.99 (1 block) | 5.81 (1 block) | 5.84 (1 block) | 6.60 (1 block) |
+| 16K | 257 to 1,024 | 7.87 (1 block) | 9.24 (1 block) | 76.46 (1 block) | 7.01 (1 block) | 6.63 (1 block) |
+| 16K | 1,025 to 2,048 | 7.88 (1 block) | 9.29 (1 block) | 11.01 (1 block) | 6.73 (1 block) | 6.77 (1 block) |
+| 64K | 2 to 256 | 7.90 (1 block) | 8.99 (1 block) | 6.04 (1 block) | 7.32 (1 block) | 6.67 (1 block) |
+| 64K | 257 to 1,024 | 9.11 (1 block) | 9.17 (1 block) | 22.42 (1 block) | 8.20 (1 block) | 6.73 (1 block) |
+| 64K | 1,025 to 2,048 | 9.23 (1 block) | 9.21 (1 block) | 6.09 (1 block) | 8.13 (1 block) | 6.70 (1 block) |
 
 ### Full-run and steady-state throughput at sixteen clients
 
@@ -67,9 +67,9 @@ A finite request list spends part of the run below its client cap. Steady state,
 
 | Input | 0731 | V4.1 | MiMo | Qwen | GLM |
 | --- | --- | --- | --- | --- | --- |
-| 1K | 1130 / 1116 (99%) | 981 / 974 (99%) | 1134 / 812 (99%) | pending | 1276 / 1274 (99%) |
-| 16K | 811 / 880 (90%) | 799 / 849 (93%) | 814 / 594 (91%) | pending | 1013 / 1087 (92%) |
-| 64K | 392 / 471 (79%) | 490 / 579 (82%) | 393 / 394 (79%) | pending | 592 / 710 (81%) |
+| 1K | 1130 / 1116 (99%) | 981 / 974 (99%) | 1134 / 812 (99%) | 1642 / 1268 (99%) | 1276 / 1274 (99%) |
+| 16K | 811 / 880 (90%) | 799 / 849 (93%) | 814 / 594 (91%) | 1281 / 1200 (92%) | 1013 / 1087 (92%) |
+| 64K | 392 / 471 (79%) | 490 / 579 (82%) | 393 / 394 (79%) | 754 / 757 (81%) | 592 / 710 (81%) |
 
 ## Decode step time against context
 
@@ -77,17 +77,17 @@ Unprofiled intervals of 512 tokens per request on the plain launches: B requests
 
 | Context | Engine batch | 0731 | V4.1 | MiMo | Qwen | GLM |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1K | 8 | 10.85 (1 block) | 12.34 (1 block) | 10.04 (1 block) | pending | 9.91 (1 block) |
-| 16K | 8 | 11.05 (1 block) | 12.39 (1 block) | 10.28 (1 block) | pending | 10.00 (1 block) |
-| 64K | 8 | 11.41 (1 block) | 12.52 (1 block) | 10.98 (1 block) | pending | 10.09 (1 block) |
-| 128K | 8 | 11.66 (1 block) | 12.74 (1 block) | 12.00 (1 block) | pending | 10.20 (1 block) |
-| 128K | 1 | 7.95 (1 block) | 9.10 (1 block) | 6.31 (1 block) | pending | 6.68 (1 block) |
+| 1K | 8 | 10.85 (1 block) | 12.34 (1 block) | 10.04 (1 block) | 8.55 (1 block) | 9.91 (1 block) |
+| 16K | 8 | 11.05 (1 block) | 12.39 (1 block) | 10.28 (1 block) | 8.63 (1 block) | 10.00 (1 block) |
+| 64K | 8 | 11.41 (1 block) | 12.52 (1 block) | 10.98 (1 block) | 8.79 (1 block) | 10.09 (1 block) |
+| 128K | 8 | 11.66 (1 block) | 12.74 (1 block) | 12.00 (1 block) | 8.95 (1 block) | 10.20 (1 block) |
+| 128K | 1 | 7.95 (1 block) | 9.10 (1 block) | 6.31 (1 block) | 5.96 (1 block) | 6.68 (1 block) |
 
 Time to first token of the single 128K request in the same launches, seconds (prompt processing with nothing else in the engine):
 
 | Context | 0731 | V4.1 | MiMo | Qwen | GLM |
 | --- | --- | --- | --- | --- | --- |
-| 128K | 7.60 (1 block) | 4.69 (1 block) | 6.42 (1 block) | pending | 3.92 (1 block) |
+| 128K | 7.60 (1 block) | 4.69 (1 block) | 6.42 (1 block) | 3.17 (1 block) | 3.92 (1 block) |
 
 ## Live state at the eight decode conditions
 
@@ -244,6 +244,18 @@ GPU kernel milliseconds per engine step, mean over the eight ranks, from the idl
 | Decode step, 16K, B=8 | 13.20 | 13.10 | 8.19 | 9.14 | 10.32 |
 | Decode step, 64K, B=8 | 13.63 | 13.20 | 8.95 | 9.29 | 10.39 |
 | Decode step, 128K, B=8 | 13.96 | 13.35 | 9.95 | 9.42 | 10.49 |
+
+### How many layers process a whole prefill chunk
+
+Calls of each model's main expert kernel inside the last full 8,192-token chunk of the 64K capture, rank 0. A long call ran on every token of the chunk; a short one ran on a trimmed batch. Qwen's kernel is called twice per layer. This is how the V4.1 split is read on this build: October's build ran 21 layers on the whole chunk.
+
+| Model | Expert kernel | Calls in the chunk | Long calls | Short calls |
+| --- | --- | --- | --- | --- |
+| 0731 | humming 4096x4096 | 43 | 43 (median 2.32 ms) | 0 |
+| V4.1 | humming 4608x5120 | 40 | 20 (median 3.32 ms) | 20 (median 0.54 ms) |
+| MiMo | humming 4096x4096 | 46 | 46 (median 3.20 ms) | 0 |
+| Qwen | fused_moe_kernel | 96 | 96 (median 0.18 ms) | 0 |
+| GLM | fp8_gemm_kernel 4096x4096 | 42 | 42 (median 0.37 ms) | 0 |
 
 ## Expert sparsity: nominal against realized
 
