@@ -29,6 +29,46 @@ five-model-rerun-h100-v1,v4-0731,quantization,"Initializing a V1 LLM engine (v0.
 five-model-rerun-h100-v1,v4-0731,quantization,DeepSeek V4 expert_dtype resolved to 'fp4',True,results/five-model-rerun-h100-v1/v4-0731/_server/serve-off-profidle-20261010-111133.log
 five-model-rerun-h100-v1,v4-0731,quantization,Selected FlashInferFp8DeepGEMMDynamicBlockScaledKernel for Fp8LinearMethod,True,results/five-model-rerun-h100-v1/v4-0731/_server/serve-off-profidle-20261010-111133.log
 five-model-rerun-h100-v1,v4-0731,quantization,Using FP8 indexer cache for Lightning Indexer.,True,results/five-model-rerun-h100-v1/v4-0731/_server/serve-off-profidle-20261010-111133.log
+five-model-rerun-h100-v1,v41,class,DeepseekV41ForCausalLM,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,engine,v0.31.1rc1.dev260+ga98247ab4,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,weights_gib_per_gpu,36.32,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,kv_pool_gib_per_gpu,29.12,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,kv_pool_tokens,"9,085,042",True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,max_concurrency_262k,34.66,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,kv_block,64 for FLASHMLA_SPARSE_DSV41/DEEPSEEK_SPARSE_SWA/DEEPSEEK_V41_INDEXER/CompressorBackend,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,kv_layout,BLHNC,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,kv_format,DeepSeek's fp8_ds_mla KV cache format,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,kv_group_block_sizes,"(32, 32, 32, 32, 32, 32, 32, 64, 8)",True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,kv_lcm_block_size,64,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,moe_backend,HUMMING,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,moe_backend_line,Using 'HUMMING' Mxfp4 MoE backend.,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,experts_class,HummingGroupedExperts,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,expert_dtype,fp4,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,chunked_prefill,max_num_batched_tokens=8192,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,prefix_caching,False,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,allreduce_tp,"['FLASHINFER', 'CUSTOM', 'SYMM_MEM', 'PYNCCL']",True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,allreduce_ep,['PYNCCL'],True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,fusions,"norm_quant, act_quant, allreduce_rms",True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,checkpoint_gib,475.25,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,cudagraph_gib,1.04,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,cudagraph_gib,0.71,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,memory_line,"Free memory on device (77.01/79.18 GiB) on startup. Desired GPU memory utilization is (0.9, 71.26 GiB). Actual usage is 38.23 GiB for consumed memory (weights + non-torch), 3.91 GiB for peak activation, and 0.71 GiB for CUDAGraph memory",True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,attention_warmup,Warming up DeepSeek V4 sparse MLA attention for mixed tokens=16.,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,engram,"Resolved Engram configuration: EngramConfig(cpu_offload=True, embedding_across_dp=False, dp_shared_memory=False, use_thp=False)",True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,engram,"Engram table offloaded to pinned host memory: 48001319 rows x 256, 11.80 GiB per rank",True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,engram,"Engram table offloaded to pinned host memory: 48000505 rows x 256, 11.80 GiB per rank",True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,engram,"Engram table offloaded to pinned host memory: 48000217 rows x 256, 11.80 GiB per rank",True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,engram,"Engram table offloaded to pinned host memory: 48000347 rows x 256, 11.80 GiB per rank",True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,engram,"Engram table offloaded to pinned host memory: 48000873 rows x 256, 11.80 GiB per rank",True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,quantization,Detected quantization_config.scale_fmt=ue8m0; enabling UE8M0 for DeepGEMM.,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,quantization,"Initializing a V1 LLM engine (v0.31.1rc1.dev260+ga98247ab4) with config: model='deepseek-ai/DeepSeek-V4.1-Flash', speculative_config=None, tokenizer='deepseek-ai/DeepSeek-V4.1-Flash', skip_tokenizer_init=False, tokenizer_mode=deepseek_v41, revision=dba1be0a40aa45a94ad051997016db3960a90277, tokenizer_revision=dba1be0a40aa45a94ad051997016db3960a90277, trust_remote_code=False, dtype=torch.bfloat16, m",True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,quantization,DeepSeek V4 expert_dtype resolved to 'fp4',True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,quantization,Using HummingMxfp8LinearKernel for MXFP8 GEMM,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,quantization,Using FP8 indexer cache for Lightning Indexer.,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,quantization,Using EmulationMxfp8LinearKernel for MXFP8 GEMM,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,attention_backend,Disabled mm_prefix attention mode because multimodal inputs are configuration-disabled. Attention backends without mm_prefix support may now be selected.,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,attention_backend,Using backend AttentionBackendEnum.FLASH_ATTN for vit attention,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+five-model-rerun-h100-v1,v41,attention_backend,Using AttentionBackendEnum.FLASH_ATTN for MMEncoderAttention.,True,results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
 five-model-rerun-h100-v1,mimo-v26,class,MiMoV2OmniForCausalLM,True,results/five-model-rerun-h100-v1/mimo-v26/_server/serve-off-profidle-20261010-112739.log
 five-model-rerun-h100-v1,mimo-v26,engine,v0.31.1rc1.dev260+ga98247ab4,True,results/five-model-rerun-h100-v1/mimo-v26/_server/serve-off-profidle-20261010-112739.log
 five-model-rerun-h100-v1,mimo-v26,weights_gib_per_gpu,20.1,True,results/five-model-rerun-h100-v1/mimo-v26/_server/serve-off-profidle-20261010-112739.log

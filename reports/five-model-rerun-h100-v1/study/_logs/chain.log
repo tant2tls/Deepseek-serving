@@ -81,3 +81,36 @@
 [11:46:37] CHAIN trace mimo-v26 prefill128k files=16 {'request_wall_s': 6.1488752365112305}
 [11:46:40] CHAIN stopped mimo-v26 off-profidle up=1141s gpu_mem_max=0MiB leftover=0
 [11:46:40] CHAIN step diag:mimo-v26 done
+[11:46:52] CHAIN publish diag:mimo-v26 rc=0 ['published diag:mimo-v26: 301 files, commit 47a5ffe, push ok']
+[11:46:52] CHAIN step diag:v41 start
+[11:46:52] CHAIN launched v41 off-profidle pgid=77393 log=results/five-model-rerun-h100-v1/v41/_server/serve-off-profidle-20261010-114652.log
+[11:51:42] CHAIN ready v41 off-profidle after 290s
+[11:52:32] CHAIN functional v41 ok=True forced=True natural_stopped=12/12 with_reasoning=0 rendered={'server_prompt_tokens': 1007, 'client_content_tokens': 1003, 'template_overhead': 4}
+[11:53:43] CHAIN pilot v41 ctx16k_osl2048_c1 block=1 n=3 valid=True dur=56.97801475098822 out_tps=107.83106478614962 ttft_p50=535.3136169724166 tpot_p50=9.01424477188964 
+[11:54:37] CHAIN pilot v41 ctx16k_osl2048_c16 block=1 n=16 valid=True dur=41.04168620088603 out_tps=798.4077418167235 ttft_p50=4389.945456990972 tpot_p50=17.82103671056947 
+[11:55:45] CHAIN pilot v41 ctx1k_osl2048_c1 block=1 n=3 valid=True dur=55.290189909981564 out_tps=111.12278706228174 ttft_p50=108.22489997372031 tpot_p50=8.944002057641335 
+[11:56:32] CHAIN pilot v41 ctx1k_osl2048_c16 block=1 n=16 valid=True dur=33.63953142601531 out_tps=974.0920462006999 ttft_p50=459.0347264893353 tpot_p50=16.18604684709451 
+[11:57:46] CHAIN pilot v41 ctx64k_osl2048_c1 block=1 n=3 valid=True dur=61.845337494974956 out_tps=99.3445949017452 ttft_p50=2120.160090038553 tpot_p50=9.032248729329446 
+[11:58:52] CHAIN pilot v41 ctx64k_osl2048_c16 block=1 n=9 valid=True dur=51.52243333298247 out_tps=357.7470784595225 ttft_p50=10268.06952606421 tpot_p50=19.99501674202861 
+[11:58:56] CHAIN kv v41 1k B=1 usage=0.0001944579484686182 running=1.0 waiting=0.0 prompt_tokens=1007.0 all_decoding_after=0.2s capacity_limit=False
+[11:59:17] CHAIN trace v41 decode1k_B1 files=16 {'B': 1, 'window_s': 0.4629805088043213, 'tokens_in_window': [49.0]}
+[11:59:21] CHAIN kv v41 1k B=8 usage=0.0015706218914774972 running=8.0 waiting=0.0 prompt_tokens=8103.0 all_decoding_after=0.5s capacity_limit=False
+[11:59:44] CHAIN trace v41 decode1k_B8 files=16 {'B': 8, 'window_s': 0.6208341121673584, 'tokens_in_window': [49.0, 49.0, 49.0, 49.0, 49.0, 49.0, 49.0, 49.0]}
+[11:59:49] CHAIN kv v41 16k B=1 usage=0.0010882165962380341 running=1.0 waiting=0.0 prompt_tokens=16309.0 all_decoding_after=0.6s capacity_limit=False
+[12:00:11] CHAIN trace v41 decode16k_B1 files=16 {'B': 1, 'window_s': 0.4651453495025635, 'tokens_in_window': [49.0]}
+[12:00:19] CHAIN kv v41 16k B=8 usage=0.008731909801428572 running=8.0 waiting=0.0 prompt_tokens=130555.0 all_decoding_after=4.0s capacity_limit=False
+[12:00:43] CHAIN trace v41 decode16k_B8 files=16 {'B': 8, 'window_s': 0.6538946628570557, 'tokens_in_window': [51.0, 51.0, 51.0, 51.0, 51.0, 51.0, 51.0, 51.0]}
+[12:00:49] CHAIN kv v41 64k B=1 usage=0.0039489921842863485 running=1.0 waiting=0.0 prompt_tokens=65244.0 all_decoding_after=2.2s capacity_limit=False
+[12:01:11] CHAIN trace v41 decode64k_B1 files=16 {'B': 1, 'window_s': 0.4627339839935303, 'tokens_in_window': [49.0]}
+[12:01:32] CHAIN kv v41 64k B=8 usage=0.03170412475225315 running=8.0 waiting=0.0 prompt_tokens=523698.0 all_decoding_after=16.5s capacity_limit=False
+[12:01:55] CHAIN trace v41 decode64k_B8 files=16 {'B': 8, 'window_s': 0.6416926383972168, 'tokens_in_window': [49.0, 49.0, 49.0, 49.0, 49.0, 49.0, 49.0, 49.0]}
+[12:02:03] CHAIN kv v41 128k B=1 usage=0.00778953666654203 running=1.0 waiting=0.0 prompt_tokens=130972.0 all_decoding_after=4.4s capacity_limit=False
+[12:02:26] CHAIN trace v41 decode128k_B1 files=16 {'B': 1, 'window_s': 0.46611666679382324, 'tokens_in_window': [49.0]}
+[12:03:05] CHAIN kv v41 128k B=8 usage=0.06237238697131742 running=8.0 waiting=0.0 prompt_tokens=1048290.0 all_decoding_after=35.3s capacity_limit=False
+[12:03:29] CHAIN trace v41 decode128k_B8 files=16 {'B': 8, 'window_s': 0.6432580947875977, 'tokens_in_window': [49.0, 49.0, 49.0, 49.0, 49.0, 49.0, 49.0, 49.0]}
+[12:03:42] CHAIN trace v41 prefill1k files=16 {'request_wall_s': 0.20493841171264648}
+[12:03:55] CHAIN trace v41 prefill16k files=16 {'request_wall_s': 0.5923476219177246}
+[12:04:21] CHAIN trace v41 prefill64k files=16 {'request_wall_s': 2.1853208541870117}
+[12:05:05] CHAIN trace v41 prefill128k files=16 {'request_wall_s': 4.3641037940979}
+[12:05:26] CHAIN stopped v41 off-profidle up=1114s gpu_mem_max=0MiB leftover=0
+[12:05:26] CHAIN step diag:v41 done
