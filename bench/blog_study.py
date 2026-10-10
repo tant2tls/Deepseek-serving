@@ -106,10 +106,18 @@ def sh(cmd):
     return subprocess.run(cmd, shell=True, capture_output=True, text=True).stdout
 
 
+_RUNTIME = None
+
+
 def runtime():
-    venv = os.environ.get("VLLM_VENV", "/root/vllm")
-    out = sh(f"{venv}/bin/python -c \"import vllm,torch;print(vllm.__version__);print(torch.__version__)\"").split()
-    return dict(venv=venv, vllm=out[-2] if len(out) >= 2 else None, torch=out[-1] if out else None)
+    """Installed vLLM and torch versions. Read once per process: the import takes seconds of CPU and
+    must not run while a request is being measured."""
+    global _RUNTIME
+    if _RUNTIME is None:
+        venv = os.environ.get("VLLM_VENV", "/root/vllm")
+        out = sh(f"{venv}/bin/python -c \"import vllm,torch;print(vllm.__version__);print(torch.__version__)\"").split()
+        _RUNTIME = dict(venv=venv, vllm=out[-2] if len(out) >= 2 else None, torch=out[-1] if out else None)
+    return dict(_RUNTIME)
 
 
 def gpu_mem():
@@ -1020,6 +1028,7 @@ def main():
     if a.cmd == "dry-run":
         sys.exit(0 if dry_run(a.steps) else 1)
     signal.signal(signal.SIGTERM, lambda *_: sys.exit(143))  # run the finally/exit paths on termination
+    runtime()  # before any launch, so that no later call imports vLLM beside a measurement
     for st in a.steps:
         kind, mk, *rest = st.split(":")
         outcome = "failed"
