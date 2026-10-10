@@ -11,9 +11,9 @@
 - `_gumbel_sample_kernel`: 2679.027
 - `void vllm::moe::dsv4HashTopkSoftplusSqrt<int, int>(float const*, float*, int*, int, int, f`: 2636.741
 - `void at::native::vectorized_elementwise_kernel<4, at::native::(anonymous namespace)::launc`: 2632.872
-- `_compute_swa_indices_and_lens_kernel`: 1852.4800000000002
 - `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1832.922
 - `_post_update_kernel`: 1452.732
+- `void at::native::vectorized_elementwise_kernel<2, at::native::FillFunctor<long>, std::arra`: 1182.722
 
 ## v4-0731 decode128k_B8
 
@@ -26,9 +26,9 @@
 - `_gumbel_sample_kernel`: 3055.0330000000004
 - `hc_head_fuse_tilelang_kernel`: 2790.338
 - `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1943.981
-- `_compute_swa_indices_and_lens_kernel`: 1859.3609999999999
 - `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 1732.965
 - `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 1685.1200000000001
+- `_post_update_kernel`: 1437.4210000000003
 
 ## v4-0731 decode16k_B1
 
@@ -41,9 +41,9 @@
 - `hc_head_fuse_tilelang_kernel`: 2816.6800000000003
 - `void vllm::moe::dsv4HashTopkSoftplusSqrt<int, int>(float const*, float*, int*, int, int, f`: 2718.553
 - `void at::native::vectorized_elementwise_kernel<4, at::native::(anonymous namespace)::launc`: 2693.7500000000005
-- `_compute_swa_indices_and_lens_kernel`: 1947.855
 - `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1854.736
 - `_post_update_kernel`: 1471.802
+- `void at::native::vectorized_elementwise_kernel<2, at::native::FillFunctor<long>, std::arra`: 1196.028
 
 ## v4-0731 decode16k_B8
 
@@ -56,9 +56,9 @@
 - `_gumbel_sample_kernel`: 3366.918
 - `hc_head_fuse_tilelang_kernel`: 2903.303
 - `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 2025.3339999999998
-- `_compute_swa_indices_and_lens_kernel`: 1933.1099999999997
 - `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 1795.6039999999998
 - `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 1750.471
+- `_post_update_kernel`: 1517.069
 
 ## v4-0731 decode1k_B1
 
@@ -71,9 +71,9 @@
 - `hc_head_fuse_tilelang_kernel`: 2792.0110000000004
 - `void at::native::vectorized_elementwise_kernel<4, at::native::(anonymous namespace)::launc`: 2690.712
 - `void vllm::moe::dsv4HashTopkSoftplusSqrt<int, int>(float const*, float*, int*, int, int, f`: 2661.5339999999997
-- `_compute_swa_indices_and_lens_kernel`: 1938.5999999999997
 - `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1846.1879999999999
 - `_post_update_kernel`: 1459.103
+- `void at::native::vectorized_elementwise_kernel<2, at::native::FillFunctor<long>, std::arra`: 1193.939
 
 ## v4-0731 decode1k_B8
 
@@ -86,9 +86,9 @@
 - `_gumbel_sample_kernel`: 2863.396
 - `hc_head_fuse_tilelang_kernel`: 2735.7350000000006
 - `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1901.3889999999997
-- `_compute_swa_indices_and_lens_kernel`: 1807.249
 - `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 1696.65
 - `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 1649.877
+- `_post_update_kernel`: 1419.844
 
 ## v4-0731 decode64k_B1
 
@@ -101,9 +101,9 @@
 - `void vllm::moe::dsv4HashTopkSoftplusSqrt<int, int>(float const*, float*, int*, int, int, f`: 2648.819
 - `void at::native::vectorized_elementwise_kernel<4, at::native::(anonymous namespace)::launc`: 2618.7309999999998
 - `_gumbel_sample_kernel`: 2616.392
-- `_compute_swa_indices_and_lens_kernel`: 1832.6930000000002
 - `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1821.5939999999996
 - `_post_update_kernel`: 1452.3609999999999
+- `void at::native::vectorized_elementwise_kernel<2, at::native::FillFunctor<long>, std::arra`: 1167.118
 
 ## v4-0731 decode64k_B8
 
@@ -116,9 +116,9 @@
 - `_gumbel_sample_kernel`: 3037.8269999999998
 - `hc_head_fuse_tilelang_kernel`: 2785.8469999999998
 - `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1946.622
-- `_compute_swa_indices_and_lens_kernel`: 1837.94
 - `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 1735.1730000000002
 - `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 1683.5470000000003
+- `_post_update_kernel`: 1448.3870000000002
 
 ## v4-0731 prefill128k
 
@@ -129,11 +129,11 @@
 - `_apply_write_kernel`: 1726.2289999999998
 - `void at::native::vectorized_elementwise_kernel<4, at::native::BUnaryFunctor<int, int, int,`: 1183.659
 - `void vllm::vocab_embedding::vocab_parallel_embedding_kernel<int, uint4>(uint4*, int const*`: 456.049
-- `_compute_swa_indices_and_lens_kernel`: 423.99
 - `void vllm::moe::dsv4HashTopkSoftplusSqrt<int, int>(float const*, float*, int*, int, int, f`: 346.446
 - `_prepare_prefill_inputs_kernel`: 238.25
 - `void at::native::vectorized_elementwise_kernel<4, at::native::(anonymous namespace)::launc`: 116.133
 - `void at::native::vectorized_elementwise_kernel<2, at::native::FillFunctor<long>, std::arra`: 50.05199999999999
+- `_combine_sampled_and_draft_tokens_kernel`: 47.745
 
 ## v4-0731 prefill16k
 
@@ -144,11 +144,11 @@
 - `void at::native::vectorized_elementwise_kernel<4, at::native::BUnaryFunctor<int, int, int,`: 1190.848
 - `_apply_write_kernel`: 636.85
 - `void vllm::vocab_embedding::vocab_parallel_embedding_kernel<int, uint4>(uint4*, int const*`: 445.244
-- `_compute_swa_indices_and_lens_kernel`: 411.582
 - `void vllm::moe::dsv4HashTopkSoftplusSqrt<int, int>(float const*, float*, int*, int, int, f`: 342.236
 - `_prepare_prefill_inputs_kernel`: 216.70199999999997
 - `void at::native::vectorized_elementwise_kernel<4, at::native::(anonymous namespace)::launc`: 114.59000000000002
 - `void at::native::vectorized_elementwise_kernel<2, at::native::FillFunctor<long>, std::arra`: 49.298
+- `void at::native::vectorized_elementwise_kernel<8, at::native::compare_scalar_kernel<long>(`: 41.29
 
 ## v4-0731 prefill1k
 
@@ -161,9 +161,9 @@
 - `_apply_write_kernel`: 288.386
 - `void vllm::moe::dsv4HashTopkSoftplusSqrt<int, int>(float const*, float*, int*, int, int, f`: 142.75199999999998
 - `void at::native::vectorized_elementwise_kernel<4, at::native::(anonymous namespace)::launc`: 115.22999999999999
-- `_compute_swa_indices_and_lens_kernel`: 96.65
 - `void vllm::vocab_embedding::vocab_parallel_embedding_kernel<int, uint4>(uint4*, int const*`: 78.224
 - `_prepare_prefill_inputs_kernel`: 64.656
+- `void at::native::vectorized_elementwise_kernel<2, at::native::FillFunctor<long>, std::arra`: 48.647999999999996
 
 ## v4-0731 prefill64k
 
@@ -174,19 +174,17 @@
 - `void at::native::vectorized_elementwise_kernel<4, at::native::BUnaryFunctor<int, int, int,`: 1195.0180000000003
 - `_apply_write_kernel`: 963.1750000000001
 - `void vllm::vocab_embedding::vocab_parallel_embedding_kernel<int, uint4>(uint4*, int const*`: 451.156
-- `_compute_swa_indices_and_lens_kernel`: 420.754
 - `void vllm::moe::dsv4HashTopkSoftplusSqrt<int, int>(float const*, float*, int*, int, int, f`: 345.2939999999999
 - `_prepare_prefill_inputs_kernel`: 239.97499999999997
 - `void at::native::vectorized_elementwise_kernel<4, at::native::(anonymous namespace)::launc`: 116.554
 - `void at::native::vectorized_elementwise_kernel<2, at::native::FillFunctor<long>, std::arra`: 49.604
+- `_combine_sampled_and_draft_tokens_kernel`: 47.331
 
 ## v41 decode128k_B1
 
 - `Kernel`: 47488.532
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 20292.604
 - `memcpy32_post`: 17758.270999999997
-- `_candidate_flags_kernel`: 7525.803000000001
-- `_compute_swa_indices_and_lens_kernel`: 5628.778
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 4011.576
 - `void at::native::vectorized_elementwise_kernel<8, at::native::compare_scalar_kernel<long>(`: 3438.6320000000005
 - `_gumbel_sample_kernel`: 3227.268
@@ -194,29 +192,29 @@
 - `void at::native::unrolled_elementwise_kernel<at::native::FillFunctor<int>, std::array<char`: 2663.592
 - `_hash_ids_kernel`: 1822.187
 - `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1796.675
+- `_post_update_kernel`: 1521.049
+- `_combine_sampled_and_draft_tokens_kernel`: 1486.5839999999998
 
 ## v41 decode128k_B8
 
 - `Kernel`: 52366.452000000005
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 26475.422
 - `memcpy32_post`: 16247.884
-- `_candidate_flags_kernel`: 8328.886999999999
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 6828.574000000001
 - `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 6787.912000000001
-- `_compute_swa_indices_and_lens_kernel`: 6018.7970000000005
 - `_gumbel_sample_kernel`: 3908.437
 - `void at::native::vectorized_elementwise_kernel<8, at::native::compare_scalar_kernel<long>(`: 3572.7830000000004
 - `_hash_ids_kernel`: 2031.009
 - `_combine_sampled_and_draft_tokens_kernel`: 2015.6209999999999
 - `_get_num_sampled_and_rejected_kernel`: 1992.411
+- `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1942.009
+- `_gather_lookback_kernel`: 1859.3229999999999
 
 ## v41 decode16k_B1
 
 - `Kernel`: 47535.591
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 20323.283000000003
 - `memcpy32_post`: 17763.700999999997
-- `_candidate_flags_kernel`: 6377.721
-- `_compute_swa_indices_and_lens_kernel`: 5621.558999999999
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 4019.989
 - `void at::native::vectorized_elementwise_kernel<8, at::native::compare_scalar_kernel<long>(`: 3445.1169999999997
 - `_gumbel_sample_kernel`: 3183.7490000000003
@@ -224,29 +222,29 @@
 - `void at::native::unrolled_elementwise_kernel<at::native::FillFunctor<int>, std::array<char`: 2668.0550000000003
 - `_hash_ids_kernel`: 1823.2939999999999
 - `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1800.3419999999999
+- `_post_update_kernel`: 1521.487
+- `_get_num_sampled_and_rejected_kernel`: 1471.0240000000001
 
 ## v41 decode16k_B8
 
 - `Kernel`: 53648.206
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 27516.588000000003
 - `memcpy32_post`: 16908.439
-- `_candidate_flags_kernel`: 7114.53
 - `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 7111.43
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 7096.601000000001
-- `_compute_swa_indices_and_lens_kernel`: 6291.089
 - `_gumbel_sample_kernel`: 4059.7450000000003
 - `void at::native::vectorized_elementwise_kernel<8, at::native::compare_scalar_kernel<long>(`: 3715.935
 - `_hash_ids_kernel`: 2125.251
 - `_combine_sampled_and_draft_tokens_kernel`: 2028.3760000000002
 - `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 2012.3229999999999
+- `_get_num_sampled_and_rejected_kernel`: 1960.3739999999998
+- `_gather_lookback_kernel`: 1885.9859999999999
 
 ## v41 decode1k_B1
 
 - `Kernel`: 47579.03199999999
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 20311.232999999997
 - `memcpy32_post`: 17719.530000000006
-- `_compute_swa_indices_and_lens_kernel`: 6007.905000000001
-- `_candidate_flags_kernel`: 5027.404
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 4026.6770000000006
 - `void at::native::vectorized_elementwise_kernel<8, at::native::compare_scalar_kernel<long>(`: 3481.264000000001
 - `_gumbel_sample_kernel`: 3460.682
@@ -254,6 +252,8 @@
 - `void at::native::unrolled_elementwise_kernel<at::native::FillFunctor<int>, std::array<char`: 2697.4610000000002
 - `_hash_ids_kernel`: 1853.7459999999996
 - `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1807.8450000000003
+- `_post_update_kernel`: 1514.98
+- `_combine_sampled_and_draft_tokens_kernel`: 1484.9330000000002
 
 ## v41 decode1k_B8
 
@@ -262,21 +262,19 @@
 - `memcpy32_post`: 16261.135999999995
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 6829.087000000001
 - `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 6789.537
-- `_compute_swa_indices_and_lens_kernel`: 6010.034000000001
-- `_candidate_flags_kernel`: 5287.208999999999
 - `_gumbel_sample_kernel`: 3976.5260000000003
 - `void at::native::vectorized_elementwise_kernel<8, at::native::compare_scalar_kernel<long>(`: 3574.554000000001
 - `_hash_ids_kernel`: 2038.0520000000001
 - `_combine_sampled_and_draft_tokens_kernel`: 2028.1380000000001
 - `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1938.6570000000002
+- `_get_num_sampled_and_rejected_kernel`: 1928.6000000000001
+- `_gather_lookback_kernel`: 1786.1039999999998
 
 ## v41 decode64k_B1
 
 - `Kernel`: 47508.030999999995
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 20304.561999999998
 - `memcpy32_post`: 17750.590999999993
-- `_candidate_flags_kernel`: 7291.739
-- `_compute_swa_indices_and_lens_kernel`: 5800.3859999999995
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 4004.7600000000007
 - `void at::native::vectorized_elementwise_kernel<8, at::native::compare_scalar_kernel<long>(`: 3406.202
 - `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 3189.4939999999997
@@ -284,21 +282,23 @@
 - `void at::native::unrolled_elementwise_kernel<at::native::FillFunctor<int>, std::array<char`: 2637.248
 - `_hash_ids_kernel`: 1813.6950000000002
 - `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1795.796
+- `_post_update_kernel`: 1522.209
+- `_get_num_sampled_and_rejected_kernel`: 1492.0469999999998
 
 ## v41 decode64k_B8
 
 - `Kernel`: 52405.877000000015
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 26480.505999999998
 - `memcpy32_post`: 16253.764999999996
-- `_candidate_flags_kernel`: 8351.408000000003
 - `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 6839.531999999999
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 6822.483
-- `_compute_swa_indices_and_lens_kernel`: 6011.902999999999
 - `_gumbel_sample_kernel`: 3937.3769999999995
 - `void at::native::vectorized_elementwise_kernel<8, at::native::compare_scalar_kernel<long>(`: 3570.518
 - `_hash_ids_kernel`: 2039.5189999999998
 - `_combine_sampled_and_draft_tokens_kernel`: 1947.2949999999998
 - `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1939.35
+- `_get_num_sampled_and_rejected_kernel`: 1880.5339999999997
+- `_gather_lookback_kernel`: 1797.609
 
 ## v41 prefill128k
 
@@ -308,12 +308,12 @@
 - `_hc_head_reduce_store_kernel`: 2267.51
 - `memcpy128`: 2108.012
 - `_apply_write_kernel`: 1786.3249999999998
-- `_compute_swa_indices_and_lens_kernel`: 1691.484
 - `void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, `: 1671.358
 - `void at::native::vectorized_elementwise_kernel<4, at::native::BUnaryFunctor<int, int, int,`: 1130.631
 - `void vllm::vocab_embedding::vocab_parallel_embedding_kernel<int, uint4>(uint4*, int const*`: 519.9549999999999
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 490.12900000000013
 - `memcpy32_post`: 451.3600000000001
+- `void at::native::vectorized_elementwise_kernel<8, at::native::compare_scalar_kernel<long>(`: 297.79600000000005
 
 ## v41 prefill16k
 
@@ -322,13 +322,13 @@
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 27465.972000000005
 - `_hc_head_reduce_store_kernel`: 2261.772
 - `memcpy128`: 2108.092
-- `_compute_swa_indices_and_lens_kernel`: 1681.274
 - `void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, `: 1667.7200000000003
 - `void at::native::vectorized_elementwise_kernel<4, at::native::BUnaryFunctor<int, int, int,`: 1119.498
 - `_apply_write_kernel`: 667.152
 - `void vllm::vocab_embedding::vocab_parallel_embedding_kernel<int, uint4>(uint4*, int const*`: 526.786
 - `memcpy32_post`: 429.95
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 410.612
+- `void at::native::vectorized_elementwise_kernel<8, at::native::compare_scalar_kernel<long>(`: 296.028
 
 ## v41 prefill1k
 
@@ -337,13 +337,13 @@
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 3361.206000000001
 - `memcpy128`: 2086.0060000000008
 - `void at::native::vectorized_elementwise_kernel<4, at::native::BUnaryFunctor<int, int, int,`: 1106.1780000000003
-- `_compute_swa_indices_and_lens_kernel`: 569.2139999999999
 - `memcpy32_post`: 433.2399999999999
 - `_apply_write_kernel`: 312.20799999999997
 - `void at::native::vectorized_elementwise_kernel<8, at::native::compare_scalar_kernel<long>(`: 310.28
 - `_hc_head_reduce_store_kernel`: 248.174
 - `void at::native::index_elementwise_kernel<128, 4, at::native::index_copy_kernel_impl<at::n`: 232.106
 - `void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, `: 212.25799999999998
+- `void at::native::vectorized_gather_kernel<16, long>(char*, char*, long*, int, long, long, `: 209.822
 
 ## v41 prefill64k
 
@@ -352,13 +352,13 @@
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 27454.481000000003
 - `_hc_head_reduce_store_kernel`: 2266.9139999999998
 - `memcpy128`: 2106.6110000000003
-- `_compute_swa_indices_and_lens_kernel`: 1695.814
 - `void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, `: 1674.6
 - `void at::native::vectorized_elementwise_kernel<4, at::native::BUnaryFunctor<int, int, int,`: 1122.227
 - `_apply_write_kernel`: 1000.8589999999999
 - `void vllm::vocab_embedding::vocab_parallel_embedding_kernel<int, uint4>(uint4*, int const*`: 517.398
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 442.6400000000001
 - `memcpy32_post`: 439.4170000000001
+- `void at::native::vectorized_elementwise_kernel<8, at::native::compare_scalar_kernel<long>(`: 298.227
 
 ## mimo-v26 decode128k_B1
 
@@ -547,20 +547,19 @@
 - `void at::native::vectorized_elementwise_kernel<8, at::native::sigmoid_kernel_cuda(at::Tens`: 39019.236
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 27086.916
 - `void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, `: 22312.154000000002
-- `_qsa_prepare_kernel`: 16989.143999999997
 - `_qsa_merge_splitk_kernel`: 11579.828000000001
 - `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 5464.6359999999995
 - `_gumbel_sample_kernel`: 2943.784
 - `void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:`: 2497.185
 - `void vllm::cross_device_reduce_1stage<__nv_bfloat16, 8>(vllm::RankData*, vllm::RankSignals`: 2422.146
 - `_ple_conv_kernel`: 2242.694
+- `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 2007.6130000000003
 
 ## qwen-38-bf16 decode128k_B8
 
 - `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 207571.329
 - `void at::native::vectorized_elementwise_kernel<8, at::native::sigmoid_kernel_cuda(at::Tens`: 42767.264
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 31168.228000000003
-- `_qsa_prepare_kernel`: 20365.050999999996
 - `void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, `: 18667.269999999993
 - `_qsa_merge_splitk_kernel`: 12337.626
 - `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 3797.9239999999995
@@ -569,6 +568,7 @@
 - `_ple_conv_kernel`: 2327.048
 - `void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:`: 2290.163
 - `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 2014.9550000000002
+- `_build_qsa_metadata_kernel`: 1832.98
 
 ## qwen-38-bf16 decode16k_B1
 
@@ -577,20 +577,19 @@
 - `void at::native::vectorized_elementwise_kernel<8, at::native::sigmoid_kernel_cuda(at::Tens`: 40473.798
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 28092.067
 - `void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, `: 23169.475000000002
-- `_qsa_prepare_kernel`: 17684.990999999998
 - `_qsa_merge_splitk_kernel`: 12021.305
 - `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 5683.377
 - `_gumbel_sample_kernel`: 3061.703
 - `void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:`: 2606.237
 - `void vllm::cross_device_reduce_1stage<__nv_bfloat16, 8>(vllm::RankData*, vllm::RankSignals`: 2557.030999999999
 - `_ple_conv_kernel`: 2360.2860000000005
+- `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 2089.083
 
 ## qwen-38-bf16 decode16k_B8
 
 - `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 190396.70300000004
 - `void at::native::vectorized_elementwise_kernel<8, at::native::sigmoid_kernel_cuda(at::Tens`: 38691.289000000004
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 28291.083
-- `_qsa_prepare_kernel`: 19913.676
 - `void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, `: 16941.983999999997
 - `_qsa_merge_splitk_kernel`: 10801.230999999998
 - `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 3455.2
@@ -599,6 +598,7 @@
 - `_ple_conv_kernel`: 2116.334
 - `void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:`: 2079.5609999999997
 - `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1832.7900000000002
+- `_build_qsa_metadata_kernel`: 1694.797
 
 ## qwen-38-bf16 decode1k_B1
 
@@ -607,20 +607,19 @@
 - `void at::native::vectorized_elementwise_kernel<8, at::native::sigmoid_kernel_cuda(at::Tens`: 40477.76299999999
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 27780.779000000002
 - `void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, `: 22916.084000000003
-- `_qsa_prepare_kernel`: 17278.772999999997
 - `_qsa_merge_splitk_kernel`: 11872.395999999999
 - `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 5644.931
 - `_gumbel_sample_kernel`: 3224.5430000000006
 - `void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:`: 2576.759
 - `void vllm::cross_device_reduce_1stage<__nv_bfloat16, 8>(vllm::RankData*, vllm::RankSignals`: 2509.7989999999995
 - `_ple_conv_kernel`: 2342.7059999999997
+- `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 2068.194
 
 ## qwen-38-bf16 decode1k_B8
 
 - `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 190654.89200000002
 - `void at::native::vectorized_elementwise_kernel<8, at::native::sigmoid_kernel_cuda(at::Tens`: 38836.090000000004
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 28303.484
-- `_qsa_prepare_kernel`: 20074.179999999997
 - `void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, `: 17023.671
 - `_qsa_merge_splitk_kernel`: 10726.045
 - `_gumbel_sample_kernel`: 3554.8340000000003
@@ -629,6 +628,7 @@
 - `_ple_conv_kernel`: 2125.248
 - `void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:`: 2075.5579999999995
 - `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1832.1280000000002
+- `_build_qsa_metadata_kernel`: 1692.6539999999998
 
 ## qwen-38-bf16 decode64k_B1
 
@@ -637,20 +637,19 @@
 - `void at::native::vectorized_elementwise_kernel<8, at::native::sigmoid_kernel_cuda(at::Tens`: 39737.981
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 27551.624000000003
 - `void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, `: 22699.486
-- `_qsa_prepare_kernel`: 17241.464000000004
 - `_qsa_merge_splitk_kernel`: 11759.986
 - `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 5540.885
 - `_gumbel_sample_kernel`: 3006.5
 - `void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:`: 2529.234
 - `void vllm::cross_device_reduce_1stage<__nv_bfloat16, 8>(vllm::RankData*, vllm::RankSignals`: 2438.021
 - `_ple_conv_kernel`: 2324.67
+- `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 2030.8940000000002
 
 ## qwen-38-bf16 decode64k_B8
 
 - `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 189359.46699999998
 - `void at::native::vectorized_elementwise_kernel<8, at::native::sigmoid_kernel_cuda(at::Tens`: 38686.448000000004
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 28289.597999999998
-- `_qsa_prepare_kernel`: 20010.374000000003
 - `void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, `: 16917.631999999994
 - `_qsa_merge_splitk_kernel`: 11205.038
 - `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 3446.523
@@ -659,13 +658,13 @@
 - `_ple_conv_kernel`: 2122.272
 - `void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:`: 2080.709
 - `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1832.0369999999998
+- `_build_qsa_metadata_kernel`: 1670.8070000000002
 
 ## qwen-38-bf16 prefill128k
 
 - `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 59711.10900000001
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 31748.553000000004
 - `_ple_conv_kernel`: 6659.734
-- `_qsa_prepare_kernel`: 6201.898000000001
 - `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 5301.668
 - `_lookup_ple_embedding_from_pinned_kernel`: 4779.378
 - `void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, `: 3742.984
@@ -674,13 +673,13 @@
 - `void at::native::vectorized_elementwise_kernel<8, at::native::sigmoid_kernel_cuda(at::Tens`: 1394.4300000000003
 - `void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:`: 1282.8880000000001
 - `void at::native::vectorized_elementwise_kernel<8, at::native::bitwise_not_kernel_cuda(at::`: 873.1380000000001
+- `void at::native::vectorized_elementwise_kernel<4, at::native::exp_kernel_cuda(at::TensorIt`: 817.2799999999999
 
 ## qwen-38-bf16 prefill16k
 
 - `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 59631.240999999995
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 31751.472
 - `_ple_conv_kernel`: 6613.648000000001
-- `_qsa_prepare_kernel`: 6205.311000000001
 - `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 5298.463999999999
 - `_lookup_ple_embedding_from_pinned_kernel`: 5096.262999999999
 - `void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, `: 3737.8789999999995
@@ -689,6 +688,7 @@
 - `void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:`: 1283.2130000000002
 - `void at::native::vectorized_elementwise_kernel<8, at::native::bitwise_not_kernel_cuda(at::`: 877.5050000000001
 - `void at::native::vectorized_elementwise_kernel<4, at::native::exp_kernel_cuda(at::TensorIt`: 816.665
+- `_apply_write_kernel`: 375.825
 
 ## qwen-38-bf16 prefill1k
 
@@ -700,17 +700,16 @@
 - `void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:`: 1287.8460000000005
 - `void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, `: 1182.15
 - `void at::native::vectorized_elementwise_kernel<4, at::native::exp_kernel_cuda(at::TensorIt`: 1095.6540000000002
-- `_qsa_prepare_kernel`: 1086.494
 - `_ple_conv_kernel`: 902.5559999999999
 - `_qsa_merge_splitk_kernel`: 795.382
 - `void at::native::vectorized_elementwise_kernel<8, at::native::bitwise_not_kernel_cuda(at::`: 766.4279999999999
+- `_lookup_ple_embedding_from_pinned_kernel`: 717.8439999999999
 
 ## qwen-38-bf16 prefill64k
 
 - `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 59710.845
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 31781.471999999998
 - `_ple_conv_kernel`: 6660.465
-- `_qsa_prepare_kernel`: 6204.092
 - `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 5297.889999999999
 - `_lookup_ple_embedding_from_pinned_kernel`: 5210.047
 - `void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, `: 3745.143000000001
@@ -719,163 +718,163 @@
 - `void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:`: 1286.162
 - `_apply_write_kernel`: 977.7370000000001
 - `void at::native::vectorized_elementwise_kernel<8, at::native::bitwise_not_kernel_cuda(at::`: 871.0989999999997
+- `void at::native::vectorized_elementwise_kernel<4, at::native::exp_kernel_cuda(at::TensorIt`: 815.8599999999999
 
 ## glm-53 decode128k_B1
 
 - `void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::Tenso`: 34882.51
-- `_fwht_quant_kernel`: 23711.379999999997
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 22507.697
 - `void dot_kernel<float, 128, 0, cublasDotParams<cublasGemvTensorStridedBatched<float const>`: 15159.821000000004
-- `sparse_mla_index_remap_kernel`: 14322.464000000002
 - `Kernel`: 8974.795
 - `_kpool_decode_update_batched_kernel`: 7660.712
 - `memcpy32_post`: 6176.91
 - `void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctorOnSelf_add<int>, `: 5371.384000000002
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 5368.148000000001
-- `_expand_pools_and_append_tail_kernel`: 5260.076000000002
 - `triton_poi_fused_mul_unsqueeze_0`: 4941.095
+- `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 3489.112
+- `_gumbel_sample_kernel`: 2865.6070000000004
+- `void at::native::reduce_kernel<128, 4, at::native::ReduceOp<c10::BFloat16, at::native::Mea`: 2104.999
 
 ## glm-53 decode128k_B8
 
 - `void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::Tenso`: 36079.342
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 26920.293999999994
-- `_fwht_quant_kernel`: 23295.018999999997
-- `sparse_mla_index_remap_kernel`: 14111.27
 - `void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:`: 8764.91
 - `Kernel`: 8495.284
 - `_kpool_decode_update_batched_kernel`: 8186.469000000001
-- `_expand_pools_and_append_tail_kernel`: 6288.1179999999995
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 5203.271000000002
 - `void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctorOnSelf_add<int>, `: 4950.736
 - `triton_poi_fused_mul_unsqueeze_0`: 4593.9180000000015
 - `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 3075.7380000000003
+- `_gumbel_sample_kernel`: 3063.893
+- `void at::native::reduce_kernel<128, 4, at::native::ReduceOp<c10::BFloat16, at::native::Mea`: 1938.576
+- `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1799.2570000000003
 
 ## glm-53 decode16k_B1
 
 - `void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::Tenso`: 32324.228
-- `_fwht_quant_kernel`: 21995.400999999998
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 20880.302
 - `void dot_kernel<float, 128, 0, cublasDotParams<cublasGemvTensorStridedBatched<float const>`: 14075.171
-- `sparse_mla_index_remap_kernel`: 13115.252999999999
 - `Kernel`: 8329.009000000002
 - `_kpool_decode_update_batched_kernel`: 7125.961000000001
 - `memcpy32_post`: 5804.324000000001
 - `void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctorOnSelf_add<int>, `: 4994.188000000001
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 4979.306000000001
-- `_expand_pools_and_append_tail_kernel`: 4902.663000000001
 - `triton_poi_fused_mul_unsqueeze_0`: 4585.354
+- `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 3134.473
+- `_gumbel_sample_kernel`: 2731.455
+- `void at::native::reduce_kernel<128, 4, at::native::ReduceOp<c10::BFloat16, at::native::Mea`: 1953.9069999999997
 
 ## glm-53 decode16k_B8
 
 - `void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::Tenso`: 36429.652
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 27452.763000000003
-- `_fwht_quant_kernel`: 23704.839999999997
-- `sparse_mla_index_remap_kernel`: 14083.965999999997
 - `_kpool_decode_update_batched_kernel`: 9455.652000000002
 - `void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:`: 8938.016999999998
 - `Kernel`: 8668.79
-- `_expand_pools_and_append_tail_kernel`: 6361.059000000001
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 5287.102000000001
 - `void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctorOnSelf_add<int>, `: 5050.7570000000005
 - `triton_poi_fused_mul_unsqueeze_0`: 4671.1
 - `_gumbel_sample_kernel`: 3635.791
+- `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 3128.7850000000003
+- `void at::native::reduce_kernel<128, 4, at::native::ReduceOp<c10::BFloat16, at::native::Mea`: 1974.855
+- `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1867.463
 
 ## glm-53 decode1k_B1
 
 - `void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::Tenso`: 31927.897999999994
-- `_fwht_quant_kernel`: 21819.087
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 20566.263000000003
 - `void dot_kernel<float, 128, 0, cublasDotParams<cublasGemvTensorStridedBatched<float const>`: 13869.553999999998
-- `sparse_mla_index_remap_kernel`: 12977.011000000002
 - `Kernel`: 8230.227
 - `_kpool_decode_update_batched_kernel`: 7013.180999999999
 - `memcpy32_post`: 5646.690999999999
 - `void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctorOnSelf_add<int>, `: 4930.329
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 4911.1539999999995
-- `_expand_pools_and_append_tail_kernel`: 4801.21
 - `triton_poi_fused_mul_unsqueeze_0`: 4519.44
+- `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 3158.3849999999998
+- `_gumbel_sample_kernel`: 2885.8689999999997
+- `void at::native::reduce_kernel<128, 4, at::native::ReduceOp<c10::BFloat16, at::native::Mea`: 1920.5229999999997
 
 ## glm-53 decode1k_B8
 
 - `void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::Tenso`: 36451.901999999995
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 27463.395999999997
-- `_fwht_quant_kernel`: 23749.746
-- `sparse_mla_index_remap_kernel`: 14127.177
 - `_kpool_decode_update_batched_kernel`: 10536.628999999999
 - `void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:`: 8951.49
 - `Kernel`: 8680.269999999999
-- `_expand_pools_and_append_tail_kernel`: 6350.219000000001
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 5301.048000000001
 - `void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctorOnSelf_add<int>, `: 5069.459000000001
 - `triton_poi_fused_mul_unsqueeze_0`: 4680.657
 - `_gumbel_sample_kernel`: 3228.3590000000004
+- `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 3141.4440000000004
+- `void at::native::reduce_kernel<128, 4, at::native::ReduceOp<c10::BFloat16, at::native::Mea`: 1981.3029999999999
+- `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1868.347
 
 ## glm-53 decode64k_B1
 
 - `void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::Tenso`: 32423.514999999996
-- `_fwht_quant_kernel`: 22044.567
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 20899.058999999997
 - `void dot_kernel<float, 128, 0, cublasDotParams<cublasGemvTensorStridedBatched<float const>`: 14092.563999999998
-- `sparse_mla_index_remap_kernel`: 13239.708999999999
 - `Kernel`: 8336.896999999999
 - `_kpool_decode_update_batched_kernel`: 7110.597000000001
 - `memcpy32_post`: 5817.446000000001
 - `void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctorOnSelf_add<int>, `: 4984.488000000001
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 4984.219000000002
-- `_expand_pools_and_append_tail_kernel`: 4906.4529999999995
 - `triton_poi_fused_mul_unsqueeze_0`: 4591.136
+- `void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native:`: 3144.236
+- `_gumbel_sample_kernel`: 2612.5009999999997
+- `void at::native::reduce_kernel<128, 4, at::native::ReduceOp<c10::BFloat16, at::native::Mea`: 1947.4009999999998
 
 ## glm-53 decode64k_B8
 
 - `void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::Tenso`: 35751.028000000006
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 26928.841
-- `_fwht_quant_kernel`: 23294.933
-- `sparse_mla_index_remap_kernel`: 13945.267999999998
 - `_kpool_decode_update_batched_kernel`: 10290.555
 - `void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:`: 8764.046999999999
 - `Kernel`: 8497.274
-- `_expand_pools_and_append_tail_kernel`: 6245.843000000001
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 5197.556
 - `void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctorOnSelf_add<int>, `: 4948.424000000002
 - `triton_poi_fused_mul_unsqueeze_0`: 4591.312000000002
 - `_gumbel_sample_kernel`: 3114.3469999999998
+- `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 3073.909
+- `void at::native::reduce_kernel<128, 4, at::native::ReduceOp<c10::BFloat16, at::native::Mea`: 1938.375
+- `void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<f`: 1826.94
 
 ## glm-53 prefill128k
 
 - `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 45438.553
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 44553.492000000006
 - `void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::Tenso`: 21848.719000000005
-- `sparse_mla_index_remap_kernel`: 15269.977
-- `_expand_pools_and_append_tail_kernel`: 15068.597
-- `_fwht_quant_kernel`: 13533.455000000002
 - `void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:`: 10475.502999999999
 - `void at::native::vectorized_gather_kernel<16, long>(char*, char*, long*, int, long, long, `: 7462.518000000001
 - `Kernel`: 5175.66
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 3945.867
 - `_gather_initial_states_kernel`: 2818.148
 - `void at::native::reduce_kernel<128, 4, at::native::ReduceOp<c10::BFloat16, at::native::Mea`: 2446.959
+- `_apply_write_kernel`: 1612.5610000000001
+- `_kpool_tail_seed_kernel`: 1107.013
+- `_scatter_states_kernel`: 744.571
 
 ## glm-53 prefill16k
 
 - `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 45337.26400000001
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 44524.693999999996
 - `void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::Tenso`: 21459.482
-- `sparse_mla_index_remap_kernel`: 15175.743999999999
-- `_expand_pools_and_append_tail_kernel`: 14960.969999999998
-- `_fwht_quant_kernel`: 13430.713999999998
 - `void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:`: 10538.006
 - `void at::native::vectorized_gather_kernel<16, long>(char*, char*, long*, int, long, long, `: 7456.891999999999
 - `Kernel`: 5117.554
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 3923.1099999999997
 - `_gather_initial_states_kernel`: 2603.79
 - `void at::native::reduce_kernel<128, 4, at::native::ReduceOp<c10::BFloat16, at::native::Mea`: 2447.1359999999995
+- `_kpool_tail_seed_kernel`: 1106.298
+- `_scatter_states_kernel`: 742.32
+- `_apply_write_kernel`: 625.384
 
 ## glm-53 prefill1k
 
 - `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 8581.762
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 4217.464
 - `_gather_initial_states_kernel`: 2558.136
-- `_fwht_quant_kernel`: 2272.2980000000002
 - `void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::Tenso`: 2139.694
 - `void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:`: 1501.0259999999998
 - `void at::native::vectorized_gather_kernel<16, long>(char*, char*, long*, int, long, long, `: 1288.124
@@ -884,18 +883,19 @@
 - `Kernel`: 739.5459999999999
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 593.582
 - `void at::native::vectorized_elementwise_kernel<8, at::native::compare_scalar_kernel<long>(`: 554.54
+- `void (anonymous namespace)::elementwise_kernel_with_index<int, at::native::arange_cuda_out`: 528.4760000000001
 
 ## glm-53 prefill64k
 
 - `void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:`: 45410.569
 - `void at::native::vectorized_elementwise_kernel<8, at::native::CUDAFunctor_add<c10::BFloat1`: 44523.517
 - `void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::Tenso`: 21476.977000000003
-- `sparse_mla_index_remap_kernel`: 15232.616000000002
-- `_expand_pools_and_append_tail_kernel`: 14969.209
-- `_fwht_quant_kernel`: 13522.496000000001
 - `void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:`: 10568.809000000001
 - `void at::native::vectorized_gather_kernel<16, long>(char*, char*, long*, int, long, long, `: 7462.923000000001
 - `Kernel`: 5137.1720000000005
 - `void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array`: 3929.541
 - `_gather_initial_states_kernel`: 2822.304
 - `void at::native::reduce_kernel<128, 4, at::native::ReduceOp<c10::BFloat16, at::native::Mea`: 2454.4379999999996
+- `_kpool_tail_seed_kernel`: 1108.1950000000002
+- `_apply_write_kernel`: 908.1960000000001
+- `_scatter_states_kernel`: 741.0680000000002
