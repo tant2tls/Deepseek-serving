@@ -31,6 +31,7 @@ bench/        MEASURE  code that launches vLLM and collects numbers; runs on the
 tools/        BUILD    tables, article data and the audit; run on any computer, no GPU
 reports/      RESULTS  evidence of every study, its hash ledger, and the generated tables
 reproduce/    RUN      one guide per model, the full procedure, known setup problems
+system_info/  NODE     the GPU node's record for each session: GPUs, driver, topology, runtime
 teach_me/     LEARN    seven lessons: measuring with vLLM and setting it up on another system
 docs/         REFER    models and technical reports, protocol and limits, provenance, earlier studies
 ```

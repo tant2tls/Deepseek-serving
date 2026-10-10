@@ -27,7 +27,7 @@ ARCHIVE = 'reports/glm-53-september'  # September GLM export, hashed by its own 
 ARCHIVE_INDEX = {'README.md', 'arms.json', 'results.csv', 'provenance.json',
                  'glm-5.3-flash/README.md', 'glm-5.3-flash/RESULTS.md'}
 # The agreed layout. A new top-level entry is a decision: add it here and to README.md together.
-FOLDERS = ('bench', 'docs', 'reports', 'reproduce', 'teach_me', 'tools')
+FOLDERS = ('bench', 'docs', 'reports', 'reproduce', 'system_info', 'teach_me', 'tools')
 ROOT_FILES = ('.gitattributes', '.gitignore', 'AGENTS.md', 'README.md', 'target.md', 'index.html', 'install.sh')
 
 

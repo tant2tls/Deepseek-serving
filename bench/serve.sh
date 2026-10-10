@@ -64,13 +64,18 @@ case "$CONFIG_ID" in
     set -- --speculative-config "{\"method\":\"mtp\",\"num_speculative_tokens\":3,\"revision\":\"$REVISION\"}" "$@" ;;
   dflash-k7)
     PREFIX_FLAG=--no-enable-prefix-caching
-    DRAFT=${HF_HOME:-/workspace/hf}/hub/models--${MODEL//\//--}/snapshots/$REVISION/dflash
+    DRAFT=${HF_HUB_CACHE:-${HF_HOME:-/workspace/hf}/hub}/models--${MODEL//\//--}/snapshots/$REVISION/dflash
     [ -f "$DRAFT/config.json" ] || { echo "missing DFlash drafter at $DRAFT" >&2; exit 2; }
     set -- --speculative-config "{\"method\":\"dflash\",\"model\":\"$DRAFT\",\"num_speculative_tokens\":7}" "$@" ;;
   *) echo "unknown config $CONFIG_ID" >&2; exit 2 ;;
 esac
 
-export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+# SERVE_GPUS and SERVE_TP select the node shape. The defaults are the 8xH100 deployment;
+# the 4xH200 and 4xB200 sessions set SERVE_GPUS=0,1,2,3 and SERVE_TP=4 (docs/H200_B200_plan.md).
+SERVE_GPUS=${SERVE_GPUS:-0,1,2,3,4,5,6,7}
+SERVE_TP=${SERVE_TP:-8}
+[ "$(awk -F, '{print NF}' <<<"$SERVE_GPUS")" = "$SERVE_TP" ] || { echo "SERVE_GPUS ($SERVE_GPUS) must list SERVE_TP=$SERVE_TP GPUs" >&2; exit 2; }
+export CUDA_VISIBLE_DEVICES=$SERVE_GPUS
 export VLLM_ENGINE_READY_TIMEOUT_S=3600
 # /root is a gocryptfs FUSE mount; concurrent TP-rank Triton compiles race there.
 export TRITON_CACHE_DIR=/tmp/triton_cache
@@ -86,7 +91,7 @@ set -x
 exec vllm serve "$MODEL" \
   --revision "$REVISION" \
   --host 0.0.0.0 --port 8000 \
-  --tensor-parallel-size 8 --enable-expert-parallel \
+  --tensor-parallel-size "$SERVE_TP" --enable-expert-parallel \
   --language-model-only \
   --tokenizer-mode "${TOKMODE:-$PARSER}" --reasoning-parser "$PARSER" \
   --enable-auto-tool-choice --tool-call-parser "${TOOL_PARSER:-$PARSER}" \
