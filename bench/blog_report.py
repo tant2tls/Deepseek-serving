@@ -254,6 +254,31 @@ def session_natural():
     wcsv(RDIR / "natural.csv", rows)
 
 
+def session_routing():
+    """Expert-routing statistics per model and condition (the per-expert counts stay in routing.json)."""
+    rows = []
+    mean = lambda xs: (sum(xs) / len(xs)) if xs else None
+    for mk in MODELS:
+        k = load(SDIR / mk / "_routing" / "routing.json")
+        for name, c in ((k or {}).get("conditions") or {}).items():
+            routed = c["routed_layers"]
+            rows.append(dict(
+                study=STUDY, model=mk, runtime=k["runtime"]["vllm"], condition=name, n_experts=c["n_experts"], k=c["k"],
+                nominal_share=c["nominal_share"], layers=c["layers"], routed_layers=len(routed), steps=c["steps"],
+                tokens_per_step_mean=c["tokens_per_step_mean"], distinct_per_step_mean=c["distinct_per_step_mean"],
+                distinct_per_step_min=c["distinct_per_step_min"], distinct_per_step_max=c["distinct_per_step_max"],
+                share_of_experts_per_step_mean=c["share_of_experts_per_step_mean"],
+                coverage_mean_over_routed_layers=mean([c["coverage_by_layer"][l] for l in routed]),
+                tokens_per_expert_max_over_mean=mean(c["tokens_per_expert"]["max_over_mean_by_layer"]),
+                tokens_per_expert_cv=mean(c["tokens_per_expert"]["cv_by_layer"]),
+                unused_experts_mean=mean(c["tokens_per_expert"]["unused_experts_by_layer"]),
+                gpu_load_peak_over_mean_per_step=c["gpu_load_peak_over_mean"]["per_step_mean"],
+                gpu_load_peak_over_mean_whole=mean(c["gpu_load_peak_over_mean"]["whole_condition_by_layer"]),
+                output_agrees_with_plain_launch=k["agreement_with_plain_launch"]["same_text"],
+                evidence=f"results/{STUDY}/{mk}/_routing/routing.json"))
+    wcsv(RDIR / "routing.csv", rows)
+
+
 def session_memory():
     """Live state at the eight decode conditions: usage gauge x per-rank pool, tokens counted by the server."""
     pool = pools()
@@ -364,7 +389,95 @@ def breakdown(trace, until_next=False):
     return rows, kern
 
 
+CLASSIFIER = 1  # bump when the rules above change: the session's cached per-trace rows are then rebuilt
+
+
+def _trace_rows(job):
+    """One rank trace of one capture -> (rows, unclassified kernels, kernel inventory of the selected steps)."""
+    mk, man, rank, f = job
+    global MODEL
+    MODEL = mk
+    meta = load(man)
+    label = meta["label"]
+    steps, kern = breakdown(f, until_next=(meta["kind"] == "decode"))
+    if meta["kind"] == "prefill":
+        sel = [s for s in steps if s["prefill_tokens"]]
+        groups = {"first_chunk": sel[:1], "last_full_chunk": [s for s in sel if s["prefill_tokens"] == max(x["prefill_tokens"] for x in sel)][-1:]} if sel else {}
+    else:
+        sel = [s for s in steps if not s["prefill_tokens"] and s["decode_reqs"] == meta["B"]]
+        groups = {"decode_steps": sel}
+    rows, other = [], collections.Counter()
+    prof, plain = meta.get("profiled_window") or {}, meta.get("unprofiled_window") or {}
+    for g, ss in groups.items():
+        if not ss:
+            continue
+        for s in ss:
+            other.update(s["_other"])
+        avg = lambda k: sum(s[k] for s in ss) / len(ss)
+        rows.append(dict(study=STUDY, model=mk, runtime=meta["runtime"]["vllm"], capture=label, kind=meta["kind"],
+                         bucket=meta["bucket"], engine_B=meta.get("B", 1), rank_file=Path(f).name, rank_index=rank,
+                         group=g, steps_averaged=len(ss), steps_in_trace=len(steps), prefill_tokens=avg("prefill_tokens"),
+                         decode_reqs=avg("decode_reqs"), span_ms=avg("span_ms"), kernel_sum_ms=avg("kernel_ms"),
+                         n_kernels=avg("n_kernels"), profiled_step_ms=prof.get("ms_per_engine_step"),
+                         unprofiled_step_ms=plain.get("ms_per_engine_step"),
+                         **{f"{c}_ms": avg(f"{c}_ms") for c in CATN},
+                         unit="ms per step, GPU kernel sum on this rank (not wall time); decode span = start of step to start of next step",
+                         evidence=str(Path(man).relative_to(ROOT))))
+    # Kernel inventory of the whole trace on rank 0: names (with their shape arguments), calls and total time.
+    inv = None
+    if rank == 0:
+        c = collections.defaultdict(lambda: [0, 0.0])
+        for e in kern:
+            x = c[e["name"][:200]]
+            x[0] += 1; x[1] += e["dur"]
+        inv = dict(capture=label, model=mk, classifier=CLASSIFIER, steps_in_trace=len(steps),
+                   note="every GPU kernel of the rank-0 trace: calls and summed duration in microseconds, with the "
+                        "component it was assigned to",
+                   kernels=[dict(name=n, component=cat(n), calls=v[0], us=round(v[1], 1))
+                            for n, v in sorted(c.items(), key=lambda kv: -kv[1][1])])
+    return rows, other, inv
+
+
+def session_components():
+    """Session: classify traces in parallel and cache the rows per capture, so that a finished model
+    is read once and a classifier change rebuilds everything from the traces still on the node."""
+    import multiprocessing
+    cached, jobs = {}, []
+    for mk in MODELS:
+        for man in sorted((SDIR / mk / "profiles").glob("*.manifest.json")):
+            cache = man.with_name(man.name.replace(".manifest.json", ".components.json"))
+            done = load(cache)
+            if done and done.get("classifier") == CLASSIFIER:
+                cached[(mk, man)] = done
+                continue
+            label = load(man)["label"]
+            files = sorted(f for f in (man.parent / label).iterdir() if f.name.endswith((".json.gz", ".json")))
+            jobs += [(mk, man, rank, str(f)) for rank, f in enumerate(files)]
+    if jobs:
+        with multiprocessing.Pool(min(32, len(jobs))) as pool:
+            res = pool.map(_trace_rows, jobs, chunksize=1)
+        by = collections.defaultdict(lambda: dict(classifier=CLASSIFIER, rows=[], other=collections.Counter()))
+        for (mk, man, rank, f), (rows, other, inv) in zip(jobs, res):
+            by[(mk, man)]["rows"] += rows
+            by[(mk, man)]["other"].update(other)
+            if inv:
+                man.with_name(man.name.replace(".manifest.json", ".kernels_rank0.json")).write_text(json.dumps(inv))
+        for (mk, man), d in by.items():
+            d["other"] = dict(d["other"].most_common(40))
+            man.with_name(man.name.replace(".manifest.json", ".components.json")).write_text(json.dumps(d))
+            cached[(mk, man)] = d
+    rows = [r for key in sorted(cached, key=lambda k: (MODELS.index(k[0]), str(k[1]))) for r in cached[key]["rows"]]
+    wcsv(RDIR / "components.csv", rows)
+    with open(RDIR / "components_unclassified.md", "w") as f:
+        f.write("# Largest kernels left in `other_elementwise` (µs summed over the averaged steps, all ranks)\n")
+        for (mk, man), d in sorted(cached.items(), key=lambda kv: (MODELS.index(kv[0][0]), str(kv[0][1]))):
+            f.write(f"\n## {mk} {load(man)['label']}\n\n" + "".join(f"- `{n}`: {v}\n" for n, v in list(d["other"].items())[:12]))
+    print(f"classified {len(jobs)} new rank traces; {len(cached)} captures in components.csv")
+
+
 def components():
+    if SESSION:
+        return session_components()
     rows, other = [], collections.defaultdict(collections.Counter)
     for mk in MODELS:
         for man in sorted((SDIR / mk / "profiles").glob("*.manifest.json")):
@@ -586,4 +699,4 @@ def compare():
 if __name__ == "__main__":
     {"compare": compare, "pilot": session_pilot if SESSION else pilot, "serving": serving, "memory": memory,
      "components": components, "tables": tables, "publish": publish, "intervals": session_intervals,
-     "natural": session_natural}[sys.argv[1]]()
+     "natural": session_natural, "routing": session_routing}[sys.argv[1]]()

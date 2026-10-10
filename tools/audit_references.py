@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
 from build_blog_results import FIRST, SECOND, MODELS, POINTS, generate
 from build_blog_page import check as page_check
+from build_rerun_results import generate as rerun_generate
 
 LEDGER = 'reports/provenance.json'
 ARCHIVE = 'reports/glm-53-september'  # September GLM export, hashed by its own ledger
@@ -256,6 +257,10 @@ def main():
     for rel, body in generate().items():
         p = ROOT / rel
         check(p.is_file() and p.read_text(encoding='utf-8') == body, f'Stale generated output: {rel}')
+    if session_paths:  # the session's results page is generated from that study's CSVs
+        for rel, body in rerun_generate().items():
+            p = ROOT / rel
+            check(p.is_file() and p.read_text(encoding='utf-8') == body, f'Stale generated output: {rel}')
     errors.extend(page_check())  # numbers embedded in index.html against the same CSVs
 
     links, pages = 0, {}

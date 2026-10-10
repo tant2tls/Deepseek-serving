@@ -33,7 +33,8 @@ def main():
     for src in sorted(p for p in src_root.rglob("*") if p.is_file()):
         rel = src.relative_to(src_root)
         if set(rel.parts) & EXCLUDE_DIRS or src.name.endswith(EXCLUDE_SUFFIX) or \
-                (rel.parts[0] == "profiles" and src.name.startswith("profiler_out_") and src.name != "profiler_out_0.txt"):
+                (rel.parts[0] == "profiles" and src.name.startswith("profiler_out_") and src.name != "profiler_out_0.txt") or \
+                (rel.parts[0] == "profiles" and src.name.endswith(".profiler_out.txt") and "_rank0." not in src.name):
             excluded.append(str(rel)); continue
         raw = src.read_bytes()
         out, ops = raw, []
@@ -57,7 +58,8 @@ def main():
         excluded=dict(
             reason={"_prompts": "prefix prompt JSONL (~400 MB), regenerable with bench/run_matrix.py build_prefix_files and the recorded seeds",
                     "*.pt.trace.json.gz": "full per-rank torch profiler traces (~73 MB); kept locally per AGENTS.md",
-                    "profiler_out_[1-7].txt": "per-rank duplicates of the rank-0 kernel summary"},
+                    "profiler_out_[1-7].txt": "per-rank duplicates of the rank-0 kernel summary",
+                    "*_rank[1-7].profiler_out.txt": "the same per-rank summaries under the newer build's file names"},
             files=excluded),
         files=ledger), indent=1))
     print(f"published {len(ledger)} files, excluded {len(excluded)} -> {dst_root.relative_to(ROOT)}")
