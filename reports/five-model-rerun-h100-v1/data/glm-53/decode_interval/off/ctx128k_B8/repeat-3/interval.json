@@ -1,0 +1,607 @@
+{
+ "kind": "decode_interval",
+ "study": "five-model-rerun-h100-v1",
+ "block": 3,
+ "steps_requested": 512,
+ "valid": true,
+ "problems": [],
+ "started_utc": "2026-10-10T18:24:18Z",
+ "model_key": "glm-53",
+ "runtime": {
+  "venv": "/workspace/vllm-rerun",
+  "vllm": "0.31.1rc1.dev260+ga98247ab4",
+  "torch": "2.13.0+cu132"
+ },
+ "bucket": "128k",
+ "B": 8,
+ "request_ids": [
+  "128k-aux-000",
+  "128k-aux-001",
+  "128k-aux-002",
+  "128k-aux-003",
+  "128k-aux-004",
+  "128k-aux-005",
+  "128k-aux-006",
+  "128k-aux-007"
+ ],
+ "request_sha256": [
+  "040a18c0ea0ae5d8968eb9bc0ea5ef42f717bd149dcf364f008120d583572014",
+  "e0f1604eb77ecd7f1556e765dafc97fdf2683d8a47a1a19c20af9d72be71d6a7",
+  "608e6c7bfb2b140c2d7df7dedffb8b47fa4e700fe4d03b8627deaef0fc169f9f",
+  "40071e4072ae4277a7eaf6b29ff058472cea54a6de1aa7a71f7630b58f0e78b4",
+  "f6067f42ddd806e01ab9a0e3041eb584dfaa6365f9a22de1d79e4c5cdf2c9fc9",
+  "aeb30f15b2dc890bb15e1c69b35a2ef158aed3b9c37467237cff26a1cdb98961",
+  "53439be154d6979dfaf1276a997097e85f35d14f64095a97475c2c116394f08d",
+  "55161f881ba20e95934afc6e2a086d9cce4f74f4b568b0684e2d8b7bda87302c"
+ ],
+ "client_content_tokens": [
+  120496,
+  136660,
+  131016,
+  120787,
+  136212,
+  131255,
+  123158,
+  135696
+ ],
+ "idle_gauges": {
+  "vllm:kv_cache_usage_perc": 0.0
+ },
+ "live_gauges": {
+  "vllm:kv_cache_usage_perc": 0.39927971188475386,
+  "vllm:num_requests_running": 8.0,
+  "vllm:num_requests_waiting": 0.0
+ },
+ "kv_usage_idle": 0.0,
+ "kv_usage_live": 0.39927971188475386,
+ "server_prompt_tokens_total": 1035376.0,
+ "generated_tokens_total": 491.0,
+ "preemptions": 0.0,
+ "running": 8.0,
+ "waiting": 0.0,
+ "gpu_mem_mib": [
+  76045,
+  76045,
+  76045,
+  76045,
+  76045,
+  76045,
+  76045,
+  76045
+ ],
+ "time_to_all_decoding_s": 31.97931408882141,
+ "progress": {
+  "usage": [
+   {
+    "prompt_tokens": 120508,
+    "total_tokens": 120558,
+    "completion_tokens": 50,
+    "completion_tokens_details": {
+     "reasoning_tokens": 40
+    }
+   },
+   {
+    "prompt_tokens": 136672,
+    "total_tokens": 136784,
+    "completion_tokens": 112,
+    "completion_tokens_details": {
+     "reasoning_tokens": 17
+    }
+   },
+   {
+    "prompt_tokens": 131028,
+    "total_tokens": 131109,
+    "completion_tokens": 81,
+    "completion_tokens_details": {
+     "reasoning_tokens": 39
+    }
+   },
+   {
+    "prompt_tokens": 120799,
+    "total_tokens": 120818,
+    "completion_tokens": 19,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   {
+    "prompt_tokens": 136224,
+    "total_tokens": 136353,
+    "completion_tokens": 129,
+    "completion_tokens_details": {
+     "reasoning_tokens": 13
+    }
+   },
+   {
+    "prompt_tokens": 131267,
+    "total_tokens": 131332,
+    "completion_tokens": 65,
+    "completion_tokens_details": {
+     "reasoning_tokens": 65
+    }
+   },
+   {
+    "prompt_tokens": 123170,
+    "total_tokens": 123267,
+    "completion_tokens": 97,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   {
+    "prompt_tokens": 135708,
+    "total_tokens": 135742,
+    "completion_tokens": 34,
+    "completion_tokens_details": {
+     "reasoning_tokens": 10
+    }
+   }
+  ],
+  "chunks": [
+   10,
+   90,
+   37,
+   14,
+   111,
+   1,
+   92,
+   19
+  ],
+  "client_ttft_s": [
+   24.307761192321777,
+   8.792708396911621,
+   16.52882194519043,
+   31.968347787857056,
+   4.553655385971069,
+   20.55154299736023,
+   12.496525526046753,
+   28.353503227233887
+  ],
+  "finished": [
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false
+  ],
+  "errors": [
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ]
+ },
+ "recorded_utc": "2026-10-10T18:24:50Z",
+ "interval": {
+  "window_s": 5.279921054840088,
+  "tokens": 4136.0,
+  "engine_steps": 517.0,
+  "step_tokens": 4136.0,
+  "ms_per_token_step": 10.212613258878314,
+  "ms_per_engine_step": 10.212613258878314,
+  "tokens_per_engine_step": 8.0,
+  "preemptions": 0.0,
+  "running_min": 8.0,
+  "waiting_max": 0,
+  "kv_usage_start": 0.39927971188475386,
+  "kv_usage_end": 0.40072028811524607,
+  "samples": [
+   [
+    0.0,
+    0.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.1073,
+    80.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.2147,
+    168.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.3229,
+    256.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.4309,
+    336.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.5382,
+    424.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.6455,
+    504.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.7528,
+    592.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.8601,
+    672.0,
+    8.0,
+    0.0
+   ],
+   [
+    0.9679,
+    760.0,
+    8.0,
+    0.0
+   ],
+   [
+    1.0762,
+    848.0,
+    8.0,
+    0.0
+   ],
+   [
+    1.1841,
+    928.0,
+    8.0,
+    0.0
+   ],
+   [
+    1.2917,
+    1016.0,
+    8.0,
+    0.0
+   ],
+   [
+    1.3998,
+    1096.0,
+    8.0,
+    0.0
+   ],
+   [
+    1.5077,
+    1184.0,
+    8.0,
+    0.0
+   ],
+   [
+    1.6158,
+    1272.0,
+    8.0,
+    0.0
+   ],
+   [
+    1.724,
+    1352.0,
+    8.0,
+    0.0
+   ],
+   [
+    1.8316,
+    1440.0,
+    8.0,
+    0.0
+   ],
+   [
+    1.9396,
+    1520.0,
+    8.0,
+    0.0
+   ],
+   [
+    2.0469,
+    1608.0,
+    8.0,
+    0.0
+   ],
+   [
+    2.1543,
+    1688.0,
+    8.0,
+    0.0
+   ],
+   [
+    2.2618,
+    1776.0,
+    8.0,
+    0.0
+   ],
+   [
+    2.3694,
+    1864.0,
+    8.0,
+    0.0
+   ],
+   [
+    2.4772,
+    1944.0,
+    8.0,
+    0.0
+   ],
+   [
+    2.5846,
+    2032.0,
+    8.0,
+    0.0
+   ],
+   [
+    2.6921,
+    2112.0,
+    8.0,
+    0.0
+   ],
+   [
+    2.7997,
+    2200.0,
+    8.0,
+    0.0
+   ],
+   [
+    2.9083,
+    2288.0,
+    8.0,
+    0.0
+   ],
+   [
+    3.0182,
+    2368.0,
+    8.0,
+    0.0
+   ],
+   [
+    3.1261,
+    2456.0,
+    8.0,
+    0.0
+   ],
+   [
+    3.2336,
+    2544.0,
+    8.0,
+    0.0
+   ],
+   [
+    3.3409,
+    2624.0,
+    8.0,
+    0.0
+   ],
+   [
+    3.4482,
+    2712.0,
+    8.0,
+    0.0
+   ],
+   [
+    3.5554,
+    2792.0,
+    8.0,
+    0.0
+   ],
+   [
+    3.6626,
+    2872.0,
+    8.0,
+    0.0
+   ],
+   [
+    3.7702,
+    2952.0,
+    8.0,
+    0.0
+   ],
+   [
+    3.8781,
+    3040.0,
+    8.0,
+    0.0
+   ],
+   [
+    3.9868,
+    3128.0,
+    8.0,
+    0.0
+   ],
+   [
+    4.0953,
+    3208.0,
+    8.0,
+    0.0
+   ],
+   [
+    4.2027,
+    3296.0,
+    8.0,
+    0.0
+   ],
+   [
+    4.3102,
+    3376.0,
+    8.0,
+    0.0
+   ],
+   [
+    4.4175,
+    3464.0,
+    8.0,
+    0.0
+   ],
+   [
+    4.5248,
+    3544.0,
+    8.0,
+    0.0
+   ],
+   [
+    4.6323,
+    3632.0,
+    8.0,
+    0.0
+   ],
+   [
+    4.74,
+    3712.0,
+    8.0,
+    0.0
+   ],
+   [
+    4.8478,
+    3800.0,
+    8.0,
+    0.0
+   ],
+   [
+    4.956,
+    3888.0,
+    8.0,
+    0.0
+   ],
+   [
+    5.0645,
+    3968.0,
+    8.0,
+    0.0
+   ],
+   [
+    5.172,
+    4056.0,
+    8.0,
+    0.0
+   ],
+   [
+    5.2799,
+    4136.0,
+    8.0,
+    0.0
+   ]
+  ]
+ },
+ "progress_end": {
+  "usage": [
+   {
+    "prompt_tokens": 120508,
+    "total_tokens": 121098,
+    "completion_tokens": 590,
+    "completion_tokens_details": {
+     "reasoning_tokens": 40
+    }
+   },
+   {
+    "prompt_tokens": 136672,
+    "total_tokens": 137324,
+    "completion_tokens": 652,
+    "completion_tokens_details": {
+     "reasoning_tokens": 17
+    }
+   },
+   {
+    "prompt_tokens": 131028,
+    "total_tokens": 131649,
+    "completion_tokens": 621,
+    "completion_tokens_details": {
+     "reasoning_tokens": 39
+    }
+   },
+   {
+    "prompt_tokens": 120799,
+    "total_tokens": 121358,
+    "completion_tokens": 559,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   {
+    "prompt_tokens": 136224,
+    "total_tokens": 136893,
+    "completion_tokens": 669,
+    "completion_tokens_details": {
+     "reasoning_tokens": 13
+    }
+   },
+   {
+    "prompt_tokens": 131267,
+    "total_tokens": 131872,
+    "completion_tokens": 605,
+    "completion_tokens_details": {
+     "reasoning_tokens": 74
+    }
+   },
+   {
+    "prompt_tokens": 123170,
+    "total_tokens": 123807,
+    "completion_tokens": 637,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   {
+    "prompt_tokens": 135708,
+    "total_tokens": 136282,
+    "completion_tokens": 574,
+    "completion_tokens_details": {
+     "reasoning_tokens": 10
+    }
+   }
+  ],
+  "chunks": [
+   550,
+   626,
+   577,
+   554,
+   649,
+   529,
+   632,
+   555
+  ],
+  "client_ttft_s": [
+   24.307761192321777,
+   8.792708396911621,
+   16.52882194519043,
+   31.968347787857056,
+   4.553655385971069,
+   20.55154299736023,
+   12.496525526046753,
+   28.353503227233887
+  ],
+  "finished": [
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false
+  ],
+  "errors": [
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ]
+ },
+ "finished_utc": "2026-10-10T18:24:56Z"
+}
