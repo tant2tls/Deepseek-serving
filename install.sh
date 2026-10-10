@@ -33,3 +33,11 @@ uv pip install --python ~/vllm-latest/bin/python "vllm==0.31.1rc1.dev50+g554340f
 # To move to the newest nightly instead (a new runtime arm; record the resolved commit):
 # uv pip install --python ~/vllm-latest/bin/python -U vllm pandas --torch-backend=auto \
 #     --index-strategy unsafe-best-match --prerelease=allow --extra-index-url https://wheels.vllm.ai/nightly
+
+# H200 node (4xH200 session, docs/H200_B200_plan.md): driver 570.211.01 supports CUDA 12.8 at most.
+# vLLM 0.20.0 and later link libcudart.so.13 and need driver 580 or newer, so the newest build that runs
+# here is the 0.19.1 release (links libcudart.so.12, torch==2.10.0). This is a separately recorded runtime
+# block, not the five-model rerun build (c41b2639e, CUDA 13). Installed 2026-10-10; the smoke test is pending.
+# CPython 3.12 from conda-forge was used; any CPython 3.12 works.
+python3.12 -m venv ~/vllm-h200-cu12
+uv pip install --python ~/vllm-h200-cu12/bin/python "vllm==0.19.1" pandas huggingface_hub --torch-backend=auto

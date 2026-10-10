@@ -1,6 +1,6 @@
 # Node record
 
-Generated 2026-10-10T11:51Z by `system_info/collect.sh`. Measured values only; host names, GPU UUIDs, user names and paths are removed.
+Generated 2026-10-10T13:47Z by `system_info/collect.sh`. Measured values only; host names, GPU UUIDs, user names and paths are removed.
 
 ## Allocation
 ```
@@ -82,7 +82,7 @@ NUMA node0 CPU(s):                       0-63,128-191
 NUMA node1 CPU(s):                       64-127,192-255
 
                total        used        free      shared  buff/cache   available
-Mem:           1.5Ti       870Gi       147Gi       4.7Gi       516Gi       640Gi
+Mem:           1.5Ti       872Gi       164Gi       5.0Gi       497Gi       638Gi
 Swap:          4.0Gi       4.0Gi       0.0Ki
 ```
 
@@ -100,8 +100,8 @@ PRETTY_NAME="Red Hat Enterprise Linux 9.7 (Plow)"
 ## Runtime
 ```
 python: Python 3.12.15
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-ImportError: libcudart.so.13: cannot open shared object file: No such file or directory
+vllm 0.19.1
+torch 2.10.0+cu129 cuda 12.9
 ```
 
 ## Slurm partitions (limits only)
