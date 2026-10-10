@@ -56,3 +56,37 @@ The first node used Xeon Platinum 8480+, two NUMA nodes and GPU driver 580.105.0
 MiMo's second/first throughput ratio is 0.983–0.995. Use the unadjusted throughput values beside one another, treating differences below about 2% as unresolved. TTFT and eight-client TPOT medians did not reproduce across nodes: **keep Qwen latency out of first-node rankings**. Short-prompt TTFT was bimodal within some second-node runs; inspect the per-request lists before interpreting a block median.
 
 The studies compare deployments, not architecture alone. Native precision, kernels, tokenizers, node hardware and model order are meaningful limits. They do not establish quality parity, production tail latency, saturation, HBM traffic or prefix-reuse capacity.
+
+## The rerun session (2026-10-10)
+
+The [15-hour session](../target.md#the-15-hour-session) is a new study, `five-model-rerun-h100-v1`. It does not replace the October numbers above and is not yet selected for the article. Its tables are in [reports/five-model-rerun-h100-v1/results.md](../reports/five-model-rerun-h100-v1/results.md) and its step times in the [timeline](../reports/five-model-rerun-h100-v1/timeline.md).
+
+**What is the same for all five.** One rented node (8×H100 80GB, two Xeon Platinum 8480+, driver 580.105.08), one build (vLLM `a98247ab4db686ee03c66d5feb3c761e52a2f8ab`, `0.31.1rc1.dev260+ga98247ab4`, torch `2.13.0+cu132`), the October deployment flags, prefix caching off and speculation off in every launch. The public-text corpus has the same hashes as in October. The 1K and 16K request texts are identical to October's; the 64K timing list is October's 45 requests plus three, because sixteen clients need 48; nine 128K requests were added for the context diagnostics.
+
+| Step, per model | Launch | What it collects |
+| --- | --- | --- |
+| Diagnostics, once | Idle profiler | Architecture and support facts from the server log; 12 natural-ending prompts with a 2K cap and one forced 2,048-token request; a pilot of the six serving points; at 1K, 16K, 64K and 128K with engine batch 1 and 8: a live-state reading, an unprofiled decode window and a trace; prefill traces at the same four contexts |
+| Timing, three blocks | Plain | 1K, 16K and 64K inputs with 2,048 forced output tokens: 12 requests at one client, 48 at sixteen. Then decode intervals of 512 tokens per request at engine batch 8 on the four contexts and at batch 1 on 128K |
+
+**Blocks.** Each block is one plain launch per model. The model order starts two positions later in each block (0731, MiMo, V4.1, GLM, Qwen; then V4.1, GLM, Qwen, 0731, MiMo; then Qwen, 0731, MiMo, V4.1, GLM), and the point order is reversed in the second block. A valid run has every request completed with exactly 2,048 output tokens, no failure, and at least 98% of the expected prompt tokens counted by the server.
+
+**Progress is read from the server, not from text.** With `ignore_eos` a model can emit tokens that produce no text. Decode windows and intervals therefore use the server's counters: first tokens (`vllm:time_to_first_token_seconds_count`), generated tokens and engine steps (`vllm:iteration_tokens_total`). B requests are admitted together; the interval starts 16 tokens after the last of them produced its first token, and it is valid only if all B stayed running with nothing queued or preempted.
+
+**Live state is read while decoding.** The gauge is read a few steps after the last first token. Read right at the first token it can be higher, because window layers still hold the whole prompt chunk; for MiMo at 1K that reading was 2.5 times the decoding value.
+
+**What did not run, and why.**
+
+| Planned | Outcome | Record |
+| --- | --- | --- |
+| HBM hardware counters (stage 4) | Not available on the node. The driver restricts GPU performance counters to host administrators and the rented container runs in a user namespace | [hbm_counter_attempt.txt](../reports/five-model-rerun-h100-v1/study/_logs/hbm_counter_attempt.txt). The fallback is the labelled [estimate](../reports/five-model-rerun-h100-v1/results.md#attention-state-moved-per-decode-step-estimate) from stored shapes |
+| Expert-routing statistics (stage 3) | Stopped at its gate. The build's own capture of the router's choices refuses to start unless prefix caching is on, and it needs a different model runner; the plan keeps prefix caching off in every launch, and no unsupported patch was applied | [routing_attempt.txt](../reports/five-model-rerun-h100-v1/study/_logs/routing_attempt.txt). Realized sparsity stays unavailable |
+
+**Limits to keep in mind.**
+
+- The harness changes were made on the node during setup, not before the rental. The first four pilot runs of 0731 used the bench client's default of 256 output tokens; the validity check rejected them and they are kept as invalid.
+- The 64K pilot at sixteen clients held nine requests, because the auxiliary split has nine. Sixteen concurrent 64K requests first ran in timing block 1.
+- A prefill capture at 1K or 16K consists of the first step after the profiler starts, where all-reduce kernels wait for the other ranks. Compare communication only at 64K and 128K; the other components are not affected.
+- GLM's first launch failed once after compiling its expert kernels and worked on the relaunch, as in October.
+- Position windows inside a response are counted in streamed chunks, which differ from tokens by under 0.5%.
+- Three blocks screen effects; they are not confidence intervals. A difference inside 5% or inside the spread between blocks is unresolved.
+- Still not measured: answer quality beyond the 12-prompt check, saturation, tail latency, client loads other than 1 and 16, speculative decoding, and anything that needs prefix caching.

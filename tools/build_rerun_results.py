@@ -183,6 +183,46 @@ def generate():
     out += ['Weights and reserved pool per GPU, from each server log:', ''] + \
         table(['Model', 'Weights loaded', 'KV pool reserved', 'Pool capacity in tokens (runtime accounting)'], body) + ['']
 
+    # ------------------------------------------------------------------ state traffic estimate
+    est = rows('state_estimate.csv')
+    out += ['## Attention state moved per decode step (Estimate)', '',
+            'Hardware counters for memory traffic could not be read on this node: the driver restricts GPU performance '
+            'counters to host administrators ([record](study/_logs/hbm_counter_attempt.txt)). **Nothing in this section is '
+            'measured traffic.** It is arithmetic on the stored shapes, written by `tools/estimate_state_traffic.py`: '
+            'megabytes of attention state one request reads in one decode step, per GPU. The eight GPUs each hold a slice '
+            'or a copy, so the node moves eight times as much. Expert and projection weights are not state and are not '
+            'counted.', '']
+    if not est:
+        out += ['Pending.', '']
+    else:
+        body = []
+        for b in BUCKETS:
+            body.append([LABEL[b]] + [next((f'{float(r["read_total_bytes"]) / 1e6:.1f}' for r in est
+                                           if (r['model'], r['context']) == (mk, b)), 'pending') for mk, _ in MODELS])
+        out += table(['Context'] + [n + ' (MB read)' for _, n in MODELS], body) + ['']
+        parts = (('read_window_bytes', 'recent window'), ('read_selected_bytes', 'selected positions'),
+                 ('read_search_index_bytes', 'index scanned by the search'), ('read_full_attention_bytes', 'full attention'),
+                 ('read_recurrent_bytes', 'recurrent state'))
+        body = []
+        for mk, name in MODELS:
+            r = next((x for x in est if (x['model'], x['context']) == (mk, '128k')), None)
+            if r is None:
+                body.append([name, 'pending', '', '', '']); continue
+            comp = ', '.join(f'{lab} {float(r[k]) / 1e6:.1f}' for k, lab in parts if float(r[k]) > 0)
+            body.append([name, comp, f'{float(r["write_total_bytes"]) / 1e3:,.1f}',
+                         f'{float(r["stored_bytes_per_token_from_shapes"]) / 1024:.2f}',
+                         (f'{float(r["stored_bytes_per_token_measured"]) / 1024:.2f}' if r['stored_bytes_per_token_measured'] else 'n/a')])
+        out += ['What the 128K value consists of, what a step writes, and a check of the shapes: the bytes one more token '
+                'adds to stored state according to the shapes, beside the growth the live-state gauge showed between 64K '
+                'and 128K.', ''] + \
+            table(['Model', 'Read at 128K, MB per GPU', 'Written per step, KB per GPU',
+                   'Stored per token from shapes, KiB', 'Stored per token from the gauge, KiB'], body) + ['']
+        out += ['The two right-hand columns agree within 5% where both were derived independently; for Qwen the shapes '
+                'column holds keys and values only and its index entries are taken from the gauge. The read side has no '
+                'such check. It assumes that a search reads the whole index of the request at every step and that a '
+                'recurrent state is read and rewritten whole; the per-model assumptions are in '
+                '[state_estimate.csv](state_estimate.csv).', '']
+
     # ------------------------------------------------------------------ trace components
     comp = rows('components.csv')
     out += ['## Attention path and expert time in the traces', '',

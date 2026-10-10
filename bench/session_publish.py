@@ -129,8 +129,8 @@ def main():
         br.publish(only=br.MODELS if kind == "all" else [mk])
         steps = timeline()
         sys.path.insert(0, str(ROOT / "tools"))
-        import build_rerun_results  # the generated results page; the audit checks that it is not stale
-        for rel, body in build_rerun_results.generate().items():
+        import build_rerun_results, estimate_state_traffic  # generated; the audit checks that they are not stale
+        for rel, body in {**estimate_state_traffic.generate(), **build_rerun_results.generate()}.items():
             (ROOT / rel).write_text(body, encoding="utf-8", newline="\n")
         n = ledger()
         git("add", "-A", "--", f"reports/{STUDY}")

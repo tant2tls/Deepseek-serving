@@ -134,6 +134,12 @@ Each row was observed on the original nodes or is enforced by the scripts. Model
 | `dry-run` reports `differs from the reference inputs` | The code corpus is built from the node's installed Python standard library; another build of Python changes the text | Use a CPython 3.12.3 installation whose files match, and compare the corpus and request hashes with the published manifest |
 | The installed packages differ from the recorded node | Wheel availability and dependency resolution move over time | Compare with `reports/<study>/study/_env/freeze.txt`. Keep a different resolution as a declared deviation, not as the same environment |
 | A download is slower than expected | The node's network was the limit (about 240 MiB/s for Qwen) | Start the download first and prepare everything else while it runs |
+| On the 2026-10-10 build (`a98247ab4`), a first launch shows `JIT kernel warmup (232 compile keys)` and `DeepGEMM warmup` for many minutes | New warm-up stages; 0731's first launch took 16 minutes | Wait. Keep `TILELANG_CACHE_DIR` and `VLLM_CACHE_ROOT` on local disk, as `bench/serve.sh` now does; the relaunch took 90 seconds |
+| `vllm bench serve` returns 256 output tokens although the request list asks for more | The client's `--custom-output-len` defaults to 256 and overrides the list | Pass the length explicitly; `bench/run_matrix.py` does when a study sets one. The validity check reports `output tokens ... != ...` |
+| `ncu` reports `ERR_NVGPUCTRPERM` | The driver restricts performance counters to host administrators (`RmProfilingAdminOnly: 1`) and a rented container is usually not one | Check `ncu --query-metrics` before renting for a counter experiment. From inside the container it cannot be changed |
+| `--enable-return-routed-experts` stops the launch with `AuxOutput Connector requires prefix caching` | The runtime's routed-experts capture needs prefix caching and Model Runner V2 | Outside this protocol, which keeps prefix caching off; it needs an explicit decision |
+
+The rerun session's problems and fixes, with the file each fix lives in, are listed in the [serving skill](../.claude/skills/serving/SKILL.md#problems-met-in-the-rerun-session-and-how-each-was-fixed).
 
 Two rules protect the node and the bill: never kill processes with a broad pattern that can match your own shell, and always confirm shutdown before the next launch.
 
