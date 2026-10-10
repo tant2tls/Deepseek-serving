@@ -1,0 +1,298 @@
+{
+ "kind": "decode_interval",
+ "study": "five-model-rerun-h100-v1",
+ "block": 2,
+ "steps_requested": 512,
+ "valid": true,
+ "problems": [],
+ "started_utc": "2026-10-10T15:49:06Z",
+ "model_key": "qwen-38-bf16",
+ "runtime": {
+  "venv": "/workspace/vllm-rerun",
+  "vllm": "0.31.1rc1.dev260+ga98247ab4",
+  "torch": "2.13.0+cu132"
+ },
+ "bucket": "128k",
+ "B": 1,
+ "request_ids": [
+  "128k-aux-000"
+ ],
+ "request_sha256": [
+  "040a18c0ea0ae5d8968eb9bc0ea5ef42f717bd149dcf364f008120d583572014"
+ ],
+ "client_content_tokens": [
+  130943
+ ],
+ "idle_gauges": {
+  "vllm:kv_cache_usage_perc": 0.0
+ },
+ "live_gauges": {
+  "vllm:kv_cache_usage_perc": 0.043365021487172806,
+  "vllm:num_requests_running": 1.0,
+  "vllm:num_requests_waiting": 0.0
+ },
+ "kv_usage_idle": 0.0,
+ "kv_usage_live": 0.043365021487172806,
+ "server_prompt_tokens_total": 130955.0,
+ "generated_tokens_total": 8.0,
+ "preemptions": 0.0,
+ "running": 1.0,
+ "waiting": 0.0,
+ "gpu_mem_mib": [
+  76071,
+  76081,
+  76081,
+  76081,
+  76081,
+  76081,
+  76081,
+  76081
+ ],
+ "time_to_all_decoding_s": 3.165309190750122,
+ "progress": {
+  "usage": [
+   {
+    "prompt_tokens": 130955,
+    "total_tokens": 130984,
+    "completion_tokens": 29,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   }
+  ],
+  "chunks": [
+   25
+  ],
+  "client_ttft_s": [
+   3.1421942710876465
+  ],
+  "finished": [
+   false
+  ],
+  "errors": [
+   null
+  ]
+ },
+ "recorded_utc": "2026-10-10T15:49:10Z",
+ "interval": {
+  "window_s": 3.11891508102417,
+  "tokens": 523.0,
+  "engine_steps": 523.0,
+  "step_tokens": 523.0,
+  "ms_per_token_step": 5.963508759128432,
+  "ms_per_engine_step": 5.963508759128432,
+  "tokens_per_engine_step": 1.0,
+  "preemptions": 0.0,
+  "running_min": 1.0,
+  "waiting_max": 0,
+  "kv_usage_start": 0.043365021487172806,
+  "kv_usage_end": 0.04349524677692407,
+  "samples": [
+   [
+    0.0,
+    0.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.1075,
+    18.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.2156,
+    36.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.3239,
+    55.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.4314,
+    73.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.5389,
+    91.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.6462,
+    109.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.7537,
+    127.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.8613,
+    145.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.9687,
+    163.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.0761,
+    181.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.1838,
+    199.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.292,
+    217.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.3996,
+    235.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.507,
+    253.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.6143,
+    271.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.7214,
+    289.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.8287,
+    307.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.9362,
+    325.0,
+    1.0,
+    0.0
+   ],
+   [
+    2.0438,
+    343.0,
+    1.0,
+    0.0
+   ],
+   [
+    2.1513,
+    361.0,
+    1.0,
+    0.0
+   ],
+   [
+    2.2589,
+    379.0,
+    1.0,
+    0.0
+   ],
+   [
+    2.3664,
+    397.0,
+    1.0,
+    0.0
+   ],
+   [
+    2.4737,
+    415.0,
+    1.0,
+    0.0
+   ],
+   [
+    2.5812,
+    433.0,
+    1.0,
+    0.0
+   ],
+   [
+    2.6888,
+    451.0,
+    1.0,
+    0.0
+   ],
+   [
+    2.7965,
+    469.0,
+    1.0,
+    0.0
+   ],
+   [
+    2.9041,
+    487.0,
+    1.0,
+    0.0
+   ],
+   [
+    3.0117,
+    505.0,
+    1.0,
+    0.0
+   ],
+   [
+    3.1189,
+    523.0,
+    1.0,
+    0.0
+   ]
+  ]
+ },
+ "progress_end": {
+  "usage": [
+   {
+    "prompt_tokens": 130955,
+    "total_tokens": 131526,
+    "completion_tokens": 571,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   }
+  ],
+  "chunks": [
+   567
+  ],
+  "client_ttft_s": [
+   3.1421942710876465
+  ],
+  "finished": [
+   false
+  ],
+  "errors": [
+   null
+  ]
+ },
+ "finished_utc": "2026-10-10T15:49:13Z"
+}
