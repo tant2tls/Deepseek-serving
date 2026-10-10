@@ -114,3 +114,41 @@
 [12:05:05] CHAIN trace v41 prefill128k files=16 {'request_wall_s': 4.3641037940979}
 [12:05:26] CHAIN stopped v41 off-profidle up=1114s gpu_mem_max=0MiB leftover=0
 [12:05:26] CHAIN step diag:v41 done
+[12:05:40] CHAIN publish diag:v41 rc=0 ['published diag:v41: 415 files, commit 28f8b16, push ok']
+[12:05:40] CHAIN step diag:glm-53 start
+[12:05:40] CHAIN launched glm-53 off-profidle pgid=92424 log=results/five-model-rerun-h100-v1/glm-53/_server/serve-off-profidle-20261010-120540.log
+[12:22:01] CHAIN stopped glm-53 off-profidle up=980s gpu_mem_max=0MiB leftover=0
+[12:22:01] CHAIN step diag:glm-53 FAILED: RuntimeError('server exited rc=1 before readiness')
+[12:22:01] CHAIN step diag:glm-53 start (retry after a failed launch)
+[12:22:01] CHAIN launched glm-53 off-profidle pgid=104116 log=results/five-model-rerun-h100-v1/glm-53/_server/serve-off-profidle-20261010-122201.log
+[12:28:16] CHAIN ready glm-53 off-profidle after 375s
+[12:28:51] CHAIN functional glm-53 ok=False forced=True natural_stopped=12/12 with_reasoning=4 rendered={'server_prompt_tokens': 936, 'client_content_tokens': 924, 'template_overhead': 12}
+[12:28:51] CHAIN functional check FAILED for glm-53; continuing with diagnostics only
+[12:29:49] CHAIN pilot glm-53 ctx16k_osl2048_c1 block=1 n=3 valid=True dur=44.3702336079441 out_tps=138.47121144974028 ttft_p50=503.7037320435047 tpot_p50=6.6259971978033665 
+[12:30:36] CHAIN pilot glm-53 ctx16k_osl2048_c16 block=1 n=16 valid=True dur=32.836602043011226 out_tps=997.9108056637112 ttft_p50=4126.269784988835 tpot_p50=13.960710343195952 
+[12:31:32] CHAIN pilot glm-53 ctx1k_osl2048_c1 block=1 n=3 valid=True dur=42.904483392019756 out_tps=143.20181748518118 ttft_p50=146.09335910063237 tpot_p50=6.582730000453734 
+[12:32:12] CHAIN pilot glm-53 ctx1k_osl2048_c16 block=1 n=16 valid=True dur=25.765997146023437 out_tps=1271.7536144358849 ttft_p50=422.72126697935164 tpot_p50=12.376838816316415 
+[12:33:16] CHAIN pilot glm-53 ctx64k_osl2048_c1 block=1 n=3 valid=True dur=49.31759673997294 out_tps=124.58027978115486 ttft_p50=2473.345958045684 tpot_p50=6.666333425476598 
+[12:34:11] CHAIN pilot glm-53 ctx64k_osl2048_c16 block=1 n=9 valid=True dur=41.46658118197229 out_tps=444.50252407144103 ttft_p50=9554.56800898537 tpot_p50=15.471218624784651 
+[12:34:15] CHAIN kv glm-53 1k B=1 usage=0.001680672268907557 running=1.0 waiting=0.0 prompt_tokens=936.0 all_decoding_after=0.2s capacity_limit=False
+[12:34:36] CHAIN trace glm-53 decode1k_B1 files=16 {'B': 1, 'window_s': 0.34750819206237793, 'tokens_in_window': [50.0]}
+[12:34:41] CHAIN kv glm-53 1k B=8 usage=0.013445378151260456 running=8.0 waiting=0.0 prompt_tokens=8127.0 all_decoding_after=0.3s capacity_limit=False
+[12:35:03] CHAIN trace glm-53 decode1k_B8 files=16 {'B': 8, 'window_s': 0.522160530090332, 'tokens_in_window': [51.0, 51.0, 51.0, 51.0, 51.0, 51.0, 51.0, 51.0]}
+[12:35:07] CHAIN kv glm-53 16k B=1 usage=0.006962785114045578 running=1.0 waiting=0.0 prompt_tokens=15244.0 all_decoding_after=0.5s capacity_limit=False
+[12:35:29] CHAIN trace glm-53 decode16k_B1 files=16 {'B': 1, 'window_s': 0.347780704498291, 'tokens_in_window': [51.0]}
+[12:35:37] CHAIN kv glm-53 16k B=8 usage=0.05858343337334937 running=8.0 waiting=0.0 prompt_tokens=128825.0 all_decoding_after=3.7s capacity_limit=False
+[12:36:00] CHAIN trace glm-53 decode16k_B8 files=16 {'B': 8, 'window_s': 0.5311477184295654, 'tokens_in_window': [51.0, 51.0, 51.0, 51.0, 51.0, 51.0, 51.0, 51.0]}
+[12:36:06] CHAIN kv glm-53 64k B=1 usage=0.024249699879951958 running=1.0 waiting=0.0 prompt_tokens=61014.0 all_decoding_after=2.0s capacity_limit=False
+[12:36:28] CHAIN trace glm-53 decode64k_B1 files=16 {'B': 1, 'window_s': 0.3536713123321533, 'tokens_in_window': [51.0]}
+[12:36:47] CHAIN kv glm-53 64k B=8 usage=0.20336134453781518 running=8.0 waiting=0.0 prompt_tokens=513317.0 all_decoding_after=15.0s capacity_limit=False
+[12:37:10] CHAIN trace glm-53 decode64k_B8 files=16 {'B': 8, 'window_s': 0.5275540351867676, 'tokens_in_window': [51.0, 51.0, 51.0, 51.0, 51.0, 51.0, 51.0, 51.0]}
+[12:37:18] CHAIN kv glm-53 128k B=1 usage=0.04657863145258101 running=1.0 waiting=0.0 prompt_tokens=120508.0 all_decoding_after=4.0s capacity_limit=False
+[12:37:41] CHAIN trace glm-53 decode128k_B1 files=16 {'B': 1, 'window_s': 0.3766157627105713, 'tokens_in_window': [54.0]}
+[12:38:16] CHAIN kv glm-53 128k B=8 usage=0.3990396158463385 running=8.0 waiting=0.0 prompt_tokens=1035376.0 all_decoding_after=31.6s capacity_limit=False
+[12:38:39] CHAIN trace glm-53 decode128k_B8 files=16 {'B': 8, 'window_s': 0.5276050567626953, 'tokens_in_window': [50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0]}
+[12:38:52] CHAIN trace glm-53 prefill1k files=16 {'request_wall_s': 0.2543773651123047}
+[12:39:07] CHAIN trace glm-53 prefill16k files=16 {'request_wall_s': 0.5141925811767578}
+[12:39:35] CHAIN trace glm-53 prefill64k files=16 {'request_wall_s': 1.9313468933105469}
+[12:40:22] CHAIN trace glm-53 prefill128k files=16 {'request_wall_s': 3.9191291332244873}
+[12:40:25] CHAIN stopped glm-53 off-profidle up=1104s gpu_mem_max=0MiB leftover=0
+[12:40:25] CHAIN step diag:glm-53 done

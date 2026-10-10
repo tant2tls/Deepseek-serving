@@ -1,0 +1,267 @@
+{
+ "model_key": "glm-53",
+ "runtime": {
+  "venv": "/workspace/vllm-rerun",
+  "vllm": "0.31.1rc1.dev260+ga98247ab4",
+  "torch": "2.13.0+cu132"
+ },
+ "output_tokens": 2048,
+ "natural_cap": 2048,
+ "checks": [
+  {
+   "kind": "natural_eos",
+   "domain": "code",
+   "task": "merge_intervals",
+   "prompt": "Write a Python function `merge_intervals(intervals)` that merges overlapping closed intervals given as a list of [start, end] pairs and returns the merged list sorted by start. Include a docstring. Reply with the code only.",
+   "text": "```python\ndef merge_intervals(intervals):\n    \"\"\"\n    Merge overlapping closed intervals.\n\n    Given a list of intervals represented as [start, end] pairs, this function\n    merges all overlapping or adjacent-touching intervals and returns the\n    resulting list of non-overlapping intervals sorted by start.\n\n    Args:\n        intervals (list[list[int]]): List of [start, end] pairs.\n\n    Returns:\n        list[list[int]]: Sorted list of merged, non-overlapping intervals.\n\n    Example:\n        >>> merge_intervals([[1, 3], [2, 6], [8, 10], [15, 18]])\n        [[1, 6], [8, 10], [15, 18]]\n    \"\"\"\n    if not intervals:\n        return []\n\n    sorted_intervals = sorted(intervals, key=lambda x: x[0])\n    merged = [list(sorted_intervals[0])]\n\n    for start, end in sorted_intervals[1:]:\n        if start <= merged[-1][1]:\n            merged[-1][1] = max(merged[-1][1], end)\n        else:\n            merged.append([start, end])\n\n    return merged\n```",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 58,
+    "total_tokens": 301,
+    "completion_tokens": 243,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "wall_s": 1.682257890701294
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "code",
+   "task": "lru_cache",
+   "prompt": "Write a Python class `LRUCache` whose constructor takes a capacity and which has `get(key)` and `put(key, value)` methods; `get` returns -1 for a missing key and both count as a use. Reply with the code only.",
+   "text": "```python\nfrom collections import OrderedDict\n\nclass LRUCache:\n    def __init__(self, capacity):\n        self.capacity = capacity\n        self.cache = OrderedDict()\n\n    def get(self, key):\n        if key not in self.cache:\n            return -1\n        self.cache.move_to_end(key)\n        return self.cache[key]\n\n    def put(self, key, value):\n        if key in self.cache:\n            self.cache.move_to_end(key)\n        self.cache[key] = value\n        if len(self.cache) > self.capacity:\n            self.cache.popitem(last=False)\n```",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 65,
+    "total_tokens": 186,
+    "completion_tokens": 121,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "wall_s": 0.8213925361633301
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "code",
+   "task": "to_roman",
+   "prompt": "Write a Python function `to_roman(n)` that converts an integer from 1 to 3999 to a Roman numeral string. Reply with the code only.",
+   "text": "```python\ndef to_roman(n):\n    values = [(1000, 'M'), (900, 'CM'), (500, 'D'), (400, 'CD'),\n              (100, 'C'), (90, 'XC'), (50, 'L'), (40, 'XL'),\n              (10, 'X'), (9, 'IX'), (5, 'V'), (4, 'IV'), (1, 'I')]\n    result = []\n    for value, symbol in values:\n        while n >= value:\n            result.append(symbol)\n            n -= value\n    return ''.join(result)\n```",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 46,
+    "total_tokens": 176,
+    "completion_tokens": 130,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "wall_s": 0.8781189918518066
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "code",
+   "task": "top_k_words",
+   "prompt": "Write a Python function `top_k_words(text, k)` that returns the k most frequent lowercase words in `text` as a list of (word, count) tuples, most frequent first, ties broken alphabetically. Words are maximal runs of ASCII letters. Reply with the code only.",
+   "text": "```python\nimport re\nfrom collections import Counter\n\ndef top_k_words(text, k):\n    words = re.findall(r'[A-Za-z]+', text.lower())\n    counts = Counter(words)\n    return sorted(counts.items(), key=lambda x: (-x[1], x[0]))[:k]\n```",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 70,
+    "total_tokens": 136,
+    "completion_tokens": 66,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "wall_s": 0.454498291015625
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "math",
+   "task": "average_speed",
+   "prompt": "A train travels 180 km at 60 km/h and then 120 km at 40 km/h. What is its average speed for the whole trip in km/h? Explain step by step, then give the final number on the last line in the form `Answer: <number>`.",
+   "text": "**Step 1: Find the time for each part.**\n- First part: 180 km ÷ 60 km/h = 3 hours\n- Second part: 120 km ÷ 40 km/h = 3 hours\n\n**Step 2: Find total distance and total time.**\n- Total distance = 180 + 120 = 300 km\n- Total time = 3 + 3 = 6 hours\n\n**Step 3: Compute average speed.**\n- Average speed = total distance ÷ total time = 300 ÷ 6 = 50 km/h\n\nAnswer: 50",
+   "reasoning": "180/60=3h, 120/40=3h, total 300/6=50.",
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 71,
+    "total_tokens": 223,
+    "completion_tokens": 152,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 23
+    }
+   },
+   "wall_s": 1.0194904804229736
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "math",
+   "task": "divisors_360",
+   "prompt": "How many positive divisors does 360 have? Explain step by step, then give the final number on the last line in the form `Answer: <number>`.",
+   "text": "**Step 1: Prime factorization**\n360 = 36 × 10 = (2² × 3²) × (2 × 5) = 2³ × 3² × 5¹\n\n**Step 2: Apply the divisor formula**\nIf n = p₁^a × p₂^b × p₃^c, the number of divisors is (a+1)(b+1)(c+1).\n\n**Step 3: Compute**\n(3+1)(2+1)(1+1) = 4 × 3 × 2 = 24\n\nAnswer: 24",
+   "reasoning": "360=2^3·3^2·5 → 4·3·2=24",
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 46,
+    "total_tokens": 198,
+    "completion_tokens": 152,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 20
+    }
+   },
+   "wall_s": 1.012394666671753
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "math",
+   "task": "linear_equation",
+   "prompt": "Solve for x: 3x + 7 = 2(x - 4) + 30. Explain step by step, then give the final number on the last line in the form `Answer: <number>`.",
+   "text": "Step 1: Expand the right side: 2(x − 4) + 30 = 2x − 8 + 30 = 2x + 22.\n\nStep 2: Rewrite the equation: 3x + 7 = 2x + 22.\n\nStep 3: Subtract 2x from both sides: x + 7 = 22.\n\nStep 4: Subtract 7 from both sides: x = 15.\n\nCheck: 3(15) + 7 = 52, and 2(15 − 4) + 30 = 22 + 30 = 52. ✓\n\nAnswer: 15",
+   "reasoning": "3x+7=2x-8+30=2x+22 → x=15",
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 59,
+    "total_tokens": 218,
+    "completion_tokens": 159,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 20
+    }
+   },
+   "wall_s": 1.059602975845337
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "math",
+   "task": "sum_multiples",
+   "prompt": "What is the sum of all integers from 1 to 200 that are divisible by 3 or by 5? Explain step by step, then give the final number on the last line in the form `Answer: <number>`.",
+   "text": "**Step 1: Sum multiples of 3 up to 200.**\nLargest multiple: 3 × 66 = 198, so there are 66 terms.\nSum = 3 × (1 + 2 + ... + 66) = 3 × (66 × 67 / 2) = 3 × 2211 = 6633\n\n**Step 2: Sum multiples of 5 up to 200.**\nLargest multiple: 5 × 40 = 200, so there are 40 terms.\nSum = 5 × (1 + 2 + ... + 40) = 5 × (40 × 41 / 2) = 5 × 820 = 4100\n\n**Step 3: Subtract multiples of 15 (counted twice).**\nLargest multiple: 15 × 13 = 195, so there are 13 terms.\nSum = 15 × (1 + 2 + ... + 13) = 15 × (13 × 14 / 2) = 15 × 91 = 1365\n\n**Step 4: Apply inclusion–exclusion.**\nTotal = 6633 + 4100 − 1365 = 9368\n\nAnswer: 9368",
+   "reasoning": "Sum multiples of 3: 3(1+...+66)=3·2211=6633. Multiples of 5: 5(1+...+40)=5·820=4100. Multiples of 15: 15(1+...+13)=15·91=1365. Total 6633+4100−1365=9368.",
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 60,
+    "total_tokens": 422,
+    "completion_tokens": 362,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 88
+    }
+   },
+   "wall_s": 2.378497838973999
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "chat",
+   "task": "hash_table",
+   "prompt": "Explain how a hash table works to a first-year computer science student in about 300 words. End your reply with the single word DONE on its own line.",
+   "text": "# How a Hash Table Works\n\nA hash table is a data structure that stores and retrieves data extremely quickly—often in constant time, no matter how much data you have.\n\n## The Basic Idea\n\nImagine a wall of numbered mailboxes. When you want to store a letter, you don't search through every mailbox to find an empty one. Instead, a rule tells you exactly which mailbox to use based on the recipient's name. A hash table works the same way.\n\n## The Components\n\n**1. The Array:** A hash table is built on top of an array—a fixed list of numbered slots (called \"buckets\").\n\n**2. The Hash Function:** This is the \"rule\" that decides where data goes. You give it a key (like a name), and it converts that key into a number that maps to an array index. For example, hashing \"Alice\" might produce index 3, so her data gets stored in bucket 3.\n\n## Why It's Fast\n\nWhen you later want to look up \"Alice,\" you run the same hash function, get index 3 again, and go straight to that bucket. You never have to search the whole table. Compare this to searching an unsorted list, where you might check every single item.\n\n## Collisions\n\nSometimes two different keys hash to the same index—this is called a **collision**. For example, both \"Alice\" and \"Bob\" might map to bucket 3. There are two common solutions:\n\n- **Chaining:** Each bucket holds a small list, so multiple items can share a bucket.\n- **Open addressing:** If a bucket is full, the item is placed in the next available slot.\n\n## Resizing\n\nAs the table fills up, collisions become more frequent and performance suffers. To fix this, hash tables automatically resize—creating a bigger array and rehashing all existing items into new positions.\n\nIn practice, hash tables power things like dictionaries in Python and objects in JavaScript, making them one of the most important structures you'll use.\n\nDONE",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 45,
+    "total_tokens": 460,
+    "completion_tokens": 415,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "wall_s": 2.724510431289673
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "chat",
+   "task": "interview_steps",
+   "prompt": "Write a guide with exactly five numbered steps for preparing for a job interview. Each step should be two or three sentences.",
+   "text": "# How to Prepare for a Job Interview\n\n1. **Research the company.** Visit the company's website and read recent news articles to understand its mission, values, and current projects. This knowledge will help you tailor your answers and show genuine interest in the role.\n\n2. **Review the job description carefully.** Identify the key skills and qualifications the employer is seeking, and think of specific examples from your experience that demonstrate them. Prepare to explain how your background aligns with each major requirement.\n\n3. **Practice common interview questions.** Rehearse answers to questions like \"Tell me about yourself\" and \"What are your strengths and weaknesses?\" out loud, ideally with a friend or by recording yourself. Practicing aloud helps you sound confident and natural rather than memorized.\n\n4. **Prepare thoughtful questions to ask.** Employers expect you to ask questions, so come up with two or three about the role, team, or company culture. Asking insightful questions shows engagement and helps you determine if the job is right for you.\n\n5. **Plan the logistics in advance.** Confirm the interview time, location (or video link), and your interviewer's name the day before. Lay out professional attire, print extra copies of your resume, and plan to arrive ten to fifteen minutes early.",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 36,
+    "total_tokens": 299,
+    "completion_tokens": 263,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "wall_s": 1.7396790981292725
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "chat",
+   "task": "cars_essay",
+   "prompt": "Compare electric cars and petrol cars in a short essay of four paragraphs: cost, range, maintenance and environmental impact, in that order.",
+   "text": "# Electric Cars vs. Petrol Cars\n\n**Cost**\n\nWhen it comes to cost, electric and petrol cars differ significantly in both upfront and long-term expenses. Electric vehicles (EVs) typically have a higher purchase price due to expensive battery technology, although government incentives in many countries help offset this. However, EVs are considerably cheaper to run: electricity costs less per mile than petrol, and drivers can save further by charging at home during off-peak hours. Petrol cars, by contrast, are generally cheaper to buy initially, but their running costs are higher and more vulnerable to fluctuating fuel prices. Over the lifetime of the vehicle, an electric car often works out more economical despite its steeper initial price tag.\n\n**Range**\n\nRange remains one of the most noticeable differences between the two. Petrol cars can typically travel 400 to 600 miles on a single tank and can be refuelled in a matter of minutes at widely available stations, making them ideal for long journeys. Electric cars, while improving rapidly, generally offer between 150 and 350 miles per charge, and charging can take anywhere from thirty minutes at a rapid charger to several hours at home. Although charging infrastructure is expanding quickly, EV drivers still need to plan longer trips more carefully, particularly in rural areas. For everyday commuting, however, most EVs offer more than enough range for typical daily needs.\n\n**Maintenance**\n\nMaintenance is an area where electric cars clearly have the advantage. EVs have far fewer moving parts—no engine oil, spark plugs, exhaust systems, or timing belts—which means fewer things can go wrong. Their regenerative braking systems also reduce wear on brake pads. As a result, servicing costs for electric vehicles tend to be lower and less frequent. Petrol cars, on the other hand, require regular oil changes, filter replacements, and more frequent attention to complex engine components. That said, when EVs do need repairs, particularly to their batteries, the costs can be substantial, and finding qualified technicians can sometimes be a challenge.\n\n**Environmental Impact**\n\nFinally, the environmental comparison strongly favours electric cars, though with some caveats. EVs produce zero tailpipe emissions, improving urban air quality, and their overall carbon footprint shrinks further when charged with renewable energy. However, manufacturing EV batteries is energy-intensive and involves mining lithium and other rare metals, raising environmental and ethical concerns. Petrol cars emit carbon dioxide and pollutants throughout their working lives, making them a major contributor to climate change and air pollution. While neither option is entirely impact-free, over their full lifecycle electric cars generally produce significantly lower emissions, especially as electricity grids become greener.",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 39,
+    "total_tokens": 573,
+    "completion_tokens": 534,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "wall_s": 3.4995317459106445
+  },
+  {
+   "kind": "natural_eos",
+   "domain": "chat",
+   "task": "ww1_bullets",
+   "prompt": "Summarise the causes of the First World War in exactly three bullet points, each starting with '- '.",
+   "text": "- **Militarism and alliance systems**: European powers engaged in an arms race and were bound by rigid alliances (Triple Entente vs. Triple Alliance), meaning a conflict between two nations could quickly drag in all the major powers.\n\n- **Imperialism and nationalism**: Competition for colonies and global influence created tension between rival empires, while intense nationalism—especially in the Balkans—fueled ethnic conflicts and demands for independence from Austro-Hungarian rule.\n\n- **The assassination of Archduke Franz Ferdinand**: The murder of the Austro-Hungarian heir in Sarajevo by a Serbian nationalist in June 1914 triggered the July Crisis, in which Austria-Hungary's ultimatum to Serbia set off a chain reaction of mobilizations and declarations of war.",
+   "reasoning": null,
+   "finish_reason": "stop",
+   "usage": {
+    "prompt_tokens": 33,
+    "total_tokens": 195,
+    "completion_tokens": 162,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "wall_s": 1.0814075469970703
+  },
+  {
+   "kind": "forced_2048",
+   "request_id": "1k-aux-000",
+   "usage": {
+    "prompt_tokens": 936,
+    "total_tokens": 2984,
+    "completion_tokens": 2048,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 0
+    }
+   },
+   "finish_reason": "length",
+   "text": "# `encodings/utf_16.py` — Overview\n\nThis file implements the `utf-16` codec for Python's codec registry. Unlike `utf-16-le` and `utf-16-be` (which are simple fixed-endian codecs), `utf-16` is a *stateful* codec: it must sniff a **Byte Order Mark (BOM)** when decoding, and write one when encoding. All the interesting logic in this file is about tracking that endianness state.\n\n## Module-level codec API\n\n```python\nencode = codecs.utf_16_encode\ndef decode(input, errors='strict'):\n    return codecs.utf_16_decode(input, errors, True)\n```\n\n- `encode` delegates straight to the C implementation, which writes a BOM in native byte order followed by native-order UTF-16 data.\n- `decode` passes `True` as the final argument — this is the `final` flag meaning \"the whole input is available at once.\" The C-level `utf_16_decode` then handles BOM detection: a leading BOM sets the endianness; **if no BOM is present, the data is assumed to be little-endian** (per the Unicode spec's default for UTF-16 without a BOM... actually in CPython's implementation, missing BOM defaults to native byte order — see subtleties below).\n\n## `IncrementalEncoder`\n\nStateful wrapper that remembers which byte-order encoder to use:\n\n- On the **first** `encode()` call, it uses `codecs.utf_16_encode`, which emits the BOM in native byte order. It then caches the native-order encoder (`utf_16_le_encode` or `utf_16_be_encode` depending on `sys.byteorder`) for subsequent calls.\n- `reset()` clears the cached encoder, so the next stream starts with a fresh BOM.\n- `getstate()`/`setstate()` support `codecs.IncrementalEncoder` pickling/stream-positioning (used e.g. by `codecs.StreamRecoder` and `io.TextIOWrapper`'s `getstate` machinery). The state is just \"BOM not yet written\" (2) vs. \"writing in natural order\" (0). The comment notes the encoder **never writes in unnatural order** — that's why only states 0 and 2 exist.\n\n## `IncrementalDecoder`\n\nSubclasses `BufferedIncrementalDecoder`, which handles buffering partial multi-byte sequences; this class only implements `_buffer_decode`:\n\n- Until the endianness is known (`self.decoder is None`), it calls `codecs.utf_16_ex_decode`, which returns a third result: `byteorder` (`-1` = LE detected via BOM, `+1` = BE detected, `0` = no BOM seen yet).\n- If a BOM was seen, the matching decoder is cached. If `byteorder == 0` **and** at least 2 bytes were consumed, it raises `UnicodeError(\"UTF-16 stream does not start with BOM\")` — this is the strict \"BOM required\" behaviour of the `utf-16` decoder (contrast with `utf-16-le`/`utf-16-be`, which never require a BOM).\n- `getstate()` returns a tuple `(buffer_state, endianness_state)` where the second element is 0 (natural order), 1 (unnatural order), or 2 (undetermined). The `addstate` computation:\n  ```python\n  int((sys.byteorder == \"big\") != (self.decoder is codecs.utf_16_be_decode))\n  ```\n  is 1 exactly when the cached decoder disagrees with the platform's natural order.\n- `setstate()` restores the decoder from that integer, mapping 0/1 back to LE/BE depending on `sys.byteorder`.\n\n## `StreamWriter`\n\nA legacy `codecs.StreamWriter` subclass mirroring the incremental encoder: it defers the first encode to emit the BOM, then caches the native-order encoder. (The file is truncated here, but the pattern continues: `encode()` uses `utf_16_encode` first, then the cached LE/BE encoder, and `reset()` clears the cache.)\n\n## Subtle behaviours a maintainer should know\n\n1. **BOM is written only once per stream/reset.** The cached-encoder trick ensures the BOM appears at the start of the stream, not before every `encode()` chunk. Forgetting to reset (or pickling/restoring state incorrectly) will silently omit or duplicate BOMs.\n\n2. **Missing BOM on decode is an error for `utf-16`** (unlike the platform-default behaviour of the one-shot `bytes.decode('utf-16')` path in some other implementations). But note the check is `consumed >= 2` — a stream shorter than 2 bytes with `final=True` returns empty output without error, and a 1-byte trailing fragment is buffered by the base class.\n\n3. **The \"no BOM yet\" case (`byteorder == 0`) is not an error** — it means \"not enough data to decide.\" The decoder stays in the undetermined state and retries when more bytes arrive. Only when `final=True` and no BOM was found does the error path trigger.\n\n4. **State encoding is platform-dependent.** `getstate()`/`setstate()` values 0 and 1 mean \"natural\"/\"unnatural\" *relative to `sys.byteorder`*, so a state captured on a little-endian machine and restored on a big-endian machine still decodes correctly — this is deliberate, but it means the state integers are not stable byte-order identifiers and shouldn't be persisted across processes with that assumption in mind.\n\n5. **`decode()` (the one-shot function) passes `final=True`**, so trailing incomplete sequences raise rather than being buffered — correct for `bytes.decode()`, but don't reuse this function for streaming.\n\n6. **The decoder's no-BOM default:** when `utf_16_ex_decode` reports byteorder 0 with data consumed and no error (i.e., the lenient path), CPython's C code assumes **little-endian** for BOM-less data in the one-shot `utf_16_decode` used by `decode()` above — actually, in the one-shot path the C code defaults to native byte order when no BOM is present. Either way, this asymmetry between \"BOM required\" (incremental, strict) and \"BOM optional\" (some paths) is a known quirk; check `codecs.utf_16_ex_decode`'s C implementation in `Objects/unicodeobject.c` before changing behaviour here.\n\n7. **`errors` handling:** the incremental decoder passes `self.errors` on subsequent calls but the *initial* `_buffer_decode` call uses the `errors` argument passed in — they're the same value in practice, but a subclass overriding `setstate`/`__init__` inconsistently could desynchronize them.\n\n8. **Thread safety:** none. The cached `self.encoder`/`self.decoder` make instances unsuitable for concurrent use without external locking — relevant since `io.TextIOWrapper` shares one decoder across `read()`/`readline()` calls.# `encodings/utf_16.py` — What it does\n\nThis module implements the **`utf-16` codec** for Python's codec registry. The key thing to understand: `utf-16` is a **stateful** codec, unlike its siblings `utf-16-le` and `utf-16-be` which are stateless. Its job is to handle the **Byte Order Mark (BOM)**:\n\n- **Encoding:** write a BOM (in native byte order) at the start of the stream, then encode the rest in native byte order.\n- **Decoding:** sniff the BOM at the start of the stream to determine endianness, then decode accordingly.\n\nAll the complexity in this file exists to track \"has the BOM been seen/written yet?\"\n\n## Module level\n\n```python\nencode = codecs.utf_16_encode\n\ndef decode(input, errors='strict'):\n    return codecs.utf_16_decode(input, errors, True)\n```\n\n- `encode` delegates directly to the C implementation, which emits a BOM in native byte order followed by native-order data.\n- `decode` passes `final=True` — appropriate for one-shot `bytes.decode('utf-16')`, where all input is available. The C-level `utf_16_decode` handles BOM detection; if no BOM is present, the data is decoded in **native byte order** (this is CPython's documented behaviour for BOM-less `utf-16` input).\n\n## `IncrementalEncoder`\n\nTracks whether the BOM has been written:\n\n- `self.encoder is None` means \"BOM not yet written.\" The first `encode()` call goes through `codecs.utf_16_encode` (which writes the BOM in native order), then caches the native-order encoder (`utf_16_le_encode` or `utf_16_be_encode` based on `sys.byteorder`) for all subsequent chunks.\n- `reset()` clears the cache so the next stream starts with a fresh BOM.\n- `getstate()`/`setstate()` expose the state for stream-positioning machinery: `2` = BOM not yet written, `0` = writing in natural order. The comment notes the encoder **never writes in unnatural order**, so state `1` doesn't exist for the encoder.\n\n## `IncrementalDecoder`\n\nSubclasses `BufferedIncrementalDecoder` (which handles buffering of partial multi-byte sequences); this class only implements `_buffer_decode`:\n\n- While `self.decoder is None` (endianness unknown), it calls `codecs.utf",
+   "reasoning": null,
+   "text_sha256": "d9e1321d3743c6136055a4cad875b72f8cba511dd7b1bac7c241ce5beb622c71"
+  }
+ ],
+ "recorded_utc": "2026-10-10T12:28:19Z",
+ "rendered": {
+  "server_prompt_tokens": 936,
+  "client_content_tokens": 924,
+  "template_overhead": 12
+ },
+ "natural_stopped": 12,
+ "natural_with_reasoning": 4,
+ "forced_ok": true,
+ "ok": false
+}
