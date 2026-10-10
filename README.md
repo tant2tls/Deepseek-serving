@@ -9,6 +9,7 @@ This branch (`main`) accompanies the [architecture blog](index.html): **DeepSeek
 | Read the article | [index.html](index.html) |
 | Know which questions the work answers, and which are still open | [target.md](target.md) |
 | Review the planned rerun and the experiments needed for stronger conclusions | [Rerun plan](target.md#five-model-rerun-plan) |
+| Run the same plan on the 4×H200 or 4×B200 server, with speculative decoding | [docs/H200_B200_plan.md](docs/H200_B200_plan.md) |
 | See the numbers | [reports/five-model/results.md](reports/five-model/results.md) |
 | Run one model, or repeat the measurements | [reproduce/](reproduce/README.md) |
 | Know the disk, GPU memory, host RAM and hours a reproduction needs | [reproduce/: what a reproduction needs](reproduce/README.md#what-a-reproduction-needs-disk-memory-and-time) |

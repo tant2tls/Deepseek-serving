@@ -10,6 +10,12 @@ Background and rules for the measurements. Commands live in [reproduce/](../repr
 | [experiments.md](experiments.md) | The protocol: workloads, request counts, validity rule, the two nodes, and what was **not** measured |
 | [provenance.md](provenance.md) | How evidence was selected and preserved byte-for-byte, and what was left out of Git |
 
+## Planned sessions
+
+| Document | Read it to learn |
+| --- | --- |
+| [H200_B200_plan.md](H200_B200_plan.md) | How an agent measures on the 4×H200 and the 4×B200 server: the H100 session of [target.md](../target.md#the-15-hour-session) plus speculative decoding, with one checkpoint on disk at a time |
+
 ## Earlier studies, older runtime
 
 These used vLLM `44af287ebe38d6dc4e102948025f5e3e175aefd6` in September. They are evidence and history. **A number from them is never a control for an October number**, and none of them is an active work queue.
