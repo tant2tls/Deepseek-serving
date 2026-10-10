@@ -8,6 +8,7 @@ This branch (`main`) accompanies the [architecture blog](index.html): **DeepSeek
 | --- | --- |
 | Read the article | [index.html](index.html) |
 | Know which questions the work answers, and which are still open | [target.md](target.md) |
+| Review the planned rerun and the experiments needed for stronger conclusions | [Rerun plan](target.md#five-model-rerun-plan) |
 | See the numbers | [reports/five-model/results.md](reports/five-model/results.md) |
 | Run one model, or repeat the measurements | [reproduce/](reproduce/README.md) |
 | Know the disk, GPU memory, host RAM and hours a reproduction needs | [reproduce/: what a reproduction needs](reproduce/README.md#what-a-reproduction-needs-disk-memory-and-time) |
@@ -56,9 +57,11 @@ tools/audit_references.py checks every arrow above, the layout, the model pins a
 
 All five models used the **same core serving setup**: vLLM `554340f3d3259e321be4c07282be7a02a5aeef83` (`0.31.1rc1.dev50+g554340f3d`), 8×H100 80GB SXM, TP8 plus expert parallel, 0.90 utilization, context limit 262144, at most 64 sequences, and an 8192-token prefill chunk budget. The workload uses the same public code/math/chat texts, approximately 1K/16K/64K input, 256 forced output tokens, one or eight clients and three timing blocks. Prefix caching and speculation were off. Native precision differs by model.
 
-Four deployments were measured on the first node on October 7–8, 2026. Qwen was measured on a second node on October 8, with MiMo as a node control. **Compare throughput across nodes; keep Qwen latency separate.** MiMo's control reproduced throughput within about 2%, but TTFT and eight-client TPOT medians moved. GLM used `reasoning_effort=low` because its template has no thinking-off switch.
+Four deployments were measured on the first node on October 7–8, 2026. Qwen was measured on a second node on October 8, with MiMo as a node control. The article displays all five models for each serving metric. MiMo's control reproduced throughput within about 2%, but TTFT and eight-client TPOT medians moved, so cross-node latency differences can reflect the machine as well as the model. GLM used `reasoning_effort=low` because its template has no thinking-off switch.
 
 The main selection contains **90 valid timing runs, 30 trace captures and 30 live-KV snapshots**. The second-node MiMo control adds 6 timing runs, 6 traces and 6 snapshots. This is a selection of completed evidence, not a newly measured study. No GPU session was run to prepare this branch. Earlier September studies on an older build are kept under `reports/` as history; [docs/previous-experiments.md](docs/previous-experiments.md) explains how to read them.
+
+The [new rerun proposal](target.md#five-model-rerun-plan) uses one physical node and the latest vLLM build frozen at preparation time, with 2,048-token main workloads, 8,192-token checks and c1/c4/c16/c32/c64 load curves. It also defines [targeted experiments for the blog](target.md#experiments-for-the-blog). This is planning only: the current article and evidence still describe the completed 256-token study.
 
 ## Check it locally
 

@@ -146,8 +146,8 @@ def check():
             values = [stat[(short[name],) + point(label)]['output_tok_s'] for name in head[1:]]
             best = max(range(len(values)), key=lambda i: values[i]['mean'])
             for i, (name, td, v) in enumerate(zip(head[1:], tds, values)):
-                if re.sub(r'<[^>]+>', '', td).strip() != f'{v["mean"]:.1f} ± {v["sd"]:.1f}':
-                    errors.append(f'index.html #throughput-table {label} {name} is not the CSV mean ± SD')
+                if re.sub(r'<[^>]+>', '', td).strip() != f'{v["mean"]:.1f}':
+                    errors.append(f'index.html #throughput-table {label} {name} is not the CSV mean')
                 if ('class="winner"' in td) != (i == best):
                     errors.append(f'index.html #throughput-table {label} {name}: winner mark is wrong')
     qwen = next((m['key'] for m in block['models'] if m['node'] == 'second'), None)
@@ -157,7 +157,7 @@ def check():
     else:
         for label, tds in table[1]:
             r = stat[(qwen,) + point(label)]
-            want = [f'{r["ttft_p50_ms"]["mean"]:.0f} ± {r["ttft_p50_ms"]["sd"]:.0f}',
+            want = [f'{r["ttft_p50_ms"]["mean"]:.0f}',
                     f'{r["tpot_p50_ms"]["mean"]:.2f}', f'{r["e2el_p50_ms"]["mean"]:.0f}']
             if [td.strip() for td in tds] != want:
                 errors.append(f'index.html #bf16-latency {label} is not the CSV value')
