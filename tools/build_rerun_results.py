@@ -209,16 +209,25 @@ def generate():
             'A check that each deployment answers and stops by itself, not a quality ranking. GLM has no thinking-off '
             'switch and runs with `reasoning_effort=low`.', '']
     body = []
+    outcomes = rows('natural_outcomes.csv')
     for mk, name in MODELS:
         rs = [r for r in nat if r['model'] == mk]
         if not rs:
-            body.append([name, 'pending', '', '', '']); continue
+            body.append([name, 'pending', '', '', '', '']); continue
+        oc = [r for r in outcomes if r['model'] == mk]
+        passed = 'not scored yet' if not oc else '; '.join(
+            f'{d} {sum(r["passed"] == "True" for r in oc if r["domain"] == d)}/{sum(r["domain"] == d for r in oc)}'
+            for d in ('code', 'math', 'chat'))
         toks = [num(r, 'completion_tokens') for r in rs if num(r, 'completion_tokens') is not None]
         body.append([name, f'{sum(r["finish_reason"] == "stop" for r in rs)} of {len(rs)}',
                      f'{st.median(toks):.0f} (max {max(toks):.0f})' if toks else 'n/a',
                      str(sum(r['finish_reason'] == 'length' for r in rs)),
-                     str(sum((num(r, 'reasoning_chars') or 0) > 0 for r in rs))])
-    out += table(['Model', 'Stopped by itself', 'Output tokens, median', 'Hit the 2K cap', 'Answers with reasoning text'], body) + ['']
+                     str(sum((num(r, 'reasoning_chars') or 0) > 0 for r in rs)), passed])
+    out += table(['Model', 'Stopped by itself', 'Output tokens, median', 'Hit the 2K cap', 'Answers with reasoning text',
+                  'Passed its fixed check'], body) + ['']
+    out += ['The fixed checks are in `tools/check_natural_answers.py`: unit tests for the four code tasks, the expected '
+            'number for the four math tasks, and a structural rule from the prompt for the four chat tasks. Per-task '
+            'outcomes are in [natural_outcomes.csv](natural_outcomes.csv).', '']
 
     pilot = rows('pilot.csv')
     out += ['## Pilot of the serving points (diagnostics launch)', '',

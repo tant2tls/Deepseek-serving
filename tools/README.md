@@ -13,6 +13,7 @@ python tools/audit_references.py          # everything, before publishing
 | [build_blog_results.py](build_blog_results.py) | `serving.csv`, `components.csv`, `memory.csv` of the two October studies | `reports/five-model/results.md`, `serving.csv`, `node_control.csv`, and both `findings.md` | A CSV, a model list or a table's wording changed. `--check` only compares |
 | [build_blog_page.py](build_blog_page.py) | The same CSVs and the data block inside `index.html` | With no flag, the `<script id="study-data">` block of `index.html`; with `--check`, nothing | Writing or editing the article |
 | [build_rerun_results.py](build_rerun_results.py) | The CSVs of the rerun session under `reports/five-model-rerun-h100-v1/` | `results.md` in that folder | A session CSV changed. `bench/session_publish.py` calls it after every step; `--check` only compares |
+| [check_natural_answers.py](check_natural_answers.py) | The published `functional.json` of each model in the rerun session | `natural_outcomes.csv` in that study's folder | After the diagnostics, once. It **executes the models' code answers** in a limited subprocess, so the audit never runs it |
 | [launch_times.py](launch_times.py) | The saved server logs and `memory.csv` of the two October studies | Nothing; it prints tables | Budgeting a session: how long each recorded launch took, and the weights, KV pool and GPU memory each model reported |
 | [audit_references.py](audit_references.py) | The whole repository | Nothing | Before every commit that will be published, on a clean clone |
 
