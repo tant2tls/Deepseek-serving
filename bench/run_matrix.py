@@ -163,7 +163,7 @@ def unique_dir(d: Path):
     return p
 
 
-def bench_cmd(mk, out_dir, fname, *, c, n, seed, dataset_args, warm=False):
+def bench_cmd(mk, out_dir, fname, *, c, n, seed, dataset_args, warm=False, osl=None):
     m = MODELS[mk]
     cmd = [f"{VENV}/vllm", "bench", "serve",
            "--backend", "openai-chat", "--endpoint", "/v1/chat/completions",
@@ -176,6 +176,8 @@ def bench_cmd(mk, out_dir, fname, *, c, n, seed, dataset_args, warm=False):
            "--percentile-metrics", "ttft,tpot,itl,e2el",
            "--metric-percentiles", "50,90,95,99",
            "--disable-tqdm", *dataset_args]
+    if osl is not None:  # the client's default of 256 overrides the request list unless this is given
+        cmd += ["--custom-output-len", str(osl)]
     if not warm:
         cmd += ["--save-result", "--save-detailed",
                 "--result-dir", str(out_dir), "--result-filename", fname]
@@ -187,7 +189,8 @@ def run_point(mk, study, workload, config, point, rep, *, c, n, seed, dataset_ar
     """`osl` is the forced output length the request list asks for (historical studies: 256)."""
     rdir = unique_dir(ROOT / "results" / study / mk / workload / config / point / f"repeat-{rep}")
     tdir = rdir / "telemetry"; tdir.mkdir(parents=True)
-    cmd = bench_cmd(mk, rdir, "bench.json", c=c, n=n, seed=seed, dataset_args=dataset_args)
+    cmd = bench_cmd(mk, rdir, "bench.json", c=c, n=n, seed=seed, dataset_args=dataset_args,
+                    osl=None if osl == OSL else osl)
     manifest = dict(study=study, model_key=mk, **{k: v for k, v in MODELS[mk].items() if k != "extra_body"}, workload=workload, config=config,
                     point=point, repeat=rep, concurrency=c, num_prompts=n, seed=seed,
                     output_len=osl, temperature=TEMPERATURE, extra_body=extra_body(mk),
@@ -265,8 +268,8 @@ def run_point(mk, study, workload, config, point, rep, *, c, n, seed, dataset_ar
     return summary
 
 
-def warmup(mk, *, c, n, seed, dataset_args):
-    cmd = bench_cmd(mk, None, None, c=c, n=n, seed=seed, dataset_args=dataset_args, warm=True)
+def warmup(mk, *, c, n, seed, dataset_args, osl=None):
+    cmd = bench_cmd(mk, None, None, c=c, n=n, seed=seed, dataset_args=dataset_args, warm=True, osl=osl)
     r = subprocess.run(cmd, capture_output=True, text=True)
     print(f"  warmup c={c} n={n} rc={r.returncode}", flush=True)
 

@@ -281,7 +281,8 @@ def timing_step(mk, block):
     with Server(mk, "off") as srv:
         for b in BUCKETS:  # warm every shape with disjoint requests before the timed points
             if SESSION:  # same auxiliary prompts with a short output: the shapes, not 2,048 tokens each
-                rm.warmup(mk, c=WARM_N[b], n=WARM_N[b], seed=0, dataset_args=rm.custom_args(INP / b / "warm.jsonl"))
+                rm.warmup(mk, c=WARM_N[b], n=WARM_N[b], seed=0, osl=128,
+                          dataset_args=rm.custom_args(INP / b / "warm.jsonl"))
             else:
                 rm.warmup(mk, c=min(8, WARM_N[b]), n=WARM_N[b], seed=0,
                           dataset_args=rm.custom_args(INP / b / "aux.jsonl"))
