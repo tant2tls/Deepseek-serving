@@ -66,6 +66,20 @@ How to read the columns:
 - The first four rows are from the first node and Qwen's from the second, so its row also carries that node's CPU. On the second node MiMo's first launch took 10.7 min and its control block 30.2 min.
 - **Failed first launches cost time too.** A 0731 diagnostics launch died in the JIT build after 8.3 min and a GLM one after 4.7 min; both models worked on the relaunch.
 
+### The rerun session on the newer build
+
+Recorded on 2026-10-10 on one 8×H100 node with vLLM `a98247ab4db686ee03c66d5feb3c761e52a2f8ab`, 2,048 forced output tokens and contexts up to 128K, from the session's [timeline](../reports/five-model-rerun-h100-v1/timeline.md). The diagnostics step holds a first launch, 12 natural prompts, a pilot, 8 live-state readings and 12 traces; a timing block holds six serving points and five decode intervals.
+
+| Key | First launch until ready | Relaunch until ready | Diagnostics step | One timing block | Three timing blocks |
+| --- | --- | --- | ---: | ---: | ---: |
+| `v4-0731` | 970 s | 90 s | 15.9 min | 23.7 to 24.1 min | 72 min |
+| `v41` | 290 s | 120 to 145 s | 18.6 min | 24.4 to 25.1 min | 74 min |
+| `mimo-v26` | 295 s | 90 to 110 s | 19.0 min | 22.4 to 23.6 min | 69 min |
+| `qwen-38-bf16` | 130 s | 100 s | 14.2 min | 16.9 to 17.1 min | 51 min |
+| `glm-53` | 375 s after a failed launch of 980 s | 130 s | 34.8 min | 19.9 to 20.1 min | 60 min |
+
+All five checkpoints (1.44 TB) downloaded in 16 minutes on that node. Diagnostics took 1.7 h of server time and the fifteen timing launches 5.4 h; from the start of the rental to the last measurement it was 7.9 h, including the harness work done on the node. First launches are longer on this build because of two extra kernel warm-ups; GLM's first launch compiled its expert kernels for 16 minutes and failed once before the relaunch worked.
+
 ### Total for all five
 
 | Stage | Time | Basis |
