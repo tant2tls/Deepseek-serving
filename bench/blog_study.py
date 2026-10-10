@@ -610,6 +610,8 @@ def routing_step(mk):
         r, a = routed_request(mk, aux1k[0]["prompt"], OSL)
         if a is None:
             raise RuntimeError("the server returned no routed_experts: capture is not supported for this model")
+        if int(a.max()) == 0:  # a buffer nobody wrote to: the model's MoE path has no capture hook on this build
+            raise RuntimeError("routed_experts is all zeros: capture is not wired for this model's MoE path")
         n_exp = n_cfg or int(a.max()) + 1
         text = r["choices"][0]["message"].get("content") or ""
         plain = json.loads((SDIR / mk / "_functional" / "functional.json").read_text()) \
