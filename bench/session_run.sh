@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Run the stages of the 15-hour rerun session one after another, unattended (target.md#the-15-hour-session).
-#   bench/session_run.sh routing timing        # after the diagnostics chain; waits for any running chain first
+#   bench/session_run.sh diagfix routing timing   # after the diagnostics chain; waits for any running chain first
 # Stages:
+#   diagfix  relaunch the diagnostics of a model whose captures are incomplete (once).
 #   routing  expert-routing statistics, one `off-routed` launch per model. Gate: the first model must
 #            produce routing.json within 20 minutes, and the stage stops at 75 minutes in any case.
 #   timing   three blocks, each one plain launch per model, in the frozen rotating order.
@@ -30,6 +31,19 @@ wait_chain() {  # wait_chain [deadline epoch]: returns 1 if the deadline passed 
 for stage in "$@"; do
   wait_chain
   case "$stage" in
+    diagfix)  # one more diagnostics launch for a model whose first one did not finish its captures
+      redo=()
+      for mk in v4-0731 mimo-v26 v41 glm-53 qwen-38-bf16; do
+        [ -f "$S/$mk/profiles/prefill128k.manifest.json" ] && [ -f "$S/$mk/_kv/live_128k_B8.json" ] || redo+=("diag:$mk")
+      done
+      if [ ${#redo[@]} -gt 0 ]; then
+        say "diagnostics incomplete, relaunching: ${redo[*]}"
+        bash bench/blog_launch.sh diagnostics-redo "${redo[@]}" --publish
+        sleep 5; wait_chain
+      else
+        say "diagnostics complete for all five models"
+      fi
+      ;;
     routing)
       start=$(date +%s)
       say "stage 3 routing: first model, 20-minute gate"
