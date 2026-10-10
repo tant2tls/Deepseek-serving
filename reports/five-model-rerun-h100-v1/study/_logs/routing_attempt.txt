@@ -1,0 +1,11 @@
+# Expert-routing statistics attempt (session stage 3), recorded 2026-10-10T12:56:24Z
+
+Hook tried: the runtime's own capture of the router's selected expert IDs, vLLM flag --enable-return-routed-experts (bench/serve.sh config off-routed), on the frozen build with the session's deployment (prefix caching off).
+
+Result: the server refuses to start. From serve-off-routed-20261010-125524.log:
+
+  Value error, AuxOutput Connector requires prefix caching. [type=value_error, input_value=ArgsKwargs((), {'model_co... 'shutdown_timeout': 0}), input_type=ArgsKwargs]
+
+Source of the rule, vllm/config/vllm.py at commit a98247ab4db686ee03c66d5feb3c761e52a2f8ab: the AuxOutput connector requires Model Runner V2 (VLLM_USE_V2_MODEL_RUNNER=1), a generate runner, an MoE model, and cache_config.enable_prefix_caching.
+
+Reading: the supported hook exists but only in a deployment that this session does not run. The plan keeps prefix caching off in every launch (target.md, Shared system and workload; user decision of 2026-10-10), and Model Runner V2 would be a different execution path from the measured one. No unsupported patch was applied. The stage stopped at its gate after two launches of 15 seconds each; no routing statistics were collected. Realized expert sparsity stays unavailable and the fallback is nominal sparsity beside expert kernel time (target.md, answer map). Running the capture needs an explicit decision to allow prefix caching (and the V2 runner) in a separate instrumented launch.

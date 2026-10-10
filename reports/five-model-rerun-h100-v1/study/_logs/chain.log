@@ -195,3 +195,21 @@
 [12:55:40] CHAIN launched v4-0731 off-routed pgid=131180 log=results/five-model-rerun-h100-v1/v4-0731/_server/serve-off-routed-20261010-125539.log
 [12:55:55] CHAIN stopped v4-0731 off-routed up=15s gpu_mem_max=0MiB leftover=0
 [12:55:55] CHAIN step routing:v4-0731 FAILED: RuntimeError('server exited rc=1 before readiness')
+[12:56:03] CHAIN publish routing:v4-0731 rc=0 ['published routing:v4-0731: 646 files, commit 437a7ca, push ok']
+[12:56:03] CHAIN chain finished; no server left running
+[12:56:13] CHAIN step timing:v4-0731:1 start
+[12:56:13] CHAIN launched v4-0731 off pgid=132126 log=results/five-model-rerun-h100-v1/v4-0731/_server/serve-off-20261010-125613.log
+[12:57:43] CHAIN ready v4-0731 off after 90s
+[13:02:06] CHAIN serving v4-0731 ctx16k_osl2048_c1 block=1 n=12 valid=True dur=199.84235182299744 out_tps=122.97693544843403 ttft_p50=757.6668815454468 tpot_p50=7.76426467340909 
+[13:04:19] CHAIN serving v4-0731 ctx16k_osl2048_c16 block=1 n=48 valid=True dur=121.18371403194033 out_tps=811.1981117701184 ttft_p50=2980.8076664921828 tpot_p50=18.14828042232563 
+[13:07:43] CHAIN serving v4-0731 ctx1k_osl2048_c1 block=1 n=12 valid=True dur=194.19390792690683 out_tps=126.55391851556037 ttft_p50=169.92616548668593 tpot_p50=7.676256578885389 
+[13:09:20] CHAIN serving v4-0731 ctx1k_osl2048_c16 block=1 n=48 valid=True dur=86.9588684020564 out_tps=1130.4654925532047 ttft_p50=529.547089478001 tpot_p50=13.887145010517655 
+[13:13:24] CHAIN serving v4-0731 ctx64k_osl2048_c1 block=1 n=12 valid=True dur=232.70766675902996 out_tps=105.60889695760896 ttft_p50=3265.6733639887534 tpot_p50=7.875334621888448 
+[13:17:50] CHAIN serving v4-0731 ctx64k_osl2048_c16 block=1 n=48 valid=True dur=250.76325820805505 out_tps=392.0191526560818 ttft_p50=9494.164710456971 tpot_p50=35.45460427774464 
+[13:18:09] CHAIN interval v4-0731 1k B=8 block=1 valid=True ms_per_step=10.850530862808228 engine_step_ms=10.850530862808228 window_s=5.642276048660278 all_decoding_after=12.454233646392822 
+[13:18:22] CHAIN interval v4-0731 16k B=8 block=1 valid=True ms_per_step=11.053467443747113 engine_step_ms=11.053467443747113 window_s=5.703589200973511 all_decoding_after=6.163000822067261 
+[13:18:56] CHAIN interval v4-0731 64k B=8 block=1 valid=True ms_per_step=11.406382157323886 engine_step_ms=11.406382157323886 window_s=5.851474046707153 all_decoding_after=27.25979447364807 
+[13:20:03] CHAIN interval v4-0731 128k B=8 block=1 valid=True ms_per_step=11.66427182033658 engine_step_ms=11.66427182033658 window_s=5.972107172012329 all_decoding_after=60.27714395523071 
+[13:20:16] CHAIN interval v4-0731 128k B=1 block=1 valid=True ms_per_step=7.953557522844248 engine_step_ms=7.953557522844248 window_s=4.088128566741943 all_decoding_after=7.662985801696777 
+[13:20:18] CHAIN stopped v4-0731 off up=1445s gpu_mem_max=0MiB leftover=0
+[13:20:18] CHAIN step timing:v4-0731:1 done
