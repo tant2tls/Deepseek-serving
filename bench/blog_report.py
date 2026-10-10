@@ -26,6 +26,12 @@ EXTRA = [
     ("qkv_rope_kvcache", r"get_mla_metadata_kernel|_zero_kv_blocks_kernel|_gather_block_tables|_compute_slot_mappings"),
     ("dense_gemm", r"cublasLt|splitKreduce|gemmk1|sgemm|gemv"),
 ]
+# Kernels first seen on the rerun session's build (a98247ab4), read from the rank-0 kernel inventories:
+# candidate and pool bookkeeping of the indexers, and state preparation for the sparse lookups.
+EXTRA += [
+    ("indexer_topk", r"_candidate_flags_kernel|sparse_mla_index_remap_kernel|_expand_pools_and_append_tail_kernel"),
+    ("qkv_rope_kvcache", r"_compute_swa_indices_and_lens_kernel|_fwht_quant_kernel|_qsa_prepare_kernel"),
+]
 # The `humming` low-bit GEMM serves both MoE experts and (on DeepSeek) low-rank attention
 # projections; they are told apart by weight shape (config: hidden x 2*moe_intermediate and back).
 MOE_SHAPES = {"mimo-v26": {(4096, 4096), (4096, 2048)}, "v4-0731": {(4096, 4096), (4096, 2048)},
@@ -489,7 +495,7 @@ def breakdown(trace, until_next=False):
     return rows, kern
 
 
-CLASSIFIER = 2  # bump when the rules above change: the session's cached per-trace rows are then rebuilt
+CLASSIFIER = 3  # bump when the rules above change: the session's cached per-trace rows are then rebuilt
 
 
 def _trace_rows(job):
@@ -739,7 +745,7 @@ def publish(only=None):
     picks = [SDIR / "plan.json", *sorted(SDIR.glob("plan_addendum_*.json")), SDIR / "_inputs" / "manifest.json",
              SDIR / "_inputs" / "extra_tokens.json", SDIR / "_inputs" / "corpus" / "sources.json",
              SDIR / "_logs" / "chain.log", SDIR / "_logs" / "shutdown.jsonl", SDIR / "_logs" / "timeline.jsonl",
-             SDIR / "_logs" / "hbm_counter_attempt.txt",
+             SDIR / "_logs" / "hbm_counter_attempt.txt", SDIR / "_logs" / "routing_attempt.txt",
              *sorted((SDIR / "_env").glob("*"))]
     for src in picks:
         if not src.is_file():
